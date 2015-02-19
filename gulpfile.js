@@ -13,48 +13,68 @@ var del = require('del');
 var reload = browserSync.reload;
 var DEST = './dist';
 
+var handleError = function (err) {
+  console.log(err.toString());
+  this.emit('end');
+};
+
 // JavaScript tasks
-gulp.task('compile-js', ['clean'], function() {
+gulp.task('compile-js', ['clean-js'], function () {
   return gulp.src(['./src/js/**/*.js'])
     .pipe(concat('npolar-css.js'))
-    .pipe(gulp.dest(DEST))
+    .pipe(gulp.dest(DEST + '/js'))
     .pipe(uglify())
     .pipe(rename({ extname: '.min.js' }))
-    .pipe(gulp.dest(DEST));
+    .pipe(gulp.dest(DEST + '/js'));
 });
 
-gulp.task('validate-js', [], function() {
+gulp.task('validate-js', [], function () {
   return gulp.src(['./src/js/**/*.js'])
     .pipe(jshint({ multistr: true }))
     .pipe(jshint.reporter('default'));
 });
 
-gulp.task('test-js', [], function() {
+gulp.task('test-js', [], function () {
   return gulp.src(['./test/js/**/*.js'])
     .pipe(mocha({ reporter: 'spec' }));
 });
 
 // Reload
-gulp.task('live-server', [], function() {
+gulp.task('live-server', ['compile-less'], function () {
   browserSync({ server: { baseDir: '.' }});
-  gulp.watch(['*.html', DEST + '/**/*', 'src/js/**/*.js'], {cwd: '.'}, reload);
+
+});
+
+// Watch
+gulp.task('watch', ['live-server', 'copyfonts'], function () {
+  gulp.watch(['*.html', DEST + '/css/**/*.css', 'src/js/**/*.js'], reload);
+  gulp.watch(['./src/less/**/*.less'], ['compile-less']);
 });
 
 // Less tasks
-gulp.task('compile-less', ['clean'], function () {
+gulp.task('compile-less', ['clean-css'], function () {
   return gulp.src('./src/less/main.less')
     .pipe(sourcemaps.init())
-    .pipe(less().on('error', console.error))
+    .pipe(less().on('error', handleError))
     .pipe(minifyCSS())
     .pipe(sourcemaps.write('../maps'))
     .pipe(gulp.dest(DEST + '/css'));
 });
 
-gulp.task('clean', [], function (cb) {
-  del([DEST], cb);
+gulp.task('clean-js', [], function (cb) {
+  del([DEST + '/js'], cb);
+});
+
+gulp.task('clean-css', [], function (cb) {
+  del([DEST + '/css'], cb);
+});
+
+gulp.task('copyfonts', function() {
+   gulp.src('./bower_components/bootstrap/dist/fonts/**/*')
+   .pipe(gulp.dest(DEST + '/fonts'));
 });
 
 gulp.task('default', [
   'validate-js', 'test-js',
   'compile-js', 'compile-less',
-  'live-server']);
+  'live-server', 'watch']);

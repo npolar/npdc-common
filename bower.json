@@ -1,0 +1,22 @@
+{
+  "name": "npolar-css",
+  "version": "0.0.1",
+  "homepage": "https://github.com/npolar/npolar-css",
+  "authors": [
+    "Anders Bälter <anders.balter@npolar.no>"
+  ],
+  "description": "See package.json",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "bootstrap": "~3.3.2"
+  }
+}
