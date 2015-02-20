@@ -3,13 +3,14 @@
   <head>
     <title>npolar-css</title>
     <link href="dist/css/main.css" rel="stylesheet"></link>
+    <link href="bower_components/leaflet/dist/leaflet.css" rel="stylesheet"></link>
   </head>
   <body>
-    <div class="container-fluid">
-      <nav class="navbar navbar-default navbar-fixed-top top-menu">
+    <div class="container-fluid page-container">
+      <nav class="navbar top-menu">
         <div class="container-fluid">
           <!-- Small screen menu toggle -->
-          <div class="navbar-header pull-right">
+          <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#top-menu-collapse">
               <span class="sr-only">Toggle navigation</span>
               <span class="icon-bar"></span>
@@ -17,39 +18,71 @@
               <span class="icon-bar"></span>
             </button>
           </div>
-          <div class="shrink-fit">
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="top-menu-collapse">
-              <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Publications <span class="sr-only">(current)</span></a></li>
-                <li><a href="#">Projects</a></li>
-                <li><a href="#">People</a></li>
-                <li><a href="#">Developer</a></li>
-              </ul>
-              <form class="navbar-form navbar-left" role="search">
-                <div class="input-group">
-                  <input type="text" class="form-control" placeholder="Search for...">
-                  <span class="input-group-btn">
-                    <button class="btn btn-default" type="button">Go!</button>
-                  </span>
-                </div><!-- /input-group -->
-              </form>
-            </div><!-- /.navbar-collapse -->
-          </div>
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="top-menu-collapse">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#">Home <span class="sr-only">(current)</span></a></li>
+              <li><a href="#">Publications</a></li>
+              <li><a href="#">Projects</a></li>
+              <li><a href="#">People</a></li>
+              <li><a href="#">Developer</a></li>
+            </ul>
+            <form class="navbar-form" role="search">
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search for...">
+                <span class="input-group-btn">
+                  <button class="btn btn-default" type="button">Go!</button>
+                </span>
+              </div><!-- /input-group -->
+            </form>
+          </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
       </nav>
-      <div class="row">
-        <div class="col-md-6 .hidden-sm">
+      <main>
+        <section class="col-xs-12 col-sm-8">
+          <article class="timeline-post first">
+            <div class="timeline">
+              <span class="icon"><span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span></span>
+              <span class="line"></span>
+            </div>
+            <div class="content">
+              <h1>data.npolar.no</h1>
+              <cite>Portal for scientific data at the Norwegian Polar Institute</cite>
+            </div>
 
-        </div>
-        <div class="col-xs-12 col-md-6">
+          </article>
+          <article class="timeline-post">
+            <div class="timeline">
+              <span class="icon"><span class="glyphicon glyphicon-time" aria-hidden="true"></span></span>
+              <span class="line"></span>
+            </div>
+            <div class="content">
+              <div class="media">
+                <div class="media-left">
+                  <a href="#">
+                    <img class="media-object" src="img/drift-path.jpg">
+                  </a>
+                </div>
+                <div class="media-body">
+                  <h4 class="media-heading">Drifting with the ice</h4>
+                  <p>Alt er bedre nå. En toktleders humør er som en aksjemeglers. Når markedet går ned – i dette tilfellet: når vi driver sørover – så blir man urolig. Men, akkurat som en meglers humør når markedet er i oppsving – i dette tilfellet: når vi driver nordover – så er toktlederen en glad fyr. Glemt er alle mørke skyer og gårdagens sorger.</p>
 
-        </div>
-      </div>
+                </div>
+              </div>
+            </div>
+
+          </article>
+        </section>
+        <aside class="map col-sm-4">
+          <div id="map"></div>
+        </aside>
+      </main>
 
     </div>
 
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/leaflet/dist/leaflet.js"></script>
+    <script src="src/js/map.js"></script>
   </body>
 </html>

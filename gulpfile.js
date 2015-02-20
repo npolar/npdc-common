@@ -9,6 +9,7 @@ var jshint = require('gulp-jshint');
 var mocha = require('gulp-mocha');
 var rename = require('gulp-rename');
 var minifyCSS = require('gulp-minify-css');
+var watch = require('gulp-watch');
 var del = require('del');
 var reload = browserSync.reload;
 var DEST = './dist';
@@ -47,8 +48,11 @@ gulp.task('live-server', ['compile-less'], function () {
 
 // Watch
 gulp.task('watch', ['live-server', 'copyfonts'], function () {
-  gulp.watch(['*.html', DEST + '/css/**/*.css', 'src/js/**/*.js'], reload);
-  gulp.watch(['./src/less/**/*.less'], ['compile-less']);
+  watch(['*.html', DEST + '/css/**/*.css', 'src/js/**/*.js'], reload);
+  watch(['./src/less/**/*.less'], function () {
+    gulp.start('compile-less');
+  });
+
 });
 
 // Less tasks

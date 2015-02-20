@@ -17,6 +17,7 @@
   ],
   "dependencies": {},
   "devDependencies": {
-    "bootstrap": "~3.3.2"
+    "bootstrap": "~3.3.2",
+    "leaflet": "~0.7.3"
   }
 }

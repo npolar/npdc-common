@@ -1,0 +1,42 @@
+.top-menu {
+  .navbar-default;
+  .navbar-fixed-top;
+  background: @color-primary-0 url(/img/logo-no.png) 10px 5px no-repeat;
+  background-size: auto 40px;
+  overflow: hidden;
+  .navbar-collapse {
+    overflow: hidden;
+  }
+  @media (min-width: @screen-sm-min) {
+    background-size: auto;
+    background-position: 10px center;
+    &.navbar {
+      .navbar-nav, .navbar-form {
+          display: inline-block;
+          float: none;
+          vertical-align: top;
+      }
+      .navbar-collapse {
+          text-align: center;
+      }
+    }
+  }
+
+  @media (max-width: @screen-xs-max) {
+    .navbar-form {
+      position: absolute;
+      top: 42px;
+      left: 0;
+      right: 0;
+      margin-left: -10px;
+      margin-right: -10px;
+      border: none;
+    }
+    .collapsing .navbar-form {
+      top: -9px;
+    }
+    .navbar-nav {
+      margin-top: 52px;
+    }
+  }
+}

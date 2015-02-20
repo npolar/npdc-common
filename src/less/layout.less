@@ -2,9 +2,29 @@
   Layout rules
 */
 body {
-  padding-top: 70px;
+  padding-top: 50px;
 }
 
-.shrink-fit {
-  display: inline-block;
+.fill {
+  height: 100%;
+}
+
+.page-container {
+  .fill;
+}
+
+aside.map {
+  .hidden-xs;
+  .fill;
+  padding: 0;
+}
+
+main {
+  .row;
+  .fill;
+}
+
+#map {
+  min-height: 100%;
+  height: 100%;
 }
