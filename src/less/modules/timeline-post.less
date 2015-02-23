@@ -1,21 +1,27 @@
 .timeline-post {
   @border-width: 4px;
-  @color: @color-complement-3;
+  @color: @color-primary-0;
+  @active-color: @color-complement-3;
 
-  .row;
+  .make-row();
   padding: 15px;
   text-align: center;
   height: 100%;
   position: relative;
   .content {
     overflow: hidden;
-    margin-right: 70px;
     background-color: #F0F3F4;
-    border-bottom: solid 1px #fdfdfd;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0px 0px 3px rgba(0,0,0,.14);
+
+    @media (min-width: @screen-sm-min) {
+      margin-right: 70px;
+    }
   }
 
   .timeline {
-    width: 70px;
+    .hidden-xs;
+    width: 85px;
     position: absolute;
     padding-right: 10px;
     top: 0;
@@ -38,7 +44,7 @@
         vertical-align: text-top;
       }
     }
-    .line {
+    .v-line {
       z-index: -1;
       position: absolute;
       top: 0;
@@ -46,15 +52,47 @@
       right: 0;
       width: 36px;
       border-left: solid @border-width;
+      color: @color;
     }
+    .h-line {
+      z-index: -1;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 36px;
+      height: 46px;
+      border-bottom: solid @border-width;
+    }
+
   }
 
-  &.first {
+  &.sticky {
     .content {
       background-color: white;
     }
-    .line {
+  }
+
+  &:first-child {
+    .v-line {
       top: 64px + @border-width;
+    }
+  }
+
+  &:last-child {
+    .v-line {
+      bottom: auto;
+      height: 30px;
+    }
+  }
+
+  &.active {
+
+    .timeline {
+      color: @active-color;
+      .icon {
+        text-shadow: 0 0 15px @active-color;
+        transition: all 0.3s;
+      }
     }
   }
 }

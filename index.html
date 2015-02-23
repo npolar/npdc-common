@@ -4,6 +4,7 @@
     <title>npolar-css</title>
     <link href="dist/css/main.css" rel="stylesheet"></link>
     <link href="bower_components/leaflet/dist/leaflet.css" rel="stylesheet"></link>
+    <link href="bower_components/leaflet-minimap/dist/Control.MiniMap.min.css" rel="stylesheet"></link>
   </head>
   <body>
     <div class="container-fluid page-container">
@@ -39,28 +40,32 @@
         </div><!-- /.container-fluid -->
       </nav>
       <main>
-        <section class="col-xs-12 col-sm-8">
-          <article class="timeline-post first">
+        <section class="posts">
+          <article class="timeline-post sticky active">
             <div class="timeline">
+              <span class="h-line"></span>
               <span class="icon"><span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span></span>
-              <span class="line"></span>
+              <span class="v-line"></span>
             </div>
             <div class="content">
               <h1>data.npolar.no</h1>
               <cite>Portal for scientific data at the Norwegian Polar Institute</cite>
+              <br><br>
+              <p>This is a sticky post, always on top. Useful for important content that does not fit the "timeline" feature of this landing page.</p>
             </div>
 
           </article>
           <article class="timeline-post">
             <div class="timeline">
+              <span class="h-line"></span>
               <span class="icon"><span class="glyphicon glyphicon-time" aria-hidden="true"></span></span>
-              <span class="line"></span>
+              <span class="v-line"></span>
             </div>
-            <div class="content">
+            <div class="content container-fluid">
               <div class="media">
                 <div class="media-left">
                   <a href="#">
-                    <img class="media-object" src="img/drift-path.jpg">
+                    <img class="img-responsive" src="img/drift-path.jpg" style="max-height: 300px;">
                   </a>
                 </div>
                 <div class="media-body">
@@ -73,7 +78,7 @@
 
           </article>
         </section>
-        <aside class="map col-sm-4">
+        <aside class="map">
           <div id="map"></div>
         </aside>
       </main>
@@ -83,6 +88,7 @@
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <script src="bower_components/leaflet/dist/leaflet.js"></script>
+    <script src="bower_components/leaflet-minimap/dist/Control.MiniMap.min.js"></script>
     <script src="src/js/map.js"></script>
   </body>
 </html>
