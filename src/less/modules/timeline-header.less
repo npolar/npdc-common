@@ -1,14 +1,48 @@
 header {
   //padding: 15px;
   .content {
+    background-image: url(https://farm4.staticflickr.com/3173/5709966726_b40e307366_b_d.jpg);
+    background-size: cover;
+    background-position: center;
+    margin-left: -15px;
+    margin-right: -15px;
+    padding-top: 30px;
     border: none;
     box-shadow: none;
     background-color: white;
     text-align: center;
-    p {
-      margin-left: 20px;
-      margin-right: 20px;
+    .description {
+      width: 50%;
     }
+
+    .heading, .description {
+      display: inline-block;
+    }
+
+    h1 {
+      margin: 0;
+    }
+
+    .box {
+      background-color: rgba(255,255,255,0.8);
+      padding: 5px;
+    }
+
+    .counters {
+      margin-top: 80px;
+      .make-row();
+      div {
+        .make-xs-column(6);
+        .make-md-column(3);
+
+        .count {
+          color: @color-complement-0;
+          font-size: large;
+          font-weight: bolder;
+        }
+      }
+    }
+
   }
 
 

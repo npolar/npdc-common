@@ -44,14 +44,24 @@ $(function () {
 
     $('.timeline-post').each(function (index, post) {
       var data = $(post).data('post');
-      var marker;
       if (data.coordinates) {
-        marker = L.marker(data.coordinates).addTo(map);
+        data.marker = L.marker(data.coordinates).addTo(map);
       } else if (data.coverage) {
-        marker = L.rectangle(bounds(data.coverage[0])).addTo(map);
+        data.marker = L.rectangle(bounds(data.coverage[0])).addTo(map);
       }
-      markers.push(marker);
 
+      data.marker.on('click', function () {
+        activatePost($(post));
+      });
+
+      if ($(post).hasClass('active')) {
+        data.marker.setIcon(L.icon({
+          iconUrl: 'img/marker-icon-orange.png',
+          iconRetinaUrl: 'img/marker-icon-orange-2x.png',
+        }));
+      }
+      markers.push(data.marker);
+      $(post).data('post', data);
     });
 
 
@@ -69,6 +79,15 @@ $(function () {
     return map;
   };
 
+  var isOnScreen = function (element) {
+    var viewPortHeight = $(window).height(), // Viewport Height
+        scrollPosition = $(window).scrollTop(), // Scroll Top
+        elementPosition = $(element).offset().top,
+        elementHeight = $(element).height();
+
+    return (scrollPosition < elementPosition) &&
+      (viewPortHeight + scrollPosition) > (elementPosition + elementHeight);
+  };
 
   var activatePost = function ($post) {
     $currentPost = $('.timeline-post.active');
@@ -82,30 +101,34 @@ $(function () {
     }
     if ($post) {
       $postToActivate = $post;
+      if (!isOnScreen($post)) {
+        window.scrollTo(0, $post.offset().top - 50);
+      }
     }
 
     if (!$currentPost.is($postToActivate)) {
       $currentPost.removeClass('active');
       $postToActivate.addClass('active');
+      $currentPost.data('post').marker.setIcon(new L.Icon.Default());
     }
 
     var data = $postToActivate.data('post');
     if (data.coordinates) {
-      map.panTo($postToActivate.data('post').coordinates);
+      map.panTo(data.coordinates);
       map.setZoom(10);
     } else if (data.coverage) {
       map.fitBounds(bounds(data.coverage[0]));
     }
 
+    data.marker.setIcon(L.icon({
+      iconUrl: 'img/marker-icon-orange.png',
+      iconRetinaUrl: 'img/marker-icon-orange-2x.png',
+    }));
+
   };
 
   $(window).scroll(function(event) {
     activatePost();
-  });
-
-  $('.map-link').click(function () {
-    activatePost($(this).parents('.timeline-post'));
-    return false;
   });
 
   var initPopovers = function () {
@@ -133,6 +156,11 @@ $(function () {
       }, 10);
     });
   };
+
+  $('.timeline-post').click(function () {
+    activatePost($(this));
+    return false;
+  });
 
   mockData();
   initPopovers();
