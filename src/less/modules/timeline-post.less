@@ -22,6 +22,7 @@
       margin-right: 70px;
     }
   }
+
   @media (min-width: @screen-md-min) {
     margin-left: 10%;
   }
@@ -43,7 +44,6 @@
       float: right;
       border-radius: 100%;
       display: inline-block;
-      //border: 1px solid @color;
       width: 25px;
       height: 25px;
       line-height: 25px;
@@ -73,14 +73,6 @@
       border-bottom: solid @border-width;
     }
 
-  }
-
-  &.sticky {
-    margin-left: -15px;
-    .content {
-      background-color: white;
-      text-align: center;
-    }
   }
 
   &:first-child {
@@ -122,6 +114,10 @@
         &.time, &.tag {
           width: 7em;
         }
+      }
+
+      .map-link {
+        .hidden-xs;
       }
     }
   }

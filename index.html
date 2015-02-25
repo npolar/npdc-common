@@ -20,45 +20,80 @@
             </button>
           </div>
           <!-- Collect the nav links, forms, and other content for toggling -->
-          <div class="collapse navbar-collapse" id="top-menu-collapse">
-            <ul class="nav navbar-nav">
-              <li class="active"><a href="#">Home <span class="sr-only">(current)</span></a></li>
-              <li><a href="https://data.npolar.no/publications">Publications</a></li>
-              <li><a href="https://data.npolar.no/projects">Projects</a></li>
-              <li><a href="https://data.npolar.no/geodata">Geodata</a></li>
-              <li><a href="https://data.npolar.no/datasets">Datasets</a></li>
-              <li><a href="https://data.npolar.no/people">People</a></li>
-              <li><a href="https://data.npolar.no/biology/marine">Marine biology</a></li>
-              <li><a href="http://api.npolar.no">Developer</a></li>
+          <div class="collapse navbar-collapse" id="top-menu-collapse" style="height: auto !important;">
+            <ul class="nav navbar-nav menu">
+              <li><a href="#"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home <span class="sr-only">(current)</span></a></li>
+              <li class="dropdown">
+               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                 <span class="glyphicon glyphicon-hdd" aria-hidden="true"></span> Data <span class="caret"></span></a>
+               <ul class="dropdown-menu" role="menu">
+                 <li><a href="https://data.npolar.no/datasets">Datasets</a></li>
+                 <li><a href="https://data.npolar.no/biology/marine">Marine biology</a></li>
+                 <li><a href="https://data.npolar.no/people">People</a></li>
+                 <li><a href="https://data.npolar.no/projects">Projects</a></li>
+                 <li><a href="https://data.npolar.no/publications">Publications</a></li>
+               </ul>
+             </li>
+             <li><a href="https://data.npolar.no/geodata"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Map services</a></li>
+             <li><a href="http://api.npolar.no"><span class="glyphicon glyphicon-console" aria-hidden="true"></span> Developer</a></li>
             </ul>
             <form class="navbar-form" role="search">
               <div class="input-group">
                 <input type="text" class="form-control" placeholder="Search for...">
                 <span class="input-group-btn">
-                  <button class="btn btn-default" type="button">Go!</button>
+                  <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
                 </span>
               </div><!-- /input-group -->
             </form>
+            <ul class="nav navbar-nav navbar-right login">
+              <li>
+               <a href="#" class="navbar-link" data-toggle="popover" role="button" aria-expanded="false">
+                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Login <span class="caret"></span></a>
+               <a href="#" class="navbar-link" data-toggle="modal" data-target="#login-modal" role="button" aria-expanded="false">
+                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Login</a>
+               <div class="popover-wrapper">
+                 <div class="popover-content">
+                   <form>
+                     <div class="form-group">
+                       <label for="exampleInputEmail1">Email address</label>
+                       <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                     </div>
+                     <div class="form-group">
+                       <label for="exampleInputPassword1">Password</label>
+                       <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                     </div>
+                     <button type="submit" class="btn btn-default">Submit</button>
+                    </form>
+                 </div>
+               </div>
+             </li>
+           </ul>
           </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
       </nav>
       <main>
         <section class="posts">
-          <article class="timeline-post sticky active">
-            <div class="timeline">
-              <span class="h-line"></span>
-              <span class="icon"><span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span></span>
-              <span class="v-line"></span>
-            </div>
+          <header>
             <div class="content">
-              <h1>data.npolar.no</h1>
+              <h1>Norwegian polar data</h1>
               <cite>Portal for scientific data at the Norwegian Polar Institute</cite>
               <br><br>
-              <p>This is a sticky post, always on top. Useful for important content that does not fit the "timeline" feature of this landing page.</p>
+              <p>Search, browse, download and vizualize scientific data about the polar regions. We gather data about climate, marine biology, wildlife, ice, expeditions, ships, cruises and much more. Everything polar.</p>
+              <p>We currently host:</p>
+              <div class="counters">
+                <div><span class="count">235</span> datasets</div>
+                <div><span class="count">7,242,119</span> oceanographic data points</div>
+                <div><span class="count">13,037</span> marine biology samples</div>
+                <div><span class="count">192</span> timeseries</div>
+              </div>
+              <hr>
             </div>
-
-          </article>
-          <article class="timeline-post">
+            <div class="timeline">
+              <div class="latest-data">Latest data</div>
+              <span class="h-line"></span>
+            </div>
+          </header>
+          <article class="timeline-post active">
             <div class="timeline">
               <span class="h-line"></span>
               <span class="icon"><span class="glyphicon glyphicon-time" aria-hidden="true"></span></span>
@@ -131,6 +166,32 @@
         </aside>
       </main>
 
+    </div>
+
+    <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="login-modal-label" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="login-modal-label">Login</h4>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+              </div>
+             </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-default">Submit</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script src="bower_components/jquery/dist/jquery.js"></script>

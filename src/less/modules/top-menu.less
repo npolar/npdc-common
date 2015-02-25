@@ -3,13 +3,28 @@
   .navbar-fixed-top;
   background: @color-primary-0 url(/img/logo-no.png) 10px 5px no-repeat;
   background-size: auto 40px;
-  overflow: hidden;
-  .navbar-collapse {
-    overflow: hidden;
-  }
+
   .navbar-nav a {
     background-color: @color-primary-0;
   }
+
+  .navbar-form {
+    width: 25%;
+    button {
+      color: grey;
+    }
+  }
+
+  .navbar-collapse {
+    overflow-x: hidden;
+  }
+
+  .navbar-toggle:hover .icon-bar,
+  .navbar-toggle:focus .icon-bar,
+  .navbar-toggle:not(.collapsed) .icon-bar {
+    background-color: black;
+  }
+
   @media (min-width: @screen-sm-min) {
     background-size: auto;
     background-position: 10px center;
@@ -31,6 +46,7 @@
       top: 42px;
       left: 0;
       right: 0;
+      width: auto;
       margin-left: -10px;
       margin-right: -10px;
       border: none;
@@ -38,8 +54,25 @@
     .collapsing .navbar-form {
       top: -9px;
     }
-    .navbar-nav {
+    .menu {
       margin-top: 52px;
+      margin-bottom: 0;
+    }
+    .login {
+      margin-top: 0;
+    }
+  }
+
+  .login {
+    .popover {
+      width: 400px;
+    }
+
+    a[data-toggle="popover"] {
+      .hidden-xs;
+    }
+    a[data-toggle="modal"] {
+      .visible-xs-block;
     }
   }
 }

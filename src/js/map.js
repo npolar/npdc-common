@@ -108,7 +108,34 @@ $(function () {
     return false;
   });
 
+  var initPopovers = function () {
+    $('[data-toggle="popover"]').popover({
+      placement: 'bottom',
+      trigger: 'click',
+      html : true,
+      title: function() {
+        return $(this).siblings('.popover-wrapper').find('.popover-head').html();
+      },
+      content: function() {
+        return $(this).siblings('.popover-wrapper').find('.popover-content').html();
+      }
+    }).on('shown.bs.popover', function() {
+      $(this).siblings('.popover').find('input:first').focus();
+    });
+
+    $(document).on('blur','.popover', function() {
+      var $elem = $(this);
+      setTimeout(function () {
+        if ($elem.find(':focus').length === 0) {
+          $elem.popover('hide');
+          $elem.remove();
+        }
+      }, 10);
+    });
+  };
+
   mockData();
+  initPopovers();
   var map = initMap();
   activatePost($('.timeline-post.active'));
 });
