@@ -76,6 +76,9 @@ gulp.task('clean-css', [], function (cb) {
 gulp.task('copyfonts', function() {
    gulp.src('./bower_components/bootstrap/dist/fonts/**/*')
    .pipe(gulp.dest(DEST + '/fonts'));
+
+   gulp.src('./bower_components/league-gothic/webfonts/**/*')
+   .pipe(gulp.dest(DEST + '/fonts'));
 });
 
 gulp.task('default', [

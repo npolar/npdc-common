@@ -80,9 +80,13 @@ $(function () {
   };
 
   var isOnScreen = function (element) {
-    var curPos = element.offset().top;
-    var screenHeight = $(window).height();
-    return (curPos > screenHeight) ? false : true;
+    var viewPortHeight = $(window).height(), // Viewport Height
+        scrollPosition = $(window).scrollTop(), // Scroll Top
+        elementPosition = $(element).offset().top,
+        elementHeight = $(element).height();
+
+    return (scrollPosition < elementPosition) &&
+      (viewPortHeight + scrollPosition) > (elementPosition + elementHeight);
   };
 
   var activatePost = function ($post) {

@@ -18,7 +18,8 @@
   "dependencies": {
     "bootstrap": "~3.3.2",
     "leaflet": "~0.7.3",
-    "leaflet-minimap": "git://github.com/Norkart/Leaflet-MiniMap.git#~2.0.1"
+    "leaflet-minimap": "git://github.com/Norkart/Leaflet-MiniMap.git#~2.0.1",
+    "league-gothic": "git://github.com/theleagueof/league-gothic.git"
   },
   "devDependencies": {}
 }
