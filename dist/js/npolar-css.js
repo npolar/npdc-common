@@ -157,13 +157,38 @@ $(function () {
     });
   };
 
+  var getUrlParameter = function (sParam) {
+    var sPageURL = window.location.search.substring(1);
+    var sURLVariables = sPageURL.split('&');
+    for (var i = 0; i < sURLVariables.length; i++)
+    {
+        var sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == sParam)
+        {
+            return sParameterName[1] || null;
+        }
+    }
+  };
+
+  var login = function () {
+    $('main').load('user.html');
+  };
+
   $('.timeline-post').click(function () {
     activatePost($(this));
     return false;
+  });
+
+  $('body').on('click', '.do-login', function () {
+
   });
 
   mockData();
   initPopovers();
   var map = initMap();
   activatePost($('.timeline-post.active'));
+
+  if(getUrlParameter('user') !== undefined) {
+    login();
+  }
 });

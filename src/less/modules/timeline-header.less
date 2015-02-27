@@ -1,12 +1,13 @@
 header {
   //padding: 15px;
   .content {
-    background-image: url(https://farm4.staticflickr.com/3173/5709966726_b40e307366_b_d.jpg);
+    background-image: url(/img/5709966726_3beab07408_o.jpg);
     background-size: cover;
     background-position: center;
     margin-left: -15px;
     margin-right: -15px;
     padding-top: 30px;
+    padding-bottom: 57px;
     border: none;
     box-shadow: none;
     background-color: white;
@@ -32,6 +33,8 @@ header {
 
     .counters {
       margin-top: 80px;
+      text-align: left;
+      padding: 5px 35px;
       .make-row();
       div {
         .make-xs-column(6);
@@ -51,6 +54,7 @@ header {
   .timeline {
     @border-width: 3px;
     @color: @color-primary-0;
+    margin-top: 15px;
     .clearfix();
     .h-line {
       color: @color;
@@ -77,6 +81,28 @@ header {
         width: 100px;
         margin: 0 auto;
       }
+    }
+  }
+
+  .arrow {
+    position: relative;
+    &:before, &:after {
+      content: "";
+      position: absolute;
+      height: 30px;
+      width: 55%;
+      top: -30px;
+      background: white;
+    }
+
+    &:before {
+      .skew(40deg);
+      left: -6%;
+    }
+
+    &:after {
+      .skew(-40deg);
+      right: -6%;
     }
   }
 }
