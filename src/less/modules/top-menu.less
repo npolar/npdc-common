@@ -1,8 +1,26 @@
 .top-menu {
   .navbar-default;
   .navbar-fixed-top;
-  background: @color-primary-0 url(/img/logo-no.png) 10px 5px no-repeat;
-  background-size: auto 40px;
+  background: @color-primary-0;
+
+  .container-fluid {
+    padding-right: 0;
+  }
+
+  .navbar-brand {
+    @brand-size: 35px;
+    padding: 8px;
+    line-height: @brand-size;
+    vertical-align: bottom;
+    span {
+      .hidden-md;
+      .hidden-sm;
+    }
+    img {
+      display: inline-block;
+      height: @brand-size;
+    }
+  }
 
   .navbar-nav a {
     background-color: @color-primary-0;
@@ -26,8 +44,6 @@
   }
 
   @media (min-width: @screen-sm-min) {
-    background-size: auto;
-    background-position: 10px center;
     &.navbar {
       .navbar-nav, .navbar-form {
           display: inline-block;

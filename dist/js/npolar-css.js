@@ -134,26 +134,29 @@ $(function () {
   var initPopovers = function () {
     $('[data-toggle="popover"]').popover({
       placement: 'bottom',
-      trigger: 'click',
+      trigger: 'manual',
       html : true,
-      title: function() {
+      title: function () {
         return $(this).siblings('.popover-wrapper').find('.popover-head').html();
       },
-      content: function() {
+      content: function () {
         return $(this).siblings('.popover-wrapper').find('.popover-content').html();
       }
-    }).on('shown.bs.popover', function() {
-      $(this).siblings('.popover').find('input:first').focus();
+    }).on('shown.bs.popover', function () {
+      $(this).siblings('.popover').attr("tabindex",-1).find('input:first').focus();
+    }).on('click', function () {
+      $(this).popover('toggle');
+
     });
 
-    $(document).on('blur','.popover', function() {
+
+    $(document).on('focusout','.popover', function (event) {
       var $elem = $(this);
-      setTimeout(function () {
-        if ($elem.find(':focus').length === 0) {
+      if (!$elem.is(event.relatedTarget) &&
+        $elem.has(event.relatedTarget).length === 0) {
           $elem.popover('hide');
           $elem.remove();
         }
-      }, 10);
     });
   };
 
