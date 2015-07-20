@@ -38,7 +38,7 @@ var AutoConfig = function(environment) {
 
   // Auto-detect environment - only allow overriding on localhost
   if ("localhost" === window.location.hostname && (typeof this.environment === 'string' || this.environment instanceof String)) {
-    console.error("Environment:", this.environment, "[localhost override]");
+    console.warn("Environment:", this.environment, "[localhost override]");
   } else {
     this.environment = detectEnvironment(window.location.hostname);
     console.log("Environment:", this.environment, "[auto-detected]");
@@ -46,13 +46,12 @@ var AutoConfig = function(environment) {
 
   this.base = base(this.environment);
 
-
   if ("production" === this.environment) {
     if ("https:" !== window.location.protocol) {
-      console.error("WARNING", "Not using HTTPS in production environment");
+      console.warn("WARNING", "Not using HTTPS in production environment");
     }
     if ("data.npolar.no" !== window.location.hostname) {
-      console.error("WARNING", "Running against production API", this.base, "from", window.location.href);
+      console.warn("WARNING", "Running against production API", this.base, "from", window.location.href);
     }
   }
   return this;
