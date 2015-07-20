@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/npolar/npdc-common/issues"
   },
-  "homepage": "https://github.com/npolar/npdc-common#readme"
+  "homepage": "https://github.com/npolar/npdc-common#readme",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-debug": "^2.0.1",
+    "should": "^7.0.2",
+    "npdc-gulp": "git://github.com/npolar/npdc-gulp.git"
+  }
 }

@@ -3,25 +3,25 @@
  * @ngInject
  */
 var AutoConfig = function(environment) {
-  var config = {};
+  this.environment = environment;
 
-  this.isTest = function(hostname) {
+  var isTest = function(hostname) {
     return (/test/.test(hostname.split(".")[0]));
   };
 
-  this.detectEnvironment = function(hostname) {
+  var detectEnvironment = function(hostname) {
     var environment;
     if ("localhost" === hostname) {
       environment = "development";
-    } else if (this.isTest(hostname)) {
+    } else if (isTest(hostname)) {
       environment = "test";
-    } else if ("api.npolar.no" === hostname) {
+    } else if ("data.npolar.no" === hostname) {
       environment = "production";
     }
     return environment;
   };
 
-  this.base = function(environment) {
+  var base = function(environment) {
     var base;
     if ("development" === environment) {
       base = "//localhost:9393";
@@ -37,26 +37,25 @@ var AutoConfig = function(environment) {
 
 
   // Auto-detect environment - only allow overriding on localhost
-  if ("localhost" === window.location.hostname && (typeof environment === 'string' || environment instanceof String)) {
-    console.error("Environment:", environment, "[localhost override]");
+  if ("localhost" === window.location.hostname && (typeof this.environment === 'string' || this.environment instanceof String)) {
+    console.error("Environment:", this.environment, "[localhost override]");
   } else {
-    environment = this.detectEnvironment(window.location.hostname);
-    console.log("Environment:", environment, "[auto-detected]");
+    this.environment = detectEnvironment(window.location.hostname);
+    console.log("Environment:", this.environment, "[auto-detected]");
   }
 
-  config.base = this.base(environment);
-  config.environment = environment;
+  this.base = base(this.environment);
 
 
-  if ("production" === environment && window) {
+  if ("production" === this.environment) {
     if ("https:" !== window.location.protocol) {
       console.error("WARNING", "Not using HTTPS in production environment");
     }
     if ("data.npolar.no" !== window.location.hostname) {
-      console.error("WARNING", "Running against production API", config.base, "from", window.location.href);
+      console.error("WARNING", "Running against production API", this.base, "from", window.location.href);
     }
   }
-  return config;
+  return this;
 
 };
 
