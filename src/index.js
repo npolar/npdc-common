@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
-  autoConf: require('./config/AutoConfig')
+  AutoConfig: require('./config/AutoConfig')
 };
