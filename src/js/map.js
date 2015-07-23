@@ -1,4 +1,5 @@
 $(function () {
+  "use strict";
   var mockData = function () {
     var posts = [
       {
@@ -75,7 +76,8 @@ $(function () {
     L.tileLayer(opt.url, opt.options).addTo(map);
 
     var osm2 = new L.TileLayer(opt.url, {minZoom: 0, maxZoom: 13, attribution: attribution});
-    var miniMap = new L.Control.MiniMap(osm2, {zoomLevelOffset: -7}).addTo(map);
+    var miniMap = new L.Control.MiniMap(osm2, {zoomLevelOffset: -7});
+    miniMap.addTo(map);
     return map;
   };
 
@@ -90,7 +92,7 @@ $(function () {
   };
 
   var activatePost = function ($post) {
-    $currentPost = $('.timeline-post.active');
+    var $currentPost = $('.timeline-post.active');
     var $scrollPost = $('.timeline-post').filter(function (index, post) {
       return $(window).scrollTop() < $(post).offset().top;
     }).first();
@@ -166,7 +168,7 @@ $(function () {
     for (var i = 0; i < sURLVariables.length; i++)
     {
         var sParameterName = sURLVariables[i].split('=');
-        if (sParameterName[0] == sParam)
+        if (sParameterName[0] === sParam)
         {
             return sParameterName[1] || null;
         }

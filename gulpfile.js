@@ -1,7 +1,8 @@
+'use strict';
+
 var gulp = require('gulp');
 var browserSync = require('browser-sync');
 var less = require('gulp-less');
-var path = require('path');
 var sourcemaps = require('gulp-sourcemaps');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
@@ -43,7 +44,6 @@ gulp.task('test-js', [], function () {
 // Reload
 gulp.task('live-server', ['compile-less'], function () {
   browserSync({ server: { baseDir: '.' }});
-
 });
 
 // Watch
@@ -74,10 +74,7 @@ gulp.task('clean-css', [], function (cb) {
 });
 
 gulp.task('copyfonts', function() {
-   gulp.src('./bower_components/bootstrap/dist/fonts/**/*')
-   .pipe(gulp.dest(DEST + '/fonts'));
-
-   gulp.src('./bower_components/league-gothic/webfonts/**/*')
+   return gulp.src('./node_modules/bootstrap/dist/fonts/**/*')
    .pipe(gulp.dest(DEST + '/fonts'));
 });
 
