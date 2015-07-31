@@ -1,1 +1,0 @@
-{"version":3,"sources":["layout.scss","variables.scss","dummy/dummy.scss","../../variables.scss"],"names":[],"mappings":"AAEA,KACE,iBCHI,ICEN,OACE,MCHI","file":"npolar-css.min.css","sourcesContent":["@import 'variables';\n\nbody {\n  background-color: $red;\n}\n",null,"@import '../../variables';\n\n.dummy {\n  color: $red;\n}\n",null],"sourceRoot":"/source/"}
