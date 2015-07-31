@@ -1,13 +1,16 @@
 var task = function(gulp, config) {
   'use strict';
 
+  var watch = require('gulp-watch');
+  var runSequence = require('run-sequence').use(gulp);
+
   gulp.task('watch', ['browserSync'], function() {
 
     // Scripts are automatically watched and rebundled by Watchify inside Browserify task
-    gulp.watch(config.src.html, ['copy-html']);
-    gulp.watch(config.src.img, ['copy-static']);
-    gulp.watch(config.src.jsAll, ['lint', 'test']);
-    gulp.watch(config.src.sass, ['sass']);
+    watch(config.src.html, function () { runSequence('copy-html');});
+    watch(config.src.img, function () { runSequence('copy-static');});
+    watch(config.src.jsAll, function () { runSequence(['lint', 'test']);});
+    watch(config.src.sassAll, function () { runSequence('sass');});
   });
 };
 

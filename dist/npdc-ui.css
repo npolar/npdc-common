@@ -7182,8 +7182,11 @@ md-tooltip {
   md-whiteframe {
     border: 1px solid #fff; } }
 
-body {
-  color: #f00; }
+div {
+  color: blue; }
+
+.np-top-menu {
+  background-color: #1570b1; }
 
 .my-class {
-  cursor: pointer; }
+  cursor: hand; }

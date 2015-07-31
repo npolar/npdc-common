@@ -3,10 +3,44 @@
   <head>
     <title>NPDC Home layout</title>
     <link href="/npdc-ui.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <meta name="viewport" content="initial-scale=1" />
   </head>
   <body>
-    <p>HEJ</p>
+    <md-toolbar class="np-top-menu">
+      <div class="md-toolbar-tools">
+        <md-button class="md-icon-button" aria-label="Menu">
+          <md-icon class="material-icons">menu</md-icon>
+        </md-button>
+        <h2>
+          <span>Toolbar with Icon Buttons</span>
+        </h2>
+        <span flex></span>
+        <md-button class="md-icon-button" aria-label="Favorite">
+          <md-icon md-svg-icon="img/icons/favorite.svg" style="color: greenyellow;"></md-icon>
+        </md-button>
+        <md-button class="md-icon-button" aria-label="More">
+          <md-icon md-svg-icon="img/icons/more_vert.svg"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <br>
+    <md-toolbar class="md-tall md-accent">
+      <h2 class="md-toolbar-tools">
+        <span>Toolbar: tall (md-accent)</span>
+      </h2>
+    </md-toolbar>
+    <br>
+    <md-toolbar class="md-tall md-warn md-hue-3">
+      <span flex></span>
+      <h2 class="md-toolbar-tools md-toolbar-tools-bottom">
+        <span class="md-flex">Toolbar: tall with actions pin to the bottom (md-warn md-hue-3)</span>
+      </h2>
+    </md-toolbar>
+    <div layout="row">
+      <div flex="66"></div>
+      <div flex="33" hide-sm></div>
+    </div>
     <script src="/npdc-ui.js"></script>
   </body>
 </html>

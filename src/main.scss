@@ -1,7 +1,7 @@
 @import 'variables';
-@import 'layouts/**/*.sass';
-@import 'components/**/*.sass';
+@import 'layouts/**/*';
+@import 'components/**/*';
 
 .my-class {
-  cursor: pointer;
+  cursor: hand;
 }
