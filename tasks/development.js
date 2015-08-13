@@ -4,7 +4,6 @@ var task = function(gulp, config) {
   var runSequence = require('run-sequence').use(gulp);
 
   gulp.task('dev', function(cb) {
-    global.isProd = false;
     runSequence(['clean'], 'lint', 'test', ['sass', 'browserify', 'copy-all'], 'watch', cb);
   });
 };

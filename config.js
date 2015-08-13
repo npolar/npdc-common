@@ -7,7 +7,7 @@ var readPackageJson = function () {
 
 var src = 'src',
   deps = 'node_modules',
-  dist = 'dist';
+  dist = './dist';
 
 var config = {
   version: function () {return readPackageJson().version;},
@@ -22,6 +22,7 @@ var config = {
     'jsMain': src+'/main.js',
     'jsAll': [src+'/**/*.js'],
     'jsNoTests': [src+'/**/*!(Spec).js'],
+    'jsDemo': src+'/**/*Demo.js',
     'sassMain': [src+'/main.scss'],
     'sassAll': [src+'/**/*.scss'],
     'img': [src+'/**/*.{ico,png,jpg,jpeg,gif}']

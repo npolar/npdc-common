@@ -1,46 +1,66 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>NPDC Home layout</title>
-    <link href="/npdc-ui.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <meta name="viewport" content="initial-scale=1" />
-  </head>
-  <body>
-    <md-toolbar class="np-top-menu">
-      <div class="md-toolbar-tools">
-        <md-button class="md-icon-button" aria-label="Menu">
-          <md-icon class="material-icons">menu</md-icon>
-        </md-button>
-        <h2>
-          <span>Toolbar with Icon Buttons</span>
-        </h2>
-        <span flex></span>
-        <md-button class="md-icon-button" aria-label="Favorite">
-          <md-icon md-svg-icon="img/icons/favorite.svg" style="color: greenyellow;"></md-icon>
-        </md-button>
-        <md-button class="md-icon-button" aria-label="More">
-          <md-icon md-svg-icon="img/icons/more_vert.svg"></md-icon>
-        </md-button>
-      </div>
-    </md-toolbar>
-    <br>
-    <md-toolbar class="md-tall md-accent">
-      <h2 class="md-toolbar-tools">
-        <span>Toolbar: tall (md-accent)</span>
-      </h2>
-    </md-toolbar>
-    <br>
-    <md-toolbar class="md-tall md-warn md-hue-3">
+<html ng-app="home">
+
+<head>
+  <title>NPDC Home layout</title>
+  <link href="/npdc-ui.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <meta name="viewport" content="initial-scale=1" />
+</head>
+<body ng-controller="HomeCtrl as ctrl">
+  <md-toolbar class="np-top-menu">
+    <div class="md-toolbar-tools">
+      <a class="np-top-menu-brand" href="#">
+        <img alt="Norwegian Polar Insitute" src="/img/NPI-logo-hvit-eng.png">
+        <span hide-md hide-sm class="md-title">Norwegian Polar Data Centre</span>
+      </a>
       <span flex></span>
-      <h2 class="md-toolbar-tools md-toolbar-tools-bottom">
-        <span class="md-flex">Toolbar: tall with actions pin to the bottom (md-warn md-hue-3)</span>
-      </h2>
-    </md-toolbar>
-    <div layout="row">
-      <div flex="66"></div>
-      <div flex="33" hide-sm></div>
+      <md-menu>
+        <md-button aria-label="Open data menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+          <md-icon md-menu-origin>cloud</md-icon>
+        </md-button>
+        <md-menu-content width="4">
+          <md-menu-item>
+            <md-button ng-click="">Datasets</md-button>
+          </md-menu-item>
+          <md-menu-item>
+            <md-button ng-click="">Marine biology</md-button>
+          </md-menu-item>
+          <md-menu-item>
+            <md-button ng-click="">People</md-button>
+          </md-menu-item>
+          <md-menu-item>
+            <md-button ng-click="">Projects</md-button>
+          </md-menu-item>
+          <md-menu-item>
+            <md-button ng-click="">Publications</md-button>
+          </md-menu-item>
+        </md-menu-content>
+      </md-menu>
+      <md-button aria-label="Goto map services" class="md-icon-button">
+        <md-icon>map</md-icon>
+      </md-button>
+      <md-button aria-label="Open search" class="md-icon-button">
+        <md-icon>search</md-icon>
+      </md-button>
+      <md-button aria-label="Open login" class="md-icon-button">
+        <md-icon>person</md-icon>
+      </md-button>
     </div>
-    <script src="/npdc-ui.js"></script>
-  </body>
+  </md-toolbar>
+  <md-content layout="row" class="md-padding np-layout-home">
+    <div flex></div>
+    <md-card flex="75">
+      <md-card-content>
+        <div class="np-center-box">
+          <h1 class="md-headline">Portal for scientific data at the Norwegian Polar Institute</h1>
+          <p>Search, browse, download and vizualize scientific data about the polar regions. We gather data about climate, marine biology, wildlife, ice, expeditions, ships, cruises and much more. Everything polar.</p>
+        </div>
+      </md-card-content>
+    </md-card>
+    <div flex></div>
+  </md-content>
+  <script src="/demos.js"></script>
+</body>
+
 </html>

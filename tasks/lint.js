@@ -5,7 +5,7 @@ var task = function(gulp, config) {
   var fs = require('fs');
   var path = require('path');
   var notify = require('gulp-notify');
-  notify.logLevel(0);
+  //notify.logLevel(0);
 
   var jshintrc = JSON.parse(fs.readFileSync(path.join(__dirname, '../.jshintrc')));
 

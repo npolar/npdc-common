@@ -1,24 +1,22 @@
 var task = function(gulp, config) {
   'use strict';
 
-  var gulpif = require('gulp-if');
   var gutil = require('gulp-util');
   var sourcemaps = require('gulp-sourcemaps');
   var source = require('vinyl-source-stream');
   var buffer = require('vinyl-buffer');
   var watchify = require('watchify');
   var browserify = require('browserify');
-  var uglify = require('gulp-uglify');
   var partialify = require('partialify');
   var ngannotate = require('browserify-ngannotate');
   var babelify = require('babelify');
   var notify = require('gulp-notify');
+  var glob = require('glob');
 
   var bundle;
-
   var bundler = browserify({
     // Our scripts
-    entries: [config.src.main],
+    entries: glob.sync(config.src.jsDemo),
     // Enable source maps
     debug: true
   }, watchify.args);
@@ -39,10 +37,9 @@ var task = function(gulp, config) {
     return bundler.bundle()
       // log errors if they happen
       .on('error', notify.onError({message: '<%= error.message %>', title: 'Gulp browserify'}))
-      .pipe(source('npdc-ui.js'))
+      .pipe(source('demos.js'))
       .pipe(buffer())
       .pipe(sourcemaps.init({loadMaps: true}))
-      .pipe(gulpif(global.isProd, uglify({ compress: { drop_console: true } })))
       .pipe(sourcemaps.write('./'))
       .pipe(gulp.dest(config.dist.root));
   };
