@@ -7281,6 +7281,17 @@ md-tooltip {
   md-whiteframe {
     border: 1px solid #fff; } }
 
+.np-layout-grid .np-grid-flex {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  overflow: hidden;
+  width: 100%; }
+
+.np-layout-grid .np-grid-img {
+  flex-shrink: 0; }
+
 .np-layout-home {
   background-image: url("/img/pingvinjakt.jpg");
   background-position: top center;

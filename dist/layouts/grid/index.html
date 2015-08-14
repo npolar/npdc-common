@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html ng-app="grid">
+
+<head>
+  <title>NPDC Home layout</title>
+  <link href="/npdc-ui.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <meta name="viewport" content="initial-scale=1" />
+</head>
+
+<body>
+  <md-toolbar class="np-top-menu">
+    <div class="md-toolbar-tools">
+      <a class="np-top-menu-brand" href="#">
+        <img alt="Norwegian Polar Insitute" src="/img/NPI-logo-hvit-eng.png">
+        <span hide-md hide-sm class="md-title">Norwegian Polar Data Centre</span>
+      </a>
+      <span flex></span>
+      <md-menu>
+        <md-button aria-label="Open data menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+          <md-icon md-menu-origin>cloud</md-icon>
+        </md-button>
+        <md-menu-content width="4">
+          <md-menu-item>
+            <md-button ng-click="">Datasets</md-button>
+          </md-menu-item>
+          <md-menu-item>
+            <md-button ng-click="">Marine biology</md-button>
+          </md-menu-item>
+          <md-menu-item>
+            <md-button ng-click="">People</md-button>
+          </md-menu-item>
+          <md-menu-item>
+            <md-button ng-click="">Projects</md-button>
+          </md-menu-item>
+          <md-menu-item>
+            <md-button ng-click="">Publications</md-button>
+          </md-menu-item>
+        </md-menu-content>
+      </md-menu>
+      <md-button aria-label="Goto map services" class="md-icon-button">
+        <md-icon>map</md-icon>
+      </md-button>
+      <md-button aria-label="Open search" class="md-icon-button">
+        <md-icon>search</md-icon>
+      </md-button>
+      <md-button aria-label="Open login" class="md-icon-button">
+        <md-icon>person</md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-content layout-padding class="np-layout-grid">
+    <md-grid-list md-cols-sm="1" md-cols-md="2" md-cols-gt-md="6" md-row-height-gt-md="1:1" md-row-height="4:3" md-gutter="8px" md-gutter-gt-sm="4px">
+      <md-grid-tile md-colspan-gt-sm="1" md-rowspan-gt-sm="1">
+        <div class="np-grid-flex">
+          <img alt="Map" src="demo/506_Nordishavet_74.jpg" class="np-grid-img">
+        </div>
+        <md-grid-tile-footer>
+          <h3>Nordishavet</h3>
+        </md-grid-tile-footer>
+      </md-grid-tile>
+      <md-grid-tile md-colspan-gt-sm="1" md-rowspan-gt-sm="1">
+        <div class="np-grid-flex">
+          <img alt="Map" src="demo/Antarktis_diverse_11.jpg" class="np-grid-img">
+        </div>
+        <md-grid-tile-footer>
+          <h3>Antarktis</h3>
+        </md-grid-tile-footer>
+      </md-grid-tile>
+      <md-grid-tile md-colspan-gt-sm="1" md-rowspan-gt-sm="1">
+        <div class="np-grid-flex">
+          <img alt="Map" src="demo/AO_NorthSibiria_28.jpg" class="np-grid-img">
+        </div>
+        <md-grid-tile-footer>
+          <h3>North Sibiria</h3>
+        </md-grid-tile-footer>
+      </md-grid-tile>
+      <md-grid-tile md-colspan-gt-sm="1" md-rowspan-gt-sm="1">
+        <div class="np-grid-flex">
+          <img alt="Map" src="demo/AO_NorthSibiria_32.jpg" class="np-grid-img">
+        </div>
+        <md-grid-tile-footer>
+          <h3>North Sibiria</h3>
+        </md-grid-tile-footer>
+      </md-grid-tile>
+      <md-grid-tile md-colspan-gt-sm="1" md-rowspan-gt-sm="1">
+        <div class="np-grid-flex">
+          <img alt="Map" src="demo/AO_NorthSibiria_41.jpg" class="np-grid-img">
+        </div>
+        <md-grid-tile-footer>
+          <h3>North Sibiria</h3>
+        </md-grid-tile-footer>
+      </md-grid-tile>
+      <md-grid-tile md-colspan-gt-sm="1" md-rowspan-gt-sm="1">
+        <div class="np-grid-flex">
+          <img alt="Map" src="demo/AO_NorthSibiria_52.jpg" class="np-grid-img">
+        </div>
+        <md-grid-tile-footer>
+          <h3>North Sibiria</h3>
+        </md-grid-tile-footer>
+      </md-grid-tile>
+      <md-grid-tile md-colspan-gt-sm="1" md-rowspan-gt-sm="1">
+        <div class="np-grid-flex">
+          <img alt="Map" src="demo/AO_NorthSibiria_60.jpg" class="np-grid-img">
+        </div>
+        <md-grid-tile-footer>
+          <h3>North Sibiria</h3>
+        </md-grid-tile-footer>
+      </md-grid-tile>
+      <md-grid-tile md-colspan-gt-sm="1" md-rowspan-gt-sm="1">
+        <div class="np-grid-flex">
+          <img alt="Map" src="demo/Claims_Svalbard_14.jpg" class="np-grid-img">
+        </div>
+        <md-grid-tile-footer>
+          <h3>Claims Svalbard</h3>
+        </md-grid-tile-footer>
+      </md-grid-tile>
+      <md-grid-tile md-colspan-gt-sm="1" md-rowspan-gt-sm="1">
+        <div class="np-grid-flex">
+          <img alt="Map" src="demo/Fishereikarte_1183_38.jpg" class="np-grid-img">
+        </div>
+        <md-grid-tile-footer>
+          <h3>Fishereikarte</h3>
+        </md-grid-tile-footer>
+      </md-grid-tile>
+      <md-grid-tile md-colspan-gt-sm="1" md-rowspan-gt-sm="1">
+        <div class="np-grid-flex">
+          <img alt="Map" src="demo/Grønland_21D_4_15.jpg" class="np-grid-img">
+        </div>
+        <md-grid-tile-footer>
+          <h3>Greenland</h3>
+        </md-grid-tile-footer>
+      </md-grid-tile>
+      <md-grid-tile md-colspan-gt-sm="1" md-rowspan-gt-sm="1">
+        <div class="np-grid-flex">
+          <img alt="Map" src="demo/MagdaleneBay_1923.jpg" class="np-grid-img">
+        </div>
+        <md-grid-tile-footer>
+          <h3>MagdaleneBay 1923</h3>
+        </md-grid-tile-footer>
+      </md-grid-tile>
+      <md-grid-tile md-colspan-gt-sm="1" md-rowspan-gt-sm="1">
+        <div class="np-grid-flex">
+          <img alt="Map" src="demo/Skap32A-3_37.jpg" class="np-grid-img">
+        </div>
+        <md-grid-tile-footer>
+          <h3>Skap</h3>
+        </md-grid-tile-footer>
+      </md-grid-tile>
+      <md-grid-tile md-colspan-gt-sm="1" md-rowspan-gt-sm="1">
+        <div class="np-grid-flex">
+          <img alt="Map" src="demo/Svalbardkart_20tallet_5.jpg" class="np-grid-img">
+        </div>
+        <md-grid-tile-footer>
+          <h3>Svalbard 1920</h3>
+        </md-grid-tile-footer>
+      </md-grid-tile>
+      <md-grid-tile md-colspan-gt-sm="1" md-rowspan-gt-sm="1">
+        <div class="np-grid-flex">
+          <img alt="Map" src="demo/Svalbardkart_20tallet_9.jpg" class="np-grid-img">
+        </div>
+        <md-grid-tile-footer>
+          <h3>Svalbard 1920</h3>
+        </md-grid-tile-footer>
+      </md-grid-tile>
+    </md-grid-list>
+  </md-content>
+
+  <script src="/demos.js"></script>
+</body>
+
+</html>
