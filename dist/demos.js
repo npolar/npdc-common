@@ -49683,14 +49683,21 @@ require('../../main');
 var angular = require('angular');
 angular.module('grid', ['ngMaterial']).controller('GridCtrl', ["$mdDialog", function DemoCtrl($mdDialog) {}]);
 
-},{"../../main":11,"angular":8}],10:[function(require,module,exports){
+},{"../../main":12,"angular":8}],10:[function(require,module,exports){
 'use strict';
 
 require('../../main');
 var angular = require('angular');
 angular.module('home', ['ngMaterial']).controller('HomeCtrl', ["$mdDialog", function DemoCtrl($mdDialog) {}]);
 
-},{"../../main":11,"angular":8}],11:[function(require,module,exports){
+},{"../../main":12,"angular":8}],11:[function(require,module,exports){
+'use strict';
+
+require('../../main');
+var angular = require('angular');
+angular.module('list', ['ngMaterial']).controller('ListCtrl', ["$mdDialog", function DemoCtrl($mdDialog) {}]);
+
+},{"../../main":12,"angular":8}],12:[function(require,module,exports){
 'use strict';
 
 require('angular');
@@ -49702,7 +49709,7 @@ require('angular-material');
 
 module.exports = {};
 
-},{"angular":8,"angular-animate":2,"angular-aria":4,"angular-material":6}]},{},[9,10])
+},{"angular":8,"angular-animate":2,"angular-aria":4,"angular-material":6}]},{},[9,10,11])
 
 
 //# sourceMappingURL=demos.js.map

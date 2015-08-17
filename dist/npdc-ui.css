@@ -7295,15 +7295,32 @@ md-tooltip {
 .np-layout-home {
   background-image: url("/img/pingvinjakt.jpg");
   background-position: top center;
-  background-repeat: no-repeat;
-  background-size: cover; }
+  background-repeat: no-repeat; }
+
+.np-layout-list .md-list-item-text .md-headline {
+  line-height: 1em; }
 
 .np-top-menu {
   background-color: #1570b1;
   color: #fff; }
+  .np-top-menu a,
+  .np-top-menu a:active,
+  .np-top-menu a:hover,
+  .np-top-menu a:visited {
+    color: #fff; }
   .np-top-menu .np-top-menu-brand img {
     height: 35px;
     vertical-align: middle; }
+
+a {
+  color: #1570b1; }
+
+a:hover,
+a:active {
+  color: #7ea2bb; }
+
+a:visited {
+  color: #1570b1; }
 
 .np-center-box {
   margin: 0 auto;

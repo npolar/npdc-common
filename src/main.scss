@@ -2,6 +2,19 @@
 @import 'layouts/**/*';
 @import 'components/**/*';
 
+a {
+  color: $color-primary-0;
+}
+
+a:hover,
+a:active {
+  color: $color-primary-1;
+}
+
+a:visited {
+  color: $color-primary-0;
+}
+
 .np-center-box {
   margin: 0 auto;
   text-align: center;
