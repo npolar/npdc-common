@@ -1,0 +1,26 @@
+.formula {
+  legend {
+    display: table;
+    padding: 0;
+  }
+
+  fieldset {
+    border: 0;
+    margin: 0;
+    min-width: 0;
+    padding: 0;
+  }
+
+  body:not(:-moz-handler-blocked) fieldset {
+    display: table-cell;
+  }
+
+  md-tabs {
+    height: 100%;
+  }
+
+  md-slider {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}

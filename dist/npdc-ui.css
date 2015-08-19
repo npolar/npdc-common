@@ -7281,6 +7281,26 @@ md-tooltip {
   md-whiteframe {
     border: 1px solid #fff; } }
 
+.formula legend {
+  display: table;
+  padding: 0; }
+
+.formula fieldset {
+  border: 0;
+  margin: 0;
+  min-width: 0;
+  padding: 0; }
+
+.formula body:not(:-moz-handler-blocked) fieldset {
+  display: table-cell; }
+
+.formula md-tabs {
+  height: 100%; }
+
+.formula md-slider {
+  padding-left: 15px;
+  padding-right: 15px; }
+
 .np-layout-grid .np-grid-flex {
   align-items: center;
   display: flex;
