@@ -25,12 +25,14 @@ var config = {
     'jsDemo': src+'/**/*Demo.js',
     'sassMain': [src+'/main.scss'],
     'sassAll': [src+'/**/*.scss'],
-    'img': [src+'/**/*.{ico,png,jpg,jpeg,gif}']
+    'img': [src+'/**/*.{ico,png,jpg,jpeg,gif}'],
+    'demo': [src+'/**/*.json'],
   },
 
   'deps': {
     'root': deps,
-    'css' : [deps+'/angular-material/angular-material.css']
+    'css' : [deps+'/angular-material/angular-material.css'],
+    'demo' : []
   },
 
   'tests': ['src/**/*Spec.js']
