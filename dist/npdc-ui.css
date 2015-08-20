@@ -7357,6 +7357,32 @@ md-tooltip {
 .np-layout-list .md-list-item-text .md-headline {
   line-height: 1em; }
 
+.np-document {
+  padding: 8px 16px; }
+  .np-document ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0; }
+  .np-document li {
+    border-bottom-color: rgba(0, 0, 0, 0.12);
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    padding: 16px 0; }
+  .np-document .np-document-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; }
+  .np-document .np-document-value {
+    overflow: hidden;
+    text-overflow: ellipsis; }
+  .np-document .np-document-ctrls {
+    position: absolute;
+    right: 0;
+    top: 0; }
+  .np-document .np-document-ctrls-title {
+    margin-right: 15px;
+    margin-top: 19px; }
+
 .np-top-menu {
   background-color: #1570b1;
   color: #fff; }
