@@ -9,46 +9,7 @@
 </head>
 
 <body>
-  <md-toolbar class="np-top-menu">
-    <div class="md-toolbar-tools">
-      <a class="np-top-menu-brand" href="#">
-        <img alt="Norwegian Polar Insitute" src="/img/NPI-logo-hvit-eng.png">
-        <span hide-md hide-sm class="md-title">Norwegian Polar Data Centre</span>
-      </a>
-      <span flex></span>
-      <md-menu>
-        <md-button aria-label="Open data menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
-          <md-icon md-menu-origin>cloud</md-icon>
-        </md-button>
-        <md-menu-content width="4">
-          <md-menu-item>
-            <md-button ng-click="">Datasets</md-button>
-          </md-menu-item>
-          <md-menu-item>
-            <md-button ng-click="">Marine biology</md-button>
-          </md-menu-item>
-          <md-menu-item>
-            <md-button ng-click="">People</md-button>
-          </md-menu-item>
-          <md-menu-item>
-            <md-button ng-click="">Projects</md-button>
-          </md-menu-item>
-          <md-menu-item>
-            <md-button ng-click="">Publications</md-button>
-          </md-menu-item>
-        </md-menu-content>
-      </md-menu>
-      <md-button aria-label="Goto map services" class="md-icon-button">
-        <md-icon>map</md-icon>
-      </md-button>
-      <md-button aria-label="Open search" class="md-icon-button">
-        <md-icon>search</md-icon>
-      </md-button>
-      <md-button aria-label="Open login" class="md-icon-button">
-        <md-icon>person</md-icon>
-      </md-button>
-    </div>
-  </md-toolbar>
+  <npdc:top-menu></npdc:top-menu>
   <md-content layout-padding class="np-layout-grid">
     <md-grid-list md-cols-sm="1" md-cols-md="2" md-cols-gt-md="6" md-row-height-gt-md="1:1" md-row-height="4:3" md-gutter="8px" md-gutter-gt-sm="4px">
       <md-grid-tile md-colspan-gt-sm="1" md-rowspan-gt-sm="1">

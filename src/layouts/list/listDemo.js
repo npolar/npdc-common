@@ -3,7 +3,7 @@
 require('../../main');
 var angular = require('angular');
 angular
-  .module('list', ['ngMaterial'])
+  .module('list', ['npdcMaterial'])
   .controller('ListCtrl', function DemoCtrl($mdDialog) {
 
   });

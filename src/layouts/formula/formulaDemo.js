@@ -5,7 +5,7 @@ require('formula');
 var angular = require('angular');
 
 angular
-  .module('formulaDemo', ['ngMaterial', 'formula'])
+  .module('formulaDemo', ['npdcMaterial', 'formula'])
   .controller('FormulaCtrl', function DemoCtrl($mdDialog, $scope, $compile) {
     $scope.formulaData = {
       schema: "./demo/schema.json",

@@ -3,7 +3,7 @@
 require('../../main');
 var angular = require('angular');
 angular
-  .module('home', ['ngMaterial'])
+  .module('home', ['npdcMaterial'])
   .controller('HomeCtrl', function DemoCtrl($mdDialog) {
 
   });
