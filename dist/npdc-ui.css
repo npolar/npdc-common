@@ -7281,6 +7281,9 @@ md-tooltip {
   md-whiteframe {
     border: 1px solid #fff; } }
 
+.formula a {
+  text-decoration: none; }
+
 .formula legend {
   display: table;
   padding: 0; }
@@ -7289,7 +7292,11 @@ md-tooltip {
   border: 0;
   margin: 0;
   min-width: 0;
-  padding: 0; }
+  padding: 0;
+  position: relative; }
+
+.formula input[type="number"] {
+  width: 100%; }
 
 .formula body:not(:-moz-handler-blocked) fieldset {
   display: table-cell; }
@@ -7300,6 +7307,36 @@ md-tooltip {
 .formula md-slider {
   padding-left: 15px;
   padding-right: 15px; }
+
+.formula md-whiteframe {
+  display: block;
+  margin: 16px;
+  padding: 16px; }
+
+.formula .np-formula-array {
+  list-style-type: none;
+  padding: 0;
+  position: relative; }
+
+.formula .np-formula-subarray {
+  margin-top: 28px; }
+
+.formula .np-formula-object-ctrls {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 99; }
+
+.formula .np-validation-message {
+  -webkit-order: 99;
+  -moz-order: 99;
+  -ms-order: 99;
+  order: 99;
+  color: #ef4100;
+  margin-top: 8px; }
+
+.formula .np-formula-array-add {
+  float: right; }
 
 .np-layout-grid .np-grid-flex {
   align-items: center;
@@ -7341,6 +7378,9 @@ a:active {
 
 a:visited {
   color: #1570b1; }
+
+div[tabindex] {
+  outline: none; }
 
 .np-center-box {
   margin: 0 auto;

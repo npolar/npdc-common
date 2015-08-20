@@ -4,117 +4,141 @@
     {{ form.title }}
   </header>
 
-
   <md-tabs md-autoselect md-dynamic-height md-border-bottom md-selected="selectedIndex">
     <md-tab label="{{fieldset.title}}" ng-disabled="fieldset.disabled" ng-repeat="fieldset in form.fieldsets">
-
-      <fieldset>
-        <div formula:field-definition ng-repeat="field in fieldset.fields" ng-show="field.visible">
-          <!-- input field-->
-          <div ng-if="field.typeOf('input')" apply-md-type="field">
+      <md-whiteframe class="md-whiteframe-z1">
+        <fieldset>
+          <div formula:field-definition ng-repeat="field in fieldset.fields" ng-show="field.visible">
+            <!-- input field-->
+            <div ng-if="field.typeOf('input')" apply-md-type="field">
               <div ng-if="field.mdType === 'boolean'" layout="row" layout-align="space-between center">
                 <label for="{{field.uid}}">{{ field.title }}</label>
-                <div flex layout="row" layout-align="end center"><md-checkbox ng-attr-id="field.uid" ng-model="field.value" aria-label="{{ field.title }}"></md-checkbox></div>
+                <div flex layout="row" layout-align="end center">
+                  <md-checkbox ng-attr-id="field.uid" ng-model="field.value" aria-label="{{ field.title }}"></md-checkbox>
+                </div>
+                <div class="np-validation-message" role="alert">
+                  {{ field.error }}
+                </div>
               </div>
               <div ng-if="field.mdType === 'range'" layout="row" layout-align="space-between center">
                 <label for="{{field.uid}}">{{ field.title }}</label>
                 <md-slider flex min="{{field.minimum}}" max="{{field.maximum}}" step="{{field.step}}" md-discrete ng-model="field.value" aria-label="{{field.title}}" ng-attr-id="field.uid">
                 </md-slider>
+                <div class="np-validation-message" role="alert">
+                  {{ field.error }}
+                </div>
               </div>
               <md-input-container ng-if="field.mdType === 'select'">
                 <label for="{{field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title) }}</label>
                 <md-select ng-model="field.value">
                   <md-option ng-repeat="val in field.enum" value="{{val}}">{{val}}</md-option>
                 </md-select>
+                <div class="np-validation-message" role="alert">
+                  {{ field.error }}
+                </div>
               </md-input-container>
               <md-input-container ng-if="field.mdType === 'input'" title="{{ field.description }}">
                 <label for="{{field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title) }}</label>
                 <div formula:field="field"></div>
-                <div ng-messages="field.form.errors" role="alert">
-                  <div ng-repeat="errorMessage in errorMessages">
-                    <div ng-message-exp="errorMessage.code">{{ errorMessage.message }}</div>
-                  </div>
+                <div class="np-validation-message md-caption" role="alert">
+                  {{ field.error }}
                 </div>
               </md-input-container>
             </div>
 
 
 
-          <div ng-if="field.typeOf('object')">
-            object
-            <fieldset formula:field="field">
-              <legend>legend: {{ field.title }}</legend>
+            <div ng-if="field.typeOf('object')">
+              <md-whiteframe class="md-whiteframe-z1">
+                <fieldset formula:field="field">
+                  <legend>{{ field.title }}</legend>
 
-              <div ng-repeat="field in field.fields" ng-show="field.visible">
-                <formula:field-instance field="field"/>
-              </div>
-            </fieldset>
-          </div>
+                  <div ng-repeat="field in field.fields" ng-show="field.visible">
+                    <formula:field-instance field="field"></formula:field-instance>
+                  </div>
+                </fieldset>
+              </md-whiteframe>
+            </div>
 
-          <div ng-if="field.typeOf('array')">
-            array
-            <div formula:field="field">
-              <fieldset ng-class="{ valid: field.valid, error: field.error }">
-                <legend>{{ field.title }}
-                  ({{ field.values.length || 0 }})</legend>
+            <div ng-if="field.typeOf('array')">
+              <div formula:field="field">
+                <md-whiteframe class="md-whiteframe-z1">
+                  <fieldset ng-class="{ valid: field.valid, error: field.error }">
+                    <legend>{{ field.title }} ({{ field.values.length || 0 }})</legend>
+                    <div ng-if="field.typeOf('fieldset')">
+                      <ul class="np-formula-array">
+                        <li ng-repeat="value in field.values">
+                          <md-whiteframe class="md-whiteframe-z1">
+                            <fieldset ng-class="{ valid: value.valid }">
+                              <legend>
+                                <span ng-if="!value.visible">{{ value.fields | formulaInlineValues }}</span>
+                              </legend>
+                              <div class="np-formula-object-ctrls">
+                                <a class="toggle" href="" ng-click="field.itemToggle($index)" title="{{ value.visible ? form.i18n.minimize[1] : form.i18n.maximize[1] }}">
+                                  <md-icon>{{ value.visible ? 'expand_less' : 'expand_more' }}</md-icon>
+                                </a>
+                                <a class="remove" href="" ng-click="field.itemRemove($index)" title="{{ form.i18n.remove[1] }}">
+                                  <md-icon>close</md-icon>
+                                </a>
+                              </div>
 
-                <ul ng-if="field.typeOf('fieldset')">
-                  <li ng-repeat="value in field.values">
-                    <fieldset ng-class="{ valid: value.valid }">
-                      <legend>
-                        <span ng-if="!value.visible">{{ value.fields | formulaInlineValues }}</span>
-                        <a class="toggle" href="" ng-click="field.itemToggle($index)" title="{{ value.visible ? form.i18n.minimize[1] : form.i18n.maximize[1] }}">{{ value.visible ? '_' : '‾' }}</a>
-                        <a class="remove" href="" ng-click="field.itemRemove($index)" title="{{ form.i18n.remove[1] }}">X</a>
-                      </legend>
-
-                      <div ng-repeat="subfield in field.fields" ng-show="value.visible">
-                        <formula:field-instance field="value.fields[$index]" ng-show="subfield.visible"/>
+                              <div class="np-formula-subarray" ng-repeat="subfield in field.fields" ng-show="value.visible">
+                                <formula:field-instance field="value.fields[$index]" ng-show="subfield.visible"></formula:field-instance>
+                              </div>
+                            </fieldset>
+                          </md-whiteframe>
+                        </li>
+                      </ul>
+                      <div class="np-formula-array-add">
+                        <md-button ng-click="field.itemAdd()" class="md-fab md-mini" aria-label="{{ form.i18n.add[1] }}">
+                          <md-icon>add</md-icon>
+                        </md-button>
                       </div>
-                    </fieldset>
-                  </li>
-                  <li>
-                    <span>{{ field.error || field.description }}</span>
-                    <button class="add" ng-click="field.itemAdd()" title="{{ form.i18n.add[1] }}" type="button">
-                      <strong>+</strong>
-                      {{ form.i18n.add[0] }}</button>
-                  </li>
-                </ul>
+                    </div>
 
-                <ul ng-if="field.typeOf('field')">
-                  <li ng-class="{ valid: value.valid, error: value.error }" ng-repeat="value in field.values">
-                    <input formula:field="value"/>
-                    <a class="remove" href="" ng-click="field.itemRemove($index)" title="{{ form.i18n.remove[1] }}">X</a>
-                    <span ng-if="value.error">{{ value.error }}</span>
-                  </li>
-                  <li>
-                    <span>{{ field.error || field.description }}</span>
-                    <button class="add" ng-click="field.itemAdd()" title="{{ form.i18n.add[1] }}" type="button">
-                      <strong>+</strong>
-                      {{ form.i18n.add[0] }}</button>
-                  </li>
-                </ul>
-              </fieldset>
+                    <div ng-if="field.typeOf('field')">
+                      <ul class="np-formula-array">
+                        <li ng-class="{ valid: value.valid, error: value.error }" ng-repeat="value in field.values" layout="row">
+                          <formula:field-instance field="value" flex></formula:field-instance>
+                          <a class="np-formula-input-ctrls remove" href="" ng-click="field.itemRemove($index)" title="{{ form.i18n.remove[1] }}">
+                            <md-icon>close</md-icon>
+                          </a>
+                        </li>
+                      </ul>
+                      <div class="np-formula-array-add">
+                        <md-button ng-click="field.itemAdd()" class="md-fab md-mini" aria-label="{{ form.i18n.add[1] }}">
+                          <md-icon>add</md-icon>
+                        </md-button>
+                      </div>
+                    </div>
+
+                  </fieldset>
+                </md-whiteframe>
+              </div>
             </div>
           </div>
-        </div>
-      </fieldset>
+        </fieldset>
+      </md-whiteframe>
+
     </md-tab>
   </md-tabs>
 
-  <footer>
+  <footer layout="row" layout-align="space-between center">
     <span ng-if="form.errors" title="{{ form.errors.join('\n') }}">{{ form.i18n.invalid | formulaReplace : { count: form.errors.length } }}</span>
-    <button ng-click="form.validate()" ng-if="!form.uiValidateHidden" title="{{ form.i18n.validate[1] }}">
-      <strong>&#10003;</strong>
-      {{ form.i18n.validate[0] }}</button>
-    <button ng-click="form.save()" ng-disabled="!form.valid" ng-if="!form.uiSaveHidden" title="{{ form.i18n.save[1] }}">
-      <strong>&#9921;</strong>
-      {{ form.i18n.save[0] }}</button>
+
+    <div>
+      <md-button class="md-raised" ng-click="form.validate()" ng-if="!form.uiValidateHidden" title="{{ form.i18n.validate[1] }}">
+        <md-icon>check</md-icon> {{ form.i18n.validate[0] }}</md-button>
+      <md-button class="md-raised md-primary" ng-click="form.save()" ng-disabled="!form.valid" ng-if="!form.uiSaveHidden" title="{{ form.i18n.save[1] }}">
+        <md-icon>save</md-icon> {{ form.i18n.save[0] }}</md-button>
+
+    </div>
+
   </footer>
 </form>
 
 <div class="formula" ng-if="!form.fieldsets">
-  <div class="loading">
-    <div class="spinner"></div>
-    <span>Loading...</span>
+  <div layout="row" layout-sm="column" layout-align="space-around">
+    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
   </div>
 </div>
