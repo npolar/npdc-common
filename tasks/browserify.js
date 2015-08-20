@@ -16,7 +16,7 @@ var task = function(gulp, config) {
   var bundle;
   var bundler = browserify({
     // Our scripts
-    entries: glob.sync(config.src.jsDemo),
+    entries: [].concat(require.resolve('babelify/polyfill'), glob.sync(config.src.jsDemo)),
     // Enable source maps
     debug: true
   }, watchify.args);
