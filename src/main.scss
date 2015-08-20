@@ -1,4 +1,5 @@
 @import 'variables';
+@import 'mixins';
 @import 'layouts/**/*';
 @import 'components/**/*';
 
@@ -13,6 +14,10 @@ a:active {
 
 a:visited {
   color: $color-primary-0;
+}
+
+div[tabindex] {
+  outline: none;
 }
 
 .np-center-box {
