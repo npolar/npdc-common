@@ -1,0 +1,20 @@
+.np-top-menu {
+  background-color: $color-primary-0;
+  color: $color-text-light;
+
+  a,
+  a:active,
+  a:hover,
+  a:visited {
+    color: $color-text-light;
+  }
+
+  .np-top-menu-brand {
+    $brand-size: 35px;
+
+    img {
+      height: $brand-size;
+      vertical-align: middle;
+    }
+  }
+}

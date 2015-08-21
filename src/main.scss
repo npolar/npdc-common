@@ -1,0 +1,27 @@
+@import 'variables';
+@import 'mixins';
+@import 'layouts/**/*';
+@import 'components/**/*';
+
+a {
+  color: $color-primary-0;
+}
+
+a:hover,
+a:active {
+  color: $color-primary-1;
+}
+
+a:visited {
+  color: $color-primary-0;
+}
+
+div[tabindex] {
+  outline: none;
+}
+
+.np-center-box {
+  margin: 0 auto;
+  text-align: center;
+  width: 60%;
+}

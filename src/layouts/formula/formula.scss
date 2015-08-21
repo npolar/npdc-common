@@ -1,0 +1,74 @@
+.formula {
+
+  a {
+    text-decoration: none;
+  }
+
+  legend {
+    display: table;
+    padding: 0;
+  }
+
+  fieldset {
+    border: 0;
+    margin: 0;
+    min-width: 0;
+    padding: 0;
+    position: relative;
+  }
+
+  // Firefox needs this...
+  input[type="number"] {
+    width: 100%;
+  }
+
+  body:not(:-moz-handler-blocked) fieldset {
+    display: table-cell;
+  }
+
+  md-tabs {
+    height: 100%;
+  }
+
+  md-slider {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  md-whiteframe {
+    display: block;
+    margin: 16px;
+    padding: 16px;
+  }
+
+  .np-formula-array {
+    list-style-type: none;
+    padding: 0;
+    position: relative;
+  }
+
+  .np-formula-subarray {
+    margin-top: 28px;
+  }
+
+  .np-formula-object-ctrls {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 99;
+  }
+
+  .np-formula-input-ctrls {
+    // noop
+  }
+
+  .np-validation-message {
+    @include order(99);
+    color: $color-secondary-1-3;
+    margin-top: 8px;
+  }
+
+  .np-formula-array-add {
+    float: right;
+  }
+}

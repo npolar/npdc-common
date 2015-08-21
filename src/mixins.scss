@@ -1,0 +1,7 @@
+// scss-lint:disable VendorPrefix
+@mixin order($order) {
+  -webkit-order: $order;
+  -moz-order: $order;
+  -ms-order: $order;
+  order: $order;
+}
