@@ -8,7 +8,7 @@
     "angular-animate": "^1.4.3",
     "angular-aria": "^1.4.3",
     "angular-material": "^0.10.0",
-    "angular-npolar": "git://github.com/npolar/angular-npolar.git"
+    "angular-npolar": "git://github.com/npolar/angular-npolar.git#ngNpolar"
   },
   "devDependencies": {
     "babelify": "^6.1.3",
