@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<div class="login-logout">
+  <div ng-if="user.jwt">
+    <button ng-click="logout()">Logout</button> <a href="/user/account">{{user.name}}</a>
+  </div>
+  <div ng-if="!user.jwt">
+
+    <form role="form">
+      <section ng-show="loginClicked" ng-init="loginClicked = false;">
+      <div>
+        <label for="username">Username</label>
+        <input type="text" ng-model="user.username" id="username" placeholder="Username (email)">
+      </div>
+      <div>
+        <label for="password">Password</label>
+        <input type="password" id="password" ng-model="user.password" placeholder="Password">
+      </div>
+      <button id="login2" type="submit" ng-click="login()">Login</button> <a href="/user/reset">Forgot password?</a>
+      </section>
+      <section ng-show="!loginClicked"><button id="login1" type="submit" ng-click="loginClicked = !loginClicked;">Login</button> <a href="/user/register">Register</a></section>
+    </form>
+  </div>
+</div>
