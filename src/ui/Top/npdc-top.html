@@ -1,0 +1,134 @@
+<div npolar-api-message></div>
+  
+<md-toolbar class="np-top-menu">
+  <div class="md-toolbar-tools">
+    <a class="np-top-menu-brand" href="/">
+      <img alt="Norsk Polarinstutt [logo]" title="NPDC" src="http://www.npolar.no/npcms/export/sites/np/images/logos/norsk-polarinstitutt-logo-norsk-hvit.png">
+      <span hide-md="NPDC" hide-sm class="md-title" title="NPDC">Norwegian Polar Data Centre</span>
+    </a>
+    <span flex></span>
+    
+    <!--  Data -->
+    <md-menu>
+      
+      <md-button aria-label="Open data menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+        <md-icon md-menu-origin title="Data">⛁</md-icon>
+      </md-button>
+      
+      <md-menu-content width="6">
+        
+        <md-menu-item>
+          <md-button ng-href="/dataset">Dataset Catalogue</md-button>
+        </md-menu-item>
+        
+        <md-menu-item>
+          <md-button ng-href="//api.npolar.no">Data services</md-button>
+        </md-menu-item>
+        
+        <md-menu-item>
+          <md-button ng-href="/geodata">Geographic services </md-button>
+        </md-menu-item>
+               
+               
+
+      </md-menu-content>
+    </md-menu>
+    
+    <!-- Apps -->
+    <md-menu>
+      <md-button aria-label="Open application menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+        <md-icon md-menu-origin title="Applications">apps</md-ico//n>
+      </md-button>
+      
+      <md-menu-content width="4">
+        
+        <md-subheader>Applications</md-subheader>
+        
+        <md-menu-item>
+          <md-button ng-href="/expedition" title="Expeditions">Expeditions</md-button>
+        </md-menu-item>
+       
+        <md-menu-item>
+          <md-button ng-href="/vessel">Historic Vessels</md-button>
+        </md-menu-item>
+        
+        
+        <md-menu-item>
+          <md-button ng-href="/map/archive">Map archive</md-button>
+        </md-menu-item>
+                        
+        <md-menu-item>
+          <md-button ng-href="/project">Projects</md-button>
+        </md-menu-item>
+                
+        <md-menu-item>
+          <md-button ng-href="/publication">Publications</md-button>
+        </md-menu-item>
+        
+         <md-divider></md-divider>
+         <md-subheader class="md-no-sticky">Internal</md-subheader>
+        
+        <md-menu-item>
+          <md-button ng-href="/courses">Courses</md-button>
+        </md-menu-item>
+                
+        <md-menu-item>
+          <md-button ng-href="/people">Employees</md-button>
+        </md-menu-item>
+        
+        <md-menu-item>
+          <md-button ng-href="/indicator">Indicators (environmental monitoring)</md-button>
+        </md-menu-item>
+        
+        <md-menu-item>
+          <md-button ng-href="/placename">Placenames</md-button>
+        </md-menu-item>
+        
+        <md-menu-item>
+          <md-button ng-href="/marine/biology" title="Marine Biology Samples">Marine biology</md-button>
+        </md-menu-item>
+      
+        <md-menu-item>
+          <md-button ng-href="/user">Users</md-button>
+        </md-menu-item>
+      
+      
+      </md-menu-content>
+      
+    </md-menu>
+    
+    <md-button aria-label="Language switcher" class="md-icon-button">
+      <md-icon title="Language">language</md-icon>
+    </md-button>
+    
+
+    
+    <!-- Login/User -->
+    <md-menu>
+      
+      <md-button aria-label="Open user" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+        <md-icon ng-show="!security.isAuthenticated()" md-menu-origin>person<md-tooltip>Login</md-tooltip></md-icon>
+        <md-icon ng-show="security.isAuthenticated()">landscape<md-tooltip>{{ security.user.name }}</md-tooltip>
+        <!--<img src="https://avatars0.githubusercontent.com/u/35185?v=3&s=40"/>--></md-icon>
+      </md-button>
+      
+      <md-menu-content width="6">
+        <div layout-padding npolar-login-logout></div>
+      </md-menu-content>
+    </md-menu>
+    
+         <!-- Search -->
+    <md-button aria-label="Search" class="md-icon-button">
+      <md-icon title="Search">search</md-icon>
+    </md-button>
+    
+         
+  </div>
+</md-toolbar>
+
+<div layout-padding>
+	<span ng-repeat="crumb in breadcrumbs.breadcrumbs">
+    <span ng-if="!$last"><a ng-href="{{crumb.href}}" title="{{crumb.title || crumb.text || crumb.href }}" >{{ crumb.text || crumb.title || crumb.href }}</a> > </span>
+    <span ng-if="$last">{{ crumb.text || crumb.title || crumb.href }}</span>
+  </span>
+</div>
