@@ -26,5 +26,12 @@
     "angular": "^1.4.3",
     "angular-npolar": "git://github.com/npolar/angular-npolar.git",
     "npdc-material": "git://github.com/npolar/npdc-material.git"
+  },
+  "browserify": {
+    "transform": [
+    "babelify",
+    "partialify",
+    "browserify-ngannotate"
+    ]
   }
 }
