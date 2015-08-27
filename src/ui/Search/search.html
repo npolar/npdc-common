@@ -1,15 +1,27 @@
+<md-content md-padding>
+
 <section class="npdc-search">
 <div>
   <span ng-if="!feed.entries">Fetching data from {{base}}</span>
-  <span ng-if="feed.opensearch.totalResults > 0">{{feed.opensearch.totalResults}} results from {{ base }}</span>
-  <span ng-if="feed.opensearch.totalResults == 0">No results</span>
 </div>
 
-<h3><span ng-if="filters.length">Filters: {{filters | json}}</span><span ng-if="filters.length"><a ng-href="/vessel">Remove filters</a></span></h3>
+<div ng-if="filters.length">
+  <md-chips ng-model="filters"
+    readonly="false"
+    placeholder="Search filters">
+
+    <md-chip-template>
+      <strong>{{$chip}}</strong>
+    </md-chip-template>
+      
+    <!-- @todo Bind removing chip to removing search filter and reload  -->
+    <md-icon class="md-chip-remove md-primary">close </md-icon>
+     
+  </md-chips>
+</div>
 <!--<npdc:button-new></npdc:button-new>-->
 <a ng-if="security.isAuthorized('create', resource.path)" href="__new/edit"><button type="button">New</button></a>
 
-<p>Filter: <input ng-model="entryfilter"></p>
 
 <div ng-repeat="e in feed.entries | filter:entryfilter">
   <md-content class="np-layout-list">
@@ -17,11 +29,18 @@
       <md-list-item class="md-2-line">
         <div class="md-list-item-text">
           <h3 class="md-headline"><a ng-href="{{e.id}}">{{ e.title || e.name || e.id }}</a></h3>
-          <h4>{{ e.updated }}</h4>
+          <h4>{{ e.updated.split("T")[0] }}</h4>
         </div>
       </md-list-item>
     </md-list>
   <md-content>
 </div>
 
+<md-subheader class="md-primary">
+  <span ng-if="feed.opensearch.totalResults > 0">{{feed.opensearch.totalResults}} results, displaying {{ feed.entries.length}}</span>
+  <span ng-if="feed.opensearch.totalResults == 0">No results</span>
+</md-subheader>
+
 </section>
+  
+</md-content>
