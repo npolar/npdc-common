@@ -1,3 +1,4 @@
+<section class="npdc-search">
 <div>
   <span ng-if="!feed.entries">Fetching data from {{base}}</span>
   <span ng-if="feed.opensearch.totalResults > 0">{{feed.opensearch.totalResults}} results from {{ base }}</span>
@@ -5,11 +6,22 @@
 </div>
 
 <h3><span ng-if="filters.length">Filters: {{filters | json}}</span><span ng-if="filters.length"><a ng-href="/vessel">Remove filters</a></span></h3>
-
-<h2><a ng-if="security.isAuthorized('create', resource.path)" href="__new/edit"><button type="button" class="pure-button">New</button></a></h2>
+<!--<npdc:button-new></npdc:button-new>-->
+<a ng-if="security.isAuthorized('create', resource.path)" href="__new/edit"><button type="button">New</button></a>
 
 <p>Filter: <input ng-model="entryfilter"></p>
 
 <div ng-repeat="e in feed.entries | filter:entryfilter">
-  <h4 class=""><a ng-href="{{e.id}}">{{ e.title || e.name || e.id }}</a> {{e.updated }}</h4>
+  <md-content class="np-layout-list">
+    <md-list>
+      <md-list-item class="md-2-line">
+        <div class="md-list-item-text">
+          <h3 class="md-headline"><a ng-href="{{e.id}}">{{ e.title || e.name || e.id }}</a></h3>
+          <h4>{{ e.updated }}</h4>
+        </div>
+      </md-list-item>
+    </md-list>
+  <md-content>
 </div>
+
+</section>
