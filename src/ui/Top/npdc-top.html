@@ -129,10 +129,28 @@
       </md-menu-content>
     </md-menu>
     
-         <!-- Search -->
-    <md-button aria-label="Search" class="md-icon-button">
-      <md-icon><md-tooltip>Search</md-tooltip>search</md-icon>
-    </md-button>
+    
+     <!-- Search -->
+    <md-menu>
+      
+      <md-button aria-label="Open search" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+        <md-icon md-menu-origin>search<md-tooltip>Search</md-tooltip></md-icon>
+      </md-button>
+      
+      <md-menu-content width="6">
+        <div layout-padding>
+          
+          <form class="" id="" action="." method="get">
+              <input type="search" autofocus="" incremental="" results="10" name="q" value="{{q}}" placeholder="Search">
+              <input type="submit" value="Search">
+          </form>
+        
+        
+        </div>
+      </md-menu-content>
+    </md-menu>
+
+    
          
   </div>
 </md-toolbar>
