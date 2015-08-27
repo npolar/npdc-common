@@ -17,7 +17,7 @@ var NpdcBreadcrumbs = function($location, $rootScope) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
   
-  var link = (crumb, i, prev) => {
+  var link = (crumb, i) => {
     if (i === 0) {
       self.path = "";
       return home;
@@ -30,18 +30,18 @@ var NpdcBreadcrumbs = function($location, $rootScope) {
     if (i === 2 && (/^\w{8}-\w{4}-/).test(crumb)) {
       return { href: self.path, text: crumb.split("-")[0] };
     }
-    return { href: self.path, title: capitalize(crumb), text: capitalize(crumb) };
+    return { href: self.path, title: capitalize(crumb), text: capitalize(decodeURIComponent(crumb)) };
   };
         
   $rootScope.$on("$locationChangeSuccess", function(event, uri) {
+
     let parts = uri.split("//")[1].split("/").filter(p => { return !(/^$/).test(p); });
     let i = 0;
-    let crumbs = parts.map(
+    self.breadcrumbs = parts.map(
       crumb => {
         return link(crumb, i++);
       }
-    );
-    self.breadcrumbs = crumbs;
+    );    
   });
   
   return this;
