@@ -1,9 +1,8 @@
-<md-content md-padding>
+<md-content layout-padding>
 
 <section class="npdc-search">
-<div>
-  <span ng-if="!feed.entries">Fetching data from {{base}}</span>
-</div>
+  
+<div ng-if="!feed.entries"><md-progress-circular md-mode="indeterminate"></md-progress-circular></div>
 
 <div ng-if="filters.length">
   <md-chips ng-model="filters"
@@ -22,19 +21,52 @@
 <!--<npdc:button-new></npdc:button-new>-->
 <a ng-if="security.isAuthorized('create', resource.path)" href="__new/edit"><button type="button">New</button></a>
 
-
-<div ng-repeat="e in feed.entries | filter:entryfilter">
-  <md-content class="np-layout-list">
-    <md-list>
-      <md-list-item class="md-2-line">
-        <div class="md-list-item-text">
-          <h3 class="md-headline"><a ng-href="{{e.id}}">{{ e.title || e.name || e.id }}</a></h3>
-          <h4>{{ e.updated.split("T")[0] }}</h4>
-        </div>
-      </md-list-item>
-    </md-list>
-  <md-content>
+<div layout="row" layout-sm="column">
+  <!-- search results (feed entries) -->
+  <div flex>
+    <div ng-repeat="e in feed.entries | filter:entryfilter">
+      <md-content class="np-layout-list">
+        <md-list>
+          <md-list-item class="md-2-line">
+            <div class="md-list-item-text">
+              <h3 class="md-headline"><a ng-href="{{e.id}}">{{ e.title || e.name || e.id }}</a></h3>
+              <h4>{{ e.updated.split("T")[0] }}</h4>
+            </div>
+          </md-list-item>
+        </md-list>
+      <md-content>
+    </div>
+  </div>
+  
+  <!-- facets -->
+  <div flex>
+    <dl ng-repeat="farr in feed.facets">
+      
+      <span ng-repeat="f in facet(farr)">
+      
+       <a ng-href="{{ f.uri }}">{{ f.term}}</a> ({{ f.count }})
+      </span>
+      
+    </dl>
+      
+      
+      <ul ng-show="facet[f].length > 0" ng-repeat="f in facets" ng-init="facetkey=f; facetname=f;" class="pure-menu-list">
+        <li class="pure-menu-item">
+          <b>{{facetname}}</b><span ng-show="isFilter(facetkey)"> (<a ng-href="heatmap/{{filterHref(facet[facetkey][0].uri)}})">show all</a>)</span>    
+          <ol class="pure-menu-list">
+            <li ng-repeat="v in facet[facetkey]" class="pure-menu-item">
+              <a ng-show="!isFilter(facetkey)" ng-href="heatmap/{{filterHref(v.uri) }}" class="">{{ v.term }}</a>
+              <span ng-show="isFilter(facetkey)">{{ v.term }}</span>
+            </li>
+          </ol>
+        </li>
+      </ul>
+    
+  </div>
 </div>
+
+
+
 
 <md-subheader class="md-primary">
   <span ng-if="feed.opensearch.totalResults > 0">{{feed.opensearch.totalResults}} results, displaying {{ feed.entries.length}}</span>
