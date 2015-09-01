@@ -1,9 +1,10 @@
 'use strict';
 
 require('../../main');
-var angular = require('angular');
+let angular = require('angular');
+
 angular
   .module('document', ['npdcMaterial'])
-  .controller('DocumentCtrl', function DemoCtrl($scope) {
+  .controller('DocumentCtrl', ($scope) => {
     $scope.document = require('./demo/doc.json');
   });

@@ -1,15 +1,15 @@
-"use strict";
+"use strict"; 
 
-var angular = require('angular');
+// @ngInject
+let npdcUserMenu = function(NpolarApiSecurity) {
+  return {
+    restrict: 'AE',
+    template: require('./userMenu.html'),
+    controller: 'NpolarLoginController',
+    link: function(scope) {
+      scope.user = NpolarApiSecurity.getUser();
+    }
+  };
+};
 
-angular.module('npdcMaterial')
-  .directive('npdcUserMenu', function(NpolarApiSecurity) {
-    return {
-      restrict: 'AE',
-      template: require('./userMenu.html'),
-      controller: 'NpolarLoginController',
-      link: function(scope) {
-        scope.user = NpolarApiSecurity.getUser();
-      }
-    };
-  });
+module.exports = npdcUserMenu;

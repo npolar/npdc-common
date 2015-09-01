@@ -1,5 +1,6 @@
 'use strict';
 
 require('../../main');
-var angular = require('angular');
+let angular = require('angular');
+
 angular.module('topMenu', ['npdcMaterial']);

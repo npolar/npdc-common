@@ -27,11 +27,13 @@ var config = {
     'sassAll': [src+'/**/*.scss'],
     'img': [src+'/**/*.{ico,png,jpg,jpeg,gif}'],
     'demo': [src+'/**/*.json'],
+    'views': [src+'/*/**/*(!index).html']
   },
 
   'deps': {
     'root': deps,
     'css' : [deps+'/angular-material/angular-material.css'],
+    'views': [deps+'/angular-npolar/src/**/*.html'],
     'demo' : []
   },
 

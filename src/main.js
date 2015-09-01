@@ -1,20 +1,24 @@
 'use strict';
-
+/**
+ * Angular bootstraping
+ */
 var angular = require('angular');
 require('angular-aria');
 require('angular-animate');
 require('angular-material');
+console.log((() => "foobar0")());
 require('angular-npolar');
-
-angular.module('npdcMaterial', ['ngMaterial', 'ngNpolar']);
+require('test');
+var npdcMaterial = angular.module('npdcMaterial', ['ngMaterial', 'ngNpolar']);
 // Don't require demo code here!
 
 // layouts
-require('./layouts/formula/applyMdType');
+npdcMaterial.directive('applyMdType', require('./layouts/formula/applyMdType'));
+
 
 // compontents
-require('./components/user-menu/userMenu');
-require('./components/top-menu/topMenu');
-require('./components/document/document');
+npdcMaterial.directive('npdcDocument', require('./components/document/document'));
+npdcMaterial.directive('npdcTopMenu', require('./components/top-menu/topMenu'));
+npdcMaterial.directive('npdcUserMenu', require('./components/user-menu/userMenu'));
 
-module.exports = {};
+module.exports = npdcMaterial;
