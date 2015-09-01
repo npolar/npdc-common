@@ -5,7 +5,6 @@ var TopController = function ($scope, $location, NpolarApiSecurity, NpdcBreadcru
   $scope.security = NpolarApiSecurity;
   $scope.breadcrumbs = NpdcBreadcrumbs;
   $scope.q = $location.search().q;
-  
 };
 
 module.exports = TopController;

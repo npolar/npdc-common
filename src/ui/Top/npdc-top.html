@@ -8,7 +8,6 @@
     
     <span flex></span>
     
-    
     <md-menu ng-if="security.isAuthenticated()">
       <md-button aria-label="Open application menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
         <md-icon md-menu-origin><md-tooltip>Site menu</md-tooltip>menu</md-icon>
@@ -62,7 +61,7 @@
         </md-menu-item>
         
         <md-menu-item>
-          <md-button ng-href="//api.npolar.no">Data services</md-button>
+          <md-button ng-href="//api.npolar.no">Data services (<abbr title="Application Programming Interface">API</abbr>s)</md-button>
         </md-menu-item>
         
         <md-menu-item>
@@ -109,9 +108,9 @@
       
     </md-menu>
     
-    <md-button aria-label="Language switcher" class="md-icon-button">
+<!--    <md-button aria-label="Language switcher" class="md-icon-button">
       <md-icon><md-tooltip>{{ 'Language' }}</md-tooltip>language</md-icon>
-    </md-button>
+    </md-button>-->
     
 
     
@@ -120,12 +119,12 @@
       
       <md-button aria-label="Open user" class="md-icon-button" ng-click="$mdOpenMenu($event)">
         <md-icon ng-show="!security.isAuthenticated()" md-menu-origin>person<md-tooltip>Login</md-tooltip></md-icon>
-        <md-icon ng-show="security.isAuthenticated()">lock<md-tooltip>{{ user.name }}</md-tooltip>
+        <md-icon ng-show="security.isAuthenticated()">lock<md-tooltip>{{ security.getUser().name }}</md-tooltip>
         <!--<img src="https://avatars0.githubusercontent.com/u/35185?v=3&s=40"/>--></md-icon>
       </md-button>
       
       <md-menu-content width="6">
-        <div layout-padding npolar-login-logout></div>
+        <div npolar-login-logout></div>
       </md-menu-content>
     </md-menu>
     
@@ -138,7 +137,7 @@
       </md-button>
       
       <md-menu-content width="6">
-        <div layout-padding>
+        <div>
           
           <form class="" id="" action="." method="get">
               <input type="search" autofocus="" incremental="" results="10" name="q" value="{{q}}" placeholder="Search">
@@ -155,7 +154,7 @@
   </div>
 </md-toolbar>
 
-<div layout-padding>
+<div>
 	<span ng-repeat="crumb in breadcrumbs.breadcrumbs">
     <span ng-if="!$last"><a ng-href="{{crumb.href}}" title="{{crumb.title || crumb.text || crumb.href }}" >{{ crumb.text || crumb.title || crumb.href }}</a> > </span>
     <span ng-if="$last">{{ crumb.text || crumb.title || crumb.href }}</span>
