@@ -1,0 +1,4 @@
+
+<a ng-show="document._rev && security.isAuthorized('delete', resource.path)"><button ng-click="deleteClicked = !deleteClicked" class="btn btn-danger">delete</button></a>
+
+<div ng-init="deleteClicked=false" ng-if="deleteClicked" ng-include="'angular-npolar/ui/template/_delete.html'"></div>
