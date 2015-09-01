@@ -27,7 +27,7 @@ var NpdcBreadcrumbs = function($location, $rootScope) {
       self.path += `/${crumb}`;
     }
 
-    if (i === 2 && (/^\w{8}-\w{4}-/).test(crumb)) {
+    if (i >= 2 && (/^\w{8}-\w{4}-/).test(crumb)) {
       return { href: self.path, text: crumb.split("-")[0] };
     }
     return { href: self.path, title: capitalize(crumb), text: capitalize(decodeURIComponent(crumb)) };
