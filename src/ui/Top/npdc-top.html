@@ -1,3 +1,4 @@
+<div ng-if="warning" class="md-primary"><md-subheader class="md-warn">Warning: {{warning}}</md-subheader></div>
 <md-toolbar class="np-top-menu">
   <div class="md-toolbar-tools">
     
@@ -151,5 +152,4 @@
     <span ng-if="$last">{{ crumb.text || crumb.title || crumb.href }}</span>
   </span>
 </div>
-
 <div npolar-api-message></div>
