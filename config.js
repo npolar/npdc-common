@@ -19,7 +19,7 @@ var config = {
   'src': {
     'root': src,
     'html': [src+'/**/*.html'],
-    'jsMain': src+'/main.js',
+    'jsMain': src+'/index.js',
     'jsAll': [src+'/**/*.js'],
     'jsNoTests': [src+'/**/*!(Spec).js'],
     'jsDemo': src+'/**/*Demo.js',

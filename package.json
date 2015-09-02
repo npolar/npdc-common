@@ -2,7 +2,7 @@
   "name": "npdc-material",
   "version": "0.0.1",
   "description": "NPDC angular material components and layouts",
-  "main": "src/main.js",
+  "main": "src/index.js",
   "dependencies": {
     "angular": "^1.4.3",
     "angular-animate": "^1.4.3",

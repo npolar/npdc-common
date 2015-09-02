@@ -1,6 +1,6 @@
 'use strict';
 
-require('../../main');
+require('../../');
 let angular = require('angular');
 
 angular.module('userMenu', ['npdcMaterial']);
