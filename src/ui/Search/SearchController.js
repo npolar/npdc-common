@@ -16,7 +16,7 @@ var SearchController = function ($scope, $location, NpolarApiSecurity) {
       return f;
     
     });
-    
+
     return facet;
     
   };
@@ -24,6 +24,17 @@ var SearchController = function ($scope, $location, NpolarApiSecurity) {
   // Get search bit of API URI
   $scope.facetHref = function(uri) {
     return "?"+ uri.split("?")[1];
+  };
+
+  $scope.facetKey = function(facet) {
+    return Object.keys(facet)[0];
+  };
+  
+  $scope.noDot = function(id) {
+    if ((/[.]/).test(id)) {
+      id += ".json";
+    }
+    return id;
   };
   
 };
