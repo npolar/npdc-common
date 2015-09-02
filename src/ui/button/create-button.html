@@ -1,1 +1,7 @@
-<a ng-show="security.isAuthorized('create', resource.path)" href="__new/edit"><button class="btn btn-danger">create</button></a>
+<a ng-show="security.isAuthorized('create', resource.path)" href="__new/edit">
+  <md-button class="md-fab md-mini" aria-label="{{ form.i18n.add[1] }}">
+    <md-icon>add</md-icon><md-tooltip>New</md-tooltip>
+  </md-button>
+</a>
+
+         

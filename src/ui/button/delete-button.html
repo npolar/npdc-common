@@ -1,4 +1,4 @@
-
+<a ng-show="security.isAuthorized('delete', resource.path)"><md-button ng-click="deleteClicked = !deleteClicked" ng-disabled="deleting || saving" class="md-fab md-mini" aria-label=""><md-icon>delete</md-icon><md-tooltip>Delete</md-tooltip></md-button></a>
 <a ng-show="document._rev && security.isAuthorized('delete', resource.path)"><button ng-click="deleteClicked = !deleteClicked" class="btn btn-danger">delete</button></a>
 
-<div ng-init="deleteClicked=false" ng-if="deleteClicked" ng-include="'angular-npolar/ui/template/_delete.html'"></div>
+<div ng-init="deleteClicked=false" ng-if="deleteClicked" ng-include="'angular-npolar/src/ui/template/_delete.html'"></div>
