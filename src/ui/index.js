@@ -2,8 +2,9 @@
 
 let angular = require('angular');
 require('angular-npolar');
+require('npdc-material');
 
-var ui = angular.module('npdcUi', ['npolarUi']);
+var ui = angular.module('npdcUi', ['npolarUi', 'npdcMaterial']);
 
 ui.service('NpdcBreadcrumbs', require('./Breadcrumbs'));
 
