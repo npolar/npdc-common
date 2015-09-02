@@ -123,7 +123,7 @@
     </md-tab>
   </md-tabs>
 
-  <footer layout="row" layout-align="space-between center">
+  <footer layout="row" layout-align="space-between center" ng-if="!(form.uiValidateHidden && form.uiSaveHidden)">
     <span ng-if="form.errors" title="{{ form.errors.join('\n') }}">{{ form.i18n.invalid | formulaReplace : { count: form.errors.length } }}</span>
 
     <div>
