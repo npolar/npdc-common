@@ -30,6 +30,12 @@ var NpdcBreadcrumbs = function($location, $rootScope) {
     if (i >= 2 && (/^\w{8}-\w{4}-/).test(crumb)) {
       return { href: self.path, text: crumb.split("-")[0] };
     }
+    
+    if ((/^\?/).test(crumb)) {
+      crumb = `Search: "${ $location.search().q }"`;
+    }
+    
+    
     return { href: self.path, title: capitalize(crumb), text: capitalize(decodeURIComponent(crumb)) };
   };
         
