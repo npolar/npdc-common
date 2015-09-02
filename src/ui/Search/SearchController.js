@@ -21,6 +21,10 @@ var SearchController = function ($scope, $location, NpolarApiSecurity) {
     
   };
   
+  // Get search bit of API URI
+  $scope.facetHref = function(uri) {
+    return "?"+ uri.split("?")[1];
+  };
   
 };
 
