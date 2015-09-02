@@ -44,7 +44,7 @@
       
       <span ng-repeat="f in facet(farr)">
       
-       <a ng-href="{{ f.uri }}">{{ f.term}}</a> ({{ f.count }})
+       <a ng-href="{{ facetHref(f.uri) }}">{{ f.term}}</a> ({{ f.count }})
       </span>
       
     </dl>
@@ -70,7 +70,7 @@
 
 <md-subheader class="md-primary">
   <span ng-if="feed.opensearch.totalResults > 0">{{feed.opensearch.totalResults}} results, displaying {{ feed.entries.length}}</span>
-  <span ng-if="feed.opensearch.totalResults == 0">No results</span>
+  <span ng-if="feed.opensearch.totalResults == 0">No results when searching for "{{q}}"</span>
 </md-subheader>
 
 </section>
