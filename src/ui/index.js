@@ -21,5 +21,6 @@ ui.directive('npdcDeleteButton', require('./button/DeleteButton'));
 ui.controller('NpdcButtonComponent', require('./button/ButtonComponent'));
 
 ui.directive('npdcFormula', require('./formula/formula.js'));
+ui.directive('npdcShow', require('./formula/show.js'));
 
 module.exports = ui;
