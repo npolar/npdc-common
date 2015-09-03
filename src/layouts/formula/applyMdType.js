@@ -1,12 +1,10 @@
 'use strict';
 
-let angular = require('angular');
-
 // @ngInject
 let applyMdType = function() {
 
   let isNumberRange = function(field) {
-    return ['integer', 'number'].indexOf(field.schema.type) !== -1 && !(angular.isUndefined(field.minimum) || angular.isUndefined(field.maximum));
+    return field.typeOf('range');
   };
 
   let isNormalInput = function(field) {

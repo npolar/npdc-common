@@ -91450,13 +91450,11 @@ module.exports = npdcMaterial;
 },{"./components/document/document":38,"./components/top-menu/topMenu":40,"./components/user-menu/userMenu":42,"./layouts/formula/applyMdType":44,"./layouts/formula/template.html":46,"angular":35,"angular-animate":6,"angular-aria":8,"angular-material":10,"angular-npolar":28}],44:[function(require,module,exports){
 'use strict';
 
-var angular = require('angular');
-
 // @ngInject
 var applyMdType = function applyMdType() {
 
   var isNumberRange = function isNumberRange(field) {
-    return ['integer', 'number'].indexOf(field.schema.type) !== -1 && !(angular.isUndefined(field.minimum) || angular.isUndefined(field.maximum));
+    return field.typeOf('range');
   };
 
   var isNormalInput = function isNormalInput(field) {
@@ -91496,7 +91494,7 @@ var applyMdType = function applyMdType() {
 
 module.exports = applyMdType;
 
-},{"angular":35}],45:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 'use strict';
 
 require('../../');

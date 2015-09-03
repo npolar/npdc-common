@@ -19,7 +19,8 @@
       "integer_maximum",
       "number_default", {
         "id": "number_minimum_maximum",
-        "step": 0.1
+        "step": 0.1,
+        "type": "range"
       },
       "boolean"
     ]
