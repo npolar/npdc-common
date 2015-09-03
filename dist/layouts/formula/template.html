@@ -4,7 +4,7 @@
     {{ form.title }}
   </header>
 
-  <md-tabs md-autoselect md-dynamic-height md-border-bottom md-selected="selectedIndex">
+  <md-tabs md-swipe-content md-dynamic-height md-border-bottom>
     <md-tab label="{{fieldset.title}}" ng-disabled="fieldset.disabled" ng-repeat="fieldset in form.fieldsets">
       <md-whiteframe class="md-whiteframe-z1">
         <fieldset>

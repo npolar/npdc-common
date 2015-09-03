@@ -1,6 +1,7 @@
 'use strict';
 
 require('../../');
+require('formula');
 let angular = require('angular');
 
 angular

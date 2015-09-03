@@ -8,8 +8,7 @@
     "angular-animate": "^1.4.3",
     "angular-aria": "^1.4.3",
     "angular-material": "^0.10.0",
-    "angular-npolar": "git://github.com/npolar/angular-npolar.git",
-    "formula": "git://github.com/npolar/formula.git"
+    "angular-npolar": "npolar/angular-npolar"
   },
   "devDependencies": {
     "babelify": "^6.2.0",
@@ -19,6 +18,7 @@
     "browserify-resolutions": "^1.0.6",
     "del": "~1.2.0",
     "event-stream": "^3.3.1",
+    "formula": "npolar/formula",
     "glob": "^5.0.14",
     "gulp": "~3.9.0",
     "gulp-add-src": "^0.2.0",

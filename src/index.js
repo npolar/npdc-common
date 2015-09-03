@@ -12,15 +12,16 @@ var npdcMaterial = angular.module('npdcMaterial', ['ngMaterial', 'npolarApi', 'n
 // Don't require demo code here!
 
 // layouts
-require('formula');
-angular.module('formula').run(function($templateCache) {
-  $templateCache.put('formula/material.html', require('./layouts/formula/template.html'));
-});
 npdcMaterial.directive('applyMdType', require('./layouts/formula/applyMdType'));
 
 // compontents
-npdcMaterial.directive('npdcDocument', require('./components/document/document'));
-npdcMaterial.directive('npdcTopMenu', require('./components/top-menu/topMenu'));
-npdcMaterial.directive('npdcUserMenu', require('./components/user-menu/userMenu'));
+npdcMaterial.directive('npdcMdDocument', require('./components/document/document'));
+npdcMaterial.directive('npdcMdTopMenu', require('./components/top-menu/topMenu'));
+npdcMaterial.directive('npdcMdUserMenu', require('./components/user-menu/userMenu'));
+
+// run block
+npdcMaterial.run(function($templateCache) {
+  $templateCache.put('formula/material.html', require('./layouts/formula/template.html'));
+});
 
 module.exports = npdcMaterial;
