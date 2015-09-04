@@ -22,12 +22,13 @@
     "npdc-material": "git://github.com/npolar/npdc-material.git"
   },
   "devDependencies": {
-    "gulp": "^3.9.0",
-    "should": "^7.0.2",
-    "npdc-gulp": "git://github.com/npolar/npdc-gulp.git",
     "babelify": "*",
     "browserify-ngannotate": "*",
-    "partialify": "*"
+    "gulp": "^3.9.0",
+    "npdc-gulp": "git://github.com/npolar/npdc-gulp.git",
+    "partialify": "*",
+    "run-sequence": "^1.1.2",
+    "should": "^7.0.2"
   },
   "browserify": {
     "transform": [
