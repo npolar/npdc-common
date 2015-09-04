@@ -91392,13 +91392,13 @@ module.exports = '<!DOCTYPE html>\n<md-toolbar class="np-top-menu">\n  <div clas
 var npdcTopMenu = function npdcTopMenu() {
   return {
     restrict: 'E',
-    template: require('./topMenu.html')
+    template: require('./toolbar.html')
   };
 };
 
 module.exports = npdcTopMenu;
 
-},{"./topMenu.html":39}],41:[function(require,module,exports){
+},{"./toolbar.html":39}],41:[function(require,module,exports){
 module.exports = '<!DOCTYPE html>\n<div class="login-logout">\n  <div ng-if="user.jwt">\n    <button ng-click="logout()">Logout</button> <a href="/user/account">{{user.name}}</a>\n  </div>\n  <div ng-if="!user.jwt">\n\n    <form role="form">\n      <section ng-show="loginClicked" ng-init="loginClicked = false;">\n      <div>\n        <label for="username">Username</label>\n        <input type="text" ng-model="user.username" id="username" placeholder="Username (email)">\n      </div>\n      <div>\n        <label for="password">Password</label>\n        <input type="password" id="password" ng-model="user.password" placeholder="Password">\n      </div>\n      <button id="login2" type="submit" ng-click="login()">Login</button> <a href="/user/reset">Forgot password?</a>\n      </section>\n      <section ng-show="!loginClicked"><button id="login1" type="submit" ng-click="loginClicked = !loginClicked;">Login</button> <a href="/user/register">Register</a></section>\n    </form>\n  </div>\n</div>\n';
 },{}],42:[function(require,module,exports){
 "use strict";
@@ -91437,7 +91437,7 @@ npdcMaterial.directive('applyMdType', require('./layouts/formula/applyMdType'));
 
 // compontents
 npdcMaterial.directive('npdcMdDocument', require('./components/document/document'));
-npdcMaterial.directive('npdcMdTopMenu', require('./components/top-menu/topMenu'));
+npdcMaterial.directive('npdcMdTopMenu', require('./components/toolbar/toolbar'));
 npdcMaterial.directive('npdcMdUserMenu', require('./components/user-menu/userMenu'));
 
 // run block
@@ -91447,7 +91447,7 @@ npdcMaterial.run(["$templateCache", function ($templateCache) {
 
 module.exports = npdcMaterial;
 
-},{"./components/document/document":38,"./components/top-menu/topMenu":40,"./components/user-menu/userMenu":42,"./layouts/formula/applyMdType":44,"./layouts/formula/template.html":46,"angular":35,"angular-animate":6,"angular-aria":8,"angular-material":10,"angular-npolar":28}],44:[function(require,module,exports){
+},{"./components/document/document":38,"./components/toolbar/toolbar":40,"./components/user-menu/userMenu":42,"./layouts/formula/applyMdType":44,"./layouts/formula/template.html":46,"angular":35,"angular-animate":6,"angular-aria":8,"angular-material":10,"angular-npolar":28}],44:[function(require,module,exports){
 'use strict';
 
 // @ngInject

@@ -5,7 +5,8 @@
     "fields": [
       "string",
       "string_required",
-      "string_minlength_maxlength", {
+      "string_minlength_maxlength",
+      {
         "id": "string_textarea",
         "type": "textarea"
       },
@@ -17,7 +18,8 @@
     "title": "numbers and boolean",
     "fields": [
       "integer_maximum",
-      "number_default", {
+      "number_default",
+      {
         "id": "number_minimum_maximum",
         "step": 0.1,
         "type": "range"

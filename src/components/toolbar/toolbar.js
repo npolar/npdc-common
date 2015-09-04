@@ -4,7 +4,7 @@
 let npdcTopMenu = function () {
     return {
       restrict: 'E',
-      template: require('./topMenu.html')
+      template: require('./toolbar.html')
     };
   };
 

@@ -16,7 +16,7 @@ npdcMaterial.directive('applyMdType', require('./layouts/formula/applyMdType'));
 
 // compontents
 npdcMaterial.directive('npdcMdDocument', require('./components/document/document'));
-npdcMaterial.directive('npdcMdTopMenu', require('./components/top-menu/topMenu'));
+npdcMaterial.directive('npdcMdTopMenu', require('./components/toolbar/toolbar'));
 npdcMaterial.directive('npdcMdUserMenu', require('./components/user-menu/userMenu'));
 
 // run block
