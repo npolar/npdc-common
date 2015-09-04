@@ -102,25 +102,7 @@
     </md-menu>
 
     <!-- Login/User -->
-    <md-menu>
-
-
-
-      <md-button aria-label="Open user" class="md-icon-button" ng-click="$mdOpenMenu($event)">
-        <md-icon ng-show="!security.isAuthenticated()" md-menu-origin>person<md-tooltip>Login</md-tooltip></md-icon>
-        <md-icon ng-show="security.isAuthenticated()">lock<md-tooltip>{{ security.getUser().name }}</md-tooltip></md-icon>
-      </md-button>
-
-      <md-menu-content width="6">
-        <!--<md-button aria-label="Language switcher" class="md-icon-button">
-          <md-icon><md-tooltip>{{ 'Language' }}</md-tooltip>language</md-icon>
-        </md-button>-->
-
-        <!-- <div npolar-login-logout></div> -->
-        <npdc-md:user-menu></npdc-md:user-menu>
-      </md-menu-content>
-    </md-menu>
-
+    <npdc-md:user-menu></npdc-md:user-menu>
 
      <!-- Search -->
     <md-menu>

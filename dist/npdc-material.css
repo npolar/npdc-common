@@ -7395,6 +7395,9 @@ md-tooltip {
     height: 35px;
     vertical-align: middle; }
 
+.np-login {
+  min-width: 400px; }
+
 a {
   color: #1570b1; }
 

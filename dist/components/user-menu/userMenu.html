@@ -1,35 +1,44 @@
 <!DOCTYPE html>
-<div class="login-logout">
-  <div ng-show="security.isAuthenticated()">
-
-    <button ng-click="logout()">Logout</button> <b>{{ user.name }}</b> (<a title="View profile for user {{user.username}}" ng-href="/user/{{user.username}}">{{ user.username }} </a>)
-
-    <p>Login session expires {{ 1000*user.exp | date:'HH:mm' }}</p>
-
-    <section>
-      <h2>Permissions</h2>
-      <dl ng-repeat="system in user.systems">
-        <dt>{{ system.uri }}</dt>
-        <dd>{{ system.rights }}</dd>
-      </dl>
-    </section>
-  </div>
-
-  <div ng-show="security.notAuthenticated()">
-    <h1>Login</h1>
-    <form role="form">
-      <section ng-show="true" ng-init="loginClicked = false;">
-        <div>
-          <label for="username">Username</label>
-          <input type="text" ng-model="user.username" id="username" placeholder="Username (email)">
-        </div>
-        <div>
-          <label for="password">Password</label>
-          <input type="password" id="password" ng-model="user.password" placeholder="Password">
-        </div>
-        <button id="login2" type="submit" ng-click="login()">Login</button>
-      </section>
-      <a ng-href="/user/reset?username={{user.username}}">Forgot password?</a> <a href="/user/register">Sign up</a>
+<md-menu ng-if="!security.isAuthenticated()">
+  <md-button aria-label="Open user" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+    <md-icon md-menu-origin>person<md-tooltip>Login</md-tooltip></md-icon>
+  </md-button>
+  <md-menu-content>
+    <form role="form" layout-padding class="np-login">
+      <div>
+        <md-input-container>
+          <label for="username" class="md-no-float">Username</label>
+          <input type="email" ng-model="user.username" id="username">
+        </md-input-container>
+        <md-input-container>
+          <label for="password" class="md-no-float">Password</label>
+          <input type="password" id="password" ng-model="user.password">
+        </md-input-container>
+      </div>
+      <div layout="row" layout-align="space-between center">
+        <a ng-href="/user/reset?username={{user.username}}">Forgot password?</a>
+        <a href="/user/register">Sign up</a>
+        <md-button type="submit" ng-click="login()" class="md-raised md-primary">Login</md-button>
+      </div>
     </form>
-  </div>
-</div>
+  </md-menu-content>
+</md-menu>
+
+<md-menu ng-if="security.isAuthenticated()">
+  <md-button aria-label="Open user" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+    <md-icon md-menu-origin>person<md-tooltip>{{ security.getUser().name }}</md-tooltip></md-icon>
+  </md-button>
+  <md-menu-content>
+    <md-menu-item>
+      <md-button ng-href="/user/{{user.username}}" title="View profile for user {{user.username}}">
+        <md-icon md-menu-align-target>face</md-icon>
+        {{ user.name }}
+      </md-button>
+    </md-menu-item>
+    <md-menu-item>
+      <md-button ng-click="logout()">
+        <span>Logout</span> <small>(session expires {{ 1000*user.exp | date:'HH:mm' }})</small>
+      </md-button>
+    </md-menu-item>
+  </md-menu-content>
+</md-menu>
