@@ -1,23 +1,35 @@
 <!DOCTYPE html>
 <div class="login-logout">
-  <div ng-if="user.jwt">
-    <button ng-click="logout()">Logout</button> <a href="/user/account">{{user.name}}</a>
-  </div>
-  <div ng-if="!user.jwt">
+  <div ng-show="security.isAuthenticated()">
 
+    <button ng-click="logout()">Logout</button> <b>{{ user.name }}</b> (<a title="View profile for user {{user.username}}" ng-href="/user/{{user.username}}">{{ user.username }} </a>)
+
+    <p>Login session expires {{ 1000*user.exp | date:'HH:mm' }}</p>
+
+    <section>
+      <h2>Permissions</h2>
+      <dl ng-repeat="system in user.systems">
+        <dt>{{ system.uri }}</dt>
+        <dd>{{ system.rights }}</dd>
+      </dl>
+    </section>
+  </div>
+
+  <div ng-show="security.notAuthenticated()">
+    <h1>Login</h1>
     <form role="form">
-      <section ng-show="loginClicked" ng-init="loginClicked = false;">
-      <div>
-        <label for="username">Username</label>
-        <input type="text" ng-model="user.username" id="username" placeholder="Username (email)">
-      </div>
-      <div>
-        <label for="password">Password</label>
-        <input type="password" id="password" ng-model="user.password" placeholder="Password">
-      </div>
-      <button id="login2" type="submit" ng-click="login()">Login</button> <a href="/user/reset">Forgot password?</a>
+      <section ng-show="true" ng-init="loginClicked = false;">
+        <div>
+          <label for="username">Username</label>
+          <input type="text" ng-model="user.username" id="username" placeholder="Username (email)">
+        </div>
+        <div>
+          <label for="password">Password</label>
+          <input type="password" id="password" ng-model="user.password" placeholder="Password">
+        </div>
+        <button id="login2" type="submit" ng-click="login()">Login</button>
       </section>
-      <section ng-show="!loginClicked"><button id="login1" type="submit" ng-click="loginClicked = !loginClicked;">Login</button> <a href="/user/register">Register</a></section>
+      <a ng-href="/user/reset?username={{user.username}}">Forgot password?</a> <a href="/user/register">Sign up</a>
     </form>
   </div>
 </div>

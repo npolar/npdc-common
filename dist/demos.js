@@ -58959,19 +58959,6 @@ module.exports = angular;
 /**
  * npolarApiConfig, meant to be .run and merged with overrides for the current environment
  *
- * angular.module('myApp').run(function(npolarApiConfig, $http) {
- *   $http.get('/npolar/config.json').success(function(config) {
- *
- *   var environment = config.environment || npolarApiConfig.environment;
- *   angular.extend(npolarApiConfig, _.find(config.config, { environment: environment}));
- *   console.log('npolarApiConfig', npolarApiConfig);
- *
- * }).error(function(response) {
- *   console.log('npolarApiConfig', npolarApiConfig);
- * });
- *
- * });
- *
  */
 'use strict';
 
@@ -58982,7 +58969,9 @@ var config = {
   security: {
     authorization: 'jwt'
   },
-  formula: {}
+  formula: {
+    template: 'default'
+  }
 };
 
 module.exports = config;
@@ -59109,7 +59098,8 @@ var EditController = function EditController($scope, $location, $route, $routePa
   $scope.formula = {
     template: npolarApiConfig.formula.template || 'default',
     language: null,
-    model: {},
+    validateHidden: true,
+    saveHidden: true,
     onsave: function onsave() {
       $scope.save();
     }
@@ -59485,13 +59475,15 @@ var Security = function Security(base64, jwtHelper, npolarApiConfig, NpolarApiUs
   // @var action "create" | "read" | "update" | "delete"
   this.isAuthorized = function (action, uri) {
     // @todo support relative URIs
-    //if (uri instanceof String && (/^\/[^/]/).test(uri)) {
-    //  uri = npolarApiConfig.base + uri;
-    //  console.log(uri);
-    //}   
-    uri = uri.split('//')[1];
+    //if (uri === undefined) {
+    // return false;
+    //}
 
-    // console.log("isAuthorized()", action, uri);
+    if (uri instanceof String && /^\/[^/]/.test(uri)) {
+      //  uri = npolarApiConfig.base + uri;
+      console.log(uri);
+    }
+    uri = uri.split('//')[1];
 
     // 1. First, verify login
     if (false === this.isAuthenticated()) {
@@ -59518,7 +59510,9 @@ var Security = function Security(base64, jwtHelper, npolarApiConfig, NpolarApiUs
     });
 
     // User is authorized if we are left with at least 1 system
-    return systems.length > 0;
+    var isAuthorized = systems.length > 0;
+    console.log('isAuthorized(' + action + ', ' + uri + ')', isAuthorized);
+    return isAuthorized;
   };
 
   this.isJwtExpired = function () {
@@ -59794,17 +59788,25 @@ module.exports = LoginController;
 /**
  * @ngInject
  */
-var loginLogout = function loginLogout(NpolarApiSecurity) {
+var loginLogout = function loginLogout(NpolarApiSecurity, npolarApiConfig, $http) {
   return {
     scope: {},
     controller: 'NpolarLoginController',
     templateUrl: 'angular-npolar/src/ui/auth/_user.html',
     link: function link(scope) {
+
       scope.user = NpolarApiSecurity.getUser();
+      scope.edits = [];
+
+      //let editlog = `${npolarApiConfig.base}/editlog/?sort=-request.time&q=&filter-request.authorization=Bearer&filter-request.username=conrad&fields=method,request.time,endpoint,response.header.Location&filter-response.status=200..299&format=json&variant=array&limit=5`;
+      //$http.get(editlog).success(response => {
+      //  console.log(response);
+      //  scope.edits = response;
+      //});
     }
   };
 };
-loginLogout.$inject = ["NpolarApiSecurity"];
+loginLogout.$inject = ["NpolarApiSecurity", "npolarApiConfig", "$http"];
 
 module.exports = loginLogout;
 
@@ -59849,6 +59851,8 @@ var MessageController = function MessageController($scope, $route, $http, $locat
 
     if (message.body && message.body.error && message.body.error.explanation) {
       explanation = message.body.error.explanation;
+    } else if (message.body && message.body.reason) {
+      explanation = message.body.reason;
     } else {
       explanation = message;
     }
@@ -59861,7 +59865,7 @@ var MessageController = function MessageController($scope, $route, $http, $locat
       locals: { message: message, explanation: explanation },
       position: "top left"
     }).then(function () {
-      $route.reload();
+      //$route.reload();
     });
   };
 
@@ -59879,7 +59883,7 @@ var MessageController = function MessageController($scope, $route, $http, $locat
       locals: { message: message, explanation: explanation },
       position: "bottom right"
     }).then(function () {
-      $route.reload();
+      // noop
     });
   };
 
@@ -59906,7 +59910,7 @@ var MessageController = function MessageController($scope, $route, $http, $locat
     if (404 === message.status) {
       flashError("Document does not exist: " + $location.absUrl());
     } else {
-      flashError(message);
+      flashError(message, message.body);
     }
   });
 };
@@ -96917,7 +96921,7 @@ var angular = require('angular');
 angular.module('toolbar', ['npdcMaterial']);
 
 },{"../../":242,"angular":45}],239:[function(require,module,exports){
-module.exports = '<!DOCTYPE html>\n<div class="login-logout">\n  <div ng-if="user.jwt">\n    <button ng-click="logout()">Logout</button> <a href="/user/account">{{user.name}}</a>\n  </div>\n  <div ng-if="!user.jwt">\n\n    <form role="form">\n      <section ng-show="loginClicked" ng-init="loginClicked = false;">\n      <div>\n        <label for="username">Username</label>\n        <input type="text" ng-model="user.username" id="username" placeholder="Username (email)">\n      </div>\n      <div>\n        <label for="password">Password</label>\n        <input type="password" id="password" ng-model="user.password" placeholder="Password">\n      </div>\n      <button id="login2" type="submit" ng-click="login()">Login</button> <a href="/user/reset">Forgot password?</a>\n      </section>\n      <section ng-show="!loginClicked"><button id="login1" type="submit" ng-click="loginClicked = !loginClicked;">Login</button> <a href="/user/register">Register</a></section>\n    </form>\n  </div>\n</div>\n';
+module.exports = '<!DOCTYPE html>\n<div class="login-logout">\n  <div ng-show="security.isAuthenticated()">\n\n    <button ng-click="logout()">Logout</button> <b>{{ user.name }}</b> (<a title="View profile for user {{user.username}}" ng-href="/user/{{user.username}}">{{ user.username }} </a>)\n\n    <p>Login session expires {{ 1000*user.exp | date:\'HH:mm\' }}</p>\n\n    <section>\n      <h2>Permissions</h2>\n      <dl ng-repeat="system in user.systems">\n        <dt>{{ system.uri }}</dt>\n        <dd>{{ system.rights }}</dd>\n      </dl>\n    </section>\n  </div>\n\n  <div ng-show="security.notAuthenticated()">\n    <h1>Login</h1>\n    <form role="form">\n      <section ng-show="true" ng-init="loginClicked = false;">\n        <div>\n          <label for="username">Username</label>\n          <input type="text" ng-model="user.username" id="username" placeholder="Username (email)">\n        </div>\n        <div>\n          <label for="password">Password</label>\n          <input type="password" id="password" ng-model="user.password" placeholder="Password">\n        </div>\n        <button id="login2" type="submit" ng-click="login()">Login</button>\n      </section>\n      <a ng-href="/user/reset?username={{user.username}}">Forgot password?</a> <a href="/user/register">Sign up</a>\n    </form>\n  </div>\n</div>\n';
 },{}],240:[function(require,module,exports){
 "use strict";
 
@@ -97066,7 +97070,7 @@ angular.module('list', ['npdcMaterial']);
 'use strict'; module.exports = angular.module("npdcMaterial").run(["$templateCache", function($templateCache) {$templateCache.put("angular-npolar/src/ui/auth/_user.html","<div class=\"login-logout\">\n  <div ng-show=\"security.isAuthenticated()\">\n    \n    <button ng-click=\"logout()\">Logout</button> <b>{{ user.name }}</b> (<a title=\"View profile for user {{user.username}}\" ng-href=\"/user/{{user.username}}\">{{ user.username }} </a>)\n    \n    <p>Login session expires {{ 1000*user.exp | date:\'HH:mm\' }}</p>\n    \n    <!--<section>\n    <h2>Recent edits</h2>\n    <dl ng-repeat=\"edit in edits\">\n      <dt>{{ edit.request.time }}</dt>\n      <dd><a href=\"{{ edit.response.header.Location }}\">{{ edit.response.header.Location }}</a></dd>\n    </dl>\n    </section>-->\n    \n    <section>\n      <h2>Permissions</h2>\n      <dl ng-repeat=\"system in user.systems\">\n        <dt>{{ system.uri }}</dt>\n        <dd>{{ system.rights }}</dd>\n      </dl>\n    </section>\n  </div>\n  \n  <div ng-show=\"security.notAuthenticated()\">\n    <h1>Login</h1>\n    <form role=\"form\">\n      <section ng-show=\"true\" ng-init=\"loginClicked = false;\">\n      <div>\n        <label for=\"username\">Username</label>\n        <input type=\"text\" ng-model=\"user.username\" id=\"username\" placeholder=\"Username (email)\">\n      </div>\n      <div>\n        <label for=\"password\">Password</label>\n        <input type=\"password\" id=\"password\" ng-model=\"user.password\" placeholder=\"Password\">\n      </div>\n      <button id=\"login2\" type=\"submit\" ng-click=\"login()\">Login</button> \n      </section>\n      <a ng-href=\"/user/reset?username={{user.username}}\">Forgot password?</a> <a href=\"/user/register\">Sign up</a></section>\n    </form>\n  </div>\n</div>");
 $templateCache.put("angular-npolar/src/ui/message/_message.html","<div ng-if=\"info\" class=\"info\">[info]{{ info | json }}</div>\n<div ng-if=\"error\" class=\"error\">[error] {{ error | json }}</div>");
 $templateCache.put("angular-npolar/src/ui/message/_message_toast.html","<md-toast>\n  <span flex> <b>{{explanation}}</b></span>\n  <md-button ng-click=\"closeToast()\">OK</md-button>\n</md-toast>");
-$templateCache.put("angular-npolar/src/ui/template/_delete.html","<div class=\"npolar-confirm-delete\">\n  <span>Really DELETE?</span>\n\n  <button type=\"button\" ng-click=\"deleteClicked=false && back()\" class=\"btn btn-default\">no</button>\n  <button type=\"button\" ng-click=\"delete()\" class=\"btn btn-danger\">yes</button>\n</div>\n");
+$templateCache.put("angular-npolar/src/ui/template/_delete.html","<div class=\"npolar-confirm-delete\">\n  <h3>Really DELETE?</h3>\n\n  <button type=\"button\" ng-click=\"deleteClicked=false && back()\" class=\"btn btn-default\">no</button>\n  <button type=\"button\" ng-click=\"delete()\" class=\"btn btn-danger\">yes</button>\n</div>\n");
 $templateCache.put("angular-npolar/src/ui/template/_error.html","<h2 ng-if=\"error\" class=\"alert alert-danger\" role=\"alert\"><strong>{{error.status}} {{error.statusText}}</strong> {{error.data}}</h2>");
 $templateCache.put("angular-npolar/src/ui/template/_foot.html","");
 $templateCache.put("angular-npolar/src/ui/template/_head.html","<div ng-if=\"error\" ng-include=\"\'angular-npolar/src/ui/template/_error.html\'\"></div>\n<div ng-if=\"info\" ng-include=\"\'angular-npolar/src/ui/template/_info.html\'\"></div>\n");
