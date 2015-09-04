@@ -18,6 +18,11 @@ gulp.task('copy-deps-assets', function () {
     .pipe(gulp.dest('dist/assets'));
 });
 
-gulp.task('default', function () {
-  runSequence('clean', ['copy-deps-assets', 'copy-static', 'copy-css', 'lint', 'test'], ['watch-css', 'watch-test', 'watch-static']);
+gulp.task('default', function (cb) {
+  runSequence('clean', ['copy-deps-assets', 'copy-static', 'copy-css', 'lint', 'test'], ['watch-css', 'watch-test', 'watch-static'], cb);
+});
+
+gulp.task('prod', function (cb) {
+  global.isProd = true;
+  runSequence('clean', ['copy-deps-assets', 'copy-static', 'copy-css', 'lint', 'test'], cb);
 });
