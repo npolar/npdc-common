@@ -18,6 +18,7 @@ npdcMaterial.directive('applyMdType', require('./layouts/formula/applyMdType'));
 npdcMaterial.directive('npdcMdDocument', require('./components/document/document'));
 npdcMaterial.directive('npdcMdToolbar', require('./components/toolbar/toolbar'));
 npdcMaterial.directive('npdcMdUserMenu', require('./components/user-menu/userMenu'));
+npdcMaterial.directive('npdcMdExpandSearch', require('./components/expandable-search/expandSearch'));
 
 // run block
 npdcMaterial.run(function($templateCache) {

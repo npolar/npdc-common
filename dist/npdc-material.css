@@ -7383,6 +7383,44 @@ md-tooltip {
     margin-right: 15px;
     margin-top: 19px; }
 
+.np-expand-search input::-webkit-search-decoration,
+.np-expand-search input::-webkit-search-cancel-button {
+  display: none; }
+
+.np-expand-search input[type=search] {
+  border-radius: 10em;
+  -moz-border-radius: 10em;
+  -ms-border-radius: 10em;
+  -webkit-border-radius: 10em;
+  transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  background: #ededed url("http://static.tumblr.com/ftv85bp/MIXmud4tx/search-icon.png") no-repeat 9px center;
+  border: solid 1px #ccc;
+  padding: 9px 6px 9px 32px;
+  font-family: inherit;
+  font-size: 100%;
+  outline: none;
+  width: 0px;
+  -webkit-box-sizing: content-box;
+  -webkit-appearance: textfield; }
+
+.np-expand-search input[type=search]:focus {
+  box-shadow: 0 0 5px rgba(109, 207, 246, 0.5);
+  -moz-box-shadow: 0 0 5px rgba(109, 207, 246, 0.5);
+  -ms-box-shadow: 0 0 5px rgba(109, 207, 246, 0.5);
+  -webkit-box-shadow: 0 0 5px rgba(109, 207, 246, 0.5);
+  background-color: #fff;
+  border-color: #66cc75;
+  width: 160px; }
+
+.np-expand-search input:-moz-placeholder {
+  color: #999; }
+
+.np-expand-search input::-webkit-input-placeholder {
+  color: #999; }
+
 .np-top-menu {
   background-color: #1570b1;
   color: #fff; }

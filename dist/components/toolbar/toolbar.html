@@ -12,7 +12,8 @@
     <!-- Apps -->
     <md-menu>
       <md-button aria-label="Open application menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
-        <md-icon md-menu-origin><md-tooltip>Data / Applications</md-tooltip>apps</md-icon>
+        <md-icon md-menu-origin>
+          <md-tooltip>Data / Applications</md-tooltip>apps</md-icon>
       </md-button>
 
       <md-menu-content width="6">
@@ -25,7 +26,8 @@
         </md-menu-item>
 
         <md-menu-item>
-          <md-button ng-href="//api.npolar.no">Data services (<abbr title="Application Programming Interface">API</abbr>s)</md-button>
+          <md-button ng-href="//api.npolar.no">Data services (
+            <abbr title="Application Programming Interface">API</abbr>s)</md-button>
         </md-menu-item>
 
         <md-menu-item>
@@ -73,20 +75,19 @@
 
     </md-menu>
 
-     <md-menu ng-if="security.isAuthenticated()">
+    <md-menu ng-if="security.isAuthenticated()">
       <md-button aria-label="Open application menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
-        <md-icon md-menu-origin><md-tooltip>Internal applications</md-tooltip>settings</md-icon>
+        <md-icon md-menu-origin>
+          <md-tooltip>Internal applications</md-tooltip>settings</md-icon>
       </md-button>
 
       <md-menu-content width="4">
 
-         <md-subheader class="md-no-sticky">Internal applications</md-subheader>
+        <md-subheader class="md-no-sticky">Internal applications</md-subheader>
 
         <md-menu-item>
           <md-button ng-href="/courses">Courses</md-button>
         </md-menu-item>
-
-
 
         <md-menu-item>
           <md-button ng-href="/marine/biology" title="Marine Biology Samples">Marine biology</md-button>
@@ -96,35 +97,12 @@
           <md-button ng-href="/user">Users</md-button>
         </md-menu-item>
 
-
       </md-menu-content>
-
     </md-menu>
 
-    <!-- Login/User -->
     <npdc-md:user-menu></npdc-md:user-menu>
 
-     <!-- Search -->
-    <md-menu>
-
-      <md-button aria-label="Open search" class="md-icon-button" ng-click="$mdOpenMenu($event)">
-        <md-icon md-menu-origin>search<md-tooltip>Search</md-tooltip></md-icon>
-      </md-button>
-
-      <md-menu-content width="6">
-        <div>
-
-          <form class="" id="" action="." method="get">
-              <input type="search" autofocus="" incremental="" results="10" name="q" value="{{q}}" placeholder="Search">
-              <input type="submit" value="Search">
-          </form>
-
-
-        </div>
-      </md-menu-content>
-    </md-menu>
-
-
+    <npdc-md:expand-search></npdc-md:expand-search>
 
   </div>
 </md-toolbar>
