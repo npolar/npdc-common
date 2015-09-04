@@ -3,4 +3,4 @@
 require('../../');
 let angular = require('angular');
 
-angular.module('topMenu', ['npdcMaterial']);
+angular.module('toolbar', ['npdcMaterial']);

@@ -1,6 +1,6 @@
 # Usage
 
-    <npdc:top-menu></npdc:top-menu>
+    <npdc-md:toolbar></npdc-md:toolbar>
 
 # Options
 None atm.

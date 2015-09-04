@@ -8,11 +8,12 @@ var task = function(gulp, config) {
   var watchify = require('watchify');
   var browserify = require('browserify');
   var notify = require('gulp-notify');
+  var glob = require('glob');
+
   var bundle;
   var bundler = browserify({
     // Our scripts
-    //entries: [].concat(require.resolve('babelify/polyfill'), glob.sync(config.src.jsDemo)),
-    entries: ['src/layouts/formula/formulaDemo.js'],
+    entries: [].concat(require.resolve('babelify/polyfill'), glob.sync(config.src.jsDemo)),
     // Enable source maps
     debug: true
   }, watchify.args);

@@ -1,8 +1,9 @@
-"use strict"; 
+"use strict";
 
 // @ngInject
 let npdcUserMenu = function(NpolarApiSecurity) {
   return {
+    scope: {},
     restrict: 'AE',
     template: require('./userMenu.html'),
     controller: 'NpolarLoginController',

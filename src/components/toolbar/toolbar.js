@@ -1,11 +1,11 @@
 "use strict";
 
 // @ngInject
-let npdcTopMenu = function () {
+let toolbar = function () {
     return {
       restrict: 'E',
       template: require('./toolbar.html')
     };
   };
 
-module.exports = npdcTopMenu;
+module.exports = toolbar;
