@@ -2,8 +2,6 @@
 
 <section class="npdc-search">
   
-<div ng-if="!feed.entries"><md-progress-circular md-mode="indeterminate"></md-progress-circular></div>
-
 <div ng-if="filters.length">
   <md-chips ng-model="filters"
     readonly="false"
@@ -20,6 +18,7 @@
 </div>
 
 <npdc:create-button></npdc:create-button>
+<div ng-if="!feed.entries"><md-progress-circular md-mode="indeterminate"></md-progress-circular></div>
 
 <div layout="row" layout-sm="column">
   <!-- search results (feed entries) -->
@@ -29,7 +28,7 @@
         <md-list>
           <md-list-item class="md-2-line">
             <div class="md-list-item-text">
-              <h3 class="md-headline"><a ng-href="{{ noDot(e.id) }}">{{ e.title || e.name || e.id }}</a></h3>
+              <h3 class="md-headline"><a ng-href="{{ entryHref(e.id) }}">{{ e.title || e.name || e.code || e.id }}</a></h3>
               <h4>{{ e.updated.split("T")[0] }}</h4>
             </div>
           </md-list-item>

@@ -29,12 +29,21 @@ var SearchController = function ($scope, $location, NpolarApiSecurity) {
   $scope.facetKey = function(facet) {
     return Object.keys(facet)[0];
   };
-  
-  $scope.noDot = function(id) {
+    
+  $scope.entryHref = function(id) {
     if ((/[.]/).test(id)) {
       id += ".json";
     }
-    return id;
+    // Get relative path of entry by removing hostname + appname from request URI
+    let segments = $location.absUrl().split("//")[1].split("?")[0].split("/").filter(s => { return s !== "";}).slice(2);
+    
+    if (segments.length === 0) {
+      // For apps at /something, we just need to link to the id
+      return id;
+    } else {
+      // For apps at /cat, but with show/edit at /cat/lynx we link to `lynx/${id}`
+      return segments.join("/")+'/'+id;
+    }
   };
   
 };
