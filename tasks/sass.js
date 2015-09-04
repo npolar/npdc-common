@@ -14,7 +14,7 @@ var task = function(gulp, config) {
       .pipe(sass().on('error', sass.logError));
 
     return es.concat(vendorFiles, compiledFiles)
-      .pipe(concat('npdc-material-' + require('../package.json').version + '.css'))
+      .pipe(concat('npdc-material.css'))
       .pipe(gulp.dest(config.dist.root))
       .on('error', notify.onError({message: '<%= error.message %>', title: 'Gulp sass'}));
   });
