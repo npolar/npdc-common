@@ -3,7 +3,7 @@
 /**
  * @ngInject
  */
-var TopMenu = function () {
+let Top = function () {
   return {
     //scope: {},
     controller: 'NpdcTopController',
@@ -13,4 +13,4 @@ var TopMenu = function () {
   };
 };
 
-module.exports = TopMenu;
+module.exports = Top;
