@@ -7383,8 +7383,10 @@ md-tooltip {
     margin-right: 15px;
     margin-top: 19px; }
 
-.np-expand-search input::-webkit-search-decoration,
-.np-expand-search input::-webkit-search-cancel-button {
+.np-expand-search input[type="search"]::-webkit-search-decoration,
+.np-expand-search input[type="search"]::-webkit-search-cancel-button,
+.np-expand-search input[type="search"]::-webkit-search-results-button,
+.np-expand-search input[type="search"]::-webkit-search-results-decoration {
   display: none; }
 
 .np-expand-search input[type=search] {
@@ -7413,6 +7415,12 @@ md-tooltip {
   -webkit-box-shadow: 0 0 5px rgba(109, 207, 246, 0.5);
   background-color: #fff;
   width: 160px; }
+
+.np-expand-search input:-moz-placeholder {
+  color: #fff; }
+
+.np-expand-search input::-webkit-input-placeholder {
+  color: #fff; }
 
 .np-top-menu {
   background-color: #1570b1;
