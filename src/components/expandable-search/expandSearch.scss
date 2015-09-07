@@ -8,29 +8,20 @@
   input[type=search] {
     @include border-radius(10em);
     @include transition(all .5s);
-    background: #ededed url("http://static.tumblr.com/ftv85bp/MIXmud4tx/search-icon.png") no-repeat 9px center;
-    border: solid 1px #ccc;
-    padding: 9px 6px 9px 32px;
+    -webkit-appearance: textfield;
+    background: $color-bg-light url('img/material-icons/ic_search_black_24dp_1x.png') no-repeat 7px center;
+    border: none;
+    -webkit-box-sizing: content-box;
     font-family: inherit;
     font-size: 100%;
     outline: none;
-    width: 0px;
-    -webkit-box-sizing: content-box;
-    -webkit-appearance: textfield;
+    padding: 6px 4px 6px 32px;
+    width: 0;
   }
 
   input[type=search]:focus {
     @include box-shadow(0 0 5px rgba(109, 207, 246, .5));
-    background-color: #fff;
-    border-color: #66cc75;
+    background-color: $color-bg-light;
     width: 160px;
-  }
-
-  input:-moz-placeholder {
-    color: #999;
-  }
-
-  input::-webkit-input-placeholder {
-    color: #999;
   }
 }

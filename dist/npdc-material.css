@@ -7396,15 +7396,15 @@ md-tooltip {
   -moz-transition: all 0.5s;
   -ms-transition: all 0.5s;
   -webkit-transition: all 0.5s;
-  background: #ededed url("http://static.tumblr.com/ftv85bp/MIXmud4tx/search-icon.png") no-repeat 9px center;
-  border: solid 1px #ccc;
-  padding: 9px 6px 9px 32px;
+  -webkit-appearance: textfield;
+  background: #fff url("img/material-icons/ic_search_black_24dp_1x.png") no-repeat 7px center;
+  border: none;
+  -webkit-box-sizing: content-box;
   font-family: inherit;
   font-size: 100%;
   outline: none;
-  width: 0px;
-  -webkit-box-sizing: content-box;
-  -webkit-appearance: textfield; }
+  padding: 6px 4px 6px 32px;
+  width: 0; }
 
 .np-expand-search input[type=search]:focus {
   box-shadow: 0 0 5px rgba(109, 207, 246, 0.5);
@@ -7412,14 +7412,7 @@ md-tooltip {
   -ms-box-shadow: 0 0 5px rgba(109, 207, 246, 0.5);
   -webkit-box-shadow: 0 0 5px rgba(109, 207, 246, 0.5);
   background-color: #fff;
-  border-color: #66cc75;
   width: 160px; }
-
-.np-expand-search input:-moz-placeholder {
-  color: #999; }
-
-.np-expand-search input::-webkit-input-placeholder {
-  color: #999; }
 
 .np-top-menu {
   background-color: #1570b1;
