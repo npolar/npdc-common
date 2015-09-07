@@ -7398,7 +7398,7 @@ md-tooltip {
   -webkit-transition: all 0.5s;
   -webkit-appearance: textfield;
   background: #fff url("img/material-icons/ic_search_black_24dp_1x.png") no-repeat 7px center;
-  border: none;
+  border: 0;
   -webkit-box-sizing: content-box;
   font-family: inherit;
   font-size: 100%;

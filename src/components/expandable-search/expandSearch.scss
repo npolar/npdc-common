@@ -10,7 +10,7 @@
     @include transition(all .5s);
     -webkit-appearance: textfield;
     background: $color-bg-light url('img/material-icons/ic_search_black_24dp_1x.png') no-repeat 7px center;
-    border: none;
+    border: 0;
     -webkit-box-sizing: content-box;
     font-family: inherit;
     font-size: 100%;

@@ -11,6 +11,7 @@ var task = function(gulp, config) {
     watch(config.src.img, function () { runSequence('copy-static');});
     watch(config.src.jsAll, function () { runSequence(['lint', 'test']);});
     watch(config.src.sassAll, function () { runSequence('sass');});
+    watch(config.src.demo, function () { runSequence('copy-demo');});
   });
 };
 

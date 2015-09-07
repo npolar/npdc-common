@@ -24,6 +24,7 @@
                 <label for="{{field.uid}}">{{ field.title }}</label>
                 <md-slider flex min="{{field.minimum}}" max="{{field.maximum}}" step="{{field.step}}" md-discrete ng-model="field.value" aria-label="{{field.title}}" ng-attr-id="field.uid">
                 </md-slider>
+                <span>{{field.value}}</span>
                 <div class="np-validation-message" role="alert">
                   {{ field.error }}
                 </div>

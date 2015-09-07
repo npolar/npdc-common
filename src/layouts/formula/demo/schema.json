@@ -20,7 +20,8 @@
     },
     "string_textarea": {
       "type": "string",
-      "description": "string input rendered as textarea due to form definition"
+      "description": "string input rendered as textarea due to form definition",
+      "default": "dfgdfgdf\ndfg\ndfg\ndf\ngdf\ngdf\ngd\nfg\ndfg\ndf\ndfg\ngdf\ngdf\ng\ndfg\nd"
     },
     "string_datetime": {
       "type": "string",
