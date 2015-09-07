@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/npolar/npdc-common#readme",
   "dependencies": {
-    "angular": "^1.4.3",
+    "angular": "1.4.5",
     "angular-npolar": "git://github.com/npolar/angular-npolar.git",
     "npdc-material": "git://github.com/npolar/npdc-material.git"
   },
