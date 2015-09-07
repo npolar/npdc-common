@@ -38,7 +38,7 @@
                   {{ field.error }}
                 </div>
               </md-input-container>
-              <md-input-container ng-if="field.mdType === 'input'" title="{{ field.description }}">
+              <md-input-container ng-if="field.mdType === 'input'" title="{{ field.description }}" ng-show="show">
                 <label for="{{field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title) }}</label>
                 <div formula:field="field"></div>
                 <div class="np-validation-message md-caption" role="alert">

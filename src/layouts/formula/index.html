@@ -8,10 +8,11 @@
   <meta name="viewport" content="initial-scale=1" />
 </head>
 
-<body ng-controller="FormulaCtrl as ctrl">
+<body>
   <npdc-md:toolbar></npdc-md:toolbar>
-  <md-content layout="row" class="md-padding">
+  <md-content layout="row" class="md-padding" ng-controller="FormulaCtrl">
     <div formula="formulaData" flex></div>
+    <button ng-click="toggleShow()"> Toggle </button>
   </md-content>
   <script src="/demos.js"></script>
 </body>

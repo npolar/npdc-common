@@ -1,7 +1,9 @@
 .np-expand-search {
 
-  input::-webkit-search-decoration,
-  input::-webkit-search-cancel-button {
+  input[type="search"]::-webkit-search-decoration,
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-results-button,
+  input[type="search"]::-webkit-search-results-decoration {
     display: none;
   }
 
@@ -23,5 +25,13 @@
     @include box-shadow(0 0 5px rgba(109, 207, 246, .5));
     background-color: $color-bg-light;
     width: 160px;
+  }
+
+  input:-moz-placeholder {
+    color: $color-bg-light;
+  }
+
+  input::-webkit-input-placeholder {
+    color: $color-bg-light;
   }
 }
