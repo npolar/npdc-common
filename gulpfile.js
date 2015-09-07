@@ -14,7 +14,7 @@ npdcGulp.loadModuleTasks(gulp, {
 });
 
 gulp.task('copy-deps-assets', function () {
-  return gulp.src(['node_modules/npdc-material/dist/img/*'], { base: 'node_modules/npdc-material/dist' })
+  return gulp.src(['node_modules/npdc-material/dist/img/**/*'], { base: 'node_modules/npdc-material/dist' })
     .pipe(gulp.dest('dist/assets'));
 });
 
