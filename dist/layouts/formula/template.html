@@ -1,4 +1,18 @@
 <!DOCTYPE html>
+<!-- field info -->
+<script type="text/ng-template" id="ft-field-info.html">
+  <md-icon>info_outline
+    <md-tooltip md-direction="left">{{ field.description }}</md-tooltip>
+  </md-icon>
+</script>
+
+<!-- validation message -->
+<script type="text/ng-template" id="ft-validation-message.html">
+  <div class="md-caption" role="alert" ng-show="{{ field.error !== null }}">
+    {{ field.error }}
+  </div>
+</script>
+
 <form name="formula" class="formula" ng-if="form.fieldsets">
   <header ng-if="form.title">
     {{ form.title }}
@@ -11,44 +25,45 @@
           <div formula:field-definition ng-repeat="field in fieldset.fields" ng-show="field.visible">
             <!-- input field-->
             <div ng-if="field.typeOf('input')" apply-md-type="field">
-              <div ng-if="field.mdType === 'boolean'" layout="row" layout-align="space-between center">
-                <label for="{{field.uid}}">{{ field.title }}</label>
-                <div flex layout="row" layout-align="end center">
-                  <md-checkbox ng-attr-id="field.uid" ng-model="field.value" aria-label="{{ field.title }}"></md-checkbox>
-                </div>
-                <div class="np-validation-message" role="alert">
-                  {{ field.error }}
-                </div>
+
+              <!-- boolean -->
+              <div ng-if="field.mdType === 'boolean'" class="np-formula-boolean">
+                <div ng-include="'ft-field-info.html'" class="np-field-info" ng-if="field.description"></div>
+                <md-checkbox ng-attr-id="field.uid" ng-model="field.value" aria-label="{{ field.title }}">
+                  <label for="{{field.uid}}">{{ field.title }}</label>
+                </md-checkbox>
+                <div ng-include="'ft-validation-message.html'" class="np-validation-message"></div>
               </div>
-              <div ng-if="field.mdType === 'range'" layout="row" layout-align="space-between center">
-                <label for="{{field.uid}}">{{ field.title }}</label>
+
+              <!-- range -->
+              <div ng-if="field.mdType === 'range'" class="np-formula-range">
+                <label for="{{field.uid}}">{{ field.title }}: <span>{{field.value}}</span></label>
+                <div ng-include="'ft-field-info.html'" class="np-field-info" ng-if="field.description"></div>
                 <md-slider flex min="{{field.minimum}}" max="{{field.maximum}}" step="{{field.step}}" md-discrete ng-model="field.value" aria-label="{{field.title}}" ng-attr-id="field.uid">
                 </md-slider>
-                <span>{{field.value}}</span>
-                <div class="np-validation-message" role="alert">
-                  {{ field.error }}
-                </div>
+                <div ng-include="'ft-validation-message.html'" class="np-validation-message"></div>
               </div>
-              <md-input-container ng-if="field.mdType === 'select'">
+
+              <!-- select -->
+              <md-input-container ng-if="field.mdType === 'select'" class="np-formula-select">
                 <label for="{{field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title) }}</label>
+                <div ng-include="'ft-field-info.html'" class="np-field-info" ng-if="field.description"></div>
                 <md-select ng-model="field.value">
                   <md-option ng-repeat="val in field.enum" value="{{val}}">{{val}}</md-option>
                 </md-select>
-                <div class="np-validation-message" role="alert">
-                  {{ field.error }}
-                </div>
+                <div ng-include="'ft-validation-message.html'" class="np-validation-message"></div>
               </md-input-container>
-              <md-input-container ng-if="field.mdType === 'input'" title="{{ field.description }}">
+
+              <!-- input -->
+              <md-input-container ng-if="field.mdType === 'input'" class="np-formula-input">
                 <label for="{{field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title) }}</label>
+                <div ng-include="'ft-field-info.html'" class="np-field-info" ng-if="field.description"></div>
                 <div formula:field="field"></div>
-                <div class="np-validation-message md-caption" role="alert">
-                  {{ field.error }}
-                </div>
+                <div ng-include="'ft-validation-message.html'" class="np-validation-message"></div>
               </md-input-container>
             </div>
 
-
-
+            <!-- object -->
             <div ng-if="field.typeOf('object')">
               <md-whiteframe class="md-whiteframe-z1">
                 <fieldset formula:field="field">
@@ -61,13 +76,15 @@
               </md-whiteframe>
             </div>
 
-            <div ng-if="field.typeOf('array')">
+            <!-- array -->
+            <div ng-if="field.typeOf('array')" class="np-formula-array">
               <div formula:field="field">
                 <md-whiteframe class="md-whiteframe-z1">
                   <fieldset ng-class="{ valid: field.valid, error: field.error }">
+                    <div ng-include="'ft-field-info.html'" class="np-field-info" ng-if="field.description"></div>
                     <legend>{{ field.title }} ({{ field.values.length || 0 }})</legend>
                     <div ng-if="field.typeOf('fieldset')">
-                      <ul class="np-formula-array">
+                      <ul>
                         <li ng-repeat="value in field.values">
                           <md-whiteframe class="md-whiteframe-z1">
                             <fieldset ng-class="{ valid: value.valid }">

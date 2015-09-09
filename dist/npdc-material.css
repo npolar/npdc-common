@@ -7313,7 +7313,7 @@ md-tooltip {
   margin: 16px;
   padding: 16px; }
 
-.formula .np-formula-array {
+.formula .np-formula-array ul {
   list-style-type: none;
   padding: 0;
   position: relative; }
@@ -7332,11 +7332,42 @@ md-tooltip {
   -moz-order: 99;
   -ms-order: 99;
   order: 99;
-  color: #ef4100;
   margin-top: 8px; }
+  .formula .np-validation-message .md-caption {
+    color: #ef4100; }
 
 .formula .np-formula-array-add {
   float: right; }
+
+.formula .np-field-info {
+  cursor: help;
+  position: absolute;
+  right: 5px;
+  top: 0;
+  z-index: 999; }
+  .formula .np-field-info md-icon {
+    color: rgba(0, 0, 0, 0.26); }
+
+.formula .np-field-info + md-select,
+.formula .np-field-info + input[type="number"],
+.formula .np-field-info + md-slider,
+.formula .np-field-info + md-checkbox {
+  width: calc(100% - 33px); }
+
+.formula .np-formula-range,
+.formula .np-formula-boolean {
+  position: relative; }
+  .formula .np-formula-range label,
+  .formula .np-formula-boolean label {
+    color: rgba(0, 0, 0, 0.54); }
+    .formula .np-formula-range label span,
+    .formula .np-formula-boolean label span {
+      color: #000; }
+
+.formula .np-formula-input .np-field-info,
+.formula .np-formula-select .np-field-info,
+.formula .np-formula-range .np-field-info {
+  top: 20px; }
 
 .np-layout-grid .np-grid-flex {
   align-items: center;

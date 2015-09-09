@@ -15,7 +15,8 @@ var task = function(gulp, config) {
       files: [config.dist.root+'/**/*'],
       // Disable input mirroring between connected browsers
       ghostMode: false,
-      open: false
+      open: false,
+      reloadDelay: 500
     });
 
   });

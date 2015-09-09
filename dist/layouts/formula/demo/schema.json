@@ -5,8 +5,7 @@
   "type": "object",
   "properties": {
     "string": {
-      "type": "string",
-      "description": "string input without additional properties"
+      "type": "string"
     },
     "string_required": {
       "type": "string",
