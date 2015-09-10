@@ -7,7 +7,7 @@ var Search = function () {
   return {
     //scope: {},
     controller: 'NpdcSearchController',
-    templateUrl: 'npdc-common/src/ui/Search/search.html',
+    templateUrl: 'npdc-common/src/ui/search/search.html',
     link: function(scope) {
       console.log("npdc:search link(scope)", scope);
     }
