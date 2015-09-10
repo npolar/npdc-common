@@ -6754,6 +6754,7 @@ div[tabindex] {
 
 .np-content {
   bottom: 0;
+  box-sizing: border-box;
   overflow-x: hidden;
   overflow-y: scroll;
   padding: 10px;
@@ -6761,3 +6762,12 @@ div[tabindex] {
   top: 64px;
   width: 100%; }
 
+.np-environment-warning {
+  color: red;
+  position: absolute;
+  z-index: 9999;
+  font-weight: bold;
+  text-shadow: 1px 1px #000;
+  top: 20px;
+  left: 30%;
+}
