@@ -9,10 +9,12 @@
 </head>
 
 <body>
-  <npdc-md:toolbar></npdc-md:toolbar>
-  <md-content layout="row" class="md-padding" ng-controller="FormulaCtrl">
-    <div formula="formulaData" flex></div>
-  </md-content>
+  <div class="np-page-container">
+    <npdc-md:toolbar class="np-header" role="banner"></npdc-md:toolbar>
+    <md-content layout="row" class="np-content md-padding" ng-controller="FormulaCtrl">
+      <div formula="formulaData" flex></div>
+    </md-content>
+  </div>
   <script src="/demos.js"></script>
 </body>
 
