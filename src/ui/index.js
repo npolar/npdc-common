@@ -6,13 +6,15 @@ require('npdc-material');
 
 var ui = angular.module('npdcUi', ['npolarUi', 'npdcMaterial']);
 
-ui.service('NpdcBreadcrumbs', require('./Breadcrumbs'));
+ui.service('NpdcBreadcrumbs', require('./breadcrumbs/BreadcrumbsService'));
+ui.controller('NpdcBreadcrumbsController', require('./breadcrumbs/BreadcrumbsController'));
+ui.directive('npdcCrumbs', require('./breadcrumbs/breadcrumbs'));
 
-ui.directive('npdcTop', require('./Top'));
-ui.controller('NpdcTopController', require('./Top/TopController'));
+ui.directive('npdcTop', require('./top/top'));
+ui.controller('NpdcTopController', require('./top/TopController'));
 
-ui.directive('npdcSearch', require('./Search'));
-ui.controller('NpdcSearchController', require('./Search/SearchController'));
+ui.directive('npdcSearch', require('./search/search'));
+ui.controller('NpdcSearchController', require('./search/SearchController'));
 
 ui.directive('npdcCreateButton', require('./button/CreateButton'));
 ui.directive('npdcEditButton', require('./button/EditButton'));
