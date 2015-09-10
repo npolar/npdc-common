@@ -11,6 +11,9 @@
         "type": "textarea"
       },
       "string_datetime",
+      "string_date",
+      "string_datefullyear",
+      "string_time",
       "string_enum_default",
       "string_color"
     ]

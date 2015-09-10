@@ -27,6 +27,21 @@
       "description": "string input with date-time format property set",
       "format": "date-time"
     },
+    "string_date": {
+      "type": "string",
+      "description": "string input with date format property set",
+      "format": "date"
+    },
+    "string_datefullyear": {
+      "type": "string",
+      "description": "string input with date-fullyear format property set",
+      "format": "date-fullyear"
+    },
+    "string_time": {
+      "type": "string",
+      "description": "string input with time format property set",
+      "format": "time"
+    },
     "string_enum_default": {
       "type": "string",
       "description": "string input with enum and default properties set",
