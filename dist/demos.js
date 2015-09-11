@@ -68843,7 +68843,9 @@ function drainQueue() {
         currentQueue = queue;
         queue = [];
         while (++queueIndex < len) {
-            currentQueue[queueIndex].run();
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
         }
         queueIndex = -1;
         len = queue.length;
@@ -68895,7 +68897,6 @@ process.binding = function (name) {
     throw new Error('process.binding is not supported');
 };
 
-// TODO(shtylman)
 process.cwd = function () { return '/' };
 process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
@@ -69049,6 +69050,9 @@ angular.module('formula')
 							break;
 
 						case 'any':
+						case 'date':
+						case 'datetime':
+						case 'time':
 							elem.attr('type', 'text');
 							break;
 						}
@@ -69426,6 +69430,10 @@ angular.module('formula')
 
 						case 'time':
 							replace = $filter('date')(new Date(), 'hh:mm:ss', 'UTC');
+							break;
+						
+						case 'year':
+							replace = $filter('date')(new Date(), 'yyyy', 'UTC');
 							break;
 
 						default:
@@ -70439,6 +70447,14 @@ angular.module('formula')
 				}
 				
 				return 'ISO 8601 datetime';
+			},
+			datefullyear: // RCF 3339 four-digit year
+			function(data, schema) {
+				if(typeof data == 'string' && /^\d{4}$/.test(data)) {
+					return null;
+				}
+				
+				return 'RFC 3339 fullyear';
 			},
 			email: // RCF 3696 email
 			function(data, schema) {
@@ -71775,7 +71791,7 @@ ValidatorContext.prototype.validateType = function validateType(data, schema) {
 		dataType = "array";
 	}
 	var allowedTypes = schema.type;
-	if (typeof allowedTypes !== "object") {
+	if (!Array.isArray(allowedTypes)) {
 		allowedTypes = [allowedTypes];
 	}
 
