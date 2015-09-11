@@ -18,14 +18,14 @@
   "homepage": "https://github.com/npolar/npdc-common#readme",
   "dependencies": {
     "angular": "1.4.5",
-    "angular-npolar": "git://github.com/npolar/angular-npolar.git",
-    "npdc-material": "git://github.com/npolar/npdc-material.git"
+    "angular-npolar": "npolar/angular-npolar",
+    "npdc-material": "npolar/npdc-material"
   },
   "devDependencies": {
     "babelify": "*",
     "browserify-ngannotate": "*",
     "gulp": "^3.9.0",
-    "npdc-gulp": "git://github.com/npolar/npdc-gulp.git",
+    "npdc-gulp": "npolar/npdc-gulp",
     "partialify": "*",
     "run-sequence": "^1.1.2",
     "should": "^7.0.2"
