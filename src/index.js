@@ -12,9 +12,11 @@ var npdcMaterial = angular.module('npdcMaterial', ['ngMaterial', 'npolarApi', 'n
 // Don't require demo code here!
 
 npdcMaterial.config(function($mdThemingProvider) {
-  $mdThemingProvider.theme('default')
-    .primaryPalette('blue')
-    .accentPalette('amber');
+  var npdcBlue = $mdThemingProvider.extendPalette('blue', {
+    '500': '1570b1'
+  });
+  $mdThemingProvider.definePalette('npdcBlue', npdcBlue);
+  $mdThemingProvider.theme('default').primaryPalette('npdcBlue').accentPalette('deep-orange');
 });
 
 require('./components');

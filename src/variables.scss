@@ -1,3 +1,6 @@
+@import '../node_modules/sass-material-colors/sass/sass-material-colors';
+// Use with `material-color('cyan', '400')`
+
 // Color palett
 $color-primary-0: #1570b1;
 $color-primary-1: #7ea2bb;
@@ -28,4 +31,4 @@ $color-text-light: #fff;
 $color-text-dark: #000;
 
 $color-bg-light: #fff;
-$color-bg-dark: #000;
+$color-bg-dark: material-color('grey', '500');
