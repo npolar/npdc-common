@@ -72989,7 +72989,7 @@ angular.module('document', ['npdcMaterial']).controller('DocumentCtrl', ["$scope
   $scope.document = require('./demo/doc.json');
 }]);
 
-},{"../../":240,"./demo/doc.json":222,"angular":33}],226:[function(require,module,exports){
+},{"../../":241,"./demo/doc.json":222,"angular":33}],226:[function(require,module,exports){
 module.exports = '<!DOCTYPE html>\n<form class="np-expand-search" action="." method="get" ng-submit="this.form.submit()">\n  <input type="search" incremental="" results="10" name="q" value="{{q}}" >\n</form>\n';
 },{}],227:[function(require,module,exports){
 "use strict";
@@ -73012,13 +73012,14 @@ var angular = require('angular');
 
 angular.module('expandSearch', ['npdcMaterial']);
 
-},{"../../":240,"angular":33}],229:[function(require,module,exports){
+},{"../../":241,"angular":33}],229:[function(require,module,exports){
 "use strict";
 
 var angular = require('angular');
 var npdcMaterial = angular.module('npdcMaterial');
 
 npdcMaterial.controller('NpdcMdSidenavCtrl', require('./sidenav/SidenavCtrl'));
+npdcMaterial.controller('NpdcMdToolbarCtrl', require('./toolbar/ToolbarCtrl'));
 
 npdcMaterial.directive('npdcMdDocument', require('./document/document'));
 npdcMaterial.directive('npdcMdToolbar', require('./toolbar/toolbar'));
@@ -73026,7 +73027,7 @@ npdcMaterial.directive('npdcMdSidenav', require('./sidenav/sidenav'));
 npdcMaterial.directive('npdcMdUserMenu', require('./user-menu/userMenu'));
 npdcMaterial.directive('npdcMdExpandSearch', require('./expandable-search/expandSearch'));
 
-},{"./document/document":224,"./expandable-search/expandSearch":227,"./sidenav/SidenavCtrl":230,"./sidenav/sidenav":232,"./toolbar/toolbar":235,"./user-menu/userMenu":238,"angular":33}],230:[function(require,module,exports){
+},{"./document/document":224,"./expandable-search/expandSearch":227,"./sidenav/SidenavCtrl":230,"./sidenav/sidenav":232,"./toolbar/ToolbarCtrl":234,"./toolbar/toolbar":236,"./user-menu/userMenu":239,"angular":33}],230:[function(require,module,exports){
 "use strict";
 
 // @ngInject
@@ -73091,39 +73092,57 @@ angular.module('sidenav', ['ngRoute', 'npdcMaterial']).controller('SidenavCtrl',
   });
 }]);
 
-},{"../../":240,"angular":33,"angular-route":31}],234:[function(require,module,exports){
-module.exports = '<!DOCTYPE html>\n<md-toolbar class="np-top-menu">\n  <div class="md-toolbar-tools">\n    <div hide-gt-md>\n      <md-button class="md-icon-button" aria-label="Open sidenav" ng-click="toggleLeft()" ng-if="sidenav">\n        <md-icon>menu</md-icon>\n      </md-button>\n      <span class="md-title">Dataset</span>\n    </div>\n\n    <span flex></span>\n\n    <!-- Apps -->\n    <md-menu>\n      <md-button aria-label="Open application menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">\n        <md-icon md-menu-origin>\n          <md-tooltip>Data / Applications</md-tooltip>apps</md-icon>\n      </md-button>\n\n      <md-menu-content width="6">\n\n\n        <md-subheader class="md-sticky">⛁ Data</md-subheader>\n\n        <md-menu-item>\n          <md-button ng-href="/dataset">Datasets (metadata catalogue)</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="//api.npolar.no">Data services (\n            <abbr title="Application Programming Interface">API</abbr>s)</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="//geodata.npolar.no">Geographic services</md-button>\n        </md-menu-item>\n\n\n        <md-divider></md-divider>\n\n        <md-subheader class="md-no-sticky">Applications</md-subheader>\n\n        <md-menu-item>\n          <md-button ng-href="/expedition" title="Expeditions">Expeditions</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/vessel">Historic Vessels</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/indicator">Indicators (environmental monitoring)</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/map/archive">Map archive</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/people">People</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/placename">Placenames</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/project">Projects</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/publication">Publications</md-button>\n        </md-menu-item>\n\n      </md-menu-content>\n\n    </md-menu>\n\n    <md-menu ng-if="security.isAuthenticated()">\n      <md-button aria-label="Open application menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">\n        <md-icon md-menu-origin>\n          <md-tooltip>Internal applications</md-tooltip>settings</md-icon>\n      </md-button>\n\n      <md-menu-content width="4">\n\n        <md-subheader class="md-no-sticky">Internal applications</md-subheader>\n\n        <md-menu-item>\n          <md-button ng-href="/courses">Courses</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/marine/biology" title="Marine Biology Samples">Marine biology</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/user">Users</md-button>\n        </md-menu-item>\n\n      </md-menu-content>\n    </md-menu>\n\n    <npdc-md:user-menu></npdc-md:user-menu>\n\n    <npdc-md:expand-search></npdc-md:expand-search>\n\n  </div>\n</md-toolbar>\n';
+},{"../../":241,"angular":33,"angular-route":31}],234:[function(require,module,exports){
+"use strict";
+
+// @ngInject
+var ToolbarCtrl = function ToolbarCtrl($scope, $mdSidenav) {
+  $scope.sidenav = $scope.toolbar.sidenav || true;
+  $scope.title = $scope.toolbar.title || '';
+  $scope.toggleLeft = function () {
+    $mdSidenav('left').toggle();
+  };
+};
+ToolbarCtrl.$inject = ["$scope", "$mdSidenav"];
+
+module.exports = ToolbarCtrl;
+
 },{}],235:[function(require,module,exports){
+module.exports = '<!DOCTYPE html>\n<md-toolbar class="np-top-menu">\n  <div class="md-toolbar-tools">\n    <div hide-gt-md>\n      <md-button class="md-icon-button" aria-label="Open sidenav" ng-click="toggleLeft()" ng-if="sidenav">\n        <md-icon>menu</md-icon>\n      </md-button>\n      <span class="md-title">{{title}}</span>\n    </div>\n\n    <span flex></span>\n\n    <!-- Apps -->\n    <md-menu>\n      <md-button aria-label="Open application menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">\n        <md-icon md-menu-origin>\n          <md-tooltip>Data / Applications</md-tooltip>apps</md-icon>\n      </md-button>\n\n      <md-menu-content width="6">\n\n\n        <md-subheader class="md-sticky">⛁ Data</md-subheader>\n\n        <md-menu-item>\n          <md-button ng-href="/dataset">Datasets (metadata catalogue)</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="//api.npolar.no">Data services (\n            <abbr title="Application Programming Interface">API</abbr>s)</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="//geodata.npolar.no">Geographic services</md-button>\n        </md-menu-item>\n\n\n        <md-divider></md-divider>\n\n        <md-subheader class="md-no-sticky">Applications</md-subheader>\n\n        <md-menu-item>\n          <md-button ng-href="/expedition" title="Expeditions">Expeditions</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/vessel">Historic Vessels</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/indicator">Indicators (environmental monitoring)</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/map/archive">Map archive</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/people">People</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/placename">Placenames</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/project">Projects</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/publication">Publications</md-button>\n        </md-menu-item>\n\n      </md-menu-content>\n\n    </md-menu>\n\n    <md-menu ng-if="security.isAuthenticated()">\n      <md-button aria-label="Open application menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">\n        <md-icon md-menu-origin>\n          <md-tooltip>Internal applications</md-tooltip>settings</md-icon>\n      </md-button>\n\n      <md-menu-content width="4">\n\n        <md-subheader class="md-no-sticky">Internal applications</md-subheader>\n\n        <md-menu-item>\n          <md-button ng-href="/courses">Courses</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/marine/biology" title="Marine Biology Samples">Marine biology</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/user">Users</md-button>\n        </md-menu-item>\n\n      </md-menu-content>\n    </md-menu>\n\n    <npdc-md:user-menu></npdc-md:user-menu>\n\n    <npdc-md:expand-search></npdc-md:expand-search>\n\n  </div>\n</md-toolbar>\n';
+},{}],236:[function(require,module,exports){
 "use strict";
 
 // @ngInject
 var toolbar = function toolbar($mdSidenav) {
   return {
     restrict: 'E',
+    scope: {
+      'toolbar': '='
+    },
     template: require('./toolbar.html'),
-    link: function link(scope, element, attr) {
-      scope.sidenav = true;
-      scope.toggleLeft = function () {
-        $mdSidenav('left').toggle();
-      };
-    }
+    controller: 'NpdcMdToolbarCtrl'
   };
 };
 toolbar.$inject = ["$mdSidenav"];
 
 module.exports = toolbar;
 
-},{"./toolbar.html":234}],236:[function(require,module,exports){
+},{"./toolbar.html":235}],237:[function(require,module,exports){
 'use strict';
 
 require('../../');
 var angular = require('angular');
 
-angular.module('toolbar', ['npdcMaterial']);
+angular.module('toolbar', ['npdcMaterial']).controller('ToolbarCtrl', ["$scope", function ($scope) {
+  $scope.myToolbar = {
+    title: 'Appname',
+    sidenav: true
+  };
+}]);
 
-},{"../../":240,"angular":33}],237:[function(require,module,exports){
+},{"../../":241,"angular":33}],238:[function(require,module,exports){
 module.exports = '<!DOCTYPE html>\n<md-menu ng-if="!security.isAuthenticated()">\n  <md-button aria-label="Open user" class="md-icon-button" ng-click="$mdOpenMenu($event)">\n    <md-icon md-menu-origin>person<md-tooltip>Login</md-tooltip></md-icon>\n  </md-button>\n  <md-menu-content>\n    <form role="form" layout-padding class="np-login">\n      <div>\n        <md-input-container>\n          <label for="username" class="md-no-float">Username</label>\n          <input type="text" ng-model="user.username" id="username">\n        </md-input-container>\n        <md-input-container>\n          <label for="password" class="md-no-float">Password</label>\n          <input type="password" id="password" ng-model="user.password">\n        </md-input-container>\n      </div>\n      <div layout="row" layout-align="space-between center">\n        <a ng-href="/user/reset?username={{user.username}}">Forgot password?</a>\n        <a href="/user/register">Sign up</a>\n        <md-button type="submit" ng-click="login()" class="md-raised md-primary">Login</md-button>\n      </div>\n    </form>\n  </md-menu-content>\n</md-menu>\n\n<md-menu ng-if="security.isAuthenticated()">\n  <md-button aria-label="Open user" class="md-icon-button" ng-click="$mdOpenMenu($event)">\n    <md-icon md-menu-origin>person<md-tooltip>{{ security.getUser().name }}</md-tooltip></md-icon>\n  </md-button>\n  <md-menu-content>\n    <md-menu-item>\n      <md-button ng-href="/user/{{user.username}}" title="View profile for user {{user.username}}">\n        <md-icon md-menu-align-target>face</md-icon>\n        {{ user.name }}\n      </md-button>\n    </md-menu-item>\n    <md-menu-item>\n      <md-button ng-click="logout()">\n        <span>Logout</span> <small>(session expires {{ 1000*user.exp | date:\'HH:mm\' }})</small>\n      </md-button>\n    </md-menu-item>\n  </md-menu-content>\n</md-menu>\n';
-},{}],238:[function(require,module,exports){
+},{}],239:[function(require,module,exports){
 "use strict";
 
 // @ngInject
@@ -73142,7 +73161,7 @@ npdcUserMenu.$inject = ["NpolarApiSecurity"];
 
 module.exports = npdcUserMenu;
 
-},{"./userMenu.html":237}],239:[function(require,module,exports){
+},{"./userMenu.html":238}],240:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73150,7 +73169,7 @@ var angular = require('angular');
 
 angular.module('userMenu', ['npdcMaterial']);
 
-},{"../../":240,"angular":33}],240:[function(require,module,exports){
+},{"../../":241,"angular":33}],241:[function(require,module,exports){
 'use strict';
 /**
  * Angular bootstraping
@@ -73177,7 +73196,7 @@ require('./layouts');
 
 module.exports = npdcMaterial;
 
-},{"./components":229,"./layouts":246,"angular":33,"angular-animate":2,"angular-aria":4,"angular-material":6,"angular-npolar":24}],241:[function(require,module,exports){
+},{"./components":229,"./layouts":247,"angular":33,"angular-animate":2,"angular-aria":4,"angular-material":6,"angular-npolar":24}],242:[function(require,module,exports){
 'use strict';
 
 // @ngInject
@@ -73224,7 +73243,7 @@ var applyMdType = function applyMdType() {
 
 module.exports = applyMdType;
 
-},{}],242:[function(require,module,exports){
+},{}],243:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73239,9 +73258,9 @@ angular.module('formulaDemo', ['npdcMaterial', 'formula']).controller('FormulaCt
   };
 }]);
 
-},{"../../":240,"angular":33,"formula":220}],243:[function(require,module,exports){
+},{"../../":241,"angular":33,"formula":220}],244:[function(require,module,exports){
 module.exports = '<!DOCTYPE html>\n<!-- field info -->\n<script type="text/ng-template" id="ft-field-info.html">\n  <md-icon>info_outline\n    <md-tooltip md-direction="left">{{ field.description }}</md-tooltip>\n  </md-icon>\n</script>\n\n<!-- validation message -->\n<script type="text/ng-template" id="ft-validation-message.html">\n  <div class="md-caption" role="alert" ng-show="{{ field.error !== null }}">\n    {{ field.error }}\n  </div>\n</script>\n\n<form name="formula" class="formula" ng-if="form.fieldsets">\n  <header ng-if="form.title">\n    {{ form.title }}\n  </header>\n\n  <md-tabs md-swipe-content md-dynamic-height md-border-bottom>\n    <md-tab label="{{fieldset.title}}" ng-disabled="fieldset.disabled" ng-repeat="fieldset in form.fieldsets">\n      <md-whiteframe class="md-whiteframe-z1">\n        <fieldset>\n          <div formula:field-definition ng-repeat="field in fieldset.fields" ng-show="field.visible">\n            <!-- input field-->\n            <div ng-if="field.typeOf(\'input\')" apply-md-type="field">\n\n              <!-- boolean -->\n              <div ng-if="field.mdType === \'boolean\'" class="np-formula-boolean">\n                <div ng-include="\'ft-field-info.html\'" class="np-field-info" ng-if="field.description"></div>\n                <md-checkbox ng-attr-id="field.uid" ng-model="field.value" aria-label="{{ field.title }}">\n                  <label for="{{field.uid}}">{{ field.title }}</label>\n                </md-checkbox>\n                <div ng-include="\'ft-validation-message.html\'" class="np-validation-message"></div>\n              </div>\n\n              <!-- range -->\n              <div ng-if="field.mdType === \'range\'" class="np-formula-range">\n                <label for="{{field.uid}}">{{ field.title }}: <span>{{field.value}}</span></label>\n                <div ng-include="\'ft-field-info.html\'" class="np-field-info" ng-if="field.description"></div>\n                <md-slider flex min="{{field.minimum}}" max="{{field.maximum}}" step="{{field.step}}" md-discrete ng-model="field.value" aria-label="{{field.title}}" ng-attr-id="field.uid">\n                </md-slider>\n                <div ng-include="\'ft-validation-message.html\'" class="np-validation-message"></div>\n              </div>\n\n              <!-- select -->\n              <md-input-container ng-if="field.mdType === \'select\'" class="np-formula-select">\n                <label for="{{field.uid}}">{{ (field.required ? field.title + \' (required)\' : field.title) }}</label>\n                <div ng-include="\'ft-field-info.html\'" class="np-field-info" ng-if="field.description"></div>\n                <md-select ng-model="field.value">\n                  <md-option ng-repeat="val in field.enum" value="{{val}}">{{val}}</md-option>\n                </md-select>\n                <div ng-include="\'ft-validation-message.html\'" class="np-validation-message"></div>\n              </md-input-container>\n\n              <!-- input -->\n              <md-input-container ng-if="field.mdType === \'input\'" class="np-formula-input">\n                <label for="{{field.uid}}">{{ (field.required ? field.title + \' (required)\' : field.title) }}</label>\n                <div ng-include="\'ft-field-info.html\'" class="np-field-info" ng-if="field.description"></div>\n                <div formula:field="field"></div>\n                <div ng-include="\'ft-validation-message.html\'" class="np-validation-message"></div>\n              </md-input-container>\n            </div>\n\n            <!-- object -->\n            <div ng-if="field.typeOf(\'object\')">\n              <md-whiteframe class="md-whiteframe-z1">\n                <fieldset formula:field="field">\n                  <legend>{{ field.title }}</legend>\n\n                  <div ng-repeat="field in field.fields" ng-show="field.visible">\n                    <formula:field-instance field="field"></formula:field-instance>\n                  </div>\n                </fieldset>\n              </md-whiteframe>\n            </div>\n\n            <!-- array -->\n            <div ng-if="field.typeOf(\'array\')" class="np-formula-array">\n              <div formula:field="field">\n                <md-whiteframe class="md-whiteframe-z1">\n                  <fieldset ng-class="{ valid: field.valid, error: field.error }">\n                    <div ng-include="\'ft-field-info.html\'" class="np-field-info" ng-if="field.description"></div>\n                    <legend>{{ field.title }} ({{ field.values.length || 0 }})</legend>\n                    <div ng-if="field.typeOf(\'fieldset\')">\n                      <ul>\n                        <li ng-repeat="value in field.values">\n                          <md-whiteframe class="md-whiteframe-z1">\n                            <fieldset ng-class="{ valid: value.valid }">\n                              <legend>\n                                <span ng-if="!value.visible">{{ value.fields | formulaInlineValues }}</span>\n                              </legend>\n                              <div class="np-formula-object-ctrls">\n                                <a class="toggle" href="" ng-click="field.itemToggle($index)" title="{{ value.visible ? form.i18n.minimize[1] : form.i18n.maximize[1] }}">\n                                  <md-icon>{{ value.visible ? \'expand_less\' : \'expand_more\' }}</md-icon>\n                                </a>\n                                <a class="remove" href="" ng-click="field.itemRemove($index)" title="{{ form.i18n.remove[1] }}">\n                                  <md-icon>close</md-icon>\n                                </a>\n                              </div>\n\n                              <div class="np-formula-subarray" ng-repeat="subfield in field.fields" ng-show="value.visible">\n                                <formula:field-instance field="value.fields[$index]" ng-show="subfield.visible"></formula:field-instance>\n                              </div>\n                            </fieldset>\n                          </md-whiteframe>\n                        </li>\n                      </ul>\n                      <div class="np-formula-array-add">\n                        <md-button ng-click="field.itemAdd()" class="md-fab md-mini" aria-label="{{ form.i18n.add[1] }}">\n                          <md-icon>add</md-icon>\n                        </md-button>\n                      </div>\n                    </div>\n\n                    <div ng-if="field.typeOf(\'field\')">\n                      <ul class="np-formula-array">\n                        <li ng-class="{ valid: value.valid, error: value.error }" ng-repeat="value in field.values" layout="row">\n                          <formula:field-instance field="value" flex></formula:field-instance>\n                          <a class="np-formula-input-ctrls remove" href="" ng-click="field.itemRemove($index)" title="{{ form.i18n.remove[1] }}">\n                            <md-icon>close</md-icon>\n                          </a>\n                        </li>\n                      </ul>\n                      <div class="np-formula-array-add">\n                        <md-button ng-click="field.itemAdd()" class="md-fab md-mini" aria-label="{{ form.i18n.add[1] }}">\n                          <md-icon>add</md-icon>\n                        </md-button>\n                      </div>\n                    </div>\n\n                  </fieldset>\n                </md-whiteframe>\n              </div>\n            </div>\n          </div>\n        </fieldset>\n      </md-whiteframe>\n\n    </md-tab>\n  </md-tabs>\n\n  <footer layout="row" layout-align="space-between center" ng-if="!(form.uiValidateHidden && form.uiSaveHidden)">\n    <span ng-if="form.errors" title="{{ form.errors.join(\'\n\') }}">{{ form.i18n.invalid | formulaReplace : { count: form.errors.length } }}</span>\n\n    <div>\n      <md-button class="md-raised" ng-click="form.validate()" ng-if="!form.uiValidateHidden" title="{{ form.i18n.validate[1] }}">\n        <md-icon>check</md-icon> {{ form.i18n.validate[0] }}</md-button>\n      <md-button class="md-raised md-primary" ng-click="form.save()" ng-disabled="!form.valid" ng-if="!form.uiSaveHidden" title="{{ form.i18n.save[1] }}">\n        <md-icon>save</md-icon> {{ form.i18n.save[0] }}</md-button>\n\n    </div>\n\n  </footer>\n</form>\n\n<div class="formula" ng-if="!form.fieldsets">\n  <div layout="row" layout-sm="column" layout-align="space-around">\n    <md-progress-circular md-mode="indeterminate"></md-progress-circular>\n  </div>\n</div>\n';
-},{}],244:[function(require,module,exports){
+},{}],245:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73249,7 +73268,7 @@ var angular = require('angular');
 
 angular.module('grid', ['npdcMaterial']);
 
-},{"../../":240,"angular":33}],245:[function(require,module,exports){
+},{"../../":241,"angular":33}],246:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73257,7 +73276,7 @@ var angular = require('angular');
 
 angular.module('home', ['npdcMaterial']);
 
-},{"../../":240,"angular":33}],246:[function(require,module,exports){
+},{"../../":241,"angular":33}],247:[function(require,module,exports){
 "use strict";
 
 var angular = require('angular');
@@ -73270,7 +73289,7 @@ npdcMaterial.run(["$templateCache", function ($templateCache) {
   $templateCache.put('formula/material.html', require('./formula/template.html'));
 }]);
 
-},{"./formula/applyMdType":241,"./formula/template.html":243,"angular":33}],247:[function(require,module,exports){
+},{"./formula/applyMdType":242,"./formula/template.html":244,"angular":33}],248:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73278,7 +73297,7 @@ var angular = require('angular');
 
 angular.module('list', ['npdcMaterial']);
 
-},{"../../":240,"angular":33}],248:[function(require,module,exports){
+},{"../../":241,"angular":33}],249:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73299,7 +73318,7 @@ angular.module('main', ['npdcMaterial']).controller('MainCtrl', ["$scope", funct
   };
 }]);
 
-},{"../../":240,"angular":33}],249:[function(require,module,exports){
+},{"../../":241,"angular":33}],250:[function(require,module,exports){
 'use strict'; module.exports = angular.module("npdcMaterial").run(["$templateCache", function($templateCache) {$templateCache.put("angular-npolar/src/ui/auth/_user.html","<div class=\"login-logout\">\n  <div ng-show=\"security.isAuthenticated()\">\n    \n    <button ng-click=\"logout()\">Logout</button> <b>{{ user.name }}</b> (<a title=\"View profile for user {{user.username}}\" ng-href=\"/user/{{user.username}}\">{{ user.username }} </a>)\n    \n    <p>Login session expires {{ 1000*user.exp | date:\'HH:mm\' }}</p>\n    \n    <!--<section>\n    <h2>Recent edits</h2>\n    <dl ng-repeat=\"edit in edits\">\n      <dt>{{ edit.request.time }}</dt>\n      <dd><a href=\"{{ edit.response.header.Location }}\">{{ edit.response.header.Location }}</a></dd>\n    </dl>\n    </section>-->\n    \n    <section>\n      <h2>Permissions</h2>\n      <dl ng-repeat=\"system in user.systems\">\n        <dt>{{ system.uri }}</dt>\n        <dd>{{ system.rights }}</dd>\n      </dl>\n    </section>\n  </div>\n  \n  <div ng-show=\"security.notAuthenticated()\">\n    <h1>Login</h1>\n    <form role=\"form\">\n      <section ng-show=\"true\" ng-init=\"loginClicked = false;\">\n      <div>\n        <label for=\"username\">Username</label>\n        <input type=\"text\" ng-model=\"user.username\" id=\"username\" placeholder=\"Username (email)\">\n      </div>\n      <div>\n        <label for=\"password\">Password</label>\n        <input type=\"password\" id=\"password\" ng-model=\"user.password\" placeholder=\"Password\">\n      </div>\n      <button id=\"login2\" type=\"submit\" ng-click=\"login()\">Login</button> \n      </section>\n      <a ng-href=\"/user/reset?username={{user.username}}\">Forgot password?</a> <a href=\"/user/register\">Sign up</a></section>\n    </form>\n  </div>\n</div>");
 $templateCache.put("angular-npolar/src/ui/message/_message.html","<div ng-if=\"info\" class=\"info\">[info]{{ info | json }}</div>\n<div ng-if=\"error\" class=\"error\">[error] {{ error | json }}</div>");
 $templateCache.put("angular-npolar/src/ui/message/_message_toast.html","<md-toast>\n  <span flex> <b>{{explanation}}</b></span>\n  <md-button ng-click=\"closeToast()\">OK</md-button>\n</md-toast>");
@@ -73309,7 +73328,7 @@ $templateCache.put("angular-npolar/src/ui/template/_foot.html","");
 $templateCache.put("angular-npolar/src/ui/template/_head.html","<div ng-if=\"error\" ng-include=\"\'angular-npolar/src/ui/template/_error.html\'\"></div>\n<div ng-if=\"info\" ng-include=\"\'angular-npolar/src/ui/template/_info.html\'\"></div>\n");
 $templateCache.put("angular-npolar/src/ui/template/_info.html","<h2 ng-if=\"info\" class=\"alert alert-success\"><strong>{{info.header}}</strong> {{info.message }}</h2>");
 $templateCache.put("angular-npolar/src/ui/template/_search.html","<div>\n  <span ng-if=\"!feed.entries\">Fetching data from {{base}}</span>\n  <span ng-if=\"feed.opensearch.totalResults > 0\">{{feed.opensearch.totalResults}} results from {{ base }}</span>\n  <span ng-if=\"feed.opensearch.totalResults == 0\">No results</span>\n</div>\n\n<h3><span ng-if=\"filters.length\">Filters: {{filters | json}}</span><span ng-if=\"filters.length\"><a ng-href=\"/vessel\">Remove filters</a></span></h3>\n\n<h2><a ng-if=\"user.name\" href=\"__new/edit\"><button type=\"button\" class=\"pure-button\">New</button></a></h2>\n\n<p>Filter: <input ng-model=\"entryfilter\"></p>\n\n<div ng-repeat=\"e in feed.entries | filter:entryfilter\">\n  <h4 class=\"\"><a ng-href=\"{{e.id}}\">{{ e.title || e.name || e.id }}</a> {{e.updated }}</h4>\n</div>\n");}]);
-},{}]},{},[217,225,228,233,236,239,242,244,245,247,248,249])
+},{}]},{},[217,225,228,233,237,240,243,245,246,248,249,250])
 
 
 //# sourceMappingURL=demos.js.map

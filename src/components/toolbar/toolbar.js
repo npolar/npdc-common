@@ -4,13 +4,11 @@
 let toolbar = function ($mdSidenav) {
     return {
       restrict: 'E',
+      scope: {
+        'toolbar': '='
+      },
       template: require('./toolbar.html'),
-      link (scope, element, attr) {
-        scope.sidenav = true;
-        scope.toggleLeft = function () {
-          $mdSidenav('left').toggle();
-        };
-      }
+      controller: 'NpdcMdToolbarCtrl'
     };
   };
 

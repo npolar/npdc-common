@@ -1,6 +1,10 @@
 # Usage
 
-    <npdc-md:toolbar></npdc-md:toolbar>
+    <npdc-md:toolbar toolbar="options"></npdc-md:toolbar>
 
-# Options
-None atm.
+Where options is a object with the following properties:
+
+    {
+      title: 'Appname',
+      sidenav: true
+    }
