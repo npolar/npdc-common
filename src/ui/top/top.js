@@ -1,15 +1,13 @@
 'use strict';
 
-/**
- * @ngInject
- */
+// @ngInject
 let Top = function () {
   return {
-    //scope: {},
+    scope: {
+      top: '='
+    },
     controller: 'NpdcTopController',
-    templateUrl: 'npdc-common/src/ui/top/npdc-top.html',
-    link: function(scope) {
-    }
+    templateUrl: 'npdc-common/src/ui/top/npdc-top.html'
   };
 };
 
