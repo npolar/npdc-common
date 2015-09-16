@@ -1,6 +1,6 @@
 {
   "name": "npdc-material",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "NPDC angular material components and layouts",
   "main": "src/index.js",
   "dependencies": {
