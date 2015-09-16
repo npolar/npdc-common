@@ -26677,1003 +26677,6 @@ require('./angular-resource');
 module.exports = 'ngResource';
 
 },{"./angular-resource":9}],11:[function(require,module,exports){
-/**
- * @license AngularJS v1.4.5
- * (c) 2010-2015 Google, Inc. http://angularjs.org
- * License: MIT
- */
-(function(window, angular, undefined) {'use strict';
-
-/**
- * @ngdoc module
- * @name ngRoute
- * @description
- *
- * # ngRoute
- *
- * The `ngRoute` module provides routing and deeplinking services and directives for angular apps.
- *
- * ## Example
- * See {@link ngRoute.$route#example $route} for an example of configuring and using `ngRoute`.
- *
- *
- * <div doc-module-components="ngRoute"></div>
- */
- /* global -ngRouteModule */
-var ngRouteModule = angular.module('ngRoute', ['ng']).
-                        provider('$route', $RouteProvider),
-    $routeMinErr = angular.$$minErr('ngRoute');
-
-/**
- * @ngdoc provider
- * @name $routeProvider
- *
- * @description
- *
- * Used for configuring routes.
- *
- * ## Example
- * See {@link ngRoute.$route#example $route} for an example of configuring and using `ngRoute`.
- *
- * ## Dependencies
- * Requires the {@link ngRoute `ngRoute`} module to be installed.
- */
-function $RouteProvider() {
-  function inherit(parent, extra) {
-    return angular.extend(Object.create(parent), extra);
-  }
-
-  var routes = {};
-
-  /**
-   * @ngdoc method
-   * @name $routeProvider#when
-   *
-   * @param {string} path Route path (matched against `$location.path`). If `$location.path`
-   *    contains redundant trailing slash or is missing one, the route will still match and the
-   *    `$location.path` will be updated to add or drop the trailing slash to exactly match the
-   *    route definition.
-   *
-   *    * `path` can contain named groups starting with a colon: e.g. `:name`. All characters up
-   *        to the next slash are matched and stored in `$routeParams` under the given `name`
-   *        when the route matches.
-   *    * `path` can contain named groups starting with a colon and ending with a star:
-   *        e.g.`:name*`. All characters are eagerly stored in `$routeParams` under the given `name`
-   *        when the route matches.
-   *    * `path` can contain optional named groups with a question mark: e.g.`:name?`.
-   *
-   *    For example, routes like `/color/:color/largecode/:largecode*\/edit` will match
-   *    `/color/brown/largecode/code/with/slashes/edit` and extract:
-   *
-   *    * `color: brown`
-   *    * `largecode: code/with/slashes`.
-   *
-   *
-   * @param {Object} route Mapping information to be assigned to `$route.current` on route
-   *    match.
-   *
-   *    Object properties:
-   *
-   *    - `controller` – `{(string|function()=}` – Controller fn that should be associated with
-   *      newly created scope or the name of a {@link angular.Module#controller registered
-   *      controller} if passed as a string.
-   *    - `controllerAs` – `{string=}` – An identifier name for a reference to the controller.
-   *      If present, the controller will be published to scope under the `controllerAs` name.
-   *    - `template` – `{string=|function()=}` – html template as a string or a function that
-   *      returns an html template as a string which should be used by {@link
-   *      ngRoute.directive:ngView ngView} or {@link ng.directive:ngInclude ngInclude} directives.
-   *      This property takes precedence over `templateUrl`.
-   *
-   *      If `template` is a function, it will be called with the following parameters:
-   *
-   *      - `{Array.<Object>}` - route parameters extracted from the current
-   *        `$location.path()` by applying the current route
-   *
-   *    - `templateUrl` – `{string=|function()=}` – path or function that returns a path to an html
-   *      template that should be used by {@link ngRoute.directive:ngView ngView}.
-   *
-   *      If `templateUrl` is a function, it will be called with the following parameters:
-   *
-   *      - `{Array.<Object>}` - route parameters extracted from the current
-   *        `$location.path()` by applying the current route
-   *
-   *    - `resolve` - `{Object.<string, function>=}` - An optional map of dependencies which should
-   *      be injected into the controller. If any of these dependencies are promises, the router
-   *      will wait for them all to be resolved or one to be rejected before the controller is
-   *      instantiated.
-   *      If all the promises are resolved successfully, the values of the resolved promises are
-   *      injected and {@link ngRoute.$route#$routeChangeSuccess $routeChangeSuccess} event is
-   *      fired. If any of the promises are rejected the
-   *      {@link ngRoute.$route#$routeChangeError $routeChangeError} event is fired. The map object
-   *      is:
-   *
-   *      - `key` – `{string}`: a name of a dependency to be injected into the controller.
-   *      - `factory` - `{string|function}`: If `string` then it is an alias for a service.
-   *        Otherwise if function, then it is {@link auto.$injector#invoke injected}
-   *        and the return value is treated as the dependency. If the result is a promise, it is
-   *        resolved before its value is injected into the controller. Be aware that
-   *        `ngRoute.$routeParams` will still refer to the previous route within these resolve
-   *        functions.  Use `$route.current.params` to access the new route parameters, instead.
-   *
-   *    - `redirectTo` – {(string|function())=} – value to update
-   *      {@link ng.$location $location} path with and trigger route redirection.
-   *
-   *      If `redirectTo` is a function, it will be called with the following parameters:
-   *
-   *      - `{Object.<string>}` - route parameters extracted from the current
-   *        `$location.path()` by applying the current route templateUrl.
-   *      - `{string}` - current `$location.path()`
-   *      - `{Object}` - current `$location.search()`
-   *
-   *      The custom `redirectTo` function is expected to return a string which will be used
-   *      to update `$location.path()` and `$location.search()`.
-   *
-   *    - `[reloadOnSearch=true]` - {boolean=} - reload route when only `$location.search()`
-   *      or `$location.hash()` changes.
-   *
-   *      If the option is set to `false` and url in the browser changes, then
-   *      `$routeUpdate` event is broadcasted on the root scope.
-   *
-   *    - `[caseInsensitiveMatch=false]` - {boolean=} - match routes without being case sensitive
-   *
-   *      If the option is set to `true`, then the particular route can be matched without being
-   *      case sensitive
-   *
-   * @returns {Object} self
-   *
-   * @description
-   * Adds a new route definition to the `$route` service.
-   */
-  this.when = function(path, route) {
-    //copy original route object to preserve params inherited from proto chain
-    var routeCopy = angular.copy(route);
-    if (angular.isUndefined(routeCopy.reloadOnSearch)) {
-      routeCopy.reloadOnSearch = true;
-    }
-    if (angular.isUndefined(routeCopy.caseInsensitiveMatch)) {
-      routeCopy.caseInsensitiveMatch = this.caseInsensitiveMatch;
-    }
-    routes[path] = angular.extend(
-      routeCopy,
-      path && pathRegExp(path, routeCopy)
-    );
-
-    // create redirection for trailing slashes
-    if (path) {
-      var redirectPath = (path[path.length - 1] == '/')
-            ? path.substr(0, path.length - 1)
-            : path + '/';
-
-      routes[redirectPath] = angular.extend(
-        {redirectTo: path},
-        pathRegExp(redirectPath, routeCopy)
-      );
-    }
-
-    return this;
-  };
-
-  /**
-   * @ngdoc property
-   * @name $routeProvider#caseInsensitiveMatch
-   * @description
-   *
-   * A boolean property indicating if routes defined
-   * using this provider should be matched using a case insensitive
-   * algorithm. Defaults to `false`.
-   */
-  this.caseInsensitiveMatch = false;
-
-   /**
-    * @param path {string} path
-    * @param opts {Object} options
-    * @return {?Object}
-    *
-    * @description
-    * Normalizes the given path, returning a regular expression
-    * and the original path.
-    *
-    * Inspired by pathRexp in visionmedia/express/lib/utils.js.
-    */
-  function pathRegExp(path, opts) {
-    var insensitive = opts.caseInsensitiveMatch,
-        ret = {
-          originalPath: path,
-          regexp: path
-        },
-        keys = ret.keys = [];
-
-    path = path
-      .replace(/([().])/g, '\\$1')
-      .replace(/(\/)?:(\w+)([\?\*])?/g, function(_, slash, key, option) {
-        var optional = option === '?' ? option : null;
-        var star = option === '*' ? option : null;
-        keys.push({ name: key, optional: !!optional });
-        slash = slash || '';
-        return ''
-          + (optional ? '' : slash)
-          + '(?:'
-          + (optional ? slash : '')
-          + (star && '(.+?)' || '([^/]+)')
-          + (optional || '')
-          + ')'
-          + (optional || '');
-      })
-      .replace(/([\/$\*])/g, '\\$1');
-
-    ret.regexp = new RegExp('^' + path + '$', insensitive ? 'i' : '');
-    return ret;
-  }
-
-  /**
-   * @ngdoc method
-   * @name $routeProvider#otherwise
-   *
-   * @description
-   * Sets route definition that will be used on route change when no other route definition
-   * is matched.
-   *
-   * @param {Object|string} params Mapping information to be assigned to `$route.current`.
-   * If called with a string, the value maps to `redirectTo`.
-   * @returns {Object} self
-   */
-  this.otherwise = function(params) {
-    if (typeof params === 'string') {
-      params = {redirectTo: params};
-    }
-    this.when(null, params);
-    return this;
-  };
-
-
-  this.$get = ['$rootScope',
-               '$location',
-               '$routeParams',
-               '$q',
-               '$injector',
-               '$templateRequest',
-               '$sce',
-      function($rootScope, $location, $routeParams, $q, $injector, $templateRequest, $sce) {
-
-    /**
-     * @ngdoc service
-     * @name $route
-     * @requires $location
-     * @requires $routeParams
-     *
-     * @property {Object} current Reference to the current route definition.
-     * The route definition contains:
-     *
-     *   - `controller`: The controller constructor as define in route definition.
-     *   - `locals`: A map of locals which is used by {@link ng.$controller $controller} service for
-     *     controller instantiation. The `locals` contain
-     *     the resolved values of the `resolve` map. Additionally the `locals` also contain:
-     *
-     *     - `$scope` - The current route scope.
-     *     - `$template` - The current route template HTML.
-     *
-     * @property {Object} routes Object with all route configuration Objects as its properties.
-     *
-     * @description
-     * `$route` is used for deep-linking URLs to controllers and views (HTML partials).
-     * It watches `$location.url()` and tries to map the path to an existing route definition.
-     *
-     * Requires the {@link ngRoute `ngRoute`} module to be installed.
-     *
-     * You can define routes through {@link ngRoute.$routeProvider $routeProvider}'s API.
-     *
-     * The `$route` service is typically used in conjunction with the
-     * {@link ngRoute.directive:ngView `ngView`} directive and the
-     * {@link ngRoute.$routeParams `$routeParams`} service.
-     *
-     * @example
-     * This example shows how changing the URL hash causes the `$route` to match a route against the
-     * URL, and the `ngView` pulls in the partial.
-     *
-     * <example name="$route-service" module="ngRouteExample"
-     *          deps="angular-route.js" fixBase="true">
-     *   <file name="index.html">
-     *     <div ng-controller="MainController">
-     *       Choose:
-     *       <a href="Book/Moby">Moby</a> |
-     *       <a href="Book/Moby/ch/1">Moby: Ch1</a> |
-     *       <a href="Book/Gatsby">Gatsby</a> |
-     *       <a href="Book/Gatsby/ch/4?key=value">Gatsby: Ch4</a> |
-     *       <a href="Book/Scarlet">Scarlet Letter</a><br/>
-     *
-     *       <div ng-view></div>
-     *
-     *       <hr />
-     *
-     *       <pre>$location.path() = {{$location.path()}}</pre>
-     *       <pre>$route.current.templateUrl = {{$route.current.templateUrl}}</pre>
-     *       <pre>$route.current.params = {{$route.current.params}}</pre>
-     *       <pre>$route.current.scope.name = {{$route.current.scope.name}}</pre>
-     *       <pre>$routeParams = {{$routeParams}}</pre>
-     *     </div>
-     *   </file>
-     *
-     *   <file name="book.html">
-     *     controller: {{name}}<br />
-     *     Book Id: {{params.bookId}}<br />
-     *   </file>
-     *
-     *   <file name="chapter.html">
-     *     controller: {{name}}<br />
-     *     Book Id: {{params.bookId}}<br />
-     *     Chapter Id: {{params.chapterId}}
-     *   </file>
-     *
-     *   <file name="script.js">
-     *     angular.module('ngRouteExample', ['ngRoute'])
-     *
-     *      .controller('MainController', function($scope, $route, $routeParams, $location) {
-     *          $scope.$route = $route;
-     *          $scope.$location = $location;
-     *          $scope.$routeParams = $routeParams;
-     *      })
-     *
-     *      .controller('BookController', function($scope, $routeParams) {
-     *          $scope.name = "BookController";
-     *          $scope.params = $routeParams;
-     *      })
-     *
-     *      .controller('ChapterController', function($scope, $routeParams) {
-     *          $scope.name = "ChapterController";
-     *          $scope.params = $routeParams;
-     *      })
-     *
-     *     .config(function($routeProvider, $locationProvider) {
-     *       $routeProvider
-     *        .when('/Book/:bookId', {
-     *         templateUrl: 'book.html',
-     *         controller: 'BookController',
-     *         resolve: {
-     *           // I will cause a 1 second delay
-     *           delay: function($q, $timeout) {
-     *             var delay = $q.defer();
-     *             $timeout(delay.resolve, 1000);
-     *             return delay.promise;
-     *           }
-     *         }
-     *       })
-     *       .when('/Book/:bookId/ch/:chapterId', {
-     *         templateUrl: 'chapter.html',
-     *         controller: 'ChapterController'
-     *       });
-     *
-     *       // configure html5 to get links working on jsfiddle
-     *       $locationProvider.html5Mode(true);
-     *     });
-     *
-     *   </file>
-     *
-     *   <file name="protractor.js" type="protractor">
-     *     it('should load and compile correct template', function() {
-     *       element(by.linkText('Moby: Ch1')).click();
-     *       var content = element(by.css('[ng-view]')).getText();
-     *       expect(content).toMatch(/controller\: ChapterController/);
-     *       expect(content).toMatch(/Book Id\: Moby/);
-     *       expect(content).toMatch(/Chapter Id\: 1/);
-     *
-     *       element(by.partialLinkText('Scarlet')).click();
-     *
-     *       content = element(by.css('[ng-view]')).getText();
-     *       expect(content).toMatch(/controller\: BookController/);
-     *       expect(content).toMatch(/Book Id\: Scarlet/);
-     *     });
-     *   </file>
-     * </example>
-     */
-
-    /**
-     * @ngdoc event
-     * @name $route#$routeChangeStart
-     * @eventType broadcast on root scope
-     * @description
-     * Broadcasted before a route change. At this  point the route services starts
-     * resolving all of the dependencies needed for the route change to occur.
-     * Typically this involves fetching the view template as well as any dependencies
-     * defined in `resolve` route property. Once  all of the dependencies are resolved
-     * `$routeChangeSuccess` is fired.
-     *
-     * The route change (and the `$location` change that triggered it) can be prevented
-     * by calling `preventDefault` method of the event. See {@link ng.$rootScope.Scope#$on}
-     * for more details about event object.
-     *
-     * @param {Object} angularEvent Synthetic event object.
-     * @param {Route} next Future route information.
-     * @param {Route} current Current route information.
-     */
-
-    /**
-     * @ngdoc event
-     * @name $route#$routeChangeSuccess
-     * @eventType broadcast on root scope
-     * @description
-     * Broadcasted after a route change has happened successfully.
-     * The `resolve` dependencies are now available in the `current.locals` property.
-     *
-     * {@link ngRoute.directive:ngView ngView} listens for the directive
-     * to instantiate the controller and render the view.
-     *
-     * @param {Object} angularEvent Synthetic event object.
-     * @param {Route} current Current route information.
-     * @param {Route|Undefined} previous Previous route information, or undefined if current is
-     * first route entered.
-     */
-
-    /**
-     * @ngdoc event
-     * @name $route#$routeChangeError
-     * @eventType broadcast on root scope
-     * @description
-     * Broadcasted if any of the resolve promises are rejected.
-     *
-     * @param {Object} angularEvent Synthetic event object
-     * @param {Route} current Current route information.
-     * @param {Route} previous Previous route information.
-     * @param {Route} rejection Rejection of the promise. Usually the error of the failed promise.
-     */
-
-    /**
-     * @ngdoc event
-     * @name $route#$routeUpdate
-     * @eventType broadcast on root scope
-     * @description
-     * The `reloadOnSearch` property has been set to false, and we are reusing the same
-     * instance of the Controller.
-     *
-     * @param {Object} angularEvent Synthetic event object
-     * @param {Route} current Current/previous route information.
-     */
-
-    var forceReload = false,
-        preparedRoute,
-        preparedRouteIsUpdateOnly,
-        $route = {
-          routes: routes,
-
-          /**
-           * @ngdoc method
-           * @name $route#reload
-           *
-           * @description
-           * Causes `$route` service to reload the current route even if
-           * {@link ng.$location $location} hasn't changed.
-           *
-           * As a result of that, {@link ngRoute.directive:ngView ngView}
-           * creates new scope and reinstantiates the controller.
-           */
-          reload: function() {
-            forceReload = true;
-            $rootScope.$evalAsync(function() {
-              // Don't support cancellation of a reload for now...
-              prepareRoute();
-              commitRoute();
-            });
-          },
-
-          /**
-           * @ngdoc method
-           * @name $route#updateParams
-           *
-           * @description
-           * Causes `$route` service to update the current URL, replacing
-           * current route parameters with those specified in `newParams`.
-           * Provided property names that match the route's path segment
-           * definitions will be interpolated into the location's path, while
-           * remaining properties will be treated as query params.
-           *
-           * @param {!Object<string, string>} newParams mapping of URL parameter names to values
-           */
-          updateParams: function(newParams) {
-            if (this.current && this.current.$$route) {
-              newParams = angular.extend({}, this.current.params, newParams);
-              $location.path(interpolate(this.current.$$route.originalPath, newParams));
-              // interpolate modifies newParams, only query params are left
-              $location.search(newParams);
-            } else {
-              throw $routeMinErr('norout', 'Tried updating route when with no current route');
-            }
-          }
-        };
-
-    $rootScope.$on('$locationChangeStart', prepareRoute);
-    $rootScope.$on('$locationChangeSuccess', commitRoute);
-
-    return $route;
-
-    /////////////////////////////////////////////////////
-
-    /**
-     * @param on {string} current url
-     * @param route {Object} route regexp to match the url against
-     * @return {?Object}
-     *
-     * @description
-     * Check if the route matches the current url.
-     *
-     * Inspired by match in
-     * visionmedia/express/lib/router/router.js.
-     */
-    function switchRouteMatcher(on, route) {
-      var keys = route.keys,
-          params = {};
-
-      if (!route.regexp) return null;
-
-      var m = route.regexp.exec(on);
-      if (!m) return null;
-
-      for (var i = 1, len = m.length; i < len; ++i) {
-        var key = keys[i - 1];
-
-        var val = m[i];
-
-        if (key && val) {
-          params[key.name] = val;
-        }
-      }
-      return params;
-    }
-
-    function prepareRoute($locationEvent) {
-      var lastRoute = $route.current;
-
-      preparedRoute = parseRoute();
-      preparedRouteIsUpdateOnly = preparedRoute && lastRoute && preparedRoute.$$route === lastRoute.$$route
-          && angular.equals(preparedRoute.pathParams, lastRoute.pathParams)
-          && !preparedRoute.reloadOnSearch && !forceReload;
-
-      if (!preparedRouteIsUpdateOnly && (lastRoute || preparedRoute)) {
-        if ($rootScope.$broadcast('$routeChangeStart', preparedRoute, lastRoute).defaultPrevented) {
-          if ($locationEvent) {
-            $locationEvent.preventDefault();
-          }
-        }
-      }
-    }
-
-    function commitRoute() {
-      var lastRoute = $route.current;
-      var nextRoute = preparedRoute;
-
-      if (preparedRouteIsUpdateOnly) {
-        lastRoute.params = nextRoute.params;
-        angular.copy(lastRoute.params, $routeParams);
-        $rootScope.$broadcast('$routeUpdate', lastRoute);
-      } else if (nextRoute || lastRoute) {
-        forceReload = false;
-        $route.current = nextRoute;
-        if (nextRoute) {
-          if (nextRoute.redirectTo) {
-            if (angular.isString(nextRoute.redirectTo)) {
-              $location.path(interpolate(nextRoute.redirectTo, nextRoute.params)).search(nextRoute.params)
-                       .replace();
-            } else {
-              $location.url(nextRoute.redirectTo(nextRoute.pathParams, $location.path(), $location.search()))
-                       .replace();
-            }
-          }
-        }
-
-        $q.when(nextRoute).
-          then(function() {
-            if (nextRoute) {
-              var locals = angular.extend({}, nextRoute.resolve),
-                  template, templateUrl;
-
-              angular.forEach(locals, function(value, key) {
-                locals[key] = angular.isString(value) ?
-                    $injector.get(value) : $injector.invoke(value, null, null, key);
-              });
-
-              if (angular.isDefined(template = nextRoute.template)) {
-                if (angular.isFunction(template)) {
-                  template = template(nextRoute.params);
-                }
-              } else if (angular.isDefined(templateUrl = nextRoute.templateUrl)) {
-                if (angular.isFunction(templateUrl)) {
-                  templateUrl = templateUrl(nextRoute.params);
-                }
-                if (angular.isDefined(templateUrl)) {
-                  nextRoute.loadedTemplateUrl = $sce.valueOf(templateUrl);
-                  template = $templateRequest(templateUrl);
-                }
-              }
-              if (angular.isDefined(template)) {
-                locals['$template'] = template;
-              }
-              return $q.all(locals);
-            }
-          }).
-          then(function(locals) {
-            // after route change
-            if (nextRoute == $route.current) {
-              if (nextRoute) {
-                nextRoute.locals = locals;
-                angular.copy(nextRoute.params, $routeParams);
-              }
-              $rootScope.$broadcast('$routeChangeSuccess', nextRoute, lastRoute);
-            }
-          }, function(error) {
-            if (nextRoute == $route.current) {
-              $rootScope.$broadcast('$routeChangeError', nextRoute, lastRoute, error);
-            }
-          });
-      }
-    }
-
-
-    /**
-     * @returns {Object} the current active route, by matching it against the URL
-     */
-    function parseRoute() {
-      // Match a route
-      var params, match;
-      angular.forEach(routes, function(route, path) {
-        if (!match && (params = switchRouteMatcher($location.path(), route))) {
-          match = inherit(route, {
-            params: angular.extend({}, $location.search(), params),
-            pathParams: params});
-          match.$$route = route;
-        }
-      });
-      // No route matched; fallback to "otherwise" route
-      return match || routes[null] && inherit(routes[null], {params: {}, pathParams:{}});
-    }
-
-    /**
-     * @returns {string} interpolation of the redirect path with the parameters
-     */
-    function interpolate(string, params) {
-      var result = [];
-      angular.forEach((string || '').split(':'), function(segment, i) {
-        if (i === 0) {
-          result.push(segment);
-        } else {
-          var segmentMatch = segment.match(/(\w+)(?:[?*])?(.*)/);
-          var key = segmentMatch[1];
-          result.push(params[key]);
-          result.push(segmentMatch[2] || '');
-          delete params[key];
-        }
-      });
-      return result.join('');
-    }
-  }];
-}
-
-ngRouteModule.provider('$routeParams', $RouteParamsProvider);
-
-
-/**
- * @ngdoc service
- * @name $routeParams
- * @requires $route
- *
- * @description
- * The `$routeParams` service allows you to retrieve the current set of route parameters.
- *
- * Requires the {@link ngRoute `ngRoute`} module to be installed.
- *
- * The route parameters are a combination of {@link ng.$location `$location`}'s
- * {@link ng.$location#search `search()`} and {@link ng.$location#path `path()`}.
- * The `path` parameters are extracted when the {@link ngRoute.$route `$route`} path is matched.
- *
- * In case of parameter name collision, `path` params take precedence over `search` params.
- *
- * The service guarantees that the identity of the `$routeParams` object will remain unchanged
- * (but its properties will likely change) even when a route change occurs.
- *
- * Note that the `$routeParams` are only updated *after* a route change completes successfully.
- * This means that you cannot rely on `$routeParams` being correct in route resolve functions.
- * Instead you can use `$route.current.params` to access the new route's parameters.
- *
- * @example
- * ```js
- *  // Given:
- *  // URL: http://server.com/index.html#/Chapter/1/Section/2?search=moby
- *  // Route: /Chapter/:chapterId/Section/:sectionId
- *  //
- *  // Then
- *  $routeParams ==> {chapterId:'1', sectionId:'2', search:'moby'}
- * ```
- */
-function $RouteParamsProvider() {
-  this.$get = function() { return {}; };
-}
-
-ngRouteModule.directive('ngView', ngViewFactory);
-ngRouteModule.directive('ngView', ngViewFillContentFactory);
-
-
-/**
- * @ngdoc directive
- * @name ngView
- * @restrict ECA
- *
- * @description
- * # Overview
- * `ngView` is a directive that complements the {@link ngRoute.$route $route} service by
- * including the rendered template of the current route into the main layout (`index.html`) file.
- * Every time the current route changes, the included view changes with it according to the
- * configuration of the `$route` service.
- *
- * Requires the {@link ngRoute `ngRoute`} module to be installed.
- *
- * @animations
- * enter - animation is used to bring new content into the browser.
- * leave - animation is used to animate existing content away.
- *
- * The enter and leave animation occur concurrently.
- *
- * @scope
- * @priority 400
- * @param {string=} onload Expression to evaluate whenever the view updates.
- *
- * @param {string=} autoscroll Whether `ngView` should call {@link ng.$anchorScroll
- *                  $anchorScroll} to scroll the viewport after the view is updated.
- *
- *                  - If the attribute is not set, disable scrolling.
- *                  - If the attribute is set without value, enable scrolling.
- *                  - Otherwise enable scrolling only if the `autoscroll` attribute value evaluated
- *                    as an expression yields a truthy value.
- * @example
-    <example name="ngView-directive" module="ngViewExample"
-             deps="angular-route.js;angular-animate.js"
-             animations="true" fixBase="true">
-      <file name="index.html">
-        <div ng-controller="MainCtrl as main">
-          Choose:
-          <a href="Book/Moby">Moby</a> |
-          <a href="Book/Moby/ch/1">Moby: Ch1</a> |
-          <a href="Book/Gatsby">Gatsby</a> |
-          <a href="Book/Gatsby/ch/4?key=value">Gatsby: Ch4</a> |
-          <a href="Book/Scarlet">Scarlet Letter</a><br/>
-
-          <div class="view-animate-container">
-            <div ng-view class="view-animate"></div>
-          </div>
-          <hr />
-
-          <pre>$location.path() = {{main.$location.path()}}</pre>
-          <pre>$route.current.templateUrl = {{main.$route.current.templateUrl}}</pre>
-          <pre>$route.current.params = {{main.$route.current.params}}</pre>
-          <pre>$routeParams = {{main.$routeParams}}</pre>
-        </div>
-      </file>
-
-      <file name="book.html">
-        <div>
-          controller: {{book.name}}<br />
-          Book Id: {{book.params.bookId}}<br />
-        </div>
-      </file>
-
-      <file name="chapter.html">
-        <div>
-          controller: {{chapter.name}}<br />
-          Book Id: {{chapter.params.bookId}}<br />
-          Chapter Id: {{chapter.params.chapterId}}
-        </div>
-      </file>
-
-      <file name="animations.css">
-        .view-animate-container {
-          position:relative;
-          height:100px!important;
-          background:white;
-          border:1px solid black;
-          height:40px;
-          overflow:hidden;
-        }
-
-        .view-animate {
-          padding:10px;
-        }
-
-        .view-animate.ng-enter, .view-animate.ng-leave {
-          transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 1.5s;
-
-          display:block;
-          width:100%;
-          border-left:1px solid black;
-
-          position:absolute;
-          top:0;
-          left:0;
-          right:0;
-          bottom:0;
-          padding:10px;
-        }
-
-        .view-animate.ng-enter {
-          left:100%;
-        }
-        .view-animate.ng-enter.ng-enter-active {
-          left:0;
-        }
-        .view-animate.ng-leave.ng-leave-active {
-          left:-100%;
-        }
-      </file>
-
-      <file name="script.js">
-        angular.module('ngViewExample', ['ngRoute', 'ngAnimate'])
-          .config(['$routeProvider', '$locationProvider',
-            function($routeProvider, $locationProvider) {
-              $routeProvider
-                .when('/Book/:bookId', {
-                  templateUrl: 'book.html',
-                  controller: 'BookCtrl',
-                  controllerAs: 'book'
-                })
-                .when('/Book/:bookId/ch/:chapterId', {
-                  templateUrl: 'chapter.html',
-                  controller: 'ChapterCtrl',
-                  controllerAs: 'chapter'
-                });
-
-              $locationProvider.html5Mode(true);
-          }])
-          .controller('MainCtrl', ['$route', '$routeParams', '$location',
-            function($route, $routeParams, $location) {
-              this.$route = $route;
-              this.$location = $location;
-              this.$routeParams = $routeParams;
-          }])
-          .controller('BookCtrl', ['$routeParams', function($routeParams) {
-            this.name = "BookCtrl";
-            this.params = $routeParams;
-          }])
-          .controller('ChapterCtrl', ['$routeParams', function($routeParams) {
-            this.name = "ChapterCtrl";
-            this.params = $routeParams;
-          }]);
-
-      </file>
-
-      <file name="protractor.js" type="protractor">
-        it('should load and compile correct template', function() {
-          element(by.linkText('Moby: Ch1')).click();
-          var content = element(by.css('[ng-view]')).getText();
-          expect(content).toMatch(/controller\: ChapterCtrl/);
-          expect(content).toMatch(/Book Id\: Moby/);
-          expect(content).toMatch(/Chapter Id\: 1/);
-
-          element(by.partialLinkText('Scarlet')).click();
-
-          content = element(by.css('[ng-view]')).getText();
-          expect(content).toMatch(/controller\: BookCtrl/);
-          expect(content).toMatch(/Book Id\: Scarlet/);
-        });
-      </file>
-    </example>
- */
-
-
-/**
- * @ngdoc event
- * @name ngView#$viewContentLoaded
- * @eventType emit on the current ngView scope
- * @description
- * Emitted every time the ngView content is reloaded.
- */
-ngViewFactory.$inject = ['$route', '$anchorScroll', '$animate'];
-function ngViewFactory($route, $anchorScroll, $animate) {
-  return {
-    restrict: 'ECA',
-    terminal: true,
-    priority: 400,
-    transclude: 'element',
-    link: function(scope, $element, attr, ctrl, $transclude) {
-        var currentScope,
-            currentElement,
-            previousLeaveAnimation,
-            autoScrollExp = attr.autoscroll,
-            onloadExp = attr.onload || '';
-
-        scope.$on('$routeChangeSuccess', update);
-        update();
-
-        function cleanupLastView() {
-          if (previousLeaveAnimation) {
-            $animate.cancel(previousLeaveAnimation);
-            previousLeaveAnimation = null;
-          }
-
-          if (currentScope) {
-            currentScope.$destroy();
-            currentScope = null;
-          }
-          if (currentElement) {
-            previousLeaveAnimation = $animate.leave(currentElement);
-            previousLeaveAnimation.then(function() {
-              previousLeaveAnimation = null;
-            });
-            currentElement = null;
-          }
-        }
-
-        function update() {
-          var locals = $route.current && $route.current.locals,
-              template = locals && locals.$template;
-
-          if (angular.isDefined(template)) {
-            var newScope = scope.$new();
-            var current = $route.current;
-
-            // Note: This will also link all children of ng-view that were contained in the original
-            // html. If that content contains controllers, ... they could pollute/change the scope.
-            // However, using ng-view on an element with additional content does not make sense...
-            // Note: We can't remove them in the cloneAttchFn of $transclude as that
-            // function is called before linking the content, which would apply child
-            // directives to non existing elements.
-            var clone = $transclude(newScope, function(clone) {
-              $animate.enter(clone, null, currentElement || $element).then(function onNgViewEnter() {
-                if (angular.isDefined(autoScrollExp)
-                  && (!autoScrollExp || scope.$eval(autoScrollExp))) {
-                  $anchorScroll();
-                }
-              });
-              cleanupLastView();
-            });
-
-            currentElement = clone;
-            currentScope = current.scope = newScope;
-            currentScope.$emit('$viewContentLoaded');
-            currentScope.$eval(onloadExp);
-          } else {
-            cleanupLastView();
-          }
-        }
-    }
-  };
-}
-
-// This directive is called during the $transclude call of the first `ngView` directive.
-// It will replace and compile the content of the element with the loaded template.
-// We need this directive so that the element content is already filled when
-// the link function of another directive on the same element as ngView
-// is called.
-ngViewFillContentFactory.$inject = ['$compile', '$controller', '$route'];
-function ngViewFillContentFactory($compile, $controller, $route) {
-  return {
-    restrict: 'ECA',
-    priority: -400,
-    link: function(scope, $element) {
-      var current = $route.current,
-          locals = current.locals;
-
-      $element.html(locals.$template);
-
-      var link = $compile($element.contents());
-
-      if (current.controller) {
-        locals.$scope = scope;
-        var controller = $controller(current.controller, locals);
-        if (current.controllerAs) {
-          scope[current.controllerAs] = controller;
-        }
-        $element.data('$ngControllerController', controller);
-        $element.children().data('$ngControllerController', controller);
-      }
-
-      link(scope);
-    }
-  };
-}
-
-
-})(window, window.angular);
-
-},{}],12:[function(require,module,exports){
-require('./angular-route');
-module.exports = 'ngRoute';
-
-},{"./angular-route":11}],13:[function(require,module,exports){
 'use strict';
 
 function Base64 () {
@@ -27880,7 +26883,7 @@ else
 {
     Base64();
 }
-},{}],14:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -34671,7 +33674,7 @@ else
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{}],15:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 /**
  * npolarApiConfig, meant to be .run and merged with overrides for the current environment
  *
@@ -34692,7 +33695,7 @@ var config = {
 
 module.exports = config;
 
-},{}],16:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /**
 * NpolarBaseController is meant to be the parent of a safe controller,
 * ie. a controller dealing with only with presentation, search, etc. See also NpolarEditController.
@@ -34769,7 +33772,7 @@ BaseController.$inject = ["$scope", "$location", "$route", "$routeParams", "$win
 
 module.exports = BaseController;
 
-},{"lodash":14}],17:[function(require,module,exports){
+},{"lodash":12}],15:[function(require,module,exports){
 /**
  * NpolarEditController provides methods for manipulating documents (using ngResource)
  * and controller action methods like edit().
@@ -34904,7 +33907,7 @@ EditController.$inject = ["$scope", "$location", "$route", "$routeParams", "$win
 
 module.exports = EditController;
 
-},{"angular":33}],18:[function(require,module,exports){
+},{"angular":33}],16:[function(require,module,exports){
 /**
 * Npolar API HTTP interceptor:
 * - adds JWT (Bearer token) in the Authorization header
@@ -34998,7 +34001,7 @@ HttpInterceptor.$inject = ["$q", "$rootScope", "npolarApiConfig", "NpolarApiMess
 
 module.exports = HttpInterceptor;
 
-},{}],19:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 'use strict';
 
 var angular = require('angular');
@@ -35035,7 +34038,7 @@ var HttpMessage = function HttpMessage() {
 
 module.exports = HttpMessage;
 
-},{"angular":33,"events":218}],20:[function(require,module,exports){
+},{"angular":33,"events":218}],18:[function(require,module,exports){
 /**
 *
 *
@@ -35140,7 +34143,7 @@ Resource.$inject = ["npolarApiConfig", "NpolarApiSecurity", "$resource", "$locat
 
 module.exports = Resource;
 
-},{"angular":33,"lodash":14}],21:[function(require,module,exports){
+},{"angular":33,"lodash":12}],19:[function(require,module,exports){
 'use strict';
 
 /**
@@ -35269,7 +34272,7 @@ Security.$inject = ["base64", "jwtHelper", "npolarApiConfig", "NpolarApiUser"];
 
 module.exports = Security;
 
-},{}],22:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 'use strict';
 var angular = require('angular');
 
@@ -35296,7 +34299,7 @@ npolarApi.controller('NpolarEditController', require('./controller/EditControlle
 
 module.exports = npolarApi;
 
-},{"./config":15,"./controller/BaseController":16,"./controller/EditController":17,"./http/HttpInterceptor":18,"./http/HttpMessage":19,"./http/Resource":20,"./http/Security":21,"./session/User":23,"./util/Text":24,"./util/jsonText":25,"angular":33,"angular-jwt":8,"angular-resource":10,"angular-utf8-base64":13}],23:[function(require,module,exports){
+},{"./config":13,"./controller/BaseController":14,"./controller/EditController":15,"./http/HttpInterceptor":16,"./http/HttpMessage":17,"./http/Resource":18,"./http/Security":19,"./session/User":21,"./util/Text":22,"./util/jsonText":23,"angular":33,"angular-jwt":8,"angular-resource":10,"angular-utf8-base64":11}],21:[function(require,module,exports){
 // FIXME This service is misnamed and will probably die (it's just a thin session storage wrapper)
 'use strict';
 var angular = require('angular');
@@ -35332,7 +34335,7 @@ User.$inject = ["base64", "npolarApiConfig"];
 
 module.exports = User;
 
-},{"angular":33}],24:[function(require,module,exports){
+},{"angular":33}],22:[function(require,module,exports){
 'use strict';
 var _ = require('lodash');
 
@@ -35357,7 +34360,7 @@ var Texxt = function Texxt() {
 
 module.exports = Texxt;
 
-},{"lodash":14}],25:[function(require,module,exports){
+},{"lodash":12}],23:[function(require,module,exports){
 /**
  * Adapted from [Stackoverflow?]...
  *
@@ -35386,7 +34389,7 @@ var jsonText = function jsonText() {
 
 module.exports = jsonText;
 
-},{}],26:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -35394,7 +34397,7 @@ module.exports = {
   npolarUi: require('./ui/')
 };
 
-},{"./api/":22,"./ui/":29}],27:[function(require,module,exports){
+},{"./api/":20,"./ui/":27}],25:[function(require,module,exports){
 'use strict';
 
 /**
@@ -35498,7 +34501,7 @@ LoginController.$inject = ["$scope", "$http", "$route", "$location", "$rootScope
 
 module.exports = LoginController;
 
-},{}],28:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 'use strict';
 
 /**
@@ -35526,7 +34529,7 @@ loginLogout.$inject = ["NpolarApiSecurity", "npolarApiConfig", "$http"];
 
 module.exports = loginLogout;
 
-},{}],29:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 'use strict';
 var angular = require('angular');
 require('angular-animate');
@@ -35555,7 +34558,7 @@ npolarUi.controller('ToastCtrl', ["$scope", "$mdToast", "message", "explanation"
 
 module.exports = npolarUi;
 
-},{"./auth/LoginController":27,"./auth/loginLogout":28,"./message/MessageController":30,"./message/message":31,"angular":33,"angular-animate":2,"angular-aria":4,"angular-material":6,"angular-route":12}],30:[function(require,module,exports){
+},{"./auth/LoginController":25,"./auth/loginLogout":26,"./message/MessageController":28,"./message/message":29,"angular":33,"angular-animate":2,"angular-aria":4,"angular-material":6,"angular-route":31}],28:[function(require,module,exports){
 'use strict';
 
 // @ngInject
@@ -35634,7 +34637,7 @@ MessageController.$inject = ["$scope", "$route", "$http", "$location", "$mdToast
 
 module.exports = MessageController;
 
-},{}],31:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 'use strict';
 
 /**
@@ -35648,7 +34651,1004 @@ var message = function message() {
 
 module.exports = message;
 
-},{}],32:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
+/**
+ * @license AngularJS v1.4.5
+ * (c) 2010-2015 Google, Inc. http://angularjs.org
+ * License: MIT
+ */
+(function(window, angular, undefined) {'use strict';
+
+/**
+ * @ngdoc module
+ * @name ngRoute
+ * @description
+ *
+ * # ngRoute
+ *
+ * The `ngRoute` module provides routing and deeplinking services and directives for angular apps.
+ *
+ * ## Example
+ * See {@link ngRoute.$route#example $route} for an example of configuring and using `ngRoute`.
+ *
+ *
+ * <div doc-module-components="ngRoute"></div>
+ */
+ /* global -ngRouteModule */
+var ngRouteModule = angular.module('ngRoute', ['ng']).
+                        provider('$route', $RouteProvider),
+    $routeMinErr = angular.$$minErr('ngRoute');
+
+/**
+ * @ngdoc provider
+ * @name $routeProvider
+ *
+ * @description
+ *
+ * Used for configuring routes.
+ *
+ * ## Example
+ * See {@link ngRoute.$route#example $route} for an example of configuring and using `ngRoute`.
+ *
+ * ## Dependencies
+ * Requires the {@link ngRoute `ngRoute`} module to be installed.
+ */
+function $RouteProvider() {
+  function inherit(parent, extra) {
+    return angular.extend(Object.create(parent), extra);
+  }
+
+  var routes = {};
+
+  /**
+   * @ngdoc method
+   * @name $routeProvider#when
+   *
+   * @param {string} path Route path (matched against `$location.path`). If `$location.path`
+   *    contains redundant trailing slash or is missing one, the route will still match and the
+   *    `$location.path` will be updated to add or drop the trailing slash to exactly match the
+   *    route definition.
+   *
+   *    * `path` can contain named groups starting with a colon: e.g. `:name`. All characters up
+   *        to the next slash are matched and stored in `$routeParams` under the given `name`
+   *        when the route matches.
+   *    * `path` can contain named groups starting with a colon and ending with a star:
+   *        e.g.`:name*`. All characters are eagerly stored in `$routeParams` under the given `name`
+   *        when the route matches.
+   *    * `path` can contain optional named groups with a question mark: e.g.`:name?`.
+   *
+   *    For example, routes like `/color/:color/largecode/:largecode*\/edit` will match
+   *    `/color/brown/largecode/code/with/slashes/edit` and extract:
+   *
+   *    * `color: brown`
+   *    * `largecode: code/with/slashes`.
+   *
+   *
+   * @param {Object} route Mapping information to be assigned to `$route.current` on route
+   *    match.
+   *
+   *    Object properties:
+   *
+   *    - `controller` – `{(string|function()=}` – Controller fn that should be associated with
+   *      newly created scope or the name of a {@link angular.Module#controller registered
+   *      controller} if passed as a string.
+   *    - `controllerAs` – `{string=}` – An identifier name for a reference to the controller.
+   *      If present, the controller will be published to scope under the `controllerAs` name.
+   *    - `template` – `{string=|function()=}` – html template as a string or a function that
+   *      returns an html template as a string which should be used by {@link
+   *      ngRoute.directive:ngView ngView} or {@link ng.directive:ngInclude ngInclude} directives.
+   *      This property takes precedence over `templateUrl`.
+   *
+   *      If `template` is a function, it will be called with the following parameters:
+   *
+   *      - `{Array.<Object>}` - route parameters extracted from the current
+   *        `$location.path()` by applying the current route
+   *
+   *    - `templateUrl` – `{string=|function()=}` – path or function that returns a path to an html
+   *      template that should be used by {@link ngRoute.directive:ngView ngView}.
+   *
+   *      If `templateUrl` is a function, it will be called with the following parameters:
+   *
+   *      - `{Array.<Object>}` - route parameters extracted from the current
+   *        `$location.path()` by applying the current route
+   *
+   *    - `resolve` - `{Object.<string, function>=}` - An optional map of dependencies which should
+   *      be injected into the controller. If any of these dependencies are promises, the router
+   *      will wait for them all to be resolved or one to be rejected before the controller is
+   *      instantiated.
+   *      If all the promises are resolved successfully, the values of the resolved promises are
+   *      injected and {@link ngRoute.$route#$routeChangeSuccess $routeChangeSuccess} event is
+   *      fired. If any of the promises are rejected the
+   *      {@link ngRoute.$route#$routeChangeError $routeChangeError} event is fired. The map object
+   *      is:
+   *
+   *      - `key` – `{string}`: a name of a dependency to be injected into the controller.
+   *      - `factory` - `{string|function}`: If `string` then it is an alias for a service.
+   *        Otherwise if function, then it is {@link auto.$injector#invoke injected}
+   *        and the return value is treated as the dependency. If the result is a promise, it is
+   *        resolved before its value is injected into the controller. Be aware that
+   *        `ngRoute.$routeParams` will still refer to the previous route within these resolve
+   *        functions.  Use `$route.current.params` to access the new route parameters, instead.
+   *
+   *    - `redirectTo` – {(string|function())=} – value to update
+   *      {@link ng.$location $location} path with and trigger route redirection.
+   *
+   *      If `redirectTo` is a function, it will be called with the following parameters:
+   *
+   *      - `{Object.<string>}` - route parameters extracted from the current
+   *        `$location.path()` by applying the current route templateUrl.
+   *      - `{string}` - current `$location.path()`
+   *      - `{Object}` - current `$location.search()`
+   *
+   *      The custom `redirectTo` function is expected to return a string which will be used
+   *      to update `$location.path()` and `$location.search()`.
+   *
+   *    - `[reloadOnSearch=true]` - {boolean=} - reload route when only `$location.search()`
+   *      or `$location.hash()` changes.
+   *
+   *      If the option is set to `false` and url in the browser changes, then
+   *      `$routeUpdate` event is broadcasted on the root scope.
+   *
+   *    - `[caseInsensitiveMatch=false]` - {boolean=} - match routes without being case sensitive
+   *
+   *      If the option is set to `true`, then the particular route can be matched without being
+   *      case sensitive
+   *
+   * @returns {Object} self
+   *
+   * @description
+   * Adds a new route definition to the `$route` service.
+   */
+  this.when = function(path, route) {
+    //copy original route object to preserve params inherited from proto chain
+    var routeCopy = angular.copy(route);
+    if (angular.isUndefined(routeCopy.reloadOnSearch)) {
+      routeCopy.reloadOnSearch = true;
+    }
+    if (angular.isUndefined(routeCopy.caseInsensitiveMatch)) {
+      routeCopy.caseInsensitiveMatch = this.caseInsensitiveMatch;
+    }
+    routes[path] = angular.extend(
+      routeCopy,
+      path && pathRegExp(path, routeCopy)
+    );
+
+    // create redirection for trailing slashes
+    if (path) {
+      var redirectPath = (path[path.length - 1] == '/')
+            ? path.substr(0, path.length - 1)
+            : path + '/';
+
+      routes[redirectPath] = angular.extend(
+        {redirectTo: path},
+        pathRegExp(redirectPath, routeCopy)
+      );
+    }
+
+    return this;
+  };
+
+  /**
+   * @ngdoc property
+   * @name $routeProvider#caseInsensitiveMatch
+   * @description
+   *
+   * A boolean property indicating if routes defined
+   * using this provider should be matched using a case insensitive
+   * algorithm. Defaults to `false`.
+   */
+  this.caseInsensitiveMatch = false;
+
+   /**
+    * @param path {string} path
+    * @param opts {Object} options
+    * @return {?Object}
+    *
+    * @description
+    * Normalizes the given path, returning a regular expression
+    * and the original path.
+    *
+    * Inspired by pathRexp in visionmedia/express/lib/utils.js.
+    */
+  function pathRegExp(path, opts) {
+    var insensitive = opts.caseInsensitiveMatch,
+        ret = {
+          originalPath: path,
+          regexp: path
+        },
+        keys = ret.keys = [];
+
+    path = path
+      .replace(/([().])/g, '\\$1')
+      .replace(/(\/)?:(\w+)([\?\*])?/g, function(_, slash, key, option) {
+        var optional = option === '?' ? option : null;
+        var star = option === '*' ? option : null;
+        keys.push({ name: key, optional: !!optional });
+        slash = slash || '';
+        return ''
+          + (optional ? '' : slash)
+          + '(?:'
+          + (optional ? slash : '')
+          + (star && '(.+?)' || '([^/]+)')
+          + (optional || '')
+          + ')'
+          + (optional || '');
+      })
+      .replace(/([\/$\*])/g, '\\$1');
+
+    ret.regexp = new RegExp('^' + path + '$', insensitive ? 'i' : '');
+    return ret;
+  }
+
+  /**
+   * @ngdoc method
+   * @name $routeProvider#otherwise
+   *
+   * @description
+   * Sets route definition that will be used on route change when no other route definition
+   * is matched.
+   *
+   * @param {Object|string} params Mapping information to be assigned to `$route.current`.
+   * If called with a string, the value maps to `redirectTo`.
+   * @returns {Object} self
+   */
+  this.otherwise = function(params) {
+    if (typeof params === 'string') {
+      params = {redirectTo: params};
+    }
+    this.when(null, params);
+    return this;
+  };
+
+
+  this.$get = ['$rootScope',
+               '$location',
+               '$routeParams',
+               '$q',
+               '$injector',
+               '$templateRequest',
+               '$sce',
+      function($rootScope, $location, $routeParams, $q, $injector, $templateRequest, $sce) {
+
+    /**
+     * @ngdoc service
+     * @name $route
+     * @requires $location
+     * @requires $routeParams
+     *
+     * @property {Object} current Reference to the current route definition.
+     * The route definition contains:
+     *
+     *   - `controller`: The controller constructor as define in route definition.
+     *   - `locals`: A map of locals which is used by {@link ng.$controller $controller} service for
+     *     controller instantiation. The `locals` contain
+     *     the resolved values of the `resolve` map. Additionally the `locals` also contain:
+     *
+     *     - `$scope` - The current route scope.
+     *     - `$template` - The current route template HTML.
+     *
+     * @property {Object} routes Object with all route configuration Objects as its properties.
+     *
+     * @description
+     * `$route` is used for deep-linking URLs to controllers and views (HTML partials).
+     * It watches `$location.url()` and tries to map the path to an existing route definition.
+     *
+     * Requires the {@link ngRoute `ngRoute`} module to be installed.
+     *
+     * You can define routes through {@link ngRoute.$routeProvider $routeProvider}'s API.
+     *
+     * The `$route` service is typically used in conjunction with the
+     * {@link ngRoute.directive:ngView `ngView`} directive and the
+     * {@link ngRoute.$routeParams `$routeParams`} service.
+     *
+     * @example
+     * This example shows how changing the URL hash causes the `$route` to match a route against the
+     * URL, and the `ngView` pulls in the partial.
+     *
+     * <example name="$route-service" module="ngRouteExample"
+     *          deps="angular-route.js" fixBase="true">
+     *   <file name="index.html">
+     *     <div ng-controller="MainController">
+     *       Choose:
+     *       <a href="Book/Moby">Moby</a> |
+     *       <a href="Book/Moby/ch/1">Moby: Ch1</a> |
+     *       <a href="Book/Gatsby">Gatsby</a> |
+     *       <a href="Book/Gatsby/ch/4?key=value">Gatsby: Ch4</a> |
+     *       <a href="Book/Scarlet">Scarlet Letter</a><br/>
+     *
+     *       <div ng-view></div>
+     *
+     *       <hr />
+     *
+     *       <pre>$location.path() = {{$location.path()}}</pre>
+     *       <pre>$route.current.templateUrl = {{$route.current.templateUrl}}</pre>
+     *       <pre>$route.current.params = {{$route.current.params}}</pre>
+     *       <pre>$route.current.scope.name = {{$route.current.scope.name}}</pre>
+     *       <pre>$routeParams = {{$routeParams}}</pre>
+     *     </div>
+     *   </file>
+     *
+     *   <file name="book.html">
+     *     controller: {{name}}<br />
+     *     Book Id: {{params.bookId}}<br />
+     *   </file>
+     *
+     *   <file name="chapter.html">
+     *     controller: {{name}}<br />
+     *     Book Id: {{params.bookId}}<br />
+     *     Chapter Id: {{params.chapterId}}
+     *   </file>
+     *
+     *   <file name="script.js">
+     *     angular.module('ngRouteExample', ['ngRoute'])
+     *
+     *      .controller('MainController', function($scope, $route, $routeParams, $location) {
+     *          $scope.$route = $route;
+     *          $scope.$location = $location;
+     *          $scope.$routeParams = $routeParams;
+     *      })
+     *
+     *      .controller('BookController', function($scope, $routeParams) {
+     *          $scope.name = "BookController";
+     *          $scope.params = $routeParams;
+     *      })
+     *
+     *      .controller('ChapterController', function($scope, $routeParams) {
+     *          $scope.name = "ChapterController";
+     *          $scope.params = $routeParams;
+     *      })
+     *
+     *     .config(function($routeProvider, $locationProvider) {
+     *       $routeProvider
+     *        .when('/Book/:bookId', {
+     *         templateUrl: 'book.html',
+     *         controller: 'BookController',
+     *         resolve: {
+     *           // I will cause a 1 second delay
+     *           delay: function($q, $timeout) {
+     *             var delay = $q.defer();
+     *             $timeout(delay.resolve, 1000);
+     *             return delay.promise;
+     *           }
+     *         }
+     *       })
+     *       .when('/Book/:bookId/ch/:chapterId', {
+     *         templateUrl: 'chapter.html',
+     *         controller: 'ChapterController'
+     *       });
+     *
+     *       // configure html5 to get links working on jsfiddle
+     *       $locationProvider.html5Mode(true);
+     *     });
+     *
+     *   </file>
+     *
+     *   <file name="protractor.js" type="protractor">
+     *     it('should load and compile correct template', function() {
+     *       element(by.linkText('Moby: Ch1')).click();
+     *       var content = element(by.css('[ng-view]')).getText();
+     *       expect(content).toMatch(/controller\: ChapterController/);
+     *       expect(content).toMatch(/Book Id\: Moby/);
+     *       expect(content).toMatch(/Chapter Id\: 1/);
+     *
+     *       element(by.partialLinkText('Scarlet')).click();
+     *
+     *       content = element(by.css('[ng-view]')).getText();
+     *       expect(content).toMatch(/controller\: BookController/);
+     *       expect(content).toMatch(/Book Id\: Scarlet/);
+     *     });
+     *   </file>
+     * </example>
+     */
+
+    /**
+     * @ngdoc event
+     * @name $route#$routeChangeStart
+     * @eventType broadcast on root scope
+     * @description
+     * Broadcasted before a route change. At this  point the route services starts
+     * resolving all of the dependencies needed for the route change to occur.
+     * Typically this involves fetching the view template as well as any dependencies
+     * defined in `resolve` route property. Once  all of the dependencies are resolved
+     * `$routeChangeSuccess` is fired.
+     *
+     * The route change (and the `$location` change that triggered it) can be prevented
+     * by calling `preventDefault` method of the event. See {@link ng.$rootScope.Scope#$on}
+     * for more details about event object.
+     *
+     * @param {Object} angularEvent Synthetic event object.
+     * @param {Route} next Future route information.
+     * @param {Route} current Current route information.
+     */
+
+    /**
+     * @ngdoc event
+     * @name $route#$routeChangeSuccess
+     * @eventType broadcast on root scope
+     * @description
+     * Broadcasted after a route change has happened successfully.
+     * The `resolve` dependencies are now available in the `current.locals` property.
+     *
+     * {@link ngRoute.directive:ngView ngView} listens for the directive
+     * to instantiate the controller and render the view.
+     *
+     * @param {Object} angularEvent Synthetic event object.
+     * @param {Route} current Current route information.
+     * @param {Route|Undefined} previous Previous route information, or undefined if current is
+     * first route entered.
+     */
+
+    /**
+     * @ngdoc event
+     * @name $route#$routeChangeError
+     * @eventType broadcast on root scope
+     * @description
+     * Broadcasted if any of the resolve promises are rejected.
+     *
+     * @param {Object} angularEvent Synthetic event object
+     * @param {Route} current Current route information.
+     * @param {Route} previous Previous route information.
+     * @param {Route} rejection Rejection of the promise. Usually the error of the failed promise.
+     */
+
+    /**
+     * @ngdoc event
+     * @name $route#$routeUpdate
+     * @eventType broadcast on root scope
+     * @description
+     * The `reloadOnSearch` property has been set to false, and we are reusing the same
+     * instance of the Controller.
+     *
+     * @param {Object} angularEvent Synthetic event object
+     * @param {Route} current Current/previous route information.
+     */
+
+    var forceReload = false,
+        preparedRoute,
+        preparedRouteIsUpdateOnly,
+        $route = {
+          routes: routes,
+
+          /**
+           * @ngdoc method
+           * @name $route#reload
+           *
+           * @description
+           * Causes `$route` service to reload the current route even if
+           * {@link ng.$location $location} hasn't changed.
+           *
+           * As a result of that, {@link ngRoute.directive:ngView ngView}
+           * creates new scope and reinstantiates the controller.
+           */
+          reload: function() {
+            forceReload = true;
+            $rootScope.$evalAsync(function() {
+              // Don't support cancellation of a reload for now...
+              prepareRoute();
+              commitRoute();
+            });
+          },
+
+          /**
+           * @ngdoc method
+           * @name $route#updateParams
+           *
+           * @description
+           * Causes `$route` service to update the current URL, replacing
+           * current route parameters with those specified in `newParams`.
+           * Provided property names that match the route's path segment
+           * definitions will be interpolated into the location's path, while
+           * remaining properties will be treated as query params.
+           *
+           * @param {!Object<string, string>} newParams mapping of URL parameter names to values
+           */
+          updateParams: function(newParams) {
+            if (this.current && this.current.$$route) {
+              newParams = angular.extend({}, this.current.params, newParams);
+              $location.path(interpolate(this.current.$$route.originalPath, newParams));
+              // interpolate modifies newParams, only query params are left
+              $location.search(newParams);
+            } else {
+              throw $routeMinErr('norout', 'Tried updating route when with no current route');
+            }
+          }
+        };
+
+    $rootScope.$on('$locationChangeStart', prepareRoute);
+    $rootScope.$on('$locationChangeSuccess', commitRoute);
+
+    return $route;
+
+    /////////////////////////////////////////////////////
+
+    /**
+     * @param on {string} current url
+     * @param route {Object} route regexp to match the url against
+     * @return {?Object}
+     *
+     * @description
+     * Check if the route matches the current url.
+     *
+     * Inspired by match in
+     * visionmedia/express/lib/router/router.js.
+     */
+    function switchRouteMatcher(on, route) {
+      var keys = route.keys,
+          params = {};
+
+      if (!route.regexp) return null;
+
+      var m = route.regexp.exec(on);
+      if (!m) return null;
+
+      for (var i = 1, len = m.length; i < len; ++i) {
+        var key = keys[i - 1];
+
+        var val = m[i];
+
+        if (key && val) {
+          params[key.name] = val;
+        }
+      }
+      return params;
+    }
+
+    function prepareRoute($locationEvent) {
+      var lastRoute = $route.current;
+
+      preparedRoute = parseRoute();
+      preparedRouteIsUpdateOnly = preparedRoute && lastRoute && preparedRoute.$$route === lastRoute.$$route
+          && angular.equals(preparedRoute.pathParams, lastRoute.pathParams)
+          && !preparedRoute.reloadOnSearch && !forceReload;
+
+      if (!preparedRouteIsUpdateOnly && (lastRoute || preparedRoute)) {
+        if ($rootScope.$broadcast('$routeChangeStart', preparedRoute, lastRoute).defaultPrevented) {
+          if ($locationEvent) {
+            $locationEvent.preventDefault();
+          }
+        }
+      }
+    }
+
+    function commitRoute() {
+      var lastRoute = $route.current;
+      var nextRoute = preparedRoute;
+
+      if (preparedRouteIsUpdateOnly) {
+        lastRoute.params = nextRoute.params;
+        angular.copy(lastRoute.params, $routeParams);
+        $rootScope.$broadcast('$routeUpdate', lastRoute);
+      } else if (nextRoute || lastRoute) {
+        forceReload = false;
+        $route.current = nextRoute;
+        if (nextRoute) {
+          if (nextRoute.redirectTo) {
+            if (angular.isString(nextRoute.redirectTo)) {
+              $location.path(interpolate(nextRoute.redirectTo, nextRoute.params)).search(nextRoute.params)
+                       .replace();
+            } else {
+              $location.url(nextRoute.redirectTo(nextRoute.pathParams, $location.path(), $location.search()))
+                       .replace();
+            }
+          }
+        }
+
+        $q.when(nextRoute).
+          then(function() {
+            if (nextRoute) {
+              var locals = angular.extend({}, nextRoute.resolve),
+                  template, templateUrl;
+
+              angular.forEach(locals, function(value, key) {
+                locals[key] = angular.isString(value) ?
+                    $injector.get(value) : $injector.invoke(value, null, null, key);
+              });
+
+              if (angular.isDefined(template = nextRoute.template)) {
+                if (angular.isFunction(template)) {
+                  template = template(nextRoute.params);
+                }
+              } else if (angular.isDefined(templateUrl = nextRoute.templateUrl)) {
+                if (angular.isFunction(templateUrl)) {
+                  templateUrl = templateUrl(nextRoute.params);
+                }
+                if (angular.isDefined(templateUrl)) {
+                  nextRoute.loadedTemplateUrl = $sce.valueOf(templateUrl);
+                  template = $templateRequest(templateUrl);
+                }
+              }
+              if (angular.isDefined(template)) {
+                locals['$template'] = template;
+              }
+              return $q.all(locals);
+            }
+          }).
+          then(function(locals) {
+            // after route change
+            if (nextRoute == $route.current) {
+              if (nextRoute) {
+                nextRoute.locals = locals;
+                angular.copy(nextRoute.params, $routeParams);
+              }
+              $rootScope.$broadcast('$routeChangeSuccess', nextRoute, lastRoute);
+            }
+          }, function(error) {
+            if (nextRoute == $route.current) {
+              $rootScope.$broadcast('$routeChangeError', nextRoute, lastRoute, error);
+            }
+          });
+      }
+    }
+
+
+    /**
+     * @returns {Object} the current active route, by matching it against the URL
+     */
+    function parseRoute() {
+      // Match a route
+      var params, match;
+      angular.forEach(routes, function(route, path) {
+        if (!match && (params = switchRouteMatcher($location.path(), route))) {
+          match = inherit(route, {
+            params: angular.extend({}, $location.search(), params),
+            pathParams: params});
+          match.$$route = route;
+        }
+      });
+      // No route matched; fallback to "otherwise" route
+      return match || routes[null] && inherit(routes[null], {params: {}, pathParams:{}});
+    }
+
+    /**
+     * @returns {string} interpolation of the redirect path with the parameters
+     */
+    function interpolate(string, params) {
+      var result = [];
+      angular.forEach((string || '').split(':'), function(segment, i) {
+        if (i === 0) {
+          result.push(segment);
+        } else {
+          var segmentMatch = segment.match(/(\w+)(?:[?*])?(.*)/);
+          var key = segmentMatch[1];
+          result.push(params[key]);
+          result.push(segmentMatch[2] || '');
+          delete params[key];
+        }
+      });
+      return result.join('');
+    }
+  }];
+}
+
+ngRouteModule.provider('$routeParams', $RouteParamsProvider);
+
+
+/**
+ * @ngdoc service
+ * @name $routeParams
+ * @requires $route
+ *
+ * @description
+ * The `$routeParams` service allows you to retrieve the current set of route parameters.
+ *
+ * Requires the {@link ngRoute `ngRoute`} module to be installed.
+ *
+ * The route parameters are a combination of {@link ng.$location `$location`}'s
+ * {@link ng.$location#search `search()`} and {@link ng.$location#path `path()`}.
+ * The `path` parameters are extracted when the {@link ngRoute.$route `$route`} path is matched.
+ *
+ * In case of parameter name collision, `path` params take precedence over `search` params.
+ *
+ * The service guarantees that the identity of the `$routeParams` object will remain unchanged
+ * (but its properties will likely change) even when a route change occurs.
+ *
+ * Note that the `$routeParams` are only updated *after* a route change completes successfully.
+ * This means that you cannot rely on `$routeParams` being correct in route resolve functions.
+ * Instead you can use `$route.current.params` to access the new route's parameters.
+ *
+ * @example
+ * ```js
+ *  // Given:
+ *  // URL: http://server.com/index.html#/Chapter/1/Section/2?search=moby
+ *  // Route: /Chapter/:chapterId/Section/:sectionId
+ *  //
+ *  // Then
+ *  $routeParams ==> {chapterId:'1', sectionId:'2', search:'moby'}
+ * ```
+ */
+function $RouteParamsProvider() {
+  this.$get = function() { return {}; };
+}
+
+ngRouteModule.directive('ngView', ngViewFactory);
+ngRouteModule.directive('ngView', ngViewFillContentFactory);
+
+
+/**
+ * @ngdoc directive
+ * @name ngView
+ * @restrict ECA
+ *
+ * @description
+ * # Overview
+ * `ngView` is a directive that complements the {@link ngRoute.$route $route} service by
+ * including the rendered template of the current route into the main layout (`index.html`) file.
+ * Every time the current route changes, the included view changes with it according to the
+ * configuration of the `$route` service.
+ *
+ * Requires the {@link ngRoute `ngRoute`} module to be installed.
+ *
+ * @animations
+ * enter - animation is used to bring new content into the browser.
+ * leave - animation is used to animate existing content away.
+ *
+ * The enter and leave animation occur concurrently.
+ *
+ * @scope
+ * @priority 400
+ * @param {string=} onload Expression to evaluate whenever the view updates.
+ *
+ * @param {string=} autoscroll Whether `ngView` should call {@link ng.$anchorScroll
+ *                  $anchorScroll} to scroll the viewport after the view is updated.
+ *
+ *                  - If the attribute is not set, disable scrolling.
+ *                  - If the attribute is set without value, enable scrolling.
+ *                  - Otherwise enable scrolling only if the `autoscroll` attribute value evaluated
+ *                    as an expression yields a truthy value.
+ * @example
+    <example name="ngView-directive" module="ngViewExample"
+             deps="angular-route.js;angular-animate.js"
+             animations="true" fixBase="true">
+      <file name="index.html">
+        <div ng-controller="MainCtrl as main">
+          Choose:
+          <a href="Book/Moby">Moby</a> |
+          <a href="Book/Moby/ch/1">Moby: Ch1</a> |
+          <a href="Book/Gatsby">Gatsby</a> |
+          <a href="Book/Gatsby/ch/4?key=value">Gatsby: Ch4</a> |
+          <a href="Book/Scarlet">Scarlet Letter</a><br/>
+
+          <div class="view-animate-container">
+            <div ng-view class="view-animate"></div>
+          </div>
+          <hr />
+
+          <pre>$location.path() = {{main.$location.path()}}</pre>
+          <pre>$route.current.templateUrl = {{main.$route.current.templateUrl}}</pre>
+          <pre>$route.current.params = {{main.$route.current.params}}</pre>
+          <pre>$routeParams = {{main.$routeParams}}</pre>
+        </div>
+      </file>
+
+      <file name="book.html">
+        <div>
+          controller: {{book.name}}<br />
+          Book Id: {{book.params.bookId}}<br />
+        </div>
+      </file>
+
+      <file name="chapter.html">
+        <div>
+          controller: {{chapter.name}}<br />
+          Book Id: {{chapter.params.bookId}}<br />
+          Chapter Id: {{chapter.params.chapterId}}
+        </div>
+      </file>
+
+      <file name="animations.css">
+        .view-animate-container {
+          position:relative;
+          height:100px!important;
+          background:white;
+          border:1px solid black;
+          height:40px;
+          overflow:hidden;
+        }
+
+        .view-animate {
+          padding:10px;
+        }
+
+        .view-animate.ng-enter, .view-animate.ng-leave {
+          transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 1.5s;
+
+          display:block;
+          width:100%;
+          border-left:1px solid black;
+
+          position:absolute;
+          top:0;
+          left:0;
+          right:0;
+          bottom:0;
+          padding:10px;
+        }
+
+        .view-animate.ng-enter {
+          left:100%;
+        }
+        .view-animate.ng-enter.ng-enter-active {
+          left:0;
+        }
+        .view-animate.ng-leave.ng-leave-active {
+          left:-100%;
+        }
+      </file>
+
+      <file name="script.js">
+        angular.module('ngViewExample', ['ngRoute', 'ngAnimate'])
+          .config(['$routeProvider', '$locationProvider',
+            function($routeProvider, $locationProvider) {
+              $routeProvider
+                .when('/Book/:bookId', {
+                  templateUrl: 'book.html',
+                  controller: 'BookCtrl',
+                  controllerAs: 'book'
+                })
+                .when('/Book/:bookId/ch/:chapterId', {
+                  templateUrl: 'chapter.html',
+                  controller: 'ChapterCtrl',
+                  controllerAs: 'chapter'
+                });
+
+              $locationProvider.html5Mode(true);
+          }])
+          .controller('MainCtrl', ['$route', '$routeParams', '$location',
+            function($route, $routeParams, $location) {
+              this.$route = $route;
+              this.$location = $location;
+              this.$routeParams = $routeParams;
+          }])
+          .controller('BookCtrl', ['$routeParams', function($routeParams) {
+            this.name = "BookCtrl";
+            this.params = $routeParams;
+          }])
+          .controller('ChapterCtrl', ['$routeParams', function($routeParams) {
+            this.name = "ChapterCtrl";
+            this.params = $routeParams;
+          }]);
+
+      </file>
+
+      <file name="protractor.js" type="protractor">
+        it('should load and compile correct template', function() {
+          element(by.linkText('Moby: Ch1')).click();
+          var content = element(by.css('[ng-view]')).getText();
+          expect(content).toMatch(/controller\: ChapterCtrl/);
+          expect(content).toMatch(/Book Id\: Moby/);
+          expect(content).toMatch(/Chapter Id\: 1/);
+
+          element(by.partialLinkText('Scarlet')).click();
+
+          content = element(by.css('[ng-view]')).getText();
+          expect(content).toMatch(/controller\: BookCtrl/);
+          expect(content).toMatch(/Book Id\: Scarlet/);
+        });
+      </file>
+    </example>
+ */
+
+
+/**
+ * @ngdoc event
+ * @name ngView#$viewContentLoaded
+ * @eventType emit on the current ngView scope
+ * @description
+ * Emitted every time the ngView content is reloaded.
+ */
+ngViewFactory.$inject = ['$route', '$anchorScroll', '$animate'];
+function ngViewFactory($route, $anchorScroll, $animate) {
+  return {
+    restrict: 'ECA',
+    terminal: true,
+    priority: 400,
+    transclude: 'element',
+    link: function(scope, $element, attr, ctrl, $transclude) {
+        var currentScope,
+            currentElement,
+            previousLeaveAnimation,
+            autoScrollExp = attr.autoscroll,
+            onloadExp = attr.onload || '';
+
+        scope.$on('$routeChangeSuccess', update);
+        update();
+
+        function cleanupLastView() {
+          if (previousLeaveAnimation) {
+            $animate.cancel(previousLeaveAnimation);
+            previousLeaveAnimation = null;
+          }
+
+          if (currentScope) {
+            currentScope.$destroy();
+            currentScope = null;
+          }
+          if (currentElement) {
+            previousLeaveAnimation = $animate.leave(currentElement);
+            previousLeaveAnimation.then(function() {
+              previousLeaveAnimation = null;
+            });
+            currentElement = null;
+          }
+        }
+
+        function update() {
+          var locals = $route.current && $route.current.locals,
+              template = locals && locals.$template;
+
+          if (angular.isDefined(template)) {
+            var newScope = scope.$new();
+            var current = $route.current;
+
+            // Note: This will also link all children of ng-view that were contained in the original
+            // html. If that content contains controllers, ... they could pollute/change the scope.
+            // However, using ng-view on an element with additional content does not make sense...
+            // Note: We can't remove them in the cloneAttchFn of $transclude as that
+            // function is called before linking the content, which would apply child
+            // directives to non existing elements.
+            var clone = $transclude(newScope, function(clone) {
+              $animate.enter(clone, null, currentElement || $element).then(function onNgViewEnter() {
+                if (angular.isDefined(autoScrollExp)
+                  && (!autoScrollExp || scope.$eval(autoScrollExp))) {
+                  $anchorScroll();
+                }
+              });
+              cleanupLastView();
+            });
+
+            currentElement = clone;
+            currentScope = current.scope = newScope;
+            currentScope.$emit('$viewContentLoaded');
+            currentScope.$eval(onloadExp);
+          } else {
+            cleanupLastView();
+          }
+        }
+    }
+  };
+}
+
+// This directive is called during the $transclude call of the first `ngView` directive.
+// It will replace and compile the content of the element with the loaded template.
+// We need this directive so that the element content is already filled when
+// the link function of another directive on the same element as ngView
+// is called.
+ngViewFillContentFactory.$inject = ['$compile', '$controller', '$route'];
+function ngViewFillContentFactory($compile, $controller, $route) {
+  return {
+    restrict: 'ECA',
+    priority: -400,
+    link: function(scope, $element) {
+      var current = $route.current,
+          locals = current.locals;
+
+      $element.html(locals.$template);
+
+      var link = $compile($element.contents());
+
+      if (current.controller) {
+        locals.$scope = scope;
+        var controller = $controller(current.controller, locals);
+        if (current.controllerAs) {
+          scope[current.controllerAs] = controller;
+        }
+        $element.data('$ngControllerController', controller);
+        $element.children().data('$ngControllerController', controller);
+      }
+
+      link(scope);
+    }
+  };
+}
+
+
+})(window, window.angular);
+
+},{}],31:[function(require,module,exports){
+require('./angular-route');
+module.exports = 'ngRoute';
+
+},{"./angular-route":30}],32:[function(require,module,exports){
 /**
  * @license AngularJS v1.4.5
  * (c) 2010-2015 Google, Inc. http://angularjs.org
@@ -70438,7 +70438,7 @@ angular.module('formula')
 					return null;
 				}
 				
-				return 'ISO 8601 date';
+				return 'ISO 8601 date, e.g. 2015-11-30 (year-month-day)';
 			},
 			datetime: // ISO 8601 datetime combination
 			function(data, schema) {
@@ -70446,7 +70446,7 @@ angular.module('formula')
 					return null;
 				}
 				
-				return 'ISO 8601 datetime';
+				return 'ISO 8601 datetime, e.g. 2015-11-30T23:45:30Z';
 			},
 			datefullyear: // RCF 3339 four-digit year
 			function(data, schema) {
@@ -70454,7 +70454,7 @@ angular.module('formula')
 					return null;
 				}
 				
-				return 'RFC 3339 fullyear';
+				return 'RFC 3339 fullyear, e.g. 2015';
 			},
 			email: // RCF 3696 email
 			function(data, schema) {
@@ -70477,7 +70477,7 @@ angular.module('formula')
 					return null;
 				}
 				
-				return 'ISO 8601 time';
+				return 'ISO 8601 time, e.g. 23:45:30';
 			},
 			uri: // RFC 3986 URI
 			function(data, schema) {
@@ -70997,16 +70997,6 @@ angular.module('formula')
 					result.push('Array[' + field.value.length + ']');
 				} else switch(typeof field.value) {
 					case 'string':
-						var strlen = field.value.length;
-						
-						if(strlen && strlen < 10) {
-							result.push(field.value);
-						} else if(strlen) {
-							result.push(field.value.substr(0, 10) + '...');
-						}
-						
-						break;
-						
 					case 'number':
 					case 'boolean':
 						result.push(field.value);
@@ -72999,7 +72989,7 @@ angular.module('document', ['npdcMaterial']).controller('DocumentCtrl', ["$scope
   $scope.document = require('./demo/doc.json');
 }]);
 
-},{"../../":236,"./demo/doc.json":222,"angular":33}],226:[function(require,module,exports){
+},{"../../":240,"./demo/doc.json":222,"angular":33}],226:[function(require,module,exports){
 module.exports = '<!DOCTYPE html>\n<form class="np-expand-search" action="." method="get" ng-submit="this.form.submit()">\n  <input type="search" incremental="" results="10" name="q" value="{{q}}" >\n</form>\n';
 },{}],227:[function(require,module,exports){
 "use strict";
@@ -73022,33 +73012,108 @@ var angular = require('angular');
 
 angular.module('expandSearch', ['npdcMaterial']);
 
-},{"../../":236,"angular":33}],229:[function(require,module,exports){
+},{"../../":240,"angular":33}],229:[function(require,module,exports){
 "use strict";
 
 var angular = require('angular');
 var npdcMaterial = angular.module('npdcMaterial');
 
+npdcMaterial.controller('NpdcMdSidenavCtrl', require('./sidenav/SidenavCtrl'));
+
 npdcMaterial.directive('npdcMdDocument', require('./document/document'));
 npdcMaterial.directive('npdcMdToolbar', require('./toolbar/toolbar'));
+npdcMaterial.directive('npdcMdSidenav', require('./sidenav/sidenav'));
 npdcMaterial.directive('npdcMdUserMenu', require('./user-menu/userMenu'));
 npdcMaterial.directive('npdcMdExpandSearch', require('./expandable-search/expandSearch'));
 
-},{"./document/document":224,"./expandable-search/expandSearch":227,"./toolbar/toolbar":231,"./user-menu/userMenu":234,"angular":33}],230:[function(require,module,exports){
-module.exports = '<!DOCTYPE html>\n<md-toolbar class="np-top-menu">\n  <div class="md-toolbar-tools">\n\n    <a class="np-top-menu-brand" href="/">\n      <img alt="Norsk Polarinstutt [logo]" title="NPDC" src="http://www.npolar.no/npcms/export/sites/np/images/logos/norsk-polarinstitutt-logo-norsk-hvit.png">\n      <span hide-md="NPDC" hide-sm class="md-title" title="NPDC">Norwegian Polar Data Centre</span>\n    </a>\n\n    <span flex></span>\n\n    <!-- Apps -->\n    <md-menu>\n      <md-button aria-label="Open application menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">\n        <md-icon md-menu-origin>\n          <md-tooltip>Data / Applications</md-tooltip>apps</md-icon>\n      </md-button>\n\n      <md-menu-content width="6">\n\n\n        <md-subheader class="md-sticky">⛁ Data</md-subheader>\n\n        <md-menu-item>\n          <md-button ng-href="/dataset">Datasets (metadata catalogue)</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="//api.npolar.no">Data services (\n            <abbr title="Application Programming Interface">API</abbr>s)</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="//geodata.npolar.no">Geographic services</md-button>\n        </md-menu-item>\n\n\n        <md-divider></md-divider>\n\n        <md-subheader class="md-no-sticky">Applications</md-subheader>\n\n        <md-menu-item>\n          <md-button ng-href="/expedition" title="Expeditions">Expeditions</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/vessel">Historic Vessels</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/indicator">Indicators (environmental monitoring)</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/map/archive">Map archive</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/people">People</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/placename">Placenames</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/project">Projects</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/publication">Publications</md-button>\n        </md-menu-item>\n\n      </md-menu-content>\n\n    </md-menu>\n\n    <md-menu ng-if="security.isAuthenticated()">\n      <md-button aria-label="Open application menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">\n        <md-icon md-menu-origin>\n          <md-tooltip>Internal applications</md-tooltip>settings</md-icon>\n      </md-button>\n\n      <md-menu-content width="4">\n\n        <md-subheader class="md-no-sticky">Internal applications</md-subheader>\n\n        <md-menu-item>\n          <md-button ng-href="/courses">Courses</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/marine/biology" title="Marine Biology Samples">Marine biology</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/user">Users</md-button>\n        </md-menu-item>\n\n      </md-menu-content>\n    </md-menu>\n\n    <npdc-md:user-menu></npdc-md:user-menu>\n\n    <npdc-md:expand-search></npdc-md:expand-search>\n\n  </div>\n</md-toolbar>\n';
-},{}],231:[function(require,module,exports){
+},{"./document/document":224,"./expandable-search/expandSearch":227,"./sidenav/SidenavCtrl":230,"./sidenav/sidenav":232,"./toolbar/toolbar":235,"./user-menu/userMenu":238,"angular":33}],230:[function(require,module,exports){
 "use strict";
 
 // @ngInject
-var toolbar = function toolbar() {
+var SidenavCtrl = function SidenavCtrl($scope, $mdSidenav) {
+  $scope.close = function () {
+    $mdSidenav('left').toggle();
+  };
+};
+SidenavCtrl.$inject = ["$scope", "$mdSidenav"];
+
+module.exports = SidenavCtrl;
+
+},{}],231:[function(require,module,exports){
+module.exports = '<!DOCTYPE html>\n<md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia(\'gt-md\')">\n  <div class="np-sidenav-img md-whiteframe-z1">\n    <img alt="Norsk Polarinstutt [logo]" src="http://www.npolar.no/npcms/export/sites/np/images/logos/norsk-polarinstitutt-logo-norsk-hvit.png">\n    <h1 class="md-title" style="color: white; text-align: center; font-weight: bold;">Norwegian Polar Data Centre</h1>\n  </div>\n  <div class="np-sidenav-title md-whiteframe-z1" layout-padding>\n    <span class="md-title">{{sidenav.title}}</span>\n  </div>\n  <md-content>\n    <ul class="np-sidenav-menu">\n      <li ng-repeat="item in sidenav.menu" layout>\n        <md-button flex ng-href="{{item.link}}">{{item.title}}</md-button>\n      </li>\n    </ul>\n  </md-content>\n</md-sidenav>\n';
+},{}],232:[function(require,module,exports){
+"use strict";
+
+// @ngInject
+var sidenav = function sidenav() {
   return {
     restrict: 'E',
-    template: require('./toolbar.html')
+    template: require('./sidenav.html'),
+    scope: {
+      sidenav: '='
+    },
+    controller: 'NpdcMdSidenavCtrl'
   };
 };
 
+module.exports = sidenav;
+
+},{"./sidenav.html":231}],233:[function(require,module,exports){
+'use strict';
+
+require('../../');
+var angular = require('angular');
+require('angular-route');
+
+angular.module('sidenav', ['ngRoute', 'npdcMaterial']).controller('SidenavCtrl', ["$scope", "$route", function ($scope, $route) {
+  $scope.mySidenav = {
+    title: 'Appname',
+    menu: [{
+      title: 'Item1',
+      link: 'item1',
+      alt: 'Link to Item1'
+    }, {
+      title: 'Item2',
+      link: 'item2',
+      alt: 'Link to Item2'
+    }]
+  };
+  console.log('route', $route.current);
+}]).config(["$routeProvider", "$locationProvider", function ($routeProvider, $locationProvider) {
+  $locationProvider.html5Mode(true).hashPrefix('!');
+
+  $routeProvider.when('/index.html', {
+    template: "Start"
+  }).when('/item1', {
+    template: "Item1"
+  }).when('/item2', {
+    template: "Item2"
+  });
+}]);
+
+},{"../../":240,"angular":33,"angular-route":31}],234:[function(require,module,exports){
+module.exports = '<!DOCTYPE html>\n<md-toolbar class="np-top-menu">\n  <div class="md-toolbar-tools">\n    <div hide-gt-md>\n      <md-button class="md-icon-button" aria-label="Open sidenav" ng-click="toggleLeft()" ng-if="sidenav">\n        <md-icon>menu</md-icon>\n      </md-button>\n      <span class="md-title">Dataset</span>\n    </div>\n\n    <span flex></span>\n\n    <!-- Apps -->\n    <md-menu>\n      <md-button aria-label="Open application menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">\n        <md-icon md-menu-origin>\n          <md-tooltip>Data / Applications</md-tooltip>apps</md-icon>\n      </md-button>\n\n      <md-menu-content width="6">\n\n\n        <md-subheader class="md-sticky">⛁ Data</md-subheader>\n\n        <md-menu-item>\n          <md-button ng-href="/dataset">Datasets (metadata catalogue)</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="//api.npolar.no">Data services (\n            <abbr title="Application Programming Interface">API</abbr>s)</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="//geodata.npolar.no">Geographic services</md-button>\n        </md-menu-item>\n\n\n        <md-divider></md-divider>\n\n        <md-subheader class="md-no-sticky">Applications</md-subheader>\n\n        <md-menu-item>\n          <md-button ng-href="/expedition" title="Expeditions">Expeditions</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/vessel">Historic Vessels</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/indicator">Indicators (environmental monitoring)</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/map/archive">Map archive</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/people">People</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/placename">Placenames</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/project">Projects</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/publication">Publications</md-button>\n        </md-menu-item>\n\n      </md-menu-content>\n\n    </md-menu>\n\n    <md-menu ng-if="security.isAuthenticated()">\n      <md-button aria-label="Open application menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">\n        <md-icon md-menu-origin>\n          <md-tooltip>Internal applications</md-tooltip>settings</md-icon>\n      </md-button>\n\n      <md-menu-content width="4">\n\n        <md-subheader class="md-no-sticky">Internal applications</md-subheader>\n\n        <md-menu-item>\n          <md-button ng-href="/courses">Courses</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/marine/biology" title="Marine Biology Samples">Marine biology</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/user">Users</md-button>\n        </md-menu-item>\n\n      </md-menu-content>\n    </md-menu>\n\n    <npdc-md:user-menu></npdc-md:user-menu>\n\n    <npdc-md:expand-search></npdc-md:expand-search>\n\n  </div>\n</md-toolbar>\n';
+},{}],235:[function(require,module,exports){
+"use strict";
+
+// @ngInject
+var toolbar = function toolbar($mdSidenav) {
+  return {
+    restrict: 'E',
+    template: require('./toolbar.html'),
+    link: function link(scope, element, attr) {
+      scope.sidenav = true;
+      scope.toggleLeft = function () {
+        $mdSidenav('left').toggle();
+      };
+    }
+  };
+};
+toolbar.$inject = ["$mdSidenav"];
+
 module.exports = toolbar;
 
-},{"./toolbar.html":230}],232:[function(require,module,exports){
+},{"./toolbar.html":234}],236:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73056,9 +73121,9 @@ var angular = require('angular');
 
 angular.module('toolbar', ['npdcMaterial']);
 
-},{"../../":236,"angular":33}],233:[function(require,module,exports){
+},{"../../":240,"angular":33}],237:[function(require,module,exports){
 module.exports = '<!DOCTYPE html>\n<md-menu ng-if="!security.isAuthenticated()">\n  <md-button aria-label="Open user" class="md-icon-button" ng-click="$mdOpenMenu($event)">\n    <md-icon md-menu-origin>person<md-tooltip>Login</md-tooltip></md-icon>\n  </md-button>\n  <md-menu-content>\n    <form role="form" layout-padding class="np-login">\n      <div>\n        <md-input-container>\n          <label for="username" class="md-no-float">Username</label>\n          <input type="text" ng-model="user.username" id="username">\n        </md-input-container>\n        <md-input-container>\n          <label for="password" class="md-no-float">Password</label>\n          <input type="password" id="password" ng-model="user.password">\n        </md-input-container>\n      </div>\n      <div layout="row" layout-align="space-between center">\n        <a ng-href="/user/reset?username={{user.username}}">Forgot password?</a>\n        <a href="/user/register">Sign up</a>\n        <md-button type="submit" ng-click="login()" class="md-raised md-primary">Login</md-button>\n      </div>\n    </form>\n  </md-menu-content>\n</md-menu>\n\n<md-menu ng-if="security.isAuthenticated()">\n  <md-button aria-label="Open user" class="md-icon-button" ng-click="$mdOpenMenu($event)">\n    <md-icon md-menu-origin>person<md-tooltip>{{ security.getUser().name }}</md-tooltip></md-icon>\n  </md-button>\n  <md-menu-content>\n    <md-menu-item>\n      <md-button ng-href="/user/{{user.username}}" title="View profile for user {{user.username}}">\n        <md-icon md-menu-align-target>face</md-icon>\n        {{ user.name }}\n      </md-button>\n    </md-menu-item>\n    <md-menu-item>\n      <md-button ng-click="logout()">\n        <span>Logout</span> <small>(session expires {{ 1000*user.exp | date:\'HH:mm\' }})</small>\n      </md-button>\n    </md-menu-item>\n  </md-menu-content>\n</md-menu>\n';
-},{}],234:[function(require,module,exports){
+},{}],238:[function(require,module,exports){
 "use strict";
 
 // @ngInject
@@ -73077,7 +73142,7 @@ npdcUserMenu.$inject = ["NpolarApiSecurity"];
 
 module.exports = npdcUserMenu;
 
-},{"./userMenu.html":233}],235:[function(require,module,exports){
+},{"./userMenu.html":237}],239:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73085,7 +73150,7 @@ var angular = require('angular');
 
 angular.module('userMenu', ['npdcMaterial']);
 
-},{"../../":236,"angular":33}],236:[function(require,module,exports){
+},{"../../":240,"angular":33}],240:[function(require,module,exports){
 'use strict';
 /**
  * Angular bootstraping
@@ -73112,7 +73177,7 @@ require('./layouts');
 
 module.exports = npdcMaterial;
 
-},{"./components":229,"./layouts":242,"angular":33,"angular-animate":2,"angular-aria":4,"angular-material":6,"angular-npolar":26}],237:[function(require,module,exports){
+},{"./components":229,"./layouts":246,"angular":33,"angular-animate":2,"angular-aria":4,"angular-material":6,"angular-npolar":24}],241:[function(require,module,exports){
 'use strict';
 
 // @ngInject
@@ -73159,7 +73224,7 @@ var applyMdType = function applyMdType() {
 
 module.exports = applyMdType;
 
-},{}],238:[function(require,module,exports){
+},{}],242:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73174,9 +73239,9 @@ angular.module('formulaDemo', ['npdcMaterial', 'formula']).controller('FormulaCt
   };
 }]);
 
-},{"../../":236,"angular":33,"formula":220}],239:[function(require,module,exports){
+},{"../../":240,"angular":33,"formula":220}],243:[function(require,module,exports){
 module.exports = '<!DOCTYPE html>\n<!-- field info -->\n<script type="text/ng-template" id="ft-field-info.html">\n  <md-icon>info_outline\n    <md-tooltip md-direction="left">{{ field.description }}</md-tooltip>\n  </md-icon>\n</script>\n\n<!-- validation message -->\n<script type="text/ng-template" id="ft-validation-message.html">\n  <div class="md-caption" role="alert" ng-show="{{ field.error !== null }}">\n    {{ field.error }}\n  </div>\n</script>\n\n<form name="formula" class="formula" ng-if="form.fieldsets">\n  <header ng-if="form.title">\n    {{ form.title }}\n  </header>\n\n  <md-tabs md-swipe-content md-dynamic-height md-border-bottom>\n    <md-tab label="{{fieldset.title}}" ng-disabled="fieldset.disabled" ng-repeat="fieldset in form.fieldsets">\n      <md-whiteframe class="md-whiteframe-z1">\n        <fieldset>\n          <div formula:field-definition ng-repeat="field in fieldset.fields" ng-show="field.visible">\n            <!-- input field-->\n            <div ng-if="field.typeOf(\'input\')" apply-md-type="field">\n\n              <!-- boolean -->\n              <div ng-if="field.mdType === \'boolean\'" class="np-formula-boolean">\n                <div ng-include="\'ft-field-info.html\'" class="np-field-info" ng-if="field.description"></div>\n                <md-checkbox ng-attr-id="field.uid" ng-model="field.value" aria-label="{{ field.title }}">\n                  <label for="{{field.uid}}">{{ field.title }}</label>\n                </md-checkbox>\n                <div ng-include="\'ft-validation-message.html\'" class="np-validation-message"></div>\n              </div>\n\n              <!-- range -->\n              <div ng-if="field.mdType === \'range\'" class="np-formula-range">\n                <label for="{{field.uid}}">{{ field.title }}: <span>{{field.value}}</span></label>\n                <div ng-include="\'ft-field-info.html\'" class="np-field-info" ng-if="field.description"></div>\n                <md-slider flex min="{{field.minimum}}" max="{{field.maximum}}" step="{{field.step}}" md-discrete ng-model="field.value" aria-label="{{field.title}}" ng-attr-id="field.uid">\n                </md-slider>\n                <div ng-include="\'ft-validation-message.html\'" class="np-validation-message"></div>\n              </div>\n\n              <!-- select -->\n              <md-input-container ng-if="field.mdType === \'select\'" class="np-formula-select">\n                <label for="{{field.uid}}">{{ (field.required ? field.title + \' (required)\' : field.title) }}</label>\n                <div ng-include="\'ft-field-info.html\'" class="np-field-info" ng-if="field.description"></div>\n                <md-select ng-model="field.value">\n                  <md-option ng-repeat="val in field.enum" value="{{val}}">{{val}}</md-option>\n                </md-select>\n                <div ng-include="\'ft-validation-message.html\'" class="np-validation-message"></div>\n              </md-input-container>\n\n              <!-- input -->\n              <md-input-container ng-if="field.mdType === \'input\'" class="np-formula-input">\n                <label for="{{field.uid}}">{{ (field.required ? field.title + \' (required)\' : field.title) }}</label>\n                <div ng-include="\'ft-field-info.html\'" class="np-field-info" ng-if="field.description"></div>\n                <div formula:field="field"></div>\n                <div ng-include="\'ft-validation-message.html\'" class="np-validation-message"></div>\n              </md-input-container>\n            </div>\n\n            <!-- object -->\n            <div ng-if="field.typeOf(\'object\')">\n              <md-whiteframe class="md-whiteframe-z1">\n                <fieldset formula:field="field">\n                  <legend>{{ field.title }}</legend>\n\n                  <div ng-repeat="field in field.fields" ng-show="field.visible">\n                    <formula:field-instance field="field"></formula:field-instance>\n                  </div>\n                </fieldset>\n              </md-whiteframe>\n            </div>\n\n            <!-- array -->\n            <div ng-if="field.typeOf(\'array\')" class="np-formula-array">\n              <div formula:field="field">\n                <md-whiteframe class="md-whiteframe-z1">\n                  <fieldset ng-class="{ valid: field.valid, error: field.error }">\n                    <div ng-include="\'ft-field-info.html\'" class="np-field-info" ng-if="field.description"></div>\n                    <legend>{{ field.title }} ({{ field.values.length || 0 }})</legend>\n                    <div ng-if="field.typeOf(\'fieldset\')">\n                      <ul>\n                        <li ng-repeat="value in field.values">\n                          <md-whiteframe class="md-whiteframe-z1">\n                            <fieldset ng-class="{ valid: value.valid }">\n                              <legend>\n                                <span ng-if="!value.visible">{{ value.fields | formulaInlineValues }}</span>\n                              </legend>\n                              <div class="np-formula-object-ctrls">\n                                <a class="toggle" href="" ng-click="field.itemToggle($index)" title="{{ value.visible ? form.i18n.minimize[1] : form.i18n.maximize[1] }}">\n                                  <md-icon>{{ value.visible ? \'expand_less\' : \'expand_more\' }}</md-icon>\n                                </a>\n                                <a class="remove" href="" ng-click="field.itemRemove($index)" title="{{ form.i18n.remove[1] }}">\n                                  <md-icon>close</md-icon>\n                                </a>\n                              </div>\n\n                              <div class="np-formula-subarray" ng-repeat="subfield in field.fields" ng-show="value.visible">\n                                <formula:field-instance field="value.fields[$index]" ng-show="subfield.visible"></formula:field-instance>\n                              </div>\n                            </fieldset>\n                          </md-whiteframe>\n                        </li>\n                      </ul>\n                      <div class="np-formula-array-add">\n                        <md-button ng-click="field.itemAdd()" class="md-fab md-mini" aria-label="{{ form.i18n.add[1] }}">\n                          <md-icon>add</md-icon>\n                        </md-button>\n                      </div>\n                    </div>\n\n                    <div ng-if="field.typeOf(\'field\')">\n                      <ul class="np-formula-array">\n                        <li ng-class="{ valid: value.valid, error: value.error }" ng-repeat="value in field.values" layout="row">\n                          <formula:field-instance field="value" flex></formula:field-instance>\n                          <a class="np-formula-input-ctrls remove" href="" ng-click="field.itemRemove($index)" title="{{ form.i18n.remove[1] }}">\n                            <md-icon>close</md-icon>\n                          </a>\n                        </li>\n                      </ul>\n                      <div class="np-formula-array-add">\n                        <md-button ng-click="field.itemAdd()" class="md-fab md-mini" aria-label="{{ form.i18n.add[1] }}">\n                          <md-icon>add</md-icon>\n                        </md-button>\n                      </div>\n                    </div>\n\n                  </fieldset>\n                </md-whiteframe>\n              </div>\n            </div>\n          </div>\n        </fieldset>\n      </md-whiteframe>\n\n    </md-tab>\n  </md-tabs>\n\n  <footer layout="row" layout-align="space-between center" ng-if="!(form.uiValidateHidden && form.uiSaveHidden)">\n    <span ng-if="form.errors" title="{{ form.errors.join(\'\n\') }}">{{ form.i18n.invalid | formulaReplace : { count: form.errors.length } }}</span>\n\n    <div>\n      <md-button class="md-raised" ng-click="form.validate()" ng-if="!form.uiValidateHidden" title="{{ form.i18n.validate[1] }}">\n        <md-icon>check</md-icon> {{ form.i18n.validate[0] }}</md-button>\n      <md-button class="md-raised md-primary" ng-click="form.save()" ng-disabled="!form.valid" ng-if="!form.uiSaveHidden" title="{{ form.i18n.save[1] }}">\n        <md-icon>save</md-icon> {{ form.i18n.save[0] }}</md-button>\n\n    </div>\n\n  </footer>\n</form>\n\n<div class="formula" ng-if="!form.fieldsets">\n  <div layout="row" layout-sm="column" layout-align="space-around">\n    <md-progress-circular md-mode="indeterminate"></md-progress-circular>\n  </div>\n</div>\n';
-},{}],240:[function(require,module,exports){
+},{}],244:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73184,7 +73249,7 @@ var angular = require('angular');
 
 angular.module('grid', ['npdcMaterial']);
 
-},{"../../":236,"angular":33}],241:[function(require,module,exports){
+},{"../../":240,"angular":33}],245:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73192,7 +73257,7 @@ var angular = require('angular');
 
 angular.module('home', ['npdcMaterial']);
 
-},{"../../":236,"angular":33}],242:[function(require,module,exports){
+},{"../../":240,"angular":33}],246:[function(require,module,exports){
 "use strict";
 
 var angular = require('angular');
@@ -73205,7 +73270,7 @@ npdcMaterial.run(["$templateCache", function ($templateCache) {
   $templateCache.put('formula/material.html', require('./formula/template.html'));
 }]);
 
-},{"./formula/applyMdType":237,"./formula/template.html":239,"angular":33}],243:[function(require,module,exports){
+},{"./formula/applyMdType":241,"./formula/template.html":243,"angular":33}],247:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73213,7 +73278,28 @@ var angular = require('angular');
 
 angular.module('list', ['npdcMaterial']);
 
-},{"../../":236,"angular":33}],244:[function(require,module,exports){
+},{"../../":240,"angular":33}],248:[function(require,module,exports){
+'use strict';
+
+require('../../');
+var angular = require('angular');
+
+angular.module('main', ['npdcMaterial']).controller('MainCtrl', ["$scope", function ($scope) {
+  $scope.mySidenav = {
+    title: 'Appname',
+    menu: [{
+      title: 'Item1',
+      link: '#item1',
+      alt: 'Link to Item1'
+    }, {
+      title: 'Item2',
+      link: '#item2',
+      alt: 'Link to Item2'
+    }]
+  };
+}]);
+
+},{"../../":240,"angular":33}],249:[function(require,module,exports){
 'use strict'; module.exports = angular.module("npdcMaterial").run(["$templateCache", function($templateCache) {$templateCache.put("angular-npolar/src/ui/auth/_user.html","<div class=\"login-logout\">\n  <div ng-show=\"security.isAuthenticated()\">\n    \n    <button ng-click=\"logout()\">Logout</button> <b>{{ user.name }}</b> (<a title=\"View profile for user {{user.username}}\" ng-href=\"/user/{{user.username}}\">{{ user.username }} </a>)\n    \n    <p>Login session expires {{ 1000*user.exp | date:\'HH:mm\' }}</p>\n    \n    <!--<section>\n    <h2>Recent edits</h2>\n    <dl ng-repeat=\"edit in edits\">\n      <dt>{{ edit.request.time }}</dt>\n      <dd><a href=\"{{ edit.response.header.Location }}\">{{ edit.response.header.Location }}</a></dd>\n    </dl>\n    </section>-->\n    \n    <section>\n      <h2>Permissions</h2>\n      <dl ng-repeat=\"system in user.systems\">\n        <dt>{{ system.uri }}</dt>\n        <dd>{{ system.rights }}</dd>\n      </dl>\n    </section>\n  </div>\n  \n  <div ng-show=\"security.notAuthenticated()\">\n    <h1>Login</h1>\n    <form role=\"form\">\n      <section ng-show=\"true\" ng-init=\"loginClicked = false;\">\n      <div>\n        <label for=\"username\">Username</label>\n        <input type=\"text\" ng-model=\"user.username\" id=\"username\" placeholder=\"Username (email)\">\n      </div>\n      <div>\n        <label for=\"password\">Password</label>\n        <input type=\"password\" id=\"password\" ng-model=\"user.password\" placeholder=\"Password\">\n      </div>\n      <button id=\"login2\" type=\"submit\" ng-click=\"login()\">Login</button> \n      </section>\n      <a ng-href=\"/user/reset?username={{user.username}}\">Forgot password?</a> <a href=\"/user/register\">Sign up</a></section>\n    </form>\n  </div>\n</div>");
 $templateCache.put("angular-npolar/src/ui/message/_message.html","<div ng-if=\"info\" class=\"info\">[info]{{ info | json }}</div>\n<div ng-if=\"error\" class=\"error\">[error] {{ error | json }}</div>");
 $templateCache.put("angular-npolar/src/ui/message/_message_toast.html","<md-toast>\n  <span flex> <b>{{explanation}}</b></span>\n  <md-button ng-click=\"closeToast()\">OK</md-button>\n</md-toast>");
@@ -73223,7 +73309,7 @@ $templateCache.put("angular-npolar/src/ui/template/_foot.html","");
 $templateCache.put("angular-npolar/src/ui/template/_head.html","<div ng-if=\"error\" ng-include=\"\'angular-npolar/src/ui/template/_error.html\'\"></div>\n<div ng-if=\"info\" ng-include=\"\'angular-npolar/src/ui/template/_info.html\'\"></div>\n");
 $templateCache.put("angular-npolar/src/ui/template/_info.html","<h2 ng-if=\"info\" class=\"alert alert-success\"><strong>{{info.header}}</strong> {{info.message }}</h2>");
 $templateCache.put("angular-npolar/src/ui/template/_search.html","<div>\n  <span ng-if=\"!feed.entries\">Fetching data from {{base}}</span>\n  <span ng-if=\"feed.opensearch.totalResults > 0\">{{feed.opensearch.totalResults}} results from {{ base }}</span>\n  <span ng-if=\"feed.opensearch.totalResults == 0\">No results</span>\n</div>\n\n<h3><span ng-if=\"filters.length\">Filters: {{filters | json}}</span><span ng-if=\"filters.length\"><a ng-href=\"/vessel\">Remove filters</a></span></h3>\n\n<h2><a ng-if=\"user.name\" href=\"__new/edit\"><button type=\"button\" class=\"pure-button\">New</button></a></h2>\n\n<p>Filter: <input ng-model=\"entryfilter\"></p>\n\n<div ng-repeat=\"e in feed.entries | filter:entryfilter\">\n  <h4 class=\"\"><a ng-href=\"{{e.id}}\">{{ e.title || e.name || e.id }}</a> {{e.updated }}</h4>\n</div>\n");}]);
-},{}]},{},[217,225,228,232,235,238,240,241,243,244])
+},{}]},{},[217,225,228,233,236,239,242,244,245,247,248,249])
 
 
 //# sourceMappingURL=demos.js.map

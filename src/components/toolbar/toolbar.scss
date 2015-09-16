@@ -10,6 +10,10 @@
     color: $color-text-light;
   }
 
+  .md-toolbar-tools > md-menu {
+    padding: 0;
+  }
+
   .np-top-menu-brand {
     $brand-size: 35px;
 
@@ -18,5 +22,4 @@
       vertical-align: middle;
     }
   }
-
 }

@@ -11,6 +11,7 @@
     "angular-npolar": "npolar/angular-npolar"
   },
   "devDependencies": {
+    "angular-route": "1.4.5",
     "babelify": "^6.2.0",
     "browser-sync": "~2.9.3",
     "browserify": "^11.1.0",

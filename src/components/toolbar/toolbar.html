@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <md-toolbar class="np-top-menu">
   <div class="md-toolbar-tools">
-
-    <a class="np-top-menu-brand" href="/">
-      <img alt="Norsk Polarinstutt [logo]" title="NPDC" src="http://www.npolar.no/npcms/export/sites/np/images/logos/norsk-polarinstitutt-logo-norsk-hvit.png">
-      <span hide-md="NPDC" hide-sm class="md-title" title="NPDC">Norwegian Polar Data Centre</span>
-    </a>
+    <div hide-gt-md>
+      <md-button class="md-icon-button" aria-label="Open sidenav" ng-click="toggleLeft()" ng-if="sidenav">
+        <md-icon>menu</md-icon>
+      </md-button>
+      <span class="md-title">Dataset</span>
+    </div>
 
     <span flex></span>
 
