@@ -6540,6 +6540,16 @@ md-tooltip {
   md-whiteframe {
     border: 1px solid #fff; } }
 
+/**
+ * Retrieves a color value from the $material-colors Sass map
+ * Inspired by https://github.com/nilskaspersson/Google-Material-UI-Color-Palette/
+ *
+ * @function
+ * @param {string} color-name             - quoted, lower-case, dasherized color
+ *                                          name (e.g. 'pink', 'amber')
+ * @param {string} [color-variant='500']  - quoted, lowercase color variant (e.g.
+ *                                          '200', 'a100')
+ */
 .formula a {
   text-decoration: none; }
 
@@ -6647,6 +6657,18 @@ md-tooltip {
 .np-layout-list .md-list-item-text .md-headline {
   line-height: 1em; }
 
+.np-body {
+  max-height: 100%;
+  max-width: 100%;
+  overflow: hidden; }
+
+.np-footer {
+  background-color: #9e9e9e;
+  bottom: 0;
+  color: #fff;
+  height: 230px;
+  width: 100%; }
+
 .np-document {
   padding: 8px 16px; }
   .np-document ul {
@@ -6712,6 +6734,36 @@ md-tooltip {
 .np-expand-search input::-webkit-input-placeholder {
   color: #fff; }
 
+.np-sidenav {
+  height: 100%; }
+  .np-sidenav md-sidenav {
+    height: 100%; }
+  .np-sidenav .np-sidenav-img {
+    background-color: #1570b1;
+    padding: 15px 0;
+    z-index: 10; }
+    .np-sidenav .np-sidenav-img img {
+      display: block;
+      margin: 0 auto;
+      width: 150px; }
+  .np-sidenav h1 {
+    color: #fff;
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: center; }
+  .np-sidenav .np-sidenav-title {
+    background-color: #ff7043;
+    color: #fff;
+    padding-left: 15px;
+    z-index: 9; }
+  .np-sidenav .np-sidenav-menu {
+    padding: 0; }
+    .np-sidenav .np-sidenav-menu a {
+      margin: 0;
+      padding-left: 10%;
+      text-align: left; }
+
 .np-top-menu {
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12); }
   .np-top-menu a,
@@ -6719,6 +6771,8 @@ md-tooltip {
   .np-top-menu a:hover,
   .np-top-menu a:visited {
     color: #fff; }
+  .np-top-menu .md-toolbar-tools > md-menu {
+    padding: 0; }
   .np-top-menu .np-top-menu-brand img {
     height: 35px;
     vertical-align: middle; }
@@ -6744,23 +6798,8 @@ div[tabindex] {
   text-align: center;
   width: 60%; }
 
-.np-page-container {
-  height: 100%;
-  position: absolute;
-  width: 100%; }
-
-.np-header {
-  height: 64px; }
-
-.np-content {
-  bottom: 0;
-  box-sizing: border-box;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  padding: 10px;
-  position: absolute;
-  top: 64px;
-  width: 100%; }
+.bg-primary {
+  background-color: #1570b1; }
 
 .np-environment-warning {
   color: red;
