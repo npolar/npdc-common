@@ -20,6 +20,7 @@
     "angular": "1.4.5",
     "angular-npolar": "npolar/angular-npolar",
     "npdc-material": "npolar/npdc-material"
+    "special-entities": "^1.0.2"
   },
   "devDependencies": {
     "babelify": "*",

@@ -13,8 +13,16 @@ ui.directive('npdcCrumbs', require('./breadcrumbs/breadcrumbs'));
 ui.directive('npdcTop', require('./top/top'));
 ui.controller('NpdcTopController', require('./top/TopController'));
 
+
 ui.directive('npdcSearch', require('./search/search'));
 ui.controller('NpdcSearchController', require('./search/SearchController'));
+
+ui.directive('npdcBottom', require('./Bottom'));
+ui.controller('NpdcBottomController', require('./bottom/BottomController'));
+
+ui.directive('npdcSearch', require('./Search'));
+ui.controller('NpdcSearchController', require('./search/SearchController'));
+//ui.controller('NpdcAutocompleteController', require('./search/AutocompleteController'));
 
 ui.directive('npdcCreateButton', require('./button/CreateButton'));
 ui.directive('npdcEditButton', require('./button/EditButton'));

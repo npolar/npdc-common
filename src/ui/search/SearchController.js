@@ -46,6 +46,26 @@ var SearchController = function ($scope, $location, NpolarApiSecurity) {
     }
   };
   
+  $scope.title = (entry) => {
+    return entry.title || entry.name || entry.code || entry.id;
+  };
+  
+  // Get facet object { term, uri, facet, count } from filter object like { "filter-term": "X" }
+  $scope.facetObjectFromFilter = function(filter) {
+    let term = filter[ Object.keys(filter)[0] ];
+    let key = $scope.facetKey(filter).replace(/^filter\-/, "");
+    
+    //
+    let facets = $scope.feed.facets.find(facet => {
+      //console.log(facet, term);
+      return (facet.hasOwnProperty(key) && facet.hasOwnProperty(key) === "Tromsø");
+    });
+
+    //console.log(facet);
+    return facet[key];
+  
+  };
+  
 };
 
 module.exports = SearchController;
