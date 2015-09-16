@@ -73097,8 +73097,10 @@ angular.module('sidenav', ['ngRoute', 'npdcMaterial']).controller('SidenavCtrl',
 
 // @ngInject
 var ToolbarCtrl = function ToolbarCtrl($scope, $mdSidenav) {
-  $scope.sidenav = $scope.toolbar.sidenav || true;
-  $scope.title = $scope.toolbar.title || '';
+  if ($scope.toolbar) {
+    $scope.sidenav = $scope.toolbar.sidenav;
+    $scope.title = $scope.toolbar.title;
+  }
   $scope.toggleLeft = function () {
     $mdSidenav('left').toggle();
   };
@@ -73304,8 +73306,10 @@ require('../../');
 var angular = require('angular');
 
 angular.module('main', ['npdcMaterial']).controller('MainCtrl', ["$scope", function ($scope) {
+  var appName = 'Appname';
+
   $scope.mySidenav = {
-    title: 'Appname',
+    title: appName,
     menu: [{
       title: 'Item1',
       link: '#item1',
@@ -73315,6 +73319,11 @@ angular.module('main', ['npdcMaterial']).controller('MainCtrl', ["$scope", funct
       link: '#item2',
       alt: 'Link to Item2'
     }]
+  };
+
+  $scope.myToolbar = {
+    title: appName,
+    sidenav: true
   };
 }]);
 
