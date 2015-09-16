@@ -3,5 +3,4 @@
 module.exports = {
   AutoConfig: require('./config/AutoConfig'),
   ui: require('./ui/'),
-  search: require('./search')
 };
