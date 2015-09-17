@@ -6816,6 +6816,10 @@ npdc\:create-button, npdc\:edit-button, npdc\:save-button {
   z-index: 100;
 }
 
+.npdc-search md-chips .md-chips {
+  box-shadow: none;
+}
+
 .np-environment-warning {
   color: red;
   position: absolute;
