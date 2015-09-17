@@ -8,7 +8,7 @@ var ui = angular.module('npdcUi', ['npolarUi', 'npdcMaterial']);
 
 ui.service('NpdcBreadcrumbs', require('./breadcrumbs/BreadcrumbsService'));
 ui.controller('NpdcBreadcrumbsController', require('./breadcrumbs/BreadcrumbsController'));
-ui.directive('npdcCrumbs', require('./breadcrumbs/breadcrumbs'));
+ui.directive('npdcCrumbs', require('./breadcrumbs/breadcrumbsDirective'));
 
 ui.directive('npdcTop', require('./top/top'));
 ui.controller('NpdcTopController', require('./top/TopController'));
@@ -19,7 +19,7 @@ ui.controller('NpdcSearchController', require('./search/SearchController'));
 ui.directive('npdcBottom', require('./bottom/bottom'));
 ui.controller('NpdcBottomController', require('./bottom/BottomController'));
 
-//ui.controller('NpdcAutocompleteController', require('./search/AutocompleteController'));
+ui.controller('NpdcAutocompleteController', require('./search/AutocompleteController'));
 
 ui.directive('npdcCreateButton', require('./button/CreateButton'));
 ui.directive('npdcEditButton', require('./button/EditButton'));
