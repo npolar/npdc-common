@@ -19,7 +19,7 @@ gulp.task('copy-deps-assets', function () {
 });
 
 gulp.task('default', function (cb) {
-  runSequence('clean', ['copy-deps-assets', 'copy-static', 'copy-css', 'lint', 'test'], ['watch-css', 'watch-test', 'watch-static'], cb);
+  runSequence('clean', ['copy-deps-assets', 'copy-static', 'copy-css', 'lint', 'test'], ['watch-css', 'watch-test', 'watch-static', 'watch-deps'], cb);
 });
 
 gulp.task('prod', function (cb) {
