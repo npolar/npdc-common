@@ -1,6 +1,7 @@
 'use strict';
 
 /**
+ * Angular breadcrumbs service
  * @ngInject
  */
 var NpdcBreadcrumbs = function($location, $rootScope) {
@@ -11,7 +12,7 @@ var NpdcBreadcrumbs = function($location, $rootScope) {
   
   var self = this;
   
-  var home = { href: "/", title: "Norwegian Polar Data Centre", text: "NPDC" };
+  var home = { href: "/", title: "Home [Norwegian Polar Data Centre]", text: "Home" };
     
   var capitalize = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -34,14 +35,15 @@ var NpdcBreadcrumbs = function($location, $rootScope) {
     if ((/^\?/).test(crumb)) {
       crumb = `Search: "${ $location.search().q }"`;
     }
-    
-    
     return { href: self.path, title: capitalize(crumb), text: capitalize(decodeURIComponent(crumb)) };
   };
         
   $rootScope.$on("$locationChangeSuccess", function(event, uri) {
 
     let parts = uri.split("//")[1].split("/").filter(p => { return !(/^$/).test(p); });
+    
+    console.log(parts);
+    
     let i = 0;
     self.breadcrumbs = parts.map(
       crumb => {
