@@ -6586,6 +6586,11 @@ md-tooltip {
   list-style-type: none;
   padding: 0;
   position: relative; }
+  .formula .np-formula-array ul legend {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 90%; }
 
 .formula .np-formula-subarray {
   margin-top: 28px; }

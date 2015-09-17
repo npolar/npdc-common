@@ -46,6 +46,13 @@
       list-style-type: none;
       padding: 0;
       position: relative;
+
+      legend {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 90%;
+      }
     }
   }
 

@@ -64,7 +64,7 @@
             </div>
 
             <!-- object -->
-            <div ng-if="field.typeOf('object')">
+            <div ng-if="field.typeOf('object')" class="np-formula-object">
               <md-whiteframe class="md-whiteframe-z1">
                 <fieldset formula:field="field">
                   <legend>{{ field.title }}</legend>
@@ -108,7 +108,7 @@
                         </li>
                       </ul>
                       <div class="np-formula-array-add">
-                        <md-button ng-click="field.itemAdd()" class="md-fab md-mini" aria-label="{{ form.i18n.add[1] }}">
+                        <md-button ng-click="field.itemAdd()" class="md-fab md-mini md-primary md-hue-1" aria-label="{{ form.i18n.add[1] }}">
                           <md-icon>add</md-icon>
                         </md-button>
                       </div>
@@ -124,7 +124,7 @@
                         </li>
                       </ul>
                       <div class="np-formula-array-add">
-                        <md-button ng-click="field.itemAdd()" class="md-fab md-mini" aria-label="{{ form.i18n.add[1] }}">
+                        <md-button ng-click="field.itemAdd()" class="md-fab md-mini md-primary md-hue-1" aria-label="{{ form.i18n.add[1] }}">
                           <md-icon>add</md-icon>
                         </md-button>
                       </div>
