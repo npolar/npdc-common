@@ -2,11 +2,10 @@
 /**
  * @ngInject
  */
-var DeleteButton = function () {
+let CreateButton = function () {
   return {
     controller: "NpdcButtonComponent",
     templateUrl: 'npdc-common/src/ui/button/create-button.html'
   };
 };
-
-module.exports = DeleteButton;
+module.exports = CreateButton;
