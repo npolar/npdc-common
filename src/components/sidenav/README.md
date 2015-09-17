@@ -8,12 +8,10 @@ Where "options" is a object with the following properties.
       title: 'Appname',
       menu: [{
         title: 'Item1',
-        link: '#item1',
-        alt: 'Link to Item1'
+        link: '#item1'
       },
       {
         title: 'Item2',
-        link: '#item2',
-        alt: 'Link to Item2'
+        link: '#item2'
       }]
     };
