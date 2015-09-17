@@ -1,0 +1,6 @@
+npdc\:create-button, npdc\:edit-button, npdc\:save-button {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 100;
+}

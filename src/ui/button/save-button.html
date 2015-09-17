@@ -1,1 +1,5 @@
-<a ng-show="security.isAuthorized('update', resource.path)"><md-button ng-click="save()" ng-disabled="deleting || saving" class="md-fab md-mini" aria-label=""><md-icon>save</md-icon><md-tooltip>Save</md-tooltip></md-button></a>
+<!DOCTYPE html>
+<md-button ng-show="security.isAuthorized('update', resource.path)"
+    ng-click="save()" ng-disabled="deleting || saving" class="md-fab">
+  <md-icon>save</md-icon>
+</md-button>

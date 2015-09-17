@@ -1,5 +1,14 @@
-<article>
-  <h3><npdc:save-button></npdc:save-button><a ng-href="{{document.id}}">{{ document.title || document.id.slice(0,8)}}</a></h3>
+<!DOCTYPE html>
+<article ng-show="document">
+  <h3><a ng-href="{{document.id}}">{{ document.title || document.id.slice(0,8)}}</a></h3>
   <div formula="formula"></div>
-  <npdc:delete-button></npdc:delete-button>
+  <div ng-show="formula.ready">
+    <npdc:delete-button></npdc:delete-button>
+    <npdc:save-button></npdc:save-button>
+  </div>
 </article>
+<div class="formula" ng-if="!document">
+  <div layout="row" layout-sm="column" layout-align="space-around">
+    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+  </div>
+</div>
