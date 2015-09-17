@@ -22,7 +22,7 @@
   }
 
   input[type=search]:focus {
-    @include box-shadow(0 0 5px rgba(109, 207, 246, .5));
+    @include box-shadow(0 0 5px rgba(0, 0, 0, .5));
     background-color: $color-bg-light;
     width: 160px;
   }

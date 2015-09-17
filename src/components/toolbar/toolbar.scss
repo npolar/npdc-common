@@ -3,6 +3,15 @@
     0 3px 1px -2px rgba(0, 0, 0, .2),
     0 1px 5px 0 rgba(0, 0, 0, .12);
 
+  &.white-theme {
+    background-color: $color-bg-light;
+    color: $color-text-dark;
+
+    md-icon {
+      color: $color-text-dark;
+    }
+  }
+
   a,
   a:active,
   a:hover,
@@ -12,14 +21,5 @@
 
   .md-toolbar-tools > md-menu {
     padding: 0;
-  }
-
-  .np-top-menu-brand {
-    $brand-size: 35px;
-
-    img {
-      height: $brand-size;
-      vertical-align: middle;
-    }
   }
 }
