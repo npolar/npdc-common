@@ -2,7 +2,7 @@
 <article ng-show="document">
   <h3><a ng-href="{{document.id}}">{{ document.title || document.id.slice(0,8)}}</a></h3>
   <div formula="formula"></div>
-  <div ng-show="formula.ready">
+  <div>
     <npdc:delete-button></npdc:delete-button>
     <npdc:save-button></npdc:save-button>
   </div>
