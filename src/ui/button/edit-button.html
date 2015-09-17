@@ -1,4 +1,4 @@
 <!DOCTYPE html>
-<md-button class="md-fab" ng-show="security.isAuthorized('update', resource.path)" href="{{document.id}}/edit">
+<md-button class="md-fab" ng-show="security.isAuthorized('update', resource.path)" ng-href="{{ resource.editHref(document.id) }}">
   <md-icon>edit</md-icon>
 </md-button>
