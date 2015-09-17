@@ -42,7 +42,10 @@ var NpdcBreadcrumbs = function($location, $rootScope) {
 
     let parts = uri.split("//")[1].split("/").filter(p => { return !(/^$/).test(p); });
     
-    console.log(parts);
+    // Handle "new" 
+    if (JSON.stringify(parts.slice(-2)) === JSON.stringify(['__new', 'edit'])) {
+      parts = parts.slice(0, -2).concat('new');
+    }
     
     let i = 0;
     self.breadcrumbs = parts.map(
