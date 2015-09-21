@@ -20,7 +20,7 @@
     <div ng-if="true || filters.length">
       <md-chips>
 
-        <md-chip ng-repeat="f in filters" style="box-shadow: 0">
+        <md-chip ng-repeat="f in filters">
           <strong>{{ f| json }}</strong>
           {{ "" | json }}
           {{ f | json }}
@@ -36,7 +36,7 @@
       <md-progress-circular md-mode="indeterminate"></md-progress-circular>
     </div>
 
-    <div layout-md="column" layout="row">
+    <div layout="column" layout-gt-md="row">
 
       <!-- search results (feed entries) -->
       <div flex>
