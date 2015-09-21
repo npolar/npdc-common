@@ -2,4 +2,5 @@
 <md-button class="md-raised md-warn"
     ng-show="security.isAuthorized('delete', resource.path) && document._rev"
     ng-click="confirmDelete()"
-    ng-disabled="deleting || saving"><md-icon>delete</md-icon> Delete</md-button>
+    ng-disabled="deleting || saving">
+    <md-icon>delete</md-icon> Delete</md-button>
