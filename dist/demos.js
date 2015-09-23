@@ -33698,26 +33698,10 @@ module.exports = config;
 },{}],14:[function(require,module,exports){
 /**
 * NpolarBaseController is meant to be the parent of a safe controller,
-* ie. a controller dealing with only with presentation, search, etc. See also NpolarEditController.
+* ie. a controller dealing with only with presentation, search, etc.
+* See also NpolarEditController.
 *
-*
-* Usage:
-*
-* angular.module('myApp').controller('MyApiController', function($scope, $routeParams, $controller, MyModel) {
-*
-* // 1. MyApiController -> NpolarBaseController
-* $controller('NpolarBaseController', {$scope: $scope});
-*
-* // 2. Set resource for parent document operations
-* $scope.resource = MyModel;
-*
-* // 3. Set document for resource (and view)
-* MyModel.fetch($routeParams, function(document) {
-*   $scope.document = document;
-* }, function() error {
-*   $scope.error = error;
-* });
-*
+* Usage example: 
 */
 
 'use strict';
@@ -33740,16 +33724,13 @@ var BaseController = function BaseController($scope, $location, $route, $routePa
   $scope.show = function () {
     $scope.resource.fetch($routeParams, function (document) {
       $scope.document = document;
-    }, function (error) {
-      $scope.error = NpolarApiResource.error(error);
     });
   };
 
+  // Search action, ie. fetch feed and inject into scope
   $scope.search = function (query) {
     $scope.resource.feed(query, function (response) {
       $scope.feed = response.feed;
-    }, function (error) {
-      $scope.error = NpolarApiResource.error(error);
     });
   };
 
@@ -33773,40 +33754,19 @@ BaseController.$inject = ["$scope", "$location", "$route", "$routeParams", "$win
 module.exports = BaseController;
 
 },{"lodash":12}],15:[function(require,module,exports){
+'use strict';
 /**
- * NpolarEditController provides methods for manipulating documents (using ngResource)
- * and controller action methods like edit().
+ * NpolarEditController extends [NpolarBaseController](https://github.com/npolar/angular-npolar/blob/master/src/api/controller/BaseController.js) with scope methods for REST-style document editing (using ngResource)
+ * and [formula](https://github.com/npolar/formula)-bound controller action methods, like $scope.edit()
  *
- * The following ngResource-bound methods are defined
+ * For following ngResource-bound scope methods are defined
  * - create()
  * - update()
  * - delete()
  * - save()
  *
- * Usage:
+ * Usage example: https://github.com/npolar/npdc-dataset/blob/ae0dc74d33708c76ac88fc8f0f492ac14759cae7/src/edit/DatasetEditController.js  
  *
- * angular.module('myApp').controller('MyApiController', function($scope, $routeParams, $controller, MyModel) {
- *
- * // 1. MyApiController -> NpolarEditController
- * $controller('NpolarBaseController', {$scope: $scope});
- *
- * // 2. Set resource for parent document operations
- * $scope.resource = MyModel;
- *
- * // 3. Set document for resource (and view)
- * MyModel.fetch($routeParams, function(document) {
- *   $scope.document = document;
- *   $scope.formula.model = document;
- * }, function() error {
- *   $scope.error = error;
- * });
- *
- */
-
-'use strict';
-var angular = require('angular');
-
-/**
  * @ngInject
  */
 var EditController = function EditController($scope, $location, $route, $routeParams, $window, $controller, npolarApiConfig, NpolarApiMessage, NpolarApiSecurity, NpolarApiResource) {
@@ -33824,29 +33784,21 @@ var EditController = function EditController($scope, $location, $route, $routePa
     }
   };
 
-  // Create action, ie. save document and reload app
+  // Create action, ie. save document and redirect to new URI
   $scope.create = function () {
-
-    $scope.resource.save($scope.document, function (data) {
+    $scope.resource.save($scope.document, function (document) {
       var uri = $location.path().replace(/\/__new(\/edit)?$/, '/' + data.id + '/edit');
-
-      $scope.document = data;
+      $scope.document = document;
+      $scope.formula.model = document;
       $location.path(uri);
-      $route.reload();
-    }, function (error) {
-      $scope.error = error;
     });
   };
 
   // Edit action, ie. fetch document and edit with formula
   $scope.editAction = function () {
-
     $scope.resource.fetch($routeParams, function (document) {
-
       $scope.document = document;
       $scope.formula.model = document;
-    }, function (error) {
-      $scope.error = NpolarApiResource.error(error);
     });
   };
 
@@ -33867,34 +33819,20 @@ var EditController = function EditController($scope, $location, $route, $routePa
 
   // PUT document, ie resource update
   $scope.update = function () {
-
-    $scope.resource.update($scope.document, function (data) {
-
-      $scope.document = data;
-
-      var message = { header: 'Success', message: 'Saved document revision #' + data._rev.split('-')[0] + ' at ' + new Date().toISOString() };
-      console.log(message);
-
-      $route.reload();
-    }, function (error) {
-      $scope.info = null;
-      $scope.error = error;
+    $scope.resource.update($scope.document, function (document) {
+      $scope.document = document;
+      $scope.formula.model = document;
     });
   };
 
   // DELETE document, ie. resource remove
   $scope['delete'] = function () {
-
     $scope.resource.remove({ id: $scope.document.id }, function () {
-
-      // $scope.info = { header: 'Success', message: 'Deleted document revision #'+data._rev.split('-')[0] +' at ' + new Date().toISOString() }
       $location.path('/');
-    }, function (error) {
-      $scope.error = error;
     });
   };
 
-  // Save document, ie. create or update
+  // Save document action, ie. create or update
   $scope.save = function () {
     if (angular.isUndefined($scope.document.id)) {
       $scope.create();
@@ -33907,7 +33845,7 @@ EditController.$inject = ["$scope", "$location", "$route", "$routeParams", "$win
 
 module.exports = EditController;
 
-},{"angular":33}],16:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 /**
 * Npolar API HTTP interceptor:
 * - adds JWT (Bearer token) in the Authorization header
@@ -34038,23 +33976,49 @@ var HttpMessage = function HttpMessage() {
 
 module.exports = HttpMessage;
 
-},{"angular":33,"events":218}],18:[function(require,module,exports){
-/**
-*
-*
-*/
-
+},{"angular":33,"events":217}],18:[function(require,module,exports){
 'use strict';
 var angular = require('angular');
-var _ = require('lodash');
+var _ = require('lodash'); //@todo eliminate
 
 /**
  * @ngInject
  */
-var Resource = function Resource(npolarApiConfig, NpolarApiSecurity, $resource, $location) {
+var Resource = function Resource($resource, $location, $log, npolarApiConfig, NpolarApiSecurity) {
 
-  this.info = function () {
-    //return { status: status, statusText: 'Npolar API error, failed accessing '+npolarApiConfig.base, data: 'Please inform data@npolar.no if this problem persists' };
+  // @return Array of path segments "under" the current request URI
+  var pathSegments = function pathSegments() {
+    // Split request URI into parts and remove hostname & appname from array [via the slice(2)]
+    return $location.absUrl().split("//")[1].split("?")[0].split("/").filter(function (s) {
+      return s !== "";
+    }).slice(2);
+  };
+
+  // Get href for id [warn:] relative to current application /path/
+  // @return href
+  this.href = function (id) {
+    // Add .json if id contains dots, otherwise the API barfs
+    if (/[.]/.test(id)) {
+      id += ".json";
+    }
+    var segments = pathSegments();
+
+    // For apps at /something, we just need to link to the id
+    if (segments.length === 0) {
+      return id;
+
+      // For /cat app with children like /cat/lynx we need to link to `lynx/${id}`
+    } else {
+        return segments.join("/") + '/' + id;
+      }
+  };
+
+  this.editHref = function () {
+    return pathSegments().join('/') + '/edit';
+  };
+
+  this.newHref = function () {
+    return pathSegments().join('/') + '/__new/edit';
   };
 
   this.base = function (service) {
@@ -34101,15 +34065,19 @@ var Resource = function Resource(npolarApiConfig, NpolarApiSecurity, $resource, 
     var params_query = angular.extend({}, params, { variant: 'array', limit: 1000, fields: fields_query });
 
     var resource = $resource(base + service.path + '/:id', {}, {
-      feed: { method: 'GET', params: params, headers: { Accept: 'application/json, application/vnd.geo+json' } },
-      query: { method: 'GET', params: params_query, isArray: true },
-      array: { method: 'GET', params: params_query, isArray: true },
-      fetch: { method: 'GET', params: {}, headers: { Accept: 'application/json' } },
+      feed: { method: 'GET', params: params, headers: { Accept: 'application/json, application/vnd.geo+json' }, cache: true },
+      query: { method: 'GET', params: params_query, isArray: true, cache: true },
+      array: { method: 'GET', params: params_query, isArray: true, cache: true },
+      fetch: { method: 'GET', params: {}, headers: { Accept: 'application/json' }, cache: true },
       //delete: { method:'DELETE', params: {  }, headers: { Accept:'application/json', Authorization: NpolarApiSecurity.authorization() } },
       update: { method: 'PUT', params: { id: '@id' }, headers: { Accept: 'application/json' } }
     });
 
     resource.path = base + service.path;
+
+    resource.href = this.href;
+    resource.newHref = this.newHref;
+    resource.editHref = this.editHref;
 
     // Extend Npolar API resources (individual documents)
     angular.extend(resource.prototype, {
@@ -34139,7 +34107,7 @@ var Resource = function Resource(npolarApiConfig, NpolarApiSecurity, $resource, 
     return resource;
   };
 };
-Resource.$inject = ["npolarApiConfig", "NpolarApiSecurity", "$resource", "$location"];
+Resource.$inject = ["$resource", "$location", "$log", "npolarApiConfig", "NpolarApiSecurity"];
 
 module.exports = Resource;
 
@@ -34149,8 +34117,10 @@ module.exports = Resource;
 /**
  * @ngInject
  */
-var Security = function Security(base64, jwtHelper, npolarApiConfig, NpolarApiUser) {
+var Security = function Security($log, base64, jwtHelper, npolarApiConfig, NpolarApiUser) {
   var _this = this;
+
+  this.actions = ['create', 'read', 'update', 'delete'];
 
   this.authorization = function () {
 
@@ -34191,12 +34161,22 @@ var Security = function Security(base64, jwtHelper, npolarApiConfig, NpolarApiUs
   };
 
   // Is user authenticated and authorized to perform action on current URI?
-  // @var action "create" | "read" | "update" | "delete"
+  // @var action ["create" | "read" | "update" | "delete"] => this.actions
   this.isAuthorized = function (action, uri) {
+
+    if (false === this.actions.includes(action)) {
+      $log.error('isAuthorized(' + action + ', ' + uri + ') called with invalid action');
+      return false;
+    }
+
     // @todo support relative URIs
-    //if (uri === undefined) {
-    // return false;
-    //}
+    // @todo support just ngResource or NpolarApiResurce => get path from that
+    // @todo fallback to application path?
+
+    if (uri === undefined || false === /\/\//.test(uri)) {
+      $log.error('isAuthorized(' + action + ', ' + uri + ') called with invalid URI');
+      return false;
+    }
 
     if (uri instanceof String && /^\/[^/]/.test(uri)) {
       //  uri = npolarApiConfig.base + uri;
@@ -34230,7 +34210,7 @@ var Security = function Security(base64, jwtHelper, npolarApiConfig, NpolarApiUs
 
     // User is authorized if we are left with at least 1 system
     var isAuthorized = systems.length > 0;
-    console.log('isAuthorized(' + action + ', ' + uri + ')', isAuthorized);
+    //console.log(`isAuthorized(${action}, ${uri})`, isAuthorized);
     return isAuthorized;
   };
 
@@ -34268,7 +34248,7 @@ var Security = function Security(base64, jwtHelper, npolarApiConfig, NpolarApiUs
     return NpolarApiUser.setUser(user);
   };
 };
-Security.$inject = ["base64", "jwtHelper", "npolarApiConfig", "NpolarApiUser"];
+Security.$inject = ["$log", "base64", "jwtHelper", "npolarApiConfig", "NpolarApiUser"];
 
 module.exports = Security;
 
@@ -34309,8 +34289,10 @@ var angular = require('angular');
  */
 var User = function User(base64, npolarApiConfig) {
 
+  var storage = localStorage;
+
   this.getUser = function () {
-    var user = sessionStorage.getItem(this.getStorageKey());
+    var user = storage.getItem(this.getStorageKey());
     if (angular.isString(user)) {
       return JSON.parse(base64.decode(user));
     } else {
@@ -34320,11 +34302,11 @@ var User = function User(base64, npolarApiConfig) {
 
   this.setUser = function (user) {
     var key = this.getStorageKey(user);
-    sessionStorage.setItem(key, base64.encode(JSON.stringify(user)));
+    storage.setItem(key, base64.encode(JSON.stringify(user)));
   };
 
   this.removeUser = function () {
-    sessionStorage.removeItem(this.getStorageKey());
+    storage.removeItem(this.getStorageKey());
   };
 
   this.getStorageKey = function () {
@@ -34600,7 +34582,7 @@ var MessageController = function MessageController($scope, $route, $http, $locat
       hideDelay: 5000,
       action: "OK",
       locals: { message: message, explanation: explanation },
-      position: "bottom right"
+      position: "bottom left"
     }).then(function () {
       // noop
     });
@@ -64355,7 +64337,7 @@ if (global._babelPolyfill) {
 global._babelPolyfill = true;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"core-js/shim":214,"regenerator/runtime":215}],35:[function(require,module,exports){
+},{"core-js/shim":213,"regenerator/runtime":214}],35:[function(require,module,exports){
 module.exports = function(it){
   if(typeof it != 'function')throw TypeError(it + ' is not a function!');
   return it;
@@ -64388,7 +64370,7 @@ module.exports = function(IS_INCLUDES){
     } return !IS_INCLUDES && -1;
   };
 };
-},{"./$.to-index":102,"./$.to-iobject":104,"./$.to-length":105}],38:[function(require,module,exports){
+},{"./$.to-index":101,"./$.to-iobject":103,"./$.to-length":104}],38:[function(require,module,exports){
 // 0 -> Array#forEach
 // 1 -> Array#map
 // 2 -> Array#filter
@@ -64431,14 +64413,15 @@ module.exports = function(TYPE){
     return IS_FIND_INDEX ? -1 : IS_SOME || IS_EVERY ? IS_EVERY : result;
   };
 };
-},{"./$.ctx":47,"./$.iobject":63,"./$.to-length":105,"./$.to-object":106}],39:[function(require,module,exports){
+},{"./$.ctx":47,"./$.iobject":63,"./$.to-length":104,"./$.to-object":105}],39:[function(require,module,exports){
 // 19.1.2.1 Object.assign(target, source, ...)
 var toObject = require('./$.to-object')
   , IObject  = require('./$.iobject')
   , enumKeys = require('./$.enum-keys');
-/* eslint-disable no-unused-vars */
-module.exports = Object.assign || function assign(target, source){
-/* eslint-enable no-unused-vars */
+
+module.exports = require('./$.fails')(function(){
+  return Symbol() in Object.assign({}); // Object.assign available and Symbol is native
+}) ? function assign(target, source){   // eslint-disable-line no-unused-vars
   var T = toObject(target)
     , l = arguments.length
     , i = 1;
@@ -64451,8 +64434,8 @@ module.exports = Object.assign || function assign(target, source){
     while(length > j)T[key = keys[j++]] = S[key];
   }
   return T;
-};
-},{"./$.enum-keys":51,"./$.iobject":63,"./$.to-object":106}],40:[function(require,module,exports){
+} : Object.assign;
+},{"./$.enum-keys":51,"./$.fails":53,"./$.iobject":63,"./$.to-object":105}],40:[function(require,module,exports){
 // getting tag from 19.1.3.6 Object.prototype.toString()
 var cof = require('./$.cof')
   , TAG = require('./$.wks')('toStringTag')
@@ -64469,7 +64452,7 @@ module.exports = function(it){
     // ES3 arguments fallback
     : (B = cof(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : B;
 };
-},{"./$.cof":41,"./$.wks":109}],41:[function(require,module,exports){
+},{"./$.cof":41,"./$.wks":108}],41:[function(require,module,exports){
 var toString = {}.toString;
 
 module.exports = function(it){
@@ -64634,7 +64617,7 @@ module.exports = {
     species(require('./$.core')[NAME]); // for wrapper
   }
 };
-},{"./$":74,"./$.core":46,"./$.ctx":47,"./$.defined":49,"./$.for-of":56,"./$.has":59,"./$.hide":60,"./$.is-object":66,"./$.iter-define":70,"./$.iter-step":72,"./$.mix":79,"./$.species":92,"./$.strict-new":93,"./$.support-desc":99,"./$.uid":107}],43:[function(require,module,exports){
+},{"./$":73,"./$.core":46,"./$.ctx":47,"./$.defined":49,"./$.for-of":56,"./$.has":59,"./$.hide":60,"./$.is-object":66,"./$.iter-define":69,"./$.iter-step":71,"./$.mix":78,"./$.species":91,"./$.strict-new":92,"./$.support-desc":98,"./$.uid":106}],43:[function(require,module,exports){
 // https://github.com/DavidBruant/Map-Set.prototype.toJSON
 var forOf   = require('./$.for-of')
   , classof = require('./$.classof');
@@ -64732,11 +64715,10 @@ module.exports = {
   frozenStore: frozenStore,
   WEAK: WEAK
 };
-},{"./$.an-object":36,"./$.array-methods":38,"./$.for-of":56,"./$.has":59,"./$.hide":60,"./$.is-object":66,"./$.mix":79,"./$.strict-new":93,"./$.uid":107}],45:[function(require,module,exports){
+},{"./$.an-object":36,"./$.array-methods":38,"./$.for-of":56,"./$.has":59,"./$.hide":60,"./$.is-object":66,"./$.mix":78,"./$.strict-new":92,"./$.uid":106}],45:[function(require,module,exports){
 'use strict';
 var global     = require('./$.global')
   , $def       = require('./$.def')
-  , BUGGY      = require('./$.iter-buggy')
   , forOf      = require('./$.for-of')
   , strictNew  = require('./$.strict-new');
 
@@ -64756,7 +64738,9 @@ module.exports = function(NAME, wrapper, methods, common, IS_MAP, IS_WEAK){
       : function set(a, b){ fn.call(this, a === 0 ? 0 : a, b); return this; }
     );
   };
-  if(typeof C != 'function' || !(IS_WEAK || !BUGGY && proto.forEach && proto.entries)){
+  if(typeof C != 'function' || !(IS_WEAK || proto.forEach && !require('./$.fails')(function(){
+    new C().entries().next();
+  }))){
     // create collection constructor
     C = common.getConstructor(wrapper, NAME, IS_MAP, ADDER);
     require('./$.mix')(C.prototype, methods);
@@ -64799,7 +64783,7 @@ module.exports = function(NAME, wrapper, methods, common, IS_MAP, IS_WEAK){
 
   return C;
 };
-},{"./$.def":48,"./$.for-of":56,"./$.global":58,"./$.iter-buggy":67,"./$.iter-detect":71,"./$.mix":79,"./$.redef":86,"./$.strict-new":93,"./$.tag":100}],46:[function(require,module,exports){
+},{"./$.def":48,"./$.fails":53,"./$.for-of":56,"./$.global":58,"./$.iter-detect":70,"./$.mix":78,"./$.redef":85,"./$.strict-new":92,"./$.tag":99}],46:[function(require,module,exports){
 var core = module.exports = {};
 if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
 },{}],47:[function(require,module,exports){
@@ -64865,7 +64849,7 @@ $def.P = 8;  // proto
 $def.B = 16; // bind
 $def.W = 32; // wrap
 module.exports = $def;
-},{"./$.core":46,"./$.global":58,"./$.hide":60,"./$.redef":86}],49:[function(require,module,exports){
+},{"./$.core":46,"./$.global":58,"./$.hide":60,"./$.redef":85}],49:[function(require,module,exports){
 // 7.2.1 RequireObjectCoercible(argument)
 module.exports = function(it){
   if(it == undefined)throw TypeError("Can't call method on  " + it);
@@ -64894,7 +64878,7 @@ module.exports = function(it){
   }
   return keys;
 };
-},{"./$":74}],52:[function(require,module,exports){
+},{"./$":73}],52:[function(require,module,exports){
 // 20.2.2.14 Math.expm1(x)
 module.exports = Math.expm1 || function expm1(x){
   return (x = +x) == 0 ? x : x > -1e-6 && x < 1e-6 ? x + x * x / 2 : Math.exp(x) - 1;
@@ -64929,7 +64913,7 @@ module.exports = function(KEY, length, exec){
     );
   }
 };
-},{"./$.defined":49,"./$.fails":53,"./$.hide":60,"./$.redef":86,"./$.wks":109}],55:[function(require,module,exports){
+},{"./$.defined":49,"./$.fails":53,"./$.hide":60,"./$.redef":85,"./$.wks":108}],55:[function(require,module,exports){
 'use strict';
 // 21.2.5.3 get RegExp.prototype.flags
 var anObject = require('./$.an-object');
@@ -64963,7 +64947,7 @@ module.exports = function(iterable, entries, fn, that){
     call(iterator, f, step.value, entries);
   }
 };
-},{"./$.an-object":36,"./$.ctx":47,"./$.is-array-iter":64,"./$.iter-call":68,"./$.to-length":105,"./core.get-iterator-method":110}],57:[function(require,module,exports){
+},{"./$.an-object":36,"./$.ctx":47,"./$.is-array-iter":64,"./$.iter-call":67,"./$.to-length":104,"./core.get-iterator-method":109}],57:[function(require,module,exports){
 // fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
 var toString  = {}.toString
   , toIObject = require('./$.to-iobject')
@@ -64984,7 +64968,7 @@ module.exports.get = function getOwnPropertyNames(it){
   if(windowNames && toString.call(it) == '[object Window]')return getWindowNames(it);
   return getNames(toIObject(it));
 };
-},{"./$":74,"./$.to-iobject":104}],58:[function(require,module,exports){
+},{"./$":73,"./$.to-iobject":103}],58:[function(require,module,exports){
 // https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
 var UNDEFINED = 'undefined';
 var global = module.exports = typeof window != UNDEFINED && window.Math == Math
@@ -65004,7 +64988,7 @@ module.exports = require('./$.support-desc') ? function(object, key, value){
   object[key] = value;
   return object;
 };
-},{"./$":74,"./$.property-desc":85,"./$.support-desc":99}],61:[function(require,module,exports){
+},{"./$":73,"./$.property-desc":84,"./$.support-desc":98}],61:[function(require,module,exports){
 module.exports = require('./$.global').document && document.documentElement;
 },{"./$.global":58}],62:[function(require,module,exports){
 // fast apply, http://jsperf.lnkit.com/fast-apply/5
@@ -65036,7 +65020,7 @@ var Iterators = require('./$.iterators')
 module.exports = function(it){
   return (Iterators.Array || Array.prototype[ITERATOR]) === it;
 };
-},{"./$.iterators":73,"./$.wks":109}],65:[function(require,module,exports){
+},{"./$.iterators":72,"./$.wks":108}],65:[function(require,module,exports){
 // 20.1.2.3 Number.isInteger(number)
 var isObject = require('./$.is-object')
   , floor    = Math.floor;
@@ -65049,9 +65033,6 @@ module.exports = function(it){
   return it !== null && (typeof it == 'object' || typeof it == 'function');
 };
 },{}],67:[function(require,module,exports){
-// Safari has buggy iterators w/o `next`
-module.exports = 'keys' in [] && !('next' in [].keys());
-},{}],68:[function(require,module,exports){
 // call something on iterator step with safe closing on error
 var anObject = require('./$.an-object');
 module.exports = function(iterator, fn, value, entries){
@@ -65064,7 +65045,7 @@ module.exports = function(iterator, fn, value, entries){
     throw e;
   }
 };
-},{"./$.an-object":36}],69:[function(require,module,exports){
+},{"./$.an-object":36}],68:[function(require,module,exports){
 'use strict';
 var $ = require('./$')
   , IteratorPrototype = {};
@@ -65076,7 +65057,7 @@ module.exports = function(Constructor, NAME, next){
   Constructor.prototype = $.create(IteratorPrototype, {next: require('./$.property-desc')(1,next)});
   require('./$.tag')(Constructor, NAME + ' Iterator');
 };
-},{"./$":74,"./$.hide":60,"./$.property-desc":85,"./$.tag":100,"./$.wks":109}],70:[function(require,module,exports){
+},{"./$":73,"./$.hide":60,"./$.property-desc":84,"./$.tag":99,"./$.wks":108}],69:[function(require,module,exports){
 'use strict';
 var LIBRARY         = require('./$.library')
   , $def            = require('./$.def')
@@ -65085,6 +65066,7 @@ var LIBRARY         = require('./$.library')
   , has             = require('./$.has')
   , SYMBOL_ITERATOR = require('./$.wks')('iterator')
   , Iterators       = require('./$.iterators')
+  , BUGGY           = !([].keys && 'next' in [].keys()) // Safari has buggy iterators w/o `next`
   , FF_ITERATOR     = '@@iterator'
   , KEYS            = 'keys'
   , VALUES          = 'values';
@@ -65123,10 +65105,10 @@ module.exports = function(Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCE)
     };
     if(FORCE)for(key in methods){
       if(!(key in proto))$redef(proto, key, methods[key]);
-    } else $def($def.P + $def.F * require('./$.iter-buggy'), NAME, methods);
+    } else $def($def.P + $def.F * BUGGY, NAME, methods);
   }
 };
-},{"./$":74,"./$.def":48,"./$.has":59,"./$.hide":60,"./$.iter-buggy":67,"./$.iter-create":69,"./$.iterators":73,"./$.library":76,"./$.redef":86,"./$.tag":100,"./$.wks":109}],71:[function(require,module,exports){
+},{"./$":73,"./$.def":48,"./$.has":59,"./$.hide":60,"./$.iter-create":68,"./$.iterators":72,"./$.library":75,"./$.redef":85,"./$.tag":99,"./$.wks":108}],70:[function(require,module,exports){
 var SYMBOL_ITERATOR = require('./$.wks')('iterator')
   , SAFE_CLOSING    = false;
 try {
@@ -65146,13 +65128,13 @@ module.exports = function(exec){
   } catch(e){ /* empty */ }
   return safe;
 };
-},{"./$.wks":109}],72:[function(require,module,exports){
+},{"./$.wks":108}],71:[function(require,module,exports){
 module.exports = function(done, value){
   return {value: value, done: !!done};
 };
-},{}],73:[function(require,module,exports){
+},{}],72:[function(require,module,exports){
 module.exports = {};
-},{}],74:[function(require,module,exports){
+},{}],73:[function(require,module,exports){
 var $Object = Object;
 module.exports = {
   create:     $Object.create,
@@ -65166,7 +65148,7 @@ module.exports = {
   getSymbols: $Object.getOwnPropertySymbols,
   each:       [].forEach
 };
-},{}],75:[function(require,module,exports){
+},{}],74:[function(require,module,exports){
 var $         = require('./$')
   , toIObject = require('./$.to-iobject');
 module.exports = function(object, el){
@@ -65177,14 +65159,14 @@ module.exports = function(object, el){
     , key;
   while(length > index)if(O[key = keys[index++]] === el)return key;
 };
-},{"./$":74,"./$.to-iobject":104}],76:[function(require,module,exports){
+},{"./$":73,"./$.to-iobject":103}],75:[function(require,module,exports){
 module.exports = false;
-},{}],77:[function(require,module,exports){
+},{}],76:[function(require,module,exports){
 // 20.2.2.20 Math.log1p(x)
 module.exports = Math.log1p || function log1p(x){
   return (x = +x) > -1e-8 && x < 1e-8 ? x - x * x / 2 : Math.log(1 + x);
 };
-},{}],78:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
 var global    = require('./$.global')
   , macrotask = require('./$.task').set
   , Observer  = global.MutationObserver || global.WebKitMutationObserver
@@ -65242,13 +65224,13 @@ module.exports = function asap(fn){
     notify();
   } last = task;
 };
-},{"./$.cof":41,"./$.global":58,"./$.task":101}],79:[function(require,module,exports){
+},{"./$.cof":41,"./$.global":58,"./$.task":100}],78:[function(require,module,exports){
 var $redef = require('./$.redef');
 module.exports = function(target, src){
   for(var key in src)$redef(target, key, src[key]);
   return target;
 };
-},{"./$.redef":86}],80:[function(require,module,exports){
+},{"./$.redef":85}],79:[function(require,module,exports){
 // most Object methods by ES6 should accept primitives
 module.exports = function(KEY, exec){
   var $def = require('./$.def')
@@ -65257,7 +65239,7 @@ module.exports = function(KEY, exec){
   exp[KEY] = exec(fn);
   $def($def.S + $def.F * require('./$.fails')(function(){ fn(1); }), 'Object', exp);
 };
-},{"./$.core":46,"./$.def":48,"./$.fails":53}],81:[function(require,module,exports){
+},{"./$.core":46,"./$.def":48,"./$.fails":53}],80:[function(require,module,exports){
 var $         = require('./$')
   , toIObject = require('./$.to-iobject');
 module.exports = function(isEntries){
@@ -65273,7 +65255,7 @@ module.exports = function(isEntries){
     return result;
   };
 };
-},{"./$":74,"./$.to-iobject":104}],82:[function(require,module,exports){
+},{"./$":73,"./$.to-iobject":103}],81:[function(require,module,exports){
 // all object keys, includes non-enumerable and symbols
 var $        = require('./$')
   , anObject = require('./$.an-object')
@@ -65283,7 +65265,7 @@ module.exports = Reflect && Reflect.ownKeys || function ownKeys(it){
     , getSymbols = $.getSymbols;
   return getSymbols ? keys.concat(getSymbols(it)) : keys;
 };
-},{"./$":74,"./$.an-object":36,"./$.global":58}],83:[function(require,module,exports){
+},{"./$":73,"./$.an-object":36,"./$.global":58}],82:[function(require,module,exports){
 'use strict';
 var path      = require('./$.path')
   , invoke    = require('./$.invoke')
@@ -65307,9 +65289,9 @@ module.exports = function(/* ...pargs */){
     return invoke(fn, args, that);
   };
 };
-},{"./$.a-function":35,"./$.invoke":62,"./$.path":84}],84:[function(require,module,exports){
+},{"./$.a-function":35,"./$.invoke":62,"./$.path":83}],83:[function(require,module,exports){
 module.exports = require('./$.global');
-},{"./$.global":58}],85:[function(require,module,exports){
+},{"./$.global":58}],84:[function(require,module,exports){
 module.exports = function(bitmap, value){
   return {
     enumerable  : !(bitmap & 1),
@@ -65318,7 +65300,7 @@ module.exports = function(bitmap, value){
     value       : value
   };
 };
-},{}],86:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 // add fake Function#toString
 // for correct work wrapped methods / constructors with methods like LoDash isNative
 var global    = require('./$.global')
@@ -65346,7 +65328,7 @@ require('./$.core').inspectSource = function(it){
 })(Function.prototype, TO_STRING, function toString(){
   return typeof this == 'function' && this[SRC] || $toString.call(this);
 });
-},{"./$.core":46,"./$.global":58,"./$.hide":60,"./$.uid":107}],87:[function(require,module,exports){
+},{"./$.core":46,"./$.global":58,"./$.hide":60,"./$.uid":106}],86:[function(require,module,exports){
 module.exports = function(regExp, replace){
   var replacer = replace === Object(replace) ? function(part){
     return replace[part];
@@ -65355,11 +65337,11 @@ module.exports = function(regExp, replace){
     return String(it).replace(regExp, replacer);
   };
 };
-},{}],88:[function(require,module,exports){
+},{}],87:[function(require,module,exports){
 module.exports = Object.is || function is(x, y){
   return x === y ? x !== 0 || 1 / x === 1 / y : x != x && y != y;
 };
-},{}],89:[function(require,module,exports){
+},{}],88:[function(require,module,exports){
 // Works with __proto__ only. Old v8 can't work with null proto objects.
 /* eslint-disable no-proto */
 var getDesc  = require('./$').getDesc
@@ -65386,19 +65368,19 @@ module.exports = {
     : undefined),
   check: check
 };
-},{"./$":74,"./$.an-object":36,"./$.ctx":47,"./$.is-object":66}],90:[function(require,module,exports){
+},{"./$":73,"./$.an-object":36,"./$.ctx":47,"./$.is-object":66}],89:[function(require,module,exports){
 var global = require('./$.global')
   , SHARED = '__core-js_shared__'
   , store  = global[SHARED] || (global[SHARED] = {});
 module.exports = function(key){
   return store[key] || (store[key] = {});
 };
-},{"./$.global":58}],91:[function(require,module,exports){
+},{"./$.global":58}],90:[function(require,module,exports){
 // 20.2.2.28 Math.sign(x)
 module.exports = Math.sign || function sign(x){
   return (x = +x) == 0 || x != x ? x : x < 0 ? -1 : 1;
 };
-},{}],92:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
 'use strict';
 var $       = require('./$')
   , SPECIES = require('./$.wks')('species');
@@ -65408,12 +65390,12 @@ module.exports = function(C){
     get: function(){ return this; }
   });
 };
-},{"./$":74,"./$.support-desc":99,"./$.wks":109}],93:[function(require,module,exports){
+},{"./$":73,"./$.support-desc":98,"./$.wks":108}],92:[function(require,module,exports){
 module.exports = function(it, Constructor, name){
   if(!(it instanceof Constructor))throw TypeError(name + ": use the 'new' operator!");
   return it;
 };
-},{}],94:[function(require,module,exports){
+},{}],93:[function(require,module,exports){
 // true  -> String#at
 // false -> String#codePointAt
 var toInteger = require('./$.to-integer')
@@ -65432,7 +65414,7 @@ module.exports = function(TO_STRING){
         : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
   };
 };
-},{"./$.defined":49,"./$.to-integer":103}],95:[function(require,module,exports){
+},{"./$.defined":49,"./$.to-integer":102}],94:[function(require,module,exports){
 // helper for String#{startsWith, endsWith, includes}
 var defined = require('./$.defined')
   , cof     = require('./$.cof');
@@ -65441,7 +65423,7 @@ module.exports = function(that, searchString, NAME){
   if(cof(searchString) == 'RegExp')throw TypeError('String#' + NAME + " doesn't accept regex!");
   return String(defined(that));
 };
-},{"./$.cof":41,"./$.defined":49}],96:[function(require,module,exports){
+},{"./$.cof":41,"./$.defined":49}],95:[function(require,module,exports){
 // https://github.com/ljharb/proposal-string-pad-left-right
 var toLength = require('./$.to-length')
   , repeat   = require('./$.string-repeat')
@@ -65461,7 +65443,7 @@ module.exports = function(that, maxLength, fillString, left){
     : stringFiller.slice(0, fillLen);
   return left ? stringFiller + S : S + stringFiller;
 };
-},{"./$.defined":49,"./$.string-repeat":97,"./$.to-length":105}],97:[function(require,module,exports){
+},{"./$.defined":49,"./$.string-repeat":96,"./$.to-length":104}],96:[function(require,module,exports){
 'use strict';
 var toInteger = require('./$.to-integer')
   , defined   = require('./$.defined');
@@ -65474,7 +65456,7 @@ module.exports = function repeat(count){
   for(;n > 0; (n >>>= 1) && (str += str))if(n & 1)res += str;
   return res;
 };
-},{"./$.defined":49,"./$.to-integer":103}],98:[function(require,module,exports){
+},{"./$.defined":49,"./$.to-integer":102}],97:[function(require,module,exports){
 // 1 -> String#trimLeft
 // 2 -> String#trimRight
 // 3 -> String#trim
@@ -65501,12 +65483,12 @@ module.exports = function(KEY, exec){
     return !!spaces[KEY]() || non[KEY]() != non;
   }), 'String', exp);
 };
-},{"./$.def":48,"./$.defined":49,"./$.fails":53}],99:[function(require,module,exports){
+},{"./$.def":48,"./$.defined":49,"./$.fails":53}],98:[function(require,module,exports){
 // Thank's IE8 for his funny defineProperty
 module.exports = !require('./$.fails')(function(){
   return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
 });
-},{"./$.fails":53}],100:[function(require,module,exports){
+},{"./$.fails":53}],99:[function(require,module,exports){
 var has  = require('./$.has')
   , hide = require('./$.hide')
   , TAG  = require('./$.wks')('toStringTag');
@@ -65514,7 +65496,7 @@ var has  = require('./$.has')
 module.exports = function(it, tag, stat){
   if(it && !has(it = stat ? it : it.prototype, TAG))hide(it, TAG, tag);
 };
-},{"./$.has":59,"./$.hide":60,"./$.wks":109}],101:[function(require,module,exports){
+},{"./$.has":59,"./$.hide":60,"./$.wks":108}],100:[function(require,module,exports){
 'use strict';
 var ctx                = require('./$.ctx')
   , invoke             = require('./$.invoke')
@@ -65591,7 +65573,7 @@ module.exports = {
   set:   setTask,
   clear: clearTask
 };
-},{"./$.cof":41,"./$.ctx":47,"./$.dom-create":50,"./$.global":58,"./$.html":61,"./$.invoke":62}],102:[function(require,module,exports){
+},{"./$.cof":41,"./$.ctx":47,"./$.dom-create":50,"./$.global":58,"./$.html":61,"./$.invoke":62}],101:[function(require,module,exports){
 var toInteger = require('./$.to-integer')
   , max       = Math.max
   , min       = Math.min;
@@ -65599,61 +65581,61 @@ module.exports = function(index, length){
   index = toInteger(index);
   return index < 0 ? max(index + length, 0) : min(index, length);
 };
-},{"./$.to-integer":103}],103:[function(require,module,exports){
+},{"./$.to-integer":102}],102:[function(require,module,exports){
 // 7.1.4 ToInteger
 var ceil  = Math.ceil
   , floor = Math.floor;
 module.exports = function(it){
   return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
 };
-},{}],104:[function(require,module,exports){
+},{}],103:[function(require,module,exports){
 // to indexed object, toObject with fallback for non-array-like ES3 strings
 var IObject = require('./$.iobject')
   , defined = require('./$.defined');
 module.exports = function(it){
   return IObject(defined(it));
 };
-},{"./$.defined":49,"./$.iobject":63}],105:[function(require,module,exports){
+},{"./$.defined":49,"./$.iobject":63}],104:[function(require,module,exports){
 // 7.1.15 ToLength
 var toInteger = require('./$.to-integer')
   , min       = Math.min;
 module.exports = function(it){
   return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
 };
-},{"./$.to-integer":103}],106:[function(require,module,exports){
+},{"./$.to-integer":102}],105:[function(require,module,exports){
 // 7.1.13 ToObject(argument)
 var defined = require('./$.defined');
 module.exports = function(it){
   return Object(defined(it));
 };
-},{"./$.defined":49}],107:[function(require,module,exports){
+},{"./$.defined":49}],106:[function(require,module,exports){
 var id = 0
   , px = Math.random();
 module.exports = function(key){
   return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id + px).toString(36));
 };
-},{}],108:[function(require,module,exports){
+},{}],107:[function(require,module,exports){
 // 22.1.3.31 Array.prototype[@@unscopables]
 var UNSCOPABLES = require('./$.wks')('unscopables');
 if(!(UNSCOPABLES in []))require('./$.hide')(Array.prototype, UNSCOPABLES, {});
 module.exports = function(key){
   [][UNSCOPABLES][key] = true;
 };
-},{"./$.hide":60,"./$.wks":109}],109:[function(require,module,exports){
+},{"./$.hide":60,"./$.wks":108}],108:[function(require,module,exports){
 var store  = require('./$.shared')('wks')
   , Symbol = require('./$.global').Symbol;
 module.exports = function(name){
   return store[name] || (store[name] =
     Symbol && Symbol[name] || (Symbol || require('./$.uid'))('Symbol.' + name));
 };
-},{"./$.global":58,"./$.shared":90,"./$.uid":107}],110:[function(require,module,exports){
+},{"./$.global":58,"./$.shared":89,"./$.uid":106}],109:[function(require,module,exports){
 var classof   = require('./$.classof')
   , ITERATOR  = require('./$.wks')('iterator')
   , Iterators = require('./$.iterators');
 module.exports = require('./$.core').getIteratorMethod = function(it){
   if(it != undefined)return it[ITERATOR] || it['@@iterator'] || Iterators[classof(it)];
 };
-},{"./$.classof":40,"./$.core":46,"./$.iterators":73,"./$.wks":109}],111:[function(require,module,exports){
+},{"./$.classof":40,"./$.core":46,"./$.iterators":72,"./$.wks":108}],110:[function(require,module,exports){
 'use strict';
 var $                = require('./$')
   , SUPPORT_DESC     = require('./$.support-desc')
@@ -65929,7 +65911,7 @@ $def($def.P + $def.F * brokenDate, 'Date', {
       ':' + lz(d.getUTCSeconds()) + '.' + (m > 99 ? m : '0' + lz(m)) + 'Z';
   }
 });
-},{"./$":74,"./$.a-function":35,"./$.an-object":36,"./$.array-includes":37,"./$.array-methods":38,"./$.cof":41,"./$.def":48,"./$.dom-create":50,"./$.fails":53,"./$.has":59,"./$.html":61,"./$.invoke":62,"./$.iobject":63,"./$.is-object":66,"./$.property-desc":85,"./$.support-desc":99,"./$.to-index":102,"./$.to-integer":103,"./$.to-iobject":104,"./$.to-length":105,"./$.to-object":106,"./$.uid":107}],112:[function(require,module,exports){
+},{"./$":73,"./$.a-function":35,"./$.an-object":36,"./$.array-includes":37,"./$.array-methods":38,"./$.cof":41,"./$.def":48,"./$.dom-create":50,"./$.fails":53,"./$.has":59,"./$.html":61,"./$.invoke":62,"./$.iobject":63,"./$.is-object":66,"./$.property-desc":84,"./$.support-desc":98,"./$.to-index":101,"./$.to-integer":102,"./$.to-iobject":103,"./$.to-length":104,"./$.to-object":105,"./$.uid":106}],111:[function(require,module,exports){
 'use strict';
 var $def     = require('./$.def')
   , toObject = require('./$.to-object')
@@ -65960,7 +65942,7 @@ $def($def.P, 'Array', {
   }
 });
 require('./$.unscope')('copyWithin');
-},{"./$.def":48,"./$.to-index":102,"./$.to-length":105,"./$.to-object":106,"./$.unscope":108}],113:[function(require,module,exports){
+},{"./$.def":48,"./$.to-index":101,"./$.to-length":104,"./$.to-object":105,"./$.unscope":107}],112:[function(require,module,exports){
 'use strict';
 var $def     = require('./$.def')
   , toObject = require('./$.to-object')
@@ -65979,7 +65961,7 @@ $def($def.P, 'Array', {
   }
 });
 require('./$.unscope')('fill');
-},{"./$.def":48,"./$.to-index":102,"./$.to-length":105,"./$.to-object":106,"./$.unscope":108}],114:[function(require,module,exports){
+},{"./$.def":48,"./$.to-index":101,"./$.to-length":104,"./$.to-object":105,"./$.unscope":107}],113:[function(require,module,exports){
 'use strict';
 // 22.1.3.9 Array.prototype.findIndex(predicate, thisArg = undefined)
 var KEY    = 'findIndex'
@@ -65994,7 +65976,7 @@ $def($def.P + $def.F * forced, 'Array', {
   }
 });
 require('./$.unscope')(KEY);
-},{"./$.array-methods":38,"./$.def":48,"./$.unscope":108}],115:[function(require,module,exports){
+},{"./$.array-methods":38,"./$.def":48,"./$.unscope":107}],114:[function(require,module,exports){
 'use strict';
 // 22.1.3.8 Array.prototype.find(predicate, thisArg = undefined)
 var KEY    = 'find'
@@ -66009,7 +65991,7 @@ $def($def.P + $def.F * forced, 'Array', {
   }
 });
 require('./$.unscope')(KEY);
-},{"./$.array-methods":38,"./$.def":48,"./$.unscope":108}],116:[function(require,module,exports){
+},{"./$.array-methods":38,"./$.def":48,"./$.unscope":107}],115:[function(require,module,exports){
 'use strict';
 var ctx         = require('./$.ctx')
   , $def        = require('./$.def')
@@ -66043,7 +66025,7 @@ $def($def.S + $def.F * !require('./$.iter-detect')(function(iter){ Array.from(it
     return result;
   }
 });
-},{"./$.ctx":47,"./$.def":48,"./$.is-array-iter":64,"./$.iter-call":68,"./$.iter-detect":71,"./$.to-length":105,"./$.to-object":106,"./core.get-iterator-method":110}],117:[function(require,module,exports){
+},{"./$.ctx":47,"./$.def":48,"./$.is-array-iter":64,"./$.iter-call":67,"./$.iter-detect":70,"./$.to-length":104,"./$.to-object":105,"./core.get-iterator-method":109}],116:[function(require,module,exports){
 'use strict';
 var setUnscope = require('./$.unscope')
   , step       = require('./$.iter-step')
@@ -66078,10 +66060,15 @@ Iterators.Arguments = Iterators.Array;
 setUnscope('keys');
 setUnscope('values');
 setUnscope('entries');
-},{"./$.iter-define":70,"./$.iter-step":72,"./$.iterators":73,"./$.to-iobject":104,"./$.unscope":108}],118:[function(require,module,exports){
+},{"./$.iter-define":69,"./$.iter-step":71,"./$.iterators":72,"./$.to-iobject":103,"./$.unscope":107}],117:[function(require,module,exports){
 'use strict';
 var $def = require('./$.def');
-$def($def.S, 'Array', {
+
+// WebKit Array.of isn't generic
+$def($def.S + $def.F * require('./$.fails')(function(){
+  function F(){}
+  return !(Array.of.call(F) instanceof F);
+}), 'Array', {
   // 22.1.2.3 Array.of( ...items)
   of: function of(/* ...args */){
     var index  = 0
@@ -66092,9 +66079,9 @@ $def($def.S, 'Array', {
     return result;
   }
 });
-},{"./$.def":48}],119:[function(require,module,exports){
+},{"./$.def":48,"./$.fails":53}],118:[function(require,module,exports){
 require('./$.species')(Array);
-},{"./$.species":92}],120:[function(require,module,exports){
+},{"./$.species":91}],119:[function(require,module,exports){
 'use strict';
 var $             = require('./$')
   , isObject      = require('./$.is-object')
@@ -66108,7 +66095,7 @@ if(!(HAS_INSTANCE in FunctionProto))$.setDesc(FunctionProto, HAS_INSTANCE, {valu
   while(O = $.getProto(O))if(this.prototype === O)return true;
   return false;
 }});
-},{"./$":74,"./$.is-object":66,"./$.wks":109}],121:[function(require,module,exports){
+},{"./$":73,"./$.is-object":66,"./$.wks":108}],120:[function(require,module,exports){
 var setDesc    = require('./$').setDesc
   , createDesc = require('./$.property-desc')
   , has        = require('./$.has')
@@ -66125,7 +66112,7 @@ NAME in FProto || require('./$.support-desc') && setDesc(FProto, NAME, {
     return name;
   }
 });
-},{"./$":74,"./$.has":59,"./$.property-desc":85,"./$.support-desc":99}],122:[function(require,module,exports){
+},{"./$":73,"./$.has":59,"./$.property-desc":84,"./$.support-desc":98}],121:[function(require,module,exports){
 'use strict';
 var strong = require('./$.collection-strong');
 
@@ -66143,7 +66130,7 @@ require('./$.collection')('Map', function(get){
     return strong.def(this, key === 0 ? 0 : key, value);
   }
 }, strong, true);
-},{"./$.collection":45,"./$.collection-strong":42}],123:[function(require,module,exports){
+},{"./$.collection":45,"./$.collection-strong":42}],122:[function(require,module,exports){
 // 20.2.2.3 Math.acosh(x)
 var $def   = require('./$.def')
   , log1p  = require('./$.log1p')
@@ -66158,7 +66145,7 @@ $def($def.S + $def.F * !($acosh && Math.floor($acosh(Number.MAX_VALUE)) == 710),
       : log1p(x - 1 + sqrt(x - 1) * sqrt(x + 1));
   }
 });
-},{"./$.def":48,"./$.log1p":77}],124:[function(require,module,exports){
+},{"./$.def":48,"./$.log1p":76}],123:[function(require,module,exports){
 // 20.2.2.5 Math.asinh(x)
 var $def = require('./$.def');
 
@@ -66167,7 +66154,7 @@ function asinh(x){
 }
 
 $def($def.S, 'Math', {asinh: asinh});
-},{"./$.def":48}],125:[function(require,module,exports){
+},{"./$.def":48}],124:[function(require,module,exports){
 // 20.2.2.7 Math.atanh(x)
 var $def = require('./$.def');
 
@@ -66176,7 +66163,7 @@ $def($def.S, 'Math', {
     return (x = +x) == 0 ? x : Math.log((1 + x) / (1 - x)) / 2;
   }
 });
-},{"./$.def":48}],126:[function(require,module,exports){
+},{"./$.def":48}],125:[function(require,module,exports){
 // 20.2.2.9 Math.cbrt(x)
 var $def = require('./$.def')
   , sign = require('./$.sign');
@@ -66186,7 +66173,7 @@ $def($def.S, 'Math', {
     return sign(x = +x) * Math.pow(Math.abs(x), 1 / 3);
   }
 });
-},{"./$.def":48,"./$.sign":91}],127:[function(require,module,exports){
+},{"./$.def":48,"./$.sign":90}],126:[function(require,module,exports){
 // 20.2.2.11 Math.clz32(x)
 var $def = require('./$.def');
 
@@ -66195,7 +66182,7 @@ $def($def.S, 'Math', {
     return (x >>>= 0) ? 31 - Math.floor(Math.log(x + 0.5) * Math.LOG2E) : 32;
   }
 });
-},{"./$.def":48}],128:[function(require,module,exports){
+},{"./$.def":48}],127:[function(require,module,exports){
 // 20.2.2.12 Math.cosh(x)
 var $def = require('./$.def')
   , exp  = Math.exp;
@@ -66205,12 +66192,12 @@ $def($def.S, 'Math', {
     return (exp(x = +x) + exp(-x)) / 2;
   }
 });
-},{"./$.def":48}],129:[function(require,module,exports){
+},{"./$.def":48}],128:[function(require,module,exports){
 // 20.2.2.14 Math.expm1(x)
 var $def = require('./$.def');
 
 $def($def.S, 'Math', {expm1: require('./$.expm1')});
-},{"./$.def":48,"./$.expm1":52}],130:[function(require,module,exports){
+},{"./$.def":48,"./$.expm1":52}],129:[function(require,module,exports){
 // 20.2.2.16 Math.fround(x)
 var $def  = require('./$.def')
   , sign  = require('./$.sign')
@@ -66237,7 +66224,7 @@ $def($def.S, 'Math', {
     return $sign * result;
   }
 });
-},{"./$.def":48,"./$.sign":91}],131:[function(require,module,exports){
+},{"./$.def":48,"./$.sign":90}],130:[function(require,module,exports){
 // 20.2.2.17 Math.hypot([value1[, value2[, … ]]])
 var $def = require('./$.def')
   , abs  = Math.abs;
@@ -66263,7 +66250,7 @@ $def($def.S, 'Math', {
     return larg === Infinity ? Infinity : larg * Math.sqrt(sum);
   }
 });
-},{"./$.def":48}],132:[function(require,module,exports){
+},{"./$.def":48}],131:[function(require,module,exports){
 // 20.2.2.18 Math.imul(x, y)
 var $def = require('./$.def');
 
@@ -66280,7 +66267,7 @@ $def($def.S + $def.F * require('./$.fails')(function(){
     return 0 | xl * yl + ((UINT16 & xn >>> 16) * yl + xl * (UINT16 & yn >>> 16) << 16 >>> 0);
   }
 });
-},{"./$.def":48,"./$.fails":53}],133:[function(require,module,exports){
+},{"./$.def":48,"./$.fails":53}],132:[function(require,module,exports){
 // 20.2.2.21 Math.log10(x)
 var $def = require('./$.def');
 
@@ -66289,12 +66276,12 @@ $def($def.S, 'Math', {
     return Math.log(x) / Math.LN10;
   }
 });
-},{"./$.def":48}],134:[function(require,module,exports){
+},{"./$.def":48}],133:[function(require,module,exports){
 // 20.2.2.20 Math.log1p(x)
 var $def = require('./$.def');
 
 $def($def.S, 'Math', {log1p: require('./$.log1p')});
-},{"./$.def":48,"./$.log1p":77}],135:[function(require,module,exports){
+},{"./$.def":48,"./$.log1p":76}],134:[function(require,module,exports){
 // 20.2.2.22 Math.log2(x)
 var $def = require('./$.def');
 
@@ -66303,12 +66290,12 @@ $def($def.S, 'Math', {
     return Math.log(x) / Math.LN2;
   }
 });
-},{"./$.def":48}],136:[function(require,module,exports){
+},{"./$.def":48}],135:[function(require,module,exports){
 // 20.2.2.28 Math.sign(x)
 var $def = require('./$.def');
 
 $def($def.S, 'Math', {sign: require('./$.sign')});
-},{"./$.def":48,"./$.sign":91}],137:[function(require,module,exports){
+},{"./$.def":48,"./$.sign":90}],136:[function(require,module,exports){
 // 20.2.2.30 Math.sinh(x)
 var $def  = require('./$.def')
   , expm1 = require('./$.expm1')
@@ -66321,7 +66308,7 @@ $def($def.S, 'Math', {
       : (exp(x - 1) - exp(-x - 1)) * (Math.E / 2);
   }
 });
-},{"./$.def":48,"./$.expm1":52}],138:[function(require,module,exports){
+},{"./$.def":48,"./$.expm1":52}],137:[function(require,module,exports){
 // 20.2.2.33 Math.tanh(x)
 var $def  = require('./$.def')
   , expm1 = require('./$.expm1')
@@ -66334,7 +66321,7 @@ $def($def.S, 'Math', {
     return a == Infinity ? 1 : b == Infinity ? -1 : (a - b) / (exp(x) + exp(-x));
   }
 });
-},{"./$.def":48,"./$.expm1":52}],139:[function(require,module,exports){
+},{"./$.def":48,"./$.expm1":52}],138:[function(require,module,exports){
 // 20.2.2.34 Math.trunc(x)
 var $def = require('./$.def');
 
@@ -66343,7 +66330,7 @@ $def($def.S, 'Math', {
     return (it > 0 ? Math.floor : Math.ceil)(it);
   }
 });
-},{"./$.def":48}],140:[function(require,module,exports){
+},{"./$.def":48}],139:[function(require,module,exports){
 'use strict';
 var $          = require('./$')
   , global     = require('./$.global')
@@ -66397,12 +66384,12 @@ if(!($Number('0o1') && $Number('0b1'))){
   proto.constructor = $Number;
   require('./$.redef')(global, NUMBER, $Number);
 }
-},{"./$":74,"./$.cof":41,"./$.fails":53,"./$.global":58,"./$.has":59,"./$.is-object":66,"./$.redef":86,"./$.support-desc":99}],141:[function(require,module,exports){
+},{"./$":73,"./$.cof":41,"./$.fails":53,"./$.global":58,"./$.has":59,"./$.is-object":66,"./$.redef":85,"./$.support-desc":98}],140:[function(require,module,exports){
 // 20.1.2.1 Number.EPSILON
 var $def = require('./$.def');
 
 $def($def.S, 'Number', {EPSILON: Math.pow(2, -52)});
-},{"./$.def":48}],142:[function(require,module,exports){
+},{"./$.def":48}],141:[function(require,module,exports){
 // 20.1.2.2 Number.isFinite(number)
 var $def      = require('./$.def')
   , _isFinite = require('./$.global').isFinite;
@@ -66412,12 +66399,12 @@ $def($def.S, 'Number', {
     return typeof it == 'number' && _isFinite(it);
   }
 });
-},{"./$.def":48,"./$.global":58}],143:[function(require,module,exports){
+},{"./$.def":48,"./$.global":58}],142:[function(require,module,exports){
 // 20.1.2.3 Number.isInteger(number)
 var $def = require('./$.def');
 
 $def($def.S, 'Number', {isInteger: require('./$.is-integer')});
-},{"./$.def":48,"./$.is-integer":65}],144:[function(require,module,exports){
+},{"./$.def":48,"./$.is-integer":65}],143:[function(require,module,exports){
 // 20.1.2.4 Number.isNaN(number)
 var $def = require('./$.def');
 
@@ -66426,7 +66413,7 @@ $def($def.S, 'Number', {
     return number != number;
   }
 });
-},{"./$.def":48}],145:[function(require,module,exports){
+},{"./$.def":48}],144:[function(require,module,exports){
 // 20.1.2.5 Number.isSafeInteger(number)
 var $def      = require('./$.def')
   , isInteger = require('./$.is-integer')
@@ -66437,31 +66424,32 @@ $def($def.S, 'Number', {
     return isInteger(number) && abs(number) <= 0x1fffffffffffff;
   }
 });
-},{"./$.def":48,"./$.is-integer":65}],146:[function(require,module,exports){
+},{"./$.def":48,"./$.is-integer":65}],145:[function(require,module,exports){
 // 20.1.2.6 Number.MAX_SAFE_INTEGER
 var $def = require('./$.def');
 
 $def($def.S, 'Number', {MAX_SAFE_INTEGER: 0x1fffffffffffff});
-},{"./$.def":48}],147:[function(require,module,exports){
+},{"./$.def":48}],146:[function(require,module,exports){
 // 20.1.2.10 Number.MIN_SAFE_INTEGER
 var $def = require('./$.def');
 
 $def($def.S, 'Number', {MIN_SAFE_INTEGER: -0x1fffffffffffff});
-},{"./$.def":48}],148:[function(require,module,exports){
+},{"./$.def":48}],147:[function(require,module,exports){
 // 20.1.2.12 Number.parseFloat(string)
 var $def = require('./$.def');
 
 $def($def.S, 'Number', {parseFloat: parseFloat});
-},{"./$.def":48}],149:[function(require,module,exports){
+},{"./$.def":48}],148:[function(require,module,exports){
 // 20.1.2.13 Number.parseInt(string, radix)
 var $def = require('./$.def');
 
 $def($def.S, 'Number', {parseInt: parseInt});
-},{"./$.def":48}],150:[function(require,module,exports){
+},{"./$.def":48}],149:[function(require,module,exports){
 // 19.1.3.1 Object.assign(target, source)
 var $def = require('./$.def');
-$def($def.S, 'Object', {assign: require('./$.assign')});
-},{"./$.assign":39,"./$.def":48}],151:[function(require,module,exports){
+
+$def($def.S + $def.F, 'Object', {assign: require('./$.assign')});
+},{"./$.assign":39,"./$.def":48}],150:[function(require,module,exports){
 // 19.1.2.5 Object.freeze(O)
 var isObject = require('./$.is-object');
 
@@ -66470,7 +66458,7 @@ require('./$.object-sap')('freeze', function($freeze){
     return $freeze && isObject(it) ? $freeze(it) : it;
   };
 });
-},{"./$.is-object":66,"./$.object-sap":80}],152:[function(require,module,exports){
+},{"./$.is-object":66,"./$.object-sap":79}],151:[function(require,module,exports){
 // 19.1.2.6 Object.getOwnPropertyDescriptor(O, P)
 var toIObject = require('./$.to-iobject');
 
@@ -66479,12 +66467,12 @@ require('./$.object-sap')('getOwnPropertyDescriptor', function($getOwnPropertyDe
     return $getOwnPropertyDescriptor(toIObject(it), key);
   };
 });
-},{"./$.object-sap":80,"./$.to-iobject":104}],153:[function(require,module,exports){
+},{"./$.object-sap":79,"./$.to-iobject":103}],152:[function(require,module,exports){
 // 19.1.2.7 Object.getOwnPropertyNames(O)
 require('./$.object-sap')('getOwnPropertyNames', function(){
   return require('./$.get-names').get;
 });
-},{"./$.get-names":57,"./$.object-sap":80}],154:[function(require,module,exports){
+},{"./$.get-names":57,"./$.object-sap":79}],153:[function(require,module,exports){
 // 19.1.2.9 Object.getPrototypeOf(O)
 var toObject = require('./$.to-object');
 
@@ -66493,7 +66481,7 @@ require('./$.object-sap')('getPrototypeOf', function($getPrototypeOf){
     return $getPrototypeOf(toObject(it));
   };
 });
-},{"./$.object-sap":80,"./$.to-object":106}],155:[function(require,module,exports){
+},{"./$.object-sap":79,"./$.to-object":105}],154:[function(require,module,exports){
 // 19.1.2.11 Object.isExtensible(O)
 var isObject = require('./$.is-object');
 
@@ -66502,7 +66490,7 @@ require('./$.object-sap')('isExtensible', function($isExtensible){
     return isObject(it) ? $isExtensible ? $isExtensible(it) : true : false;
   };
 });
-},{"./$.is-object":66,"./$.object-sap":80}],156:[function(require,module,exports){
+},{"./$.is-object":66,"./$.object-sap":79}],155:[function(require,module,exports){
 // 19.1.2.12 Object.isFrozen(O)
 var isObject = require('./$.is-object');
 
@@ -66511,7 +66499,7 @@ require('./$.object-sap')('isFrozen', function($isFrozen){
     return isObject(it) ? $isFrozen ? $isFrozen(it) : false : true;
   };
 });
-},{"./$.is-object":66,"./$.object-sap":80}],157:[function(require,module,exports){
+},{"./$.is-object":66,"./$.object-sap":79}],156:[function(require,module,exports){
 // 19.1.2.13 Object.isSealed(O)
 var isObject = require('./$.is-object');
 
@@ -66520,13 +66508,13 @@ require('./$.object-sap')('isSealed', function($isSealed){
     return isObject(it) ? $isSealed ? $isSealed(it) : false : true;
   };
 });
-},{"./$.is-object":66,"./$.object-sap":80}],158:[function(require,module,exports){
+},{"./$.is-object":66,"./$.object-sap":79}],157:[function(require,module,exports){
 // 19.1.3.10 Object.is(value1, value2)
 var $def = require('./$.def');
 $def($def.S, 'Object', {
   is: require('./$.same')
 });
-},{"./$.def":48,"./$.same":88}],159:[function(require,module,exports){
+},{"./$.def":48,"./$.same":87}],158:[function(require,module,exports){
 // 19.1.2.14 Object.keys(O)
 var toObject = require('./$.to-object');
 
@@ -66535,7 +66523,7 @@ require('./$.object-sap')('keys', function($keys){
     return $keys(toObject(it));
   };
 });
-},{"./$.object-sap":80,"./$.to-object":106}],160:[function(require,module,exports){
+},{"./$.object-sap":79,"./$.to-object":105}],159:[function(require,module,exports){
 // 19.1.2.15 Object.preventExtensions(O)
 var isObject = require('./$.is-object');
 
@@ -66544,7 +66532,7 @@ require('./$.object-sap')('preventExtensions', function($preventExtensions){
     return $preventExtensions && isObject(it) ? $preventExtensions(it) : it;
   };
 });
-},{"./$.is-object":66,"./$.object-sap":80}],161:[function(require,module,exports){
+},{"./$.is-object":66,"./$.object-sap":79}],160:[function(require,module,exports){
 // 19.1.2.17 Object.seal(O)
 var isObject = require('./$.is-object');
 
@@ -66553,11 +66541,11 @@ require('./$.object-sap')('seal', function($seal){
     return $seal && isObject(it) ? $seal(it) : it;
   };
 });
-},{"./$.is-object":66,"./$.object-sap":80}],162:[function(require,module,exports){
+},{"./$.is-object":66,"./$.object-sap":79}],161:[function(require,module,exports){
 // 19.1.3.19 Object.setPrototypeOf(O, proto)
 var $def = require('./$.def');
 $def($def.S, 'Object', {setPrototypeOf: require('./$.set-proto').set});
-},{"./$.def":48,"./$.set-proto":89}],163:[function(require,module,exports){
+},{"./$.def":48,"./$.set-proto":88}],162:[function(require,module,exports){
 'use strict';
 // 19.1.3.6 Object.prototype.toString()
 var classof = require('./$.classof')
@@ -66568,7 +66556,7 @@ if(test + '' != '[object z]'){
     return '[object ' + classof(this) + ']';
   }, true);
 }
-},{"./$.classof":40,"./$.redef":86,"./$.wks":109}],164:[function(require,module,exports){
+},{"./$.classof":40,"./$.redef":85,"./$.wks":108}],163:[function(require,module,exports){
 'use strict';
 var $          = require('./$')
   , LIBRARY    = require('./$.library')
@@ -66672,16 +66660,13 @@ var notify = function(record, isReject){
     chain.length = 0;
     record.n = false;
     if(isReject)setTimeout(function(){
-      asap(function(){
-        if(isUnhandled(record.p)){
-          if(isNode){
-            process.emit('unhandledRejection', value, record.p);
-          } else if(global.console && console.error){
-            console.error('Unhandled promise rejection', value);
-          }
+      if(isUnhandled(record.p)){
+        if(isNode){
+          process.emit('unhandledRejection', value, record.p);
+        } else if(global.console && console.error){
+          console.error('Unhandled promise rejection', value);
         }
-        record.a = undefined;
-      });
+      } record.a = undefined;
     }, 1);
   });
 };
@@ -66829,7 +66814,7 @@ $def($def.S + $def.F * !(useNative && require('./$.iter-detect')(function(iter){
     });
   }
 });
-},{"./$":74,"./$.a-function":35,"./$.an-object":36,"./$.classof":40,"./$.core":46,"./$.ctx":47,"./$.def":48,"./$.for-of":56,"./$.global":58,"./$.is-object":66,"./$.iter-detect":71,"./$.library":76,"./$.microtask":78,"./$.mix":79,"./$.same":88,"./$.set-proto":89,"./$.species":92,"./$.strict-new":93,"./$.support-desc":99,"./$.tag":100,"./$.uid":107,"./$.wks":109}],165:[function(require,module,exports){
+},{"./$":73,"./$.a-function":35,"./$.an-object":36,"./$.classof":40,"./$.core":46,"./$.ctx":47,"./$.def":48,"./$.for-of":56,"./$.global":58,"./$.is-object":66,"./$.iter-detect":70,"./$.library":75,"./$.microtask":77,"./$.mix":78,"./$.same":87,"./$.set-proto":88,"./$.species":91,"./$.strict-new":92,"./$.support-desc":98,"./$.tag":99,"./$.uid":106,"./$.wks":108}],164:[function(require,module,exports){
 // 26.1.1 Reflect.apply(target, thisArgument, argumentsList)
 var $def   = require('./$.def')
   , _apply = Function.apply;
@@ -66839,7 +66824,7 @@ $def($def.S, 'Reflect', {
     return _apply.call(target, thisArgument, argumentsList);
   }
 });
-},{"./$.def":48}],166:[function(require,module,exports){
+},{"./$.def":48}],165:[function(require,module,exports){
 // 26.1.2 Reflect.construct(target, argumentsList [, newTarget])
 var $         = require('./$')
   , $def      = require('./$.def')
@@ -66856,8 +66841,9 @@ $def($def.S + $def.F * require('./$.fails')(function(){
 }), 'Reflect', {
   construct: function construct(Target, args /*, newTarget*/){
     aFunction(Target);
-    if(arguments.length < 3){
-      // w/o newTarget, optimization for 0-4 arguments
+    var newTarget = arguments.length < 3 ? Target : aFunction(arguments[2]);
+    if(Target == newTarget){
+      // w/o altered newTarget, optimization for 0-4 arguments
       if(args != undefined)switch(anObject(args).length){
         case 0: return new Target;
         case 1: return new Target(args[0]);
@@ -66865,19 +66851,19 @@ $def($def.S + $def.F * require('./$.fails')(function(){
         case 3: return new Target(args[0], args[1], args[2]);
         case 4: return new Target(args[0], args[1], args[2], args[3]);
       }
-      // w/o newTarget, lot of arguments case
+      // w/o altered newTarget, lot of arguments case
       var $args = [null];
       $args.push.apply($args, args);
       return new (bind.apply(Target, $args));
     }
-    // with newTarget, not support built-in constructors
-    var proto    = aFunction(arguments[2]).prototype
+    // with altered newTarget, not support built-in constructors
+    var proto    = newTarget.prototype
       , instance = $.create(isObject(proto) ? proto : Object.prototype)
       , result   = Function.apply.call(Target, instance, args);
     return isObject(result) ? result : instance;
   }
 });
-},{"./$":74,"./$.a-function":35,"./$.an-object":36,"./$.core":46,"./$.def":48,"./$.fails":53,"./$.is-object":66}],167:[function(require,module,exports){
+},{"./$":73,"./$.a-function":35,"./$.an-object":36,"./$.core":46,"./$.def":48,"./$.fails":53,"./$.is-object":66}],166:[function(require,module,exports){
 // 26.1.3 Reflect.defineProperty(target, propertyKey, attributes)
 var $        = require('./$')
   , $def     = require('./$.def')
@@ -66897,7 +66883,7 @@ $def($def.S + $def.F * require('./$.fails')(function(){
     }
   }
 });
-},{"./$":74,"./$.an-object":36,"./$.def":48,"./$.fails":53}],168:[function(require,module,exports){
+},{"./$":73,"./$.an-object":36,"./$.def":48,"./$.fails":53}],167:[function(require,module,exports){
 // 26.1.4 Reflect.deleteProperty(target, propertyKey)
 var $def     = require('./$.def')
   , getDesc  = require('./$').getDesc
@@ -66909,7 +66895,7 @@ $def($def.S, 'Reflect', {
     return desc && !desc.configurable ? false : delete target[propertyKey];
   }
 });
-},{"./$":74,"./$.an-object":36,"./$.def":48}],169:[function(require,module,exports){
+},{"./$":73,"./$.an-object":36,"./$.def":48}],168:[function(require,module,exports){
 'use strict';
 // 26.1.5 Reflect.enumerate(target)
 var $def     = require('./$.def')
@@ -66936,7 +66922,7 @@ $def($def.S, 'Reflect', {
     return new Enumerate(target);
   }
 });
-},{"./$.an-object":36,"./$.def":48,"./$.iter-create":69}],170:[function(require,module,exports){
+},{"./$.an-object":36,"./$.def":48,"./$.iter-create":68}],169:[function(require,module,exports){
 // 26.1.7 Reflect.getOwnPropertyDescriptor(target, propertyKey)
 var $        = require('./$')
   , $def     = require('./$.def')
@@ -66947,7 +66933,7 @@ $def($def.S, 'Reflect', {
     return $.getDesc(anObject(target), propertyKey);
   }
 });
-},{"./$":74,"./$.an-object":36,"./$.def":48}],171:[function(require,module,exports){
+},{"./$":73,"./$.an-object":36,"./$.def":48}],170:[function(require,module,exports){
 // 26.1.8 Reflect.getPrototypeOf(target)
 var $def     = require('./$.def')
   , getProto = require('./$').getProto
@@ -66958,7 +66944,7 @@ $def($def.S, 'Reflect', {
     return getProto(anObject(target));
   }
 });
-},{"./$":74,"./$.an-object":36,"./$.def":48}],172:[function(require,module,exports){
+},{"./$":73,"./$.an-object":36,"./$.def":48}],171:[function(require,module,exports){
 // 26.1.6 Reflect.get(target, propertyKey [, receiver])
 var $        = require('./$')
   , has      = require('./$.has')
@@ -66979,7 +66965,7 @@ function get(target, propertyKey/*, receiver*/){
 }
 
 $def($def.S, 'Reflect', {get: get});
-},{"./$":74,"./$.an-object":36,"./$.def":48,"./$.has":59,"./$.is-object":66}],173:[function(require,module,exports){
+},{"./$":73,"./$.an-object":36,"./$.def":48,"./$.has":59,"./$.is-object":66}],172:[function(require,module,exports){
 // 26.1.9 Reflect.has(target, propertyKey)
 var $def = require('./$.def');
 
@@ -66988,7 +66974,7 @@ $def($def.S, 'Reflect', {
     return propertyKey in target;
   }
 });
-},{"./$.def":48}],174:[function(require,module,exports){
+},{"./$.def":48}],173:[function(require,module,exports){
 // 26.1.10 Reflect.isExtensible(target)
 var $def          = require('./$.def')
   , anObject      = require('./$.an-object')
@@ -67000,12 +66986,12 @@ $def($def.S, 'Reflect', {
     return $isExtensible ? $isExtensible(target) : true;
   }
 });
-},{"./$.an-object":36,"./$.def":48}],175:[function(require,module,exports){
+},{"./$.an-object":36,"./$.def":48}],174:[function(require,module,exports){
 // 26.1.11 Reflect.ownKeys(target)
 var $def = require('./$.def');
 
 $def($def.S, 'Reflect', {ownKeys: require('./$.own-keys')});
-},{"./$.def":48,"./$.own-keys":82}],176:[function(require,module,exports){
+},{"./$.def":48,"./$.own-keys":81}],175:[function(require,module,exports){
 // 26.1.12 Reflect.preventExtensions(target)
 var $def               = require('./$.def')
   , anObject           = require('./$.an-object')
@@ -67022,7 +67008,7 @@ $def($def.S, 'Reflect', {
     }
   }
 });
-},{"./$.an-object":36,"./$.def":48}],177:[function(require,module,exports){
+},{"./$.an-object":36,"./$.def":48}],176:[function(require,module,exports){
 // 26.1.14 Reflect.setPrototypeOf(target, proto)
 var $def     = require('./$.def')
   , setProto = require('./$.set-proto');
@@ -67038,7 +67024,7 @@ if(setProto)$def($def.S, 'Reflect', {
     }
   }
 });
-},{"./$.def":48,"./$.set-proto":89}],178:[function(require,module,exports){
+},{"./$.def":48,"./$.set-proto":88}],177:[function(require,module,exports){
 // 26.1.13 Reflect.set(target, propertyKey, V [, receiver])
 var $          = require('./$')
   , has        = require('./$.has')
@@ -67068,7 +67054,7 @@ function set(target, propertyKey, V/*, receiver*/){
 }
 
 $def($def.S, 'Reflect', {set: set});
-},{"./$":74,"./$.an-object":36,"./$.def":48,"./$.has":59,"./$.is-object":66,"./$.property-desc":85}],179:[function(require,module,exports){
+},{"./$":73,"./$.an-object":36,"./$.def":48,"./$.has":59,"./$.is-object":66,"./$.property-desc":84}],178:[function(require,module,exports){
 var $       = require('./$')
   , global  = require('./$.global')
   , cof     = require('./$.cof')
@@ -67111,14 +67097,14 @@ if(require('./$.support-desc')){
 }
 
 require('./$.species')($RegExp);
-},{"./$":74,"./$.cof":41,"./$.flags":55,"./$.global":58,"./$.redef":86,"./$.species":92,"./$.support-desc":99}],180:[function(require,module,exports){
+},{"./$":73,"./$.cof":41,"./$.flags":55,"./$.global":58,"./$.redef":85,"./$.species":91,"./$.support-desc":98}],179:[function(require,module,exports){
 // 21.2.5.3 get RegExp.prototype.flags()
 var $ = require('./$');
 if(require('./$.support-desc') && /./g.flags != 'g')$.setDesc(RegExp.prototype, 'flags', {
   configurable: true,
   get: require('./$.flags')
 });
-},{"./$":74,"./$.flags":55,"./$.support-desc":99}],181:[function(require,module,exports){
+},{"./$":73,"./$.flags":55,"./$.support-desc":98}],180:[function(require,module,exports){
 // @@match logic
 require('./$.fix-re-wks')('match', 1, function(defined, MATCH){
   // 21.1.3.11 String.prototype.match(regexp)
@@ -67129,7 +67115,7 @@ require('./$.fix-re-wks')('match', 1, function(defined, MATCH){
     return fn !== undefined ? fn.call(regexp, O) : new RegExp(regexp)[MATCH](String(O));
   };
 });
-},{"./$.fix-re-wks":54}],182:[function(require,module,exports){
+},{"./$.fix-re-wks":54}],181:[function(require,module,exports){
 // @@replace logic
 require('./$.fix-re-wks')('replace', 2, function(defined, REPLACE, $replace){
   // 21.1.3.14 String.prototype.replace(searchValue, replaceValue)
@@ -67142,7 +67128,7 @@ require('./$.fix-re-wks')('replace', 2, function(defined, REPLACE, $replace){
       : $replace.call(String(O), searchValue, replaceValue);
   };
 });
-},{"./$.fix-re-wks":54}],183:[function(require,module,exports){
+},{"./$.fix-re-wks":54}],182:[function(require,module,exports){
 // @@search logic
 require('./$.fix-re-wks')('search', 1, function(defined, SEARCH){
   // 21.1.3.15 String.prototype.search(regexp)
@@ -67153,7 +67139,7 @@ require('./$.fix-re-wks')('search', 1, function(defined, SEARCH){
     return fn !== undefined ? fn.call(regexp, O) : new RegExp(regexp)[SEARCH](String(O));
   };
 });
-},{"./$.fix-re-wks":54}],184:[function(require,module,exports){
+},{"./$.fix-re-wks":54}],183:[function(require,module,exports){
 // @@split logic
 require('./$.fix-re-wks')('split', 2, function(defined, SPLIT, $split){
   // 21.1.3.17 String.prototype.split(separator, limit)
@@ -67166,7 +67152,7 @@ require('./$.fix-re-wks')('split', 2, function(defined, SPLIT, $split){
       : $split.call(String(O), separator, limit);
   };
 });
-},{"./$.fix-re-wks":54}],185:[function(require,module,exports){
+},{"./$.fix-re-wks":54}],184:[function(require,module,exports){
 'use strict';
 var strong = require('./$.collection-strong');
 
@@ -67179,7 +67165,7 @@ require('./$.collection')('Set', function(get){
     return strong.def(this, value = value === 0 ? 0 : value, value);
   }
 }, strong);
-},{"./$.collection":45,"./$.collection-strong":42}],186:[function(require,module,exports){
+},{"./$.collection":45,"./$.collection-strong":42}],185:[function(require,module,exports){
 'use strict';
 var $def = require('./$.def')
   , $at  = require('./$.string-at')(false);
@@ -67189,7 +67175,7 @@ $def($def.P, 'String', {
     return $at(this, pos);
   }
 });
-},{"./$.def":48,"./$.string-at":94}],187:[function(require,module,exports){
+},{"./$.def":48,"./$.string-at":93}],186:[function(require,module,exports){
 'use strict';
 var $def     = require('./$.def')
   , toLength = require('./$.to-length')
@@ -67207,7 +67193,7 @@ $def($def.P + $def.F * !require('./$.fails')(function(){ 'q'.endsWith(/./); }), 
     return that.slice(end - search.length, end) === search;
   }
 });
-},{"./$.def":48,"./$.fails":53,"./$.string-context":95,"./$.to-length":105}],188:[function(require,module,exports){
+},{"./$.def":48,"./$.fails":53,"./$.string-context":94,"./$.to-length":104}],187:[function(require,module,exports){
 var $def    = require('./$.def')
   , toIndex = require('./$.to-index')
   , fromCharCode = String.fromCharCode
@@ -67231,7 +67217,7 @@ $def($def.S + $def.F * (!!$fromCodePoint && $fromCodePoint.length != 1), 'String
     } return res.join('');
   }
 });
-},{"./$.def":48,"./$.to-index":102}],189:[function(require,module,exports){
+},{"./$.def":48,"./$.to-index":101}],188:[function(require,module,exports){
 'use strict';
 var $def    = require('./$.def')
   , context = require('./$.string-context');
@@ -67242,7 +67228,7 @@ $def($def.P, 'String', {
     return !!~context(this, searchString, 'includes').indexOf(searchString, arguments[1]);
   }
 });
-},{"./$.def":48,"./$.string-context":95}],190:[function(require,module,exports){
+},{"./$.def":48,"./$.string-context":94}],189:[function(require,module,exports){
 'use strict';
 var $at  = require('./$.string-at')(true);
 
@@ -67260,7 +67246,7 @@ require('./$.iter-define')(String, 'String', function(iterated){
   this._i += point.length;
   return {value: point, done: false};
 });
-},{"./$.iter-define":70,"./$.string-at":94}],191:[function(require,module,exports){
+},{"./$.iter-define":69,"./$.string-at":93}],190:[function(require,module,exports){
 var $def      = require('./$.def')
   , toIObject = require('./$.to-iobject')
   , toLength  = require('./$.to-length');
@@ -67279,14 +67265,14 @@ $def($def.S, 'String', {
     } return res.join('');
   }
 });
-},{"./$.def":48,"./$.to-iobject":104,"./$.to-length":105}],192:[function(require,module,exports){
+},{"./$.def":48,"./$.to-iobject":103,"./$.to-length":104}],191:[function(require,module,exports){
 var $def = require('./$.def');
 
 $def($def.P, 'String', {
   // 21.1.3.13 String.prototype.repeat(count)
   repeat: require('./$.string-repeat')
 });
-},{"./$.def":48,"./$.string-repeat":97}],193:[function(require,module,exports){
+},{"./$.def":48,"./$.string-repeat":96}],192:[function(require,module,exports){
 'use strict';
 var $def     = require('./$.def')
   , toLength = require('./$.to-length')
@@ -67302,7 +67288,7 @@ $def($def.P + $def.F * !require('./$.fails')(function(){ 'q'.startsWith(/./); })
     return that.slice(index, index + search.length) === search;
   }
 });
-},{"./$.def":48,"./$.fails":53,"./$.string-context":95,"./$.to-length":105}],194:[function(require,module,exports){
+},{"./$.def":48,"./$.fails":53,"./$.string-context":94,"./$.to-length":104}],193:[function(require,module,exports){
 'use strict';
 // 21.1.3.25 String.prototype.trim()
 require('./$.string-trim')('trim', function($trim){
@@ -67310,7 +67296,7 @@ require('./$.string-trim')('trim', function($trim){
     return $trim(this, 3);
   };
 });
-},{"./$.string-trim":98}],195:[function(require,module,exports){
+},{"./$.string-trim":97}],194:[function(require,module,exports){
 'use strict';
 // ECMAScript 6 symbols shim
 var $              = require('./$')
@@ -67326,6 +67312,7 @@ var $              = require('./$')
   , keyOf          = require('./$.keyof')
   , $names         = require('./$.get-names')
   , enumKeys       = require('./$.enum-keys')
+  , isObject       = require('./$.is-object')
   , anObject       = require('./$.an-object')
   , toIObject      = require('./$.to-iobject')
   , createDesc     = require('./$.property-desc')
@@ -67445,10 +67432,13 @@ if(!useNative){
   }
 }
 
-// MS Edge converts symbols to JSON as '{}'
+// MS Edge converts symbol values to JSON as {}
+// WebKit converts symbol values in objects to JSON as null
 if(!useNative || require('./$.fails')(function(){
-  return JSON.stringify([$Symbol()]) != '[null]';
-}))$redef($Symbol.prototype, 'toJSON', function toJSON(){ /* return undefined */ });
+  return JSON.stringify([{a: $Symbol()}, [$Symbol()]]) != '[{},[null]]';
+}))$redef($Symbol.prototype, 'toJSON', function toJSON(){
+  if(useNative && isObject(this))return this;
+});
 
 var symbolStatics = {
   // 19.4.2.1 Symbol.for(key)
@@ -67511,7 +67501,7 @@ setTag($Symbol, 'Symbol');
 setTag(Math, 'Math', true);
 // 24.3.3 JSON[@@toStringTag]
 setTag(global.JSON, 'JSON', true);
-},{"./$":74,"./$.an-object":36,"./$.def":48,"./$.enum-keys":51,"./$.fails":53,"./$.get-names":57,"./$.global":58,"./$.has":59,"./$.keyof":75,"./$.library":76,"./$.property-desc":85,"./$.redef":86,"./$.shared":90,"./$.support-desc":99,"./$.tag":100,"./$.to-iobject":104,"./$.uid":107,"./$.wks":109}],196:[function(require,module,exports){
+},{"./$":73,"./$.an-object":36,"./$.def":48,"./$.enum-keys":51,"./$.fails":53,"./$.get-names":57,"./$.global":58,"./$.has":59,"./$.is-object":66,"./$.keyof":74,"./$.library":75,"./$.property-desc":84,"./$.redef":85,"./$.shared":89,"./$.support-desc":98,"./$.tag":99,"./$.to-iobject":103,"./$.uid":106,"./$.wks":108}],195:[function(require,module,exports){
 'use strict';
 var $            = require('./$')
   , weak         = require('./$.collection-weak')
@@ -67554,7 +67544,7 @@ if(new $WeakMap().set((Object.freeze || Object)(tmp), 7).get(tmp) != 7){
     });
   });
 }
-},{"./$":74,"./$.collection":45,"./$.collection-weak":44,"./$.has":59,"./$.is-object":66,"./$.redef":86}],197:[function(require,module,exports){
+},{"./$":73,"./$.collection":45,"./$.collection-weak":44,"./$.has":59,"./$.is-object":66,"./$.redef":85}],196:[function(require,module,exports){
 'use strict';
 var weak = require('./$.collection-weak');
 
@@ -67567,7 +67557,7 @@ require('./$.collection')('WeakSet', function(get){
     return weak.def(this, value, true);
   }
 }, weak, false, true);
-},{"./$.collection":45,"./$.collection-weak":44}],198:[function(require,module,exports){
+},{"./$.collection":45,"./$.collection-weak":44}],197:[function(require,module,exports){
 'use strict';
 var $def      = require('./$.def')
   , $includes = require('./$.array-includes')(true);
@@ -67578,12 +67568,12 @@ $def($def.P, 'Array', {
   }
 });
 require('./$.unscope')('includes');
-},{"./$.array-includes":37,"./$.def":48,"./$.unscope":108}],199:[function(require,module,exports){
+},{"./$.array-includes":37,"./$.def":48,"./$.unscope":107}],198:[function(require,module,exports){
 // https://github.com/DavidBruant/Map-Set.prototype.toJSON
 var $def  = require('./$.def');
 
 $def($def.P, 'Map', {toJSON: require('./$.collection-to-json')('Map')});
-},{"./$.collection-to-json":43,"./$.def":48}],200:[function(require,module,exports){
+},{"./$.collection-to-json":43,"./$.def":48}],199:[function(require,module,exports){
 // http://goo.gl/XkBrjD
 var $def     = require('./$.def')
   , $entries = require('./$.object-to-array')(true);
@@ -67593,7 +67583,7 @@ $def($def.S, 'Object', {
     return $entries(it);
   }
 });
-},{"./$.def":48,"./$.object-to-array":81}],201:[function(require,module,exports){
+},{"./$.def":48,"./$.object-to-array":80}],200:[function(require,module,exports){
 // https://gist.github.com/WebReflection/9353781
 var $          = require('./$')
   , $def       = require('./$.def')
@@ -67617,7 +67607,7 @@ $def($def.S, 'Object', {
     } return result;
   }
 });
-},{"./$":74,"./$.def":48,"./$.own-keys":82,"./$.property-desc":85,"./$.to-iobject":104}],202:[function(require,module,exports){
+},{"./$":73,"./$.def":48,"./$.own-keys":81,"./$.property-desc":84,"./$.to-iobject":103}],201:[function(require,module,exports){
 // http://goo.gl/XkBrjD
 var $def    = require('./$.def')
   , $values = require('./$.object-to-array')(false);
@@ -67627,18 +67617,18 @@ $def($def.S, 'Object', {
     return $values(it);
   }
 });
-},{"./$.def":48,"./$.object-to-array":81}],203:[function(require,module,exports){
+},{"./$.def":48,"./$.object-to-array":80}],202:[function(require,module,exports){
 // https://github.com/benjamingr/RexExp.escape
 var $def = require('./$.def')
   , $re  = require('./$.replacer')(/[\\^$*+?.()|[\]{}]/g, '\\$&');
 $def($def.S, 'RegExp', {escape: function escape(it){ return $re(it); }});
 
-},{"./$.def":48,"./$.replacer":87}],204:[function(require,module,exports){
+},{"./$.def":48,"./$.replacer":86}],203:[function(require,module,exports){
 // https://github.com/DavidBruant/Map-Set.prototype.toJSON
 var $def  = require('./$.def');
 
 $def($def.P, 'Set', {toJSON: require('./$.collection-to-json')('Set')});
-},{"./$.collection-to-json":43,"./$.def":48}],205:[function(require,module,exports){
+},{"./$.collection-to-json":43,"./$.def":48}],204:[function(require,module,exports){
 // https://github.com/mathiasbynens/String.prototype.at
 'use strict';
 var $def = require('./$.def')
@@ -67648,7 +67638,7 @@ $def($def.P, 'String', {
     return $at(this, pos);
   }
 });
-},{"./$.def":48,"./$.string-at":94}],206:[function(require,module,exports){
+},{"./$.def":48,"./$.string-at":93}],205:[function(require,module,exports){
 'use strict';
 var $def = require('./$.def')
   , $pad = require('./$.string-pad');
@@ -67657,7 +67647,7 @@ $def($def.P, 'String', {
     return $pad(this, maxLength, arguments[1], true);
   }
 });
-},{"./$.def":48,"./$.string-pad":96}],207:[function(require,module,exports){
+},{"./$.def":48,"./$.string-pad":95}],206:[function(require,module,exports){
 'use strict';
 var $def = require('./$.def')
   , $pad = require('./$.string-pad');
@@ -67666,7 +67656,7 @@ $def($def.P, 'String', {
     return $pad(this, maxLength, arguments[1], false);
   }
 });
-},{"./$.def":48,"./$.string-pad":96}],208:[function(require,module,exports){
+},{"./$.def":48,"./$.string-pad":95}],207:[function(require,module,exports){
 'use strict';
 // https://github.com/sebmarkbage/ecmascript-string-left-right-trim
 require('./$.string-trim')('trimLeft', function($trim){
@@ -67674,7 +67664,7 @@ require('./$.string-trim')('trimLeft', function($trim){
     return $trim(this, 1);
   };
 });
-},{"./$.string-trim":98}],209:[function(require,module,exports){
+},{"./$.string-trim":97}],208:[function(require,module,exports){
 'use strict';
 // https://github.com/sebmarkbage/ecmascript-string-left-right-trim
 require('./$.string-trim')('trimRight', function($trim){
@@ -67682,7 +67672,7 @@ require('./$.string-trim')('trimRight', function($trim){
     return $trim(this, 2);
   };
 });
-},{"./$.string-trim":98}],210:[function(require,module,exports){
+},{"./$.string-trim":97}],209:[function(require,module,exports){
 // JavaScript 1.6 / Strawman array statics shim
 var $       = require('./$')
   , $def    = require('./$.def')
@@ -67699,7 +67689,7 @@ setStatics('indexOf,every,some,forEach,map,filter,find,findIndex,includes', 3);
 setStatics('join,slice,concat,push,splice,unshift,sort,lastIndexOf,' +
            'reduce,reduceRight,copyWithin,fill');
 $def($def.S, 'Array', statics);
-},{"./$":74,"./$.core":46,"./$.ctx":47,"./$.def":48}],211:[function(require,module,exports){
+},{"./$":73,"./$.core":46,"./$.ctx":47,"./$.def":48}],210:[function(require,module,exports){
 require('./es6.array.iterator');
 var global      = require('./$.global')
   , hide        = require('./$.hide')
@@ -67712,14 +67702,14 @@ var global      = require('./$.global')
   , ArrayValues = Iterators.NodeList = Iterators.HTMLCollection = Iterators.Array;
 if(NL && !(ITERATOR in NLProto))hide(NLProto, ITERATOR, ArrayValues);
 if(HTC && !(ITERATOR in HTCProto))hide(HTCProto, ITERATOR, ArrayValues);
-},{"./$.global":58,"./$.hide":60,"./$.iterators":73,"./$.wks":109,"./es6.array.iterator":117}],212:[function(require,module,exports){
+},{"./$.global":58,"./$.hide":60,"./$.iterators":72,"./$.wks":108,"./es6.array.iterator":116}],211:[function(require,module,exports){
 var $def  = require('./$.def')
   , $task = require('./$.task');
 $def($def.G + $def.B, {
   setImmediate:   $task.set,
   clearImmediate: $task.clear
 });
-},{"./$.def":48,"./$.task":101}],213:[function(require,module,exports){
+},{"./$.def":48,"./$.task":100}],212:[function(require,module,exports){
 // ie9- setTimeout & setInterval additional parameters fix
 var global     = require('./$.global')
   , $def       = require('./$.def')
@@ -67740,7 +67730,7 @@ $def($def.G + $def.B + $def.F * MSIE, {
   setTimeout:  wrap(global.setTimeout),
   setInterval: wrap(global.setInterval)
 });
-},{"./$.def":48,"./$.global":58,"./$.invoke":62,"./$.partial":83}],214:[function(require,module,exports){
+},{"./$.def":48,"./$.global":58,"./$.invoke":62,"./$.partial":82}],213:[function(require,module,exports){
 require('./modules/es5');
 require('./modules/es6.symbol');
 require('./modules/es6.object.assign');
@@ -67845,7 +67835,7 @@ require('./modules/web.timers');
 require('./modules/web.immediate');
 require('./modules/web.dom.iterable');
 module.exports = require('./modules/$.core');
-},{"./modules/$.core":46,"./modules/es5":111,"./modules/es6.array.copy-within":112,"./modules/es6.array.fill":113,"./modules/es6.array.find":115,"./modules/es6.array.find-index":114,"./modules/es6.array.from":116,"./modules/es6.array.iterator":117,"./modules/es6.array.of":118,"./modules/es6.array.species":119,"./modules/es6.function.has-instance":120,"./modules/es6.function.name":121,"./modules/es6.map":122,"./modules/es6.math.acosh":123,"./modules/es6.math.asinh":124,"./modules/es6.math.atanh":125,"./modules/es6.math.cbrt":126,"./modules/es6.math.clz32":127,"./modules/es6.math.cosh":128,"./modules/es6.math.expm1":129,"./modules/es6.math.fround":130,"./modules/es6.math.hypot":131,"./modules/es6.math.imul":132,"./modules/es6.math.log10":133,"./modules/es6.math.log1p":134,"./modules/es6.math.log2":135,"./modules/es6.math.sign":136,"./modules/es6.math.sinh":137,"./modules/es6.math.tanh":138,"./modules/es6.math.trunc":139,"./modules/es6.number.constructor":140,"./modules/es6.number.epsilon":141,"./modules/es6.number.is-finite":142,"./modules/es6.number.is-integer":143,"./modules/es6.number.is-nan":144,"./modules/es6.number.is-safe-integer":145,"./modules/es6.number.max-safe-integer":146,"./modules/es6.number.min-safe-integer":147,"./modules/es6.number.parse-float":148,"./modules/es6.number.parse-int":149,"./modules/es6.object.assign":150,"./modules/es6.object.freeze":151,"./modules/es6.object.get-own-property-descriptor":152,"./modules/es6.object.get-own-property-names":153,"./modules/es6.object.get-prototype-of":154,"./modules/es6.object.is":158,"./modules/es6.object.is-extensible":155,"./modules/es6.object.is-frozen":156,"./modules/es6.object.is-sealed":157,"./modules/es6.object.keys":159,"./modules/es6.object.prevent-extensions":160,"./modules/es6.object.seal":161,"./modules/es6.object.set-prototype-of":162,"./modules/es6.object.to-string":163,"./modules/es6.promise":164,"./modules/es6.reflect.apply":165,"./modules/es6.reflect.construct":166,"./modules/es6.reflect.define-property":167,"./modules/es6.reflect.delete-property":168,"./modules/es6.reflect.enumerate":169,"./modules/es6.reflect.get":172,"./modules/es6.reflect.get-own-property-descriptor":170,"./modules/es6.reflect.get-prototype-of":171,"./modules/es6.reflect.has":173,"./modules/es6.reflect.is-extensible":174,"./modules/es6.reflect.own-keys":175,"./modules/es6.reflect.prevent-extensions":176,"./modules/es6.reflect.set":178,"./modules/es6.reflect.set-prototype-of":177,"./modules/es6.regexp.constructor":179,"./modules/es6.regexp.flags":180,"./modules/es6.regexp.match":181,"./modules/es6.regexp.replace":182,"./modules/es6.regexp.search":183,"./modules/es6.regexp.split":184,"./modules/es6.set":185,"./modules/es6.string.code-point-at":186,"./modules/es6.string.ends-with":187,"./modules/es6.string.from-code-point":188,"./modules/es6.string.includes":189,"./modules/es6.string.iterator":190,"./modules/es6.string.raw":191,"./modules/es6.string.repeat":192,"./modules/es6.string.starts-with":193,"./modules/es6.string.trim":194,"./modules/es6.symbol":195,"./modules/es6.weak-map":196,"./modules/es6.weak-set":197,"./modules/es7.array.includes":198,"./modules/es7.map.to-json":199,"./modules/es7.object.entries":200,"./modules/es7.object.get-own-property-descriptors":201,"./modules/es7.object.values":202,"./modules/es7.regexp.escape":203,"./modules/es7.set.to-json":204,"./modules/es7.string.at":205,"./modules/es7.string.pad-left":206,"./modules/es7.string.pad-right":207,"./modules/es7.string.trim-left":208,"./modules/es7.string.trim-right":209,"./modules/js.array.statics":210,"./modules/web.dom.iterable":211,"./modules/web.immediate":212,"./modules/web.timers":213}],215:[function(require,module,exports){
+},{"./modules/$.core":46,"./modules/es5":110,"./modules/es6.array.copy-within":111,"./modules/es6.array.fill":112,"./modules/es6.array.find":114,"./modules/es6.array.find-index":113,"./modules/es6.array.from":115,"./modules/es6.array.iterator":116,"./modules/es6.array.of":117,"./modules/es6.array.species":118,"./modules/es6.function.has-instance":119,"./modules/es6.function.name":120,"./modules/es6.map":121,"./modules/es6.math.acosh":122,"./modules/es6.math.asinh":123,"./modules/es6.math.atanh":124,"./modules/es6.math.cbrt":125,"./modules/es6.math.clz32":126,"./modules/es6.math.cosh":127,"./modules/es6.math.expm1":128,"./modules/es6.math.fround":129,"./modules/es6.math.hypot":130,"./modules/es6.math.imul":131,"./modules/es6.math.log10":132,"./modules/es6.math.log1p":133,"./modules/es6.math.log2":134,"./modules/es6.math.sign":135,"./modules/es6.math.sinh":136,"./modules/es6.math.tanh":137,"./modules/es6.math.trunc":138,"./modules/es6.number.constructor":139,"./modules/es6.number.epsilon":140,"./modules/es6.number.is-finite":141,"./modules/es6.number.is-integer":142,"./modules/es6.number.is-nan":143,"./modules/es6.number.is-safe-integer":144,"./modules/es6.number.max-safe-integer":145,"./modules/es6.number.min-safe-integer":146,"./modules/es6.number.parse-float":147,"./modules/es6.number.parse-int":148,"./modules/es6.object.assign":149,"./modules/es6.object.freeze":150,"./modules/es6.object.get-own-property-descriptor":151,"./modules/es6.object.get-own-property-names":152,"./modules/es6.object.get-prototype-of":153,"./modules/es6.object.is":157,"./modules/es6.object.is-extensible":154,"./modules/es6.object.is-frozen":155,"./modules/es6.object.is-sealed":156,"./modules/es6.object.keys":158,"./modules/es6.object.prevent-extensions":159,"./modules/es6.object.seal":160,"./modules/es6.object.set-prototype-of":161,"./modules/es6.object.to-string":162,"./modules/es6.promise":163,"./modules/es6.reflect.apply":164,"./modules/es6.reflect.construct":165,"./modules/es6.reflect.define-property":166,"./modules/es6.reflect.delete-property":167,"./modules/es6.reflect.enumerate":168,"./modules/es6.reflect.get":171,"./modules/es6.reflect.get-own-property-descriptor":169,"./modules/es6.reflect.get-prototype-of":170,"./modules/es6.reflect.has":172,"./modules/es6.reflect.is-extensible":173,"./modules/es6.reflect.own-keys":174,"./modules/es6.reflect.prevent-extensions":175,"./modules/es6.reflect.set":177,"./modules/es6.reflect.set-prototype-of":176,"./modules/es6.regexp.constructor":178,"./modules/es6.regexp.flags":179,"./modules/es6.regexp.match":180,"./modules/es6.regexp.replace":181,"./modules/es6.regexp.search":182,"./modules/es6.regexp.split":183,"./modules/es6.set":184,"./modules/es6.string.code-point-at":185,"./modules/es6.string.ends-with":186,"./modules/es6.string.from-code-point":187,"./modules/es6.string.includes":188,"./modules/es6.string.iterator":189,"./modules/es6.string.raw":190,"./modules/es6.string.repeat":191,"./modules/es6.string.starts-with":192,"./modules/es6.string.trim":193,"./modules/es6.symbol":194,"./modules/es6.weak-map":195,"./modules/es6.weak-set":196,"./modules/es7.array.includes":197,"./modules/es7.map.to-json":198,"./modules/es7.object.entries":199,"./modules/es7.object.get-own-property-descriptors":200,"./modules/es7.object.values":201,"./modules/es7.regexp.escape":202,"./modules/es7.set.to-json":203,"./modules/es7.string.at":204,"./modules/es7.string.pad-left":205,"./modules/es7.string.pad-right":206,"./modules/es7.string.trim-left":207,"./modules/es7.string.trim-right":208,"./modules/js.array.statics":209,"./modules/web.dom.iterable":210,"./modules/web.immediate":211,"./modules/web.timers":212}],214:[function(require,module,exports){
 (function (process,global){
 /**
  * Copyright (c) 2014, Facebook, Inc.
@@ -68501,13 +68491,13 @@ module.exports = require('./modules/$.core');
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"_process":219}],216:[function(require,module,exports){
+},{"_process":218}],215:[function(require,module,exports){
 module.exports = require("./lib/polyfill");
 
-},{"./lib/polyfill":34}],217:[function(require,module,exports){
+},{"./lib/polyfill":34}],216:[function(require,module,exports){
 module.exports = require("babel-core/polyfill");
 
-},{"babel-core/polyfill":216}],218:[function(require,module,exports){
+},{"babel-core/polyfill":215}],217:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -68810,7 +68800,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],219:[function(require,module,exports){
+},{}],218:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -68903,7 +68893,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],220:[function(require,module,exports){
+},{}],219:[function(require,module,exports){
 var angular = require("angular");var tv4 = require("tv4");module.exports = /**
  * formula.js
  * Generic JSON Schema form builder
@@ -71038,9 +71028,9 @@ angular.module('formula')
 		};
 	});
 
-angular.module("formula").run(["$templateCache", function($templateCache) {$templateCache.put("formula/bootstrap3.html","<form class=\"form-horizontal\" ng-if=\"form.fieldsets\"><header ng-if=\"form.title\" class=\"page-header\" style=\"margin-top: -10px\"><h2>{{ form.title }}</h2></header><ul class=\"nav nav-tabs\"><li ng-repeat=\"fieldset in form.fieldsets\" ng-if=\"form.fieldsets.length > 1\" ng-class=\"{ active: fieldset.active }\"><a href=\"\" ng-click=\"form.activate(fieldset)\">{{ fieldset.title }}</a></li></ul><fieldset ng-repeat=\"fieldset in form.fieldsets\" ng-if=\"fieldset.active\" style=\"border: 1px solid #ddd; border-radius: 0 0 5px 5px; border-top: 0; padding: 15px; padding-bottom: 0;\"><div ng-repeat=\"field in fieldset.fields\" ng-show=\"field.visible\" formula:field-definition=\"\"><div ng-if=\"field.typeOf(\'input\')\" title=\"{{ field.description }}\" class=\"form-group has-feedback\"><label for=\"{{ field.uid }}\" class=\"col-sm-3 control-label\">{{ field.title }}</label><div class=\"col-sm-9\" ng-class=\"{ \'has-error\': field.error, \'has-success\': field.valid, \'has-warning\': (field.required && field.value === null) }\"><div ng-if=\"!field.typeOf(\'select\')\"><input class=\"form-control input-md\" formula:field=\"field\"><div ng-if=\"!field.typeOf(\'checkbox\') && (field.error || field.valid)\"><span ng-if=\"field.valid\" class=\"glyphicon glyphicon-ok form-control-feedback\"></span> <span ng-if=\"field.error\" class=\"glyphicon glyphicon-remove form-control-feedback\"></span></div></div><select ng-if=\"field.typeOf(\'select\')\" class=\"form-control input-md\" formula:field=\"field\"><option ng-repeat=\"value in field.values\" value=\"{{ value.id }}\">{{ value.label }}</option></select><span class=\"help-block\">{{ field.error || field.description }}</span></div></div><div ng-if=\"field.typeOf(\'object\')\"><div class=\"panel\" ng-class=\"{ \'panel-danger\': field.error, \'panel-success\': field.valid }\" formula:field=\"field\"><div class=\"panel-heading\">{{ field.title }}</div><div class=\"panel-body\"><div ng-repeat=\"field in field.fields\" ng-show=\"field.visible\"><formula:field-instance field=\"field\"></formula:field-instance></div></div></div></div><div ng-if=\"field.typeOf(\'array\')\"><div formula:field=\"field\"><div ng-if=\"field.typeOf(\'fieldset\')\" class=\"panel\" ng-class=\"{ \'panel-danger\': field.error, \'panel-success\': field.valid }\"><div class=\"panel-heading\">{{ field.title }} ({{ field.values.length || 0 }})</div><ul class=\"list-group\"><li class=\"list-group-item\" ng-repeat=\"value in field.values\"><fieldset><legend style=\"border: none; margin-bottom: 10px; text-align: right;\"><span ng-class=\"{ \'text-danger\': !value.valid, \'text-success\': value.valid }\" class=\"pull-left\" ng-if=\"!value.visible\">{{ value.fields | formulaInlineValues }}</span> <button style=\"font-family: monospace;\" class=\"btn btn-sm btn-info\" ng-click=\"field.itemToggle($index)\" type=\"button\" title=\"{{ value.visible ? form.i18n.minimize[1] : form.i18n.maximize[1] }}\">{{ value.visible ? \'_\' : \'‾\' }}</button> <button class=\"btn btn-sm btn-danger\" ng-click=\"field.itemRemove($index)\" type=\"button\" title=\"{{ form.i18n.remove[1] }}\">X</button></legend><div ng-repeat=\"subfield in field.fields\" ng-show=\"value.visible\"><formula:field-instance field=\"value.fields[$index]\" ng-show=\"subfield.visible\"></formula:field-instance></div></fieldset></li></ul><div class=\"panel-footer clearfix has-feedback\" ng-class=\"{ \'has-error\': field.error, \'has-success\': field.valid }\"><span class=\"help-block\"><span>{{ field.error || field.description }}</span> <button class=\"btn btn-sm btn-primary pull-right\" ng-click=\"field.itemAdd()\" type=\"button\" title=\"{{ form.i18n.add[1] }}\">{{ form.i18n.add[0] }}</button></span></div></div><div ng-if=\"field.typeOf(\'field\')\" class=\"panel\" ng-class=\"{ \'panel-danger\': field.error, \'panel-success\': field.valid }\"><div class=\"panel-heading\">{{ field.title }}</div><ul class=\"list-group\"><li class=\"list-group-item\" ng-repeat=\"value in field.values\"><div class=\"input-group\"><input formula:field=\"value\" class=\"form-control input-md\"> <span class=\"input-group-btn\"><button class=\"btn btn-danger\" ng-click=\"field.itemRemove($index)\" type=\"button\" title=\"{{ form.i18n.remove[1] }}\">X</button></span></div></li></ul><div class=\"panel-footer clearfix has-feedback\" ng-class=\"{ \'has-error\': field.error, \'has-success\': field.valid }\"><span class=\"help-block\"><span>{{ field.error || field.description }}</span> <button class=\"btn btn-sm btn-primary pull-right\" ng-click=\"field.itemAdd()\" type=\"button\" title=\"{{ form.i18n.add[1] }}\">{{ form.i18n.add[0] }}</button></span></div></div></div></div></div></fieldset><div class=\"has-feedback\" ng-class=\"{ \'has-error\': !form.valid, \'has-success\': form.valid }\" style=\"margin-top: 10px;\"><span class=\"help-block\"><span ng-if=\"form.errors\" title=\"{{ form.errors.join(\'\\n\') }}\">{{ form.i18n.invalid | formulaReplace : { count: form.errors.length } }}</span><div class=\"btn-group pull-right\"><button ng-if=\"!form.uiValidateHidden\" type=\"button\" class=\"btn btn-info\" ng-click=\"form.validate()\" title=\"{{ form.i18n.validate[1] }}\">{{ form.i18n.validate[0] }}</button> <button ng-if=\"!form.uiSaveHidden\" type=\"button\" class=\"btn btn-success\" ng-class=\"{ disabled: !form.valid }\" ng-click=\"form.save()\" title=\"{{ form.i18n.save[1] }}\">{{ form.i18n.save[0] }}</button></div></span></div></form><div ng-if=\"!form.fieldsets\" class=\"alert alert-info\" style=\"text-align: center; overflow: hidden;\"><span>Loading schema...</span></div>");
+angular.module("formula").run(["$templateCache", function($templateCache) {$templateCache.put("formula/bootstrap3.html","<form class=\"form-horizontal\" ng-if=\"form.fieldsets\"><header ng-if=\"form.title\" class=\"page-header\" style=\"margin-top: -10px\"><h2>{{ form.title }}</h2></header><ul class=\"nav nav-tabs\"><li ng-repeat=\"fieldset in form.fieldsets\" ng-if=\"form.fieldsets.length > 1\" ng-class=\"{ active: fieldset.active }\"><a href=\"\" ng-click=\"form.activate(fieldset)\">{{ fieldset.title }}</a></li></ul><fieldset ng-repeat=\"fieldset in form.fieldsets\" ng-if=\"fieldset.active\" style=\"border: 1px solid #ddd; border-radius: 0 0 5px 5px; border-top: 0; padding: 15px; padding-bottom: 0;\"><div ng-repeat=\"field in fieldset.fields\" ng-show=\"field.visible\" formula:field-definition=\"\"><div ng-if=\"field.typeOf(\'input\')\" title=\"{{ field.description }}\" class=\"form-group has-feedback\"><label for=\"{{ field.uid }}\" class=\"col-sm-3 control-label\">{{ field.title }}</label><div class=\"col-sm-9\" ng-class=\"{ \'has-error\': field.error, \'has-success\': field.valid, \'has-warning\': (field.required && field.value === null) }\"><div ng-if=\"!field.typeOf(\'select\')\"><input class=\"form-control input-md\" formula:field=\"field\"><div ng-if=\"!field.typeOf(\'checkbox\') && (field.error || field.valid)\"><span ng-if=\"field.valid\" class=\"glyphicon glyphicon-ok form-control-feedback\"></span> <span ng-if=\"field.error\" class=\"glyphicon glyphicon-remove form-control-feedback\"></span></div></div><select ng-if=\"field.typeOf(\'select\')\" class=\"form-control input-md\" formula:field=\"field\"><option ng-repeat=\"value in field.values\" value=\"{{ value.id }}\">{{ value.label }}</option></select><span class=\"help-block\">{{ field.error || field.description }}</span></div></div><div ng-if=\"field.typeOf(\'object\')\"><div class=\"panel\" ng-class=\"{ \'panel-danger\': field.error, \'panel-success\': field.valid }\" formula:field=\"field\"><div class=\"panel-heading\">{{ field.title }}</div><div class=\"panel-body\"><div ng-repeat=\"field in field.fields\" ng-show=\"field.visible\"><formula:field-instance field=\"field\"></formula:field-instance></div></div></div></div><div ng-if=\"field.typeOf(\'array\')\"><div formula:field=\"field\"><div ng-if=\"field.typeOf(\'fieldset\')\" class=\"panel\" ng-class=\"{ \'panel-danger\': field.error, \'panel-success\': field.valid }\"><div class=\"panel-heading\">{{ field.title }} ({{ field.values.length || 0 }})</div><ul class=\"list-group\"><li class=\"list-group-item\" ng-repeat=\"value in field.values\"><fieldset><legend style=\"border: none; margin-bottom: 10px; text-align: right;\"><span ng-class=\"{ \'text-danger\': !value.valid, \'text-success\': value.valid }\" class=\"pull-left\" ng-if=\"!value.visible\" style=\"white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 80%; text-align: left;\">{{ value.fields | formulaInlineValues }}</span> <button style=\"font-family: monospace;\" class=\"btn btn-sm btn-info\" ng-click=\"field.itemToggle($index)\" type=\"button\" title=\"{{ value.visible ? form.i18n.minimize[1] : form.i18n.maximize[1] }}\">{{ value.visible ? \'_\' : \'‾\' }}</button> <button class=\"btn btn-sm btn-danger\" ng-click=\"field.itemRemove($index)\" type=\"button\" title=\"{{ form.i18n.remove[1] }}\">X</button></legend><div ng-repeat=\"subfield in field.fields\" ng-show=\"value.visible\"><formula:field-instance field=\"value.fields[$index]\" ng-show=\"subfield.visible\"></formula:field-instance></div></fieldset></li></ul><div class=\"panel-footer clearfix has-feedback\" ng-class=\"{ \'has-error\': field.error, \'has-success\': field.valid }\"><span class=\"help-block\"><span>{{ field.error || field.description }}</span> <button class=\"btn btn-sm btn-primary pull-right\" ng-click=\"field.itemAdd()\" type=\"button\" title=\"{{ form.i18n.add[1] }}\">{{ form.i18n.add[0] }}</button></span></div></div><div ng-if=\"field.typeOf(\'field\')\" class=\"panel\" ng-class=\"{ \'panel-danger\': field.error, \'panel-success\': field.valid }\"><div class=\"panel-heading\">{{ field.title }}</div><ul class=\"list-group\"><li class=\"list-group-item\" ng-repeat=\"value in field.values\"><div class=\"input-group\"><input formula:field=\"value\" class=\"form-control input-md\"> <span class=\"input-group-btn\"><button class=\"btn btn-danger\" ng-click=\"field.itemRemove($index)\" type=\"button\" title=\"{{ form.i18n.remove[1] }}\">X</button></span></div></li></ul><div class=\"panel-footer clearfix has-feedback\" ng-class=\"{ \'has-error\': field.error, \'has-success\': field.valid }\"><span class=\"help-block\"><span>{{ field.error || field.description }}</span> <button class=\"btn btn-sm btn-primary pull-right\" ng-click=\"field.itemAdd()\" type=\"button\" title=\"{{ form.i18n.add[1] }}\">{{ form.i18n.add[0] }}</button></span></div></div></div></div></div></fieldset><div class=\"has-feedback\" ng-class=\"{ \'has-error\': !form.valid, \'has-success\': form.valid }\" style=\"margin-top: 10px;\"><span class=\"help-block\"><span ng-if=\"form.errors\" title=\"{{ form.errors.join(\'\\n\') }}\">{{ form.i18n.invalid | formulaReplace : { count: form.errors.length } }}</span><div class=\"btn-group pull-right\"><button ng-if=\"!form.uiValidateHidden\" type=\"button\" class=\"btn btn-info\" ng-click=\"form.validate()\" title=\"{{ form.i18n.validate[1] }}\">{{ form.i18n.validate[0] }}</button> <button ng-if=\"!form.uiSaveHidden\" type=\"button\" class=\"btn btn-success\" ng-class=\"{ disabled: !form.valid }\" ng-click=\"form.save()\" title=\"{{ form.i18n.save[1] }}\">{{ form.i18n.save[0] }}</button></div></span></div></form><div ng-if=\"!form.fieldsets\" class=\"alert alert-info\" style=\"text-align: center; overflow: hidden;\"><span>Loading schema...</span></div>");
 $templateCache.put("formula/default.html","<form class=\"formula\" ng-if=\"form.fieldsets\"><header ng-if=\"form.title\">{{ form.title }}</header><nav ng-if=\"form.fieldsets.length > 1\"><a ng-repeat=\"fieldset in form.fieldsets\" ng-class=\"{ active: fieldset.active }\" href=\"\" ng-click=\"form.activate(fieldset)\">{{ fieldset.title }}</a></nav><fieldset ng-repeat=\"fieldset in form.fieldsets\" ng-if=\"fieldset.active\"><legend ng-if=\"fieldset.title\">{{ fieldset.title }}</legend><div ng-repeat=\"field in fieldset.fields\" ng-show=\"field.visible\" formula:field-definition=\"\"><div ng-if=\"field.typeOf(\'input\')\" title=\"{{ field.description }}\" ng-class=\"{ valid: field.valid, error: field.error, required: (field.required && field.value === null) }\"><label for=\"{{ field.uid }}\">{{ field.title }}</label> <input formula:field=\"field\"> <span>{{ field.error || field.description }}</span></div><div ng-if=\"field.typeOf(\'object\')\"><fieldset formula:field=\"field\"><legend ng-if=\"field.title\">{{ field.title }}</legend><div ng-repeat=\"field in field.fields\" ng-show=\"field.visible\"><formula:field-instance field=\"field\"></formula:field-instance></div></fieldset></div><div ng-if=\"field.typeOf(\'array\')\"><div formula:field=\"field\"><fieldset ng-class=\"{ valid: field.valid, error: field.error }\"><legend>{{ field.title }} ({{ field.values.length || 0 }})</legend><ul ng-if=\"field.typeOf(\'fieldset\')\"><li ng-repeat=\"value in field.values\"><fieldset ng-class=\"{ valid: value.valid }\"><legend><span ng-if=\"!value.visible\">{{ value.fields | formulaInlineValues }}</span> <a href=\"\" class=\"toggle\" ng-click=\"field.itemToggle($index)\" title=\"{{ value.visible ? form.i18n.minimize[1] : form.i18n.maximize[1] }}\">{{ value.visible ? \'_\' : \'‾\' }}</a> <a href=\"\" class=\"remove\" ng-click=\"field.itemRemove($index)\" title=\"{{ form.i18n.remove[1] }}\">X</a></legend><div ng-repeat=\"subfield in field.fields\" ng-show=\"value.visible\"><formula:field-instance field=\"value.fields[$index]\" ng-show=\"subfield.visible\"></formula:field-instance></div></fieldset></li><li><span>{{ field.error || field.description }}</span> <button class=\"add\" ng-click=\"field.itemAdd()\" type=\"button\" title=\"{{ form.i18n.add[1] }}\"><strong>+</strong> {{ form.i18n.add[0] }}</button></li></ul><ul ng-if=\"field.typeOf(\'field\')\"><li ng-repeat=\"value in field.values\" ng-class=\"{ valid: value.valid, error: value.error }\"><input formula:field=\"value\"> <a href=\"\" class=\"remove\" ng-click=\"field.itemRemove($index)\" title=\"{{ form.i18n.remove[1] }}\">X</a> <span ng-if=\"value.error\">{{ value.error }}</span></li><li><span>{{ field.error || field.description }}</span> <button class=\"add\" ng-click=\"field.itemAdd()\" type=\"button\" title=\"{{ form.i18n.add[1] }}\"><strong>+</strong> {{ form.i18n.add[0] }}</button></li></ul></fieldset></div></div></div></fieldset><footer><span ng-if=\"form.errors\" title=\"{{ form.errors.join(\'\\n\') }}\">{{ form.i18n.invalid | formulaReplace : { count: form.errors.length } }}</span> <button ng-if=\"!form.uiValidateHidden\" ng-click=\"form.validate()\" title=\"{{ form.i18n.validate[1] }}\"><strong>&#10003;</strong> {{ form.i18n.validate[0] }}</button> <button ng-if=\"!form.uiSaveHidden\" ng-disabled=\"!form.valid\" ng-click=\"form.save()\" title=\"{{ form.i18n.save[1] }}\"><strong>&#9921;</strong> {{ form.i18n.save[0] }}</button></footer></form><div class=\"formula\" ng-if=\"!form.fieldsets\"><div class=\"loading\"><div class=\"spinner\"></div><span>Loading...</span></div></div>");}]);;
-},{"angular":33,"tv4":221}],221:[function(require,module,exports){
+},{"angular":33,"tv4":220}],220:[function(require,module,exports){
 /*
 Author: Geraint Luff and others
 Year: 2013
@@ -72718,7 +72708,7 @@ tv4.tv4 = tv4;
 return tv4; // used by _header.js to globalise.
 
 }));
-},{}],222:[function(require,module,exports){
+},{}],221:[function(require,module,exports){
 module.exports={
   "_id": "025b82e5-4a5a-558f-b021-17c1a60f0922",
   "_rev": "35-bb826db14d27ff5a3ac70b9b1c7e9210",
@@ -72946,9 +72936,9 @@ module.exports={
   "updated_by": "conrad@npolar.no"
 }
 
-},{}],223:[function(require,module,exports){
+},{}],222:[function(require,module,exports){
 module.exports = '<!DOCTYPE html>\n<script type="text/ng-template" id="any.html">\n  <div ng-if="isArray(value)" layout="row" class="np-document-array">\n    <div class="np-document-title md-title" flex>{{ key }}</div>\n    <ul flex="85">\n      <li ng-repeat="(key, value) in value">\n        <ng-include src="\'any.html\'"></ng-include>\n      </li>\n    </ul>\n  </div>\n  <div ng-if="isObject(value)" layout="row" class="np-document-object">\n    <div class="np-document-title md-title" flex>{{ key }}</div>\n    <ul flex="85">\n      <li ng-repeat="(key, value) in value">\n        <ng-include src="\'any.html\'"></ng-include>\n      </li>\n    </ul>\n  </div>\n  <div ng-if="isItem(value)" layout="row" class="np-document-item">\n    <div class="np-document-title md-title" flex>{{ key }}</div>\n    <div class="np-document-value" flex="85">{{ value }}</div>\n  </div>\n</script>\n\n<div class="np-document">\n  <div class="np-document-ctrls" layout="row">\n    <div class="np-document-ctrls-title" flex>Fancy: </div><md-switch flex ng-model="fancy" aria-label="Render mode"></md-switch>\n  </div>\n  <ul ng-if="fancy">\n    <li ng-repeat="(key, value) in value">\n      <ng-include src="\'any.html\'"></ng-include>\n    </li>\n  </ul>\n  <pre ng-if="!fancy">\n    {{ value | json }}\n  </pre>\n</div>\n';
-},{}],224:[function(require,module,exports){
+},{}],223:[function(require,module,exports){
 "use strict";
 
 var angular = require('angular');
@@ -72979,7 +72969,7 @@ var npdcDocument = function npdcDocument() {
 
 module.exports = npdcDocument;
 
-},{"./document.html":223,"angular":33}],225:[function(require,module,exports){
+},{"./document.html":222,"angular":33}],224:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -72989,9 +72979,9 @@ angular.module('document', ['npdcMaterial']).controller('DocumentCtrl', ["$scope
   $scope.document = require('./demo/doc.json');
 }]);
 
-},{"../../":241,"./demo/doc.json":222,"angular":33}],226:[function(require,module,exports){
+},{"../../":240,"./demo/doc.json":221,"angular":33}],225:[function(require,module,exports){
 module.exports = '<!DOCTYPE html>\n<form class="np-expand-search" action="." method="get" ng-submit="this.form.submit()">\n  <input type="search" incremental="" results="10" name="q" value="{{q}}" >\n</form>\n';
-},{}],227:[function(require,module,exports){
+},{}],226:[function(require,module,exports){
 "use strict";
 
 // @ngInject
@@ -73004,7 +72994,7 @@ var expandSearch = function expandSearch() {
 
 module.exports = expandSearch;
 
-},{"./expandSearch.html":226}],228:[function(require,module,exports){
+},{"./expandSearch.html":225}],227:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73012,7 +73002,7 @@ var angular = require('angular');
 
 angular.module('expandSearch', ['npdcMaterial']);
 
-},{"../../":241,"angular":33}],229:[function(require,module,exports){
+},{"../../":240,"angular":33}],228:[function(require,module,exports){
 "use strict";
 
 var angular = require('angular');
@@ -73027,7 +73017,7 @@ npdcMaterial.directive('npdcMdSidenav', require('./sidenav/sidenav'));
 npdcMaterial.directive('npdcMdUserMenu', require('./user-menu/userMenu'));
 npdcMaterial.directive('npdcMdExpandSearch', require('./expandable-search/expandSearch'));
 
-},{"./document/document":224,"./expandable-search/expandSearch":227,"./sidenav/SidenavCtrl":230,"./sidenav/sidenav":232,"./toolbar/ToolbarCtrl":234,"./toolbar/toolbar":236,"./user-menu/userMenu":239,"angular":33}],230:[function(require,module,exports){
+},{"./document/document":223,"./expandable-search/expandSearch":226,"./sidenav/SidenavCtrl":229,"./sidenav/sidenav":231,"./toolbar/ToolbarCtrl":233,"./toolbar/toolbar":235,"./user-menu/userMenu":238,"angular":33}],229:[function(require,module,exports){
 "use strict";
 
 // @ngInject
@@ -73040,9 +73030,9 @@ SidenavCtrl.$inject = ["$scope", "$mdSidenav"];
 
 module.exports = SidenavCtrl;
 
-},{}],231:[function(require,module,exports){
+},{}],230:[function(require,module,exports){
 module.exports = '<!DOCTYPE html>\n<md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia(\'gt-md\')">\n  <div class="np-sidenav-img md-whiteframe-z1">\n    <img alt="Norsk Polarinstutt [logo]" src="http://www.npolar.no/npcms/export/sites/np/images/logos/norsk-polarinstitutt-logo-norsk-hvit.png">\n    <h1 class="md-title" style="color: white; text-align: center; font-weight: bold;">Norwegian Polar Data Centre</h1>\n  </div>\n  <div class="np-sidenav-title md-whiteframe-z1" layout-padding>\n    <span class="md-title">{{sidenav.title}}</span>\n  </div>\n  <md-content>\n    <ul class="np-sidenav-menu">\n      <li ng-repeat="item in sidenav.menu" layout>\n        <md-button flex ng-href="{{item.link}}">{{item.title}}</md-button>\n      </li>\n    </ul>\n  </md-content>\n</md-sidenav>\n';
-},{}],232:[function(require,module,exports){
+},{}],231:[function(require,module,exports){
 "use strict";
 
 // @ngInject
@@ -73059,7 +73049,7 @@ var sidenav = function sidenav() {
 
 module.exports = sidenav;
 
-},{"./sidenav.html":231}],233:[function(require,module,exports){
+},{"./sidenav.html":230}],232:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73092,7 +73082,7 @@ angular.module('sidenav', ['ngRoute', 'npdcMaterial']).controller('SidenavCtrl',
   });
 }]);
 
-},{"../../":241,"angular":33,"angular-route":31}],234:[function(require,module,exports){
+},{"../../":240,"angular":33,"angular-route":31}],233:[function(require,module,exports){
 "use strict";
 
 // @ngInject
@@ -73109,9 +73099,9 @@ ToolbarCtrl.$inject = ["$scope", "$mdSidenav"];
 
 module.exports = ToolbarCtrl;
 
-},{}],235:[function(require,module,exports){
+},{}],234:[function(require,module,exports){
 module.exports = '<!DOCTYPE html>\n<md-toolbar class="np-top-menu">\n  <div class="md-toolbar-tools">\n    <div hide-gt-md>\n      <md-button class="md-icon-button" aria-label="Open sidenav" ng-click="toggleLeft()" ng-if="sidenav">\n        <md-icon>menu</md-icon>\n      </md-button>\n      <span class="md-title">{{title}}</span>\n    </div>\n\n    <span flex></span>\n\n    <!-- Apps -->\n    <md-menu>\n      <md-button aria-label="Open application menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">\n        <md-icon md-menu-origin>\n          <md-tooltip>Data / Applications</md-tooltip>apps</md-icon>\n      </md-button>\n\n      <md-menu-content width="6">\n\n\n        <md-subheader class="md-sticky">⛁ Data</md-subheader>\n\n        <md-menu-item>\n          <md-button ng-href="/dataset">Datasets (metadata catalogue)</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="//api.npolar.no">Data services (\n            <abbr title="Application Programming Interface">API</abbr>s)</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="//geodata.npolar.no">Geographic services</md-button>\n        </md-menu-item>\n\n\n        <md-divider></md-divider>\n\n        <md-subheader class="md-no-sticky">Applications</md-subheader>\n\n        <md-menu-item>\n          <md-button ng-href="/expedition" title="Expeditions">Expeditions</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/vessel">Historic Vessels</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/indicator">Indicators (environmental monitoring)</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/map/archive">Map archive</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/people">People</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/placename">Placenames</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/project">Projects</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/publication">Publications</md-button>\n        </md-menu-item>\n\n      </md-menu-content>\n\n    </md-menu>\n\n    <md-menu ng-if="security.isAuthenticated()">\n      <md-button aria-label="Open application menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">\n        <md-icon md-menu-origin>\n          <md-tooltip>Internal applications</md-tooltip>settings</md-icon>\n      </md-button>\n\n      <md-menu-content width="4">\n\n        <md-subheader class="md-no-sticky">Internal applications</md-subheader>\n\n        <md-menu-item>\n          <md-button ng-href="/courses">Courses</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/marine/biology" title="Marine Biology Samples">Marine biology</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/user">Users</md-button>\n        </md-menu-item>\n\n      </md-menu-content>\n    </md-menu>\n\n    <npdc-md:user-menu></npdc-md:user-menu>\n\n    <npdc-md:expand-search></npdc-md:expand-search>\n\n  </div>\n</md-toolbar>\n';
-},{}],236:[function(require,module,exports){
+},{}],235:[function(require,module,exports){
 "use strict";
 
 // @ngInject
@@ -73129,7 +73119,7 @@ toolbar.$inject = ["$mdSidenav"];
 
 module.exports = toolbar;
 
-},{"./toolbar.html":235}],237:[function(require,module,exports){
+},{"./toolbar.html":234}],236:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73142,9 +73132,9 @@ angular.module('toolbar', ['npdcMaterial']).controller('ToolbarCtrl', ["$scope",
   };
 }]);
 
-},{"../../":241,"angular":33}],238:[function(require,module,exports){
+},{"../../":240,"angular":33}],237:[function(require,module,exports){
 module.exports = '<!DOCTYPE html>\n<md-menu ng-if="!security.isAuthenticated()">\n  <md-button aria-label="Open user" class="md-icon-button" ng-click="$mdOpenMenu($event)">\n    <md-icon md-menu-origin>person<md-tooltip>Login</md-tooltip></md-icon>\n  </md-button>\n  <md-menu-content>\n    <form role="form" layout-padding class="np-login">\n      <div>\n        <md-input-container>\n          <label for="username" class="md-no-float">Username</label>\n          <input type="text" ng-model="user.username" id="username">\n        </md-input-container>\n        <md-input-container>\n          <label for="password" class="md-no-float">Password</label>\n          <input type="password" id="password" ng-model="user.password">\n        </md-input-container>\n      </div>\n      <div layout="row" layout-align="space-between center">\n        <a ng-href="/user/reset?username={{user.username}}">Forgot password?</a>\n        <a href="/user/register">Sign up</a>\n        <md-button type="submit" ng-click="login()" class="md-raised md-primary">Login</md-button>\n      </div>\n    </form>\n  </md-menu-content>\n</md-menu>\n\n<md-menu ng-if="security.isAuthenticated()">\n  <md-button aria-label="Open user" class="md-icon-button" ng-click="$mdOpenMenu($event)">\n    <md-icon md-menu-origin>person<md-tooltip>{{ security.getUser().name }}</md-tooltip></md-icon>\n  </md-button>\n  <md-menu-content>\n    <md-menu-item>\n      <md-button ng-href="/user/{{user.username}}" title="View profile for user {{user.username}}">\n        <md-icon md-menu-align-target>face</md-icon>\n        {{ user.name }}\n      </md-button>\n    </md-menu-item>\n    <md-menu-item>\n      <md-button ng-click="logout()">\n        <span>Logout</span> <small>(session expires {{ 1000*user.exp | date:\'HH:mm\' }})</small>\n      </md-button>\n    </md-menu-item>\n  </md-menu-content>\n</md-menu>\n';
-},{}],239:[function(require,module,exports){
+},{}],238:[function(require,module,exports){
 "use strict";
 
 // @ngInject
@@ -73163,7 +73153,7 @@ npdcUserMenu.$inject = ["NpolarApiSecurity"];
 
 module.exports = npdcUserMenu;
 
-},{"./userMenu.html":238}],240:[function(require,module,exports){
+},{"./userMenu.html":237}],239:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73171,7 +73161,7 @@ var angular = require('angular');
 
 angular.module('userMenu', ['npdcMaterial']);
 
-},{"../../":241,"angular":33}],241:[function(require,module,exports){
+},{"../../":240,"angular":33}],240:[function(require,module,exports){
 'use strict';
 /**
  * Angular bootstraping
@@ -73198,7 +73188,7 @@ require('./layouts');
 
 module.exports = npdcMaterial;
 
-},{"./components":229,"./layouts":247,"angular":33,"angular-animate":2,"angular-aria":4,"angular-material":6,"angular-npolar":24}],242:[function(require,module,exports){
+},{"./components":228,"./layouts":246,"angular":33,"angular-animate":2,"angular-aria":4,"angular-material":6,"angular-npolar":24}],241:[function(require,module,exports){
 'use strict';
 
 // @ngInject
@@ -73220,7 +73210,7 @@ var applyMdType = function applyMdType() {
     field.mdType = field.schema.type;
     if (isNumberRange(field)) {
       field.mdType = 'range';
-    } else if (field.schema['enum']) {
+    } else if (field.typeOf('select')) {
       field.mdType = 'select';
     } else if (isNormalInput(field)) {
       field.mdType = 'input';
@@ -73245,7 +73235,7 @@ var applyMdType = function applyMdType() {
 
 module.exports = applyMdType;
 
-},{}],243:[function(require,module,exports){
+},{}],242:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73260,9 +73250,9 @@ angular.module('formulaDemo', ['npdcMaterial', 'formula']).controller('FormulaCt
   };
 }]);
 
-},{"../../":241,"angular":33,"formula":220}],244:[function(require,module,exports){
-module.exports = '<!DOCTYPE html>\n<!-- field info -->\n<script type="text/ng-template" id="ft-field-info.html">\n  <md-icon>info_outline\n    <md-tooltip md-direction="left">{{ field.description }}</md-tooltip>\n  </md-icon>\n</script>\n\n<!-- validation message -->\n<script type="text/ng-template" id="ft-validation-message.html">\n  <div class="md-caption" role="alert" ng-show="{{ field.error !== null }}">\n    {{ field.error }}\n  </div>\n</script>\n\n<form name="formula" class="formula" ng-if="form.fieldsets">\n  <header ng-if="form.title">\n    {{ form.title }}\n  </header>\n\n  <md-tabs md-swipe-content md-dynamic-height md-border-bottom>\n    <md-tab label="{{fieldset.title}}" ng-disabled="fieldset.disabled" ng-repeat="fieldset in form.fieldsets">\n      <md-whiteframe class="md-whiteframe-z1">\n        <fieldset>\n          <div formula:field-definition ng-repeat="field in fieldset.fields" ng-show="field.visible">\n            <!-- input field-->\n            <div ng-if="field.typeOf(\'input\')" apply-md-type="field">\n\n              <!-- boolean -->\n              <div ng-if="field.mdType === \'boolean\'" class="np-formula-boolean">\n                <div ng-include="\'ft-field-info.html\'" class="np-field-info" ng-if="field.description"></div>\n                <md-checkbox ng-attr-id="field.uid" ng-model="field.value" aria-label="{{ field.title }}">\n                  <label for="{{field.uid}}">{{ field.title }}</label>\n                </md-checkbox>\n                <div ng-include="\'ft-validation-message.html\'" class="np-validation-message"></div>\n              </div>\n\n              <!-- range -->\n              <div ng-if="field.mdType === \'range\'" class="np-formula-range">\n                <label for="{{field.uid}}">{{ field.title }}: <span>{{field.value}}</span></label>\n                <div ng-include="\'ft-field-info.html\'" class="np-field-info" ng-if="field.description"></div>\n                <md-slider flex min="{{field.minimum}}" max="{{field.maximum}}" step="{{field.step}}" md-discrete ng-model="field.value" aria-label="{{field.title}}" ng-attr-id="field.uid">\n                </md-slider>\n                <div ng-include="\'ft-validation-message.html\'" class="np-validation-message"></div>\n              </div>\n\n              <!-- select -->\n              <md-input-container ng-if="field.mdType === \'select\'" class="np-formula-select">\n                <label for="{{field.uid}}">{{ (field.required ? field.title + \' (required)\' : field.title) }}</label>\n                <div ng-include="\'ft-field-info.html\'" class="np-field-info" ng-if="field.description"></div>\n                <md-select ng-model="field.value">\n                  <md-option ng-repeat="val in field.enum" value="{{val}}">{{val}}</md-option>\n                </md-select>\n                <div ng-include="\'ft-validation-message.html\'" class="np-validation-message"></div>\n              </md-input-container>\n\n              <!-- input -->\n              <md-input-container ng-if="field.mdType === \'input\'" class="np-formula-input">\n                <label for="{{field.uid}}">{{ (field.required ? field.title + \' (required)\' : field.title) }}</label>\n                <div ng-include="\'ft-field-info.html\'" class="np-field-info" ng-if="field.description"></div>\n                <div formula:field="field"></div>\n                <div ng-include="\'ft-validation-message.html\'" class="np-validation-message"></div>\n              </md-input-container>\n            </div>\n\n            <!-- object -->\n            <div ng-if="field.typeOf(\'object\')" class="np-formula-object">\n              <md-whiteframe class="md-whiteframe-z1">\n                <fieldset formula:field="field">\n                  <legend>{{ field.title }}</legend>\n\n                  <div ng-repeat="field in field.fields" ng-show="field.visible">\n                    <formula:field-instance field="field"></formula:field-instance>\n                  </div>\n                </fieldset>\n              </md-whiteframe>\n            </div>\n\n            <!-- array -->\n            <div ng-if="field.typeOf(\'array\')" class="np-formula-array">\n              <div formula:field="field">\n                <md-whiteframe class="md-whiteframe-z1">\n                  <fieldset ng-class="{ valid: field.valid, error: field.error }">\n                    <div ng-include="\'ft-field-info.html\'" class="np-field-info" ng-if="field.description"></div>\n                    <legend>{{ field.title }} ({{ field.values.length || 0 }})</legend>\n                    <div ng-if="field.typeOf(\'fieldset\')">\n                      <ul>\n                        <li ng-repeat="value in field.values">\n                          <md-whiteframe class="md-whiteframe-z1">\n                            <fieldset ng-class="{ valid: value.valid }">\n                              <legend>\n                                <span ng-if="!value.visible">{{ value.fields | formulaInlineValues }}</span>\n                              </legend>\n                              <div class="np-formula-object-ctrls">\n                                <a class="toggle" href="" ng-click="field.itemToggle($index)" title="{{ value.visible ? form.i18n.minimize[1] : form.i18n.maximize[1] }}">\n                                  <md-icon>{{ value.visible ? \'expand_less\' : \'expand_more\' }}</md-icon>\n                                </a>\n                                <a class="remove" href="" ng-click="field.itemRemove($index)" title="{{ form.i18n.remove[1] }}">\n                                  <md-icon>close</md-icon>\n                                </a>\n                              </div>\n\n                              <div class="np-formula-subarray" ng-repeat="subfield in field.fields" ng-show="value.visible">\n                                <formula:field-instance field="value.fields[$index]" ng-show="subfield.visible"></formula:field-instance>\n                              </div>\n                            </fieldset>\n                          </md-whiteframe>\n                        </li>\n                      </ul>\n                      <div class="np-formula-array-add">\n                        <md-button ng-click="field.itemAdd()" class="md-fab md-mini md-primary md-hue-1" aria-label="{{ form.i18n.add[1] }}">\n                          <md-icon>add</md-icon>\n                        </md-button>\n                      </div>\n                    </div>\n\n                    <div ng-if="field.typeOf(\'field\')">\n                      <ul class="np-formula-array">\n                        <li ng-class="{ valid: value.valid, error: value.error }" ng-repeat="value in field.values" layout="row">\n                          <formula:field-instance field="value" flex></formula:field-instance>\n                          <a class="np-formula-input-ctrls remove" href="" ng-click="field.itemRemove($index)" title="{{ form.i18n.remove[1] }}">\n                            <md-icon>close</md-icon>\n                          </a>\n                        </li>\n                      </ul>\n                      <div class="np-formula-array-add">\n                        <md-button ng-click="field.itemAdd()" class="md-fab md-mini md-primary md-hue-1" aria-label="{{ form.i18n.add[1] }}">\n                          <md-icon>add</md-icon>\n                        </md-button>\n                      </div>\n                    </div>\n\n                  </fieldset>\n                </md-whiteframe>\n              </div>\n            </div>\n          </div>\n        </fieldset>\n      </md-whiteframe>\n\n    </md-tab>\n  </md-tabs>\n\n  <footer layout="row" layout-align="space-between center" ng-if="!(form.uiValidateHidden && form.uiSaveHidden)">\n    <span ng-if="form.errors" title="{{ form.errors.join(\'\n\') }}">{{ form.i18n.invalid | formulaReplace : { count: form.errors.length } }}</span>\n\n    <div>\n      <md-button class="md-raised" ng-click="form.validate()" ng-if="!form.uiValidateHidden" title="{{ form.i18n.validate[1] }}">\n        <md-icon>check</md-icon> {{ form.i18n.validate[0] }}</md-button>\n      <md-button class="md-raised md-primary" ng-click="form.save()" ng-disabled="!form.valid" ng-if="!form.uiSaveHidden" title="{{ form.i18n.save[1] }}">\n        <md-icon>save</md-icon> {{ form.i18n.save[0] }}</md-button>\n\n    </div>\n\n  </footer>\n</form>\n\n<div class="formula" ng-if="!form.fieldsets">\n  <div layout="row" layout-sm="column" layout-align="space-around">\n    <md-progress-circular md-mode="indeterminate"></md-progress-circular>\n  </div>\n</div>\n';
-},{}],245:[function(require,module,exports){
+},{"../../":240,"angular":33,"formula":219}],243:[function(require,module,exports){
+module.exports = '<!DOCTYPE html>\n<!-- field info -->\n<script type="text/ng-template" id="ft-field-info.html">\n  <md-icon>info_outline\n    <md-tooltip md-direction="left">{{ field.description }}</md-tooltip>\n  </md-icon>\n</script>\n\n<!-- validation message -->\n<script type="text/ng-template" id="ft-validation-message.html">\n  <div class="md-caption" role="alert" ng-show="{{ field.error !== null }}">\n    {{ field.error }}\n  </div>\n</script>\n\n<form name="formula" class="formula" ng-if="form.fieldsets">\n  <header ng-if="form.title">\n    {{ form.title }}\n  </header>\n\n  <md-tabs md-swipe-content md-dynamic-height md-border-bottom>\n    <md-tab label="{{fieldset.title}}" ng-disabled="fieldset.disabled" ng-repeat="fieldset in form.fieldsets">\n      <md-whiteframe class="md-whiteframe-z1">\n        <fieldset>\n          <div formula:field-definition ng-repeat="field in fieldset.fields" ng-show="field.visible">\n            <!-- input field-->\n            <div ng-if="field.typeOf(\'input\')" apply-md-type="field">\n\n              <!-- boolean -->\n              <div ng-if="field.mdType === \'boolean\'" class="np-formula-boolean">\n                <div ng-include="\'ft-field-info.html\'" class="np-field-info" ng-if="field.description"></div>\n                <md-checkbox ng-attr-id="field.uid" ng-model="field.value" aria-label="{{ field.title }}">\n                  <label for="{{field.uid}}">{{ field.title }}</label>\n                </md-checkbox>\n                <div ng-include="\'ft-validation-message.html\'" class="np-validation-message"></div>\n              </div>\n\n              <!-- range -->\n              <div ng-if="field.mdType === \'range\'" class="np-formula-range">\n                <label for="{{field.uid}}">{{ field.title }}: <span>{{field.value}}</span></label>\n                <div ng-include="\'ft-field-info.html\'" class="np-field-info" ng-if="field.description"></div>\n                <md-slider flex min="{{field.minimum}}" max="{{field.maximum}}" step="{{field.step}}" md-discrete ng-model="field.value" aria-label="{{field.title}}" ng-attr-id="field.uid">\n                </md-slider>\n                <div ng-include="\'ft-validation-message.html\'" class="np-validation-message"></div>\n              </div>\n\n              <!-- select -->\n              <md-input-container ng-if="field.mdType === \'select\'" class="np-formula-select">\n                <label for="{{field.uid}}">{{ (field.required ? field.title + \' (required)\' : field.title) }}</label>\n                <div ng-include="\'ft-field-info.html\'" class="np-field-info" ng-if="field.description"></div>\n				\n				<!-- single-select -->\n				<md-select ng-model="field.value" ng-if="!field.multiple">\n                  <md-option ng-repeat="val in field.enum" value="{{val}}">{{val}}</md-option>\n                </md-select>\n				\n				<!-- multi-select, ref: https://docs.angularjs.org/error/$compile/selmulti -->\n                <md-select ng-model="field.value" multiple ng-if="field.multiple">\n                  <md-option ng-repeat="val in field.enum" value="{{val}}">{{val}}</md-option>\n                </md-select>\n				\n                <div ng-include="\'ft-validation-message.html\'" class="np-validation-message"></div>\n              </md-input-container>\n\n              <!-- input -->\n              <md-input-container ng-if="field.mdType === \'input\'" class="np-formula-input">\n                <label for="{{field.uid}}">{{ (field.required ? field.title + \' (required)\' : field.title) }}</label>\n                <div ng-include="\'ft-field-info.html\'" class="np-field-info" ng-if="field.description"></div>\n                <div formula:field="field"></div>\n                <div ng-include="\'ft-validation-message.html\'" class="np-validation-message"></div>\n              </md-input-container>\n            </div>\n\n            <!-- object -->\n            <div ng-if="field.typeOf(\'object\')" class="np-formula-object">\n              <md-whiteframe class="md-whiteframe-z1">\n                <fieldset formula:field="field">\n                  <legend>{{ field.title }}</legend>\n\n                  <div ng-repeat="field in field.fields" ng-show="field.visible">\n                    <formula:field-instance field="field"></formula:field-instance>\n                  </div>\n                </fieldset>\n              </md-whiteframe>\n            </div>\n\n            <!-- array -->\n            <div ng-if="field.typeOf(\'array\')" class="np-formula-array">\n              <div formula:field="field">\n                <md-whiteframe class="md-whiteframe-z1">\n                  <fieldset ng-class="{ valid: field.valid, error: field.error }">\n                    <div ng-include="\'ft-field-info.html\'" class="np-field-info" ng-if="field.description"></div>\n                    <legend>{{ field.title }} ({{ field.values.length || 0 }})</legend>\n					\n					<!-- fieldset -->\n                    <div ng-if="field.typeOf(\'fieldset\')">\n                      <ul>\n                        <li ng-repeat="value in field.values">\n                          <md-whiteframe class="md-whiteframe-z1">\n                            <fieldset ng-class="{ valid: value.valid }">\n                              <legend>\n                                <span ng-if="!value.visible">{{ value.fields | formulaInlineValues }}</span>\n                              </legend>\n                              <div class="np-formula-object-ctrls">\n                                <a class="toggle" href="" ng-click="field.itemToggle($index)" title="{{ value.visible ? form.i18n.minimize[1] : form.i18n.maximize[1] }}">\n                                  <md-icon>{{ value.visible ? \'expand_less\' : \'expand_more\' }}</md-icon>\n                                </a>\n                                <a class="remove" href="" ng-click="field.itemRemove($index)" title="{{ form.i18n.remove[1] }}">\n                                  <md-icon>close</md-icon>\n                                </a>\n                              </div>\n\n                              <div class="np-formula-subarray" ng-repeat="subfield in field.fields" ng-show="value.visible">\n                                <formula:field-instance field="value.fields[$index]" ng-show="subfield.visible"></formula:field-instance>\n                              </div>\n                            </fieldset>\n                          </md-whiteframe>\n                        </li>\n                      </ul>\n                      <div class="np-formula-array-add">\n                        <md-button ng-click="field.itemAdd()" class="md-fab md-mini md-primary md-hue-1" aria-label="{{ form.i18n.add[1] }}">\n                          <md-icon>add</md-icon>\n                        </md-button>\n                      </div>\n                    </div>\n\n					<!-- field -->\n                    <div ng-if="field.typeOf(\'field\')">\n                      <ul class="np-formula-array">\n                        <li ng-class="{ valid: value.valid, error: value.error }" ng-repeat="value in field.values" layout="row">\n                          <formula:field-instance field="value" flex></formula:field-instance>\n                          <a class="np-formula-input-ctrls remove" href="" ng-click="field.itemRemove($index)" title="{{ form.i18n.remove[1] }}">\n                            <md-icon>close</md-icon>\n                          </a>\n                        </li>\n                      </ul>\n                      <div class="np-formula-array-add">\n                        <md-button ng-click="field.itemAdd()" class="md-fab md-mini md-primary md-hue-1" aria-label="{{ form.i18n.add[1] }}">\n                          <md-icon>add</md-icon>\n                        </md-button>\n                      </div>\n                    </div>\n\n                  </fieldset>\n                </md-whiteframe>\n              </div>\n            </div>\n          </div>\n        </fieldset>\n      </md-whiteframe>\n\n    </md-tab>\n  </md-tabs>\n\n  <footer layout="row" layout-align="space-between center" ng-if="!(form.uiValidateHidden && form.uiSaveHidden)">\n    <span ng-if="form.errors" title="{{ form.errors.join(\'\n\') }}">{{ form.i18n.invalid | formulaReplace : { count: form.errors.length } }}</span>\n\n    <div>\n      <md-button class="md-raised" ng-click="form.validate()" ng-if="!form.uiValidateHidden" title="{{ form.i18n.validate[1] }}">\n        <md-icon>check</md-icon> {{ form.i18n.validate[0] }}</md-button>\n      <md-button class="md-raised md-primary" ng-click="form.save()" ng-disabled="!form.valid" ng-if="!form.uiSaveHidden" title="{{ form.i18n.save[1] }}">\n        <md-icon>save</md-icon> {{ form.i18n.save[0] }}</md-button>\n\n    </div>\n\n  </footer>\n</form>\n\n<div class="formula" ng-if="!form.fieldsets">\n  <div layout="row" layout-sm="column" layout-align="space-around">\n    <md-progress-circular md-mode="indeterminate"></md-progress-circular>\n  </div>\n</div>\n';
+},{}],244:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73270,7 +73260,7 @@ var angular = require('angular');
 
 angular.module('grid', ['npdcMaterial']);
 
-},{"../../":241,"angular":33}],246:[function(require,module,exports){
+},{"../../":240,"angular":33}],245:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73278,7 +73268,7 @@ var angular = require('angular');
 
 angular.module('home', ['npdcMaterial']);
 
-},{"../../":241,"angular":33}],247:[function(require,module,exports){
+},{"../../":240,"angular":33}],246:[function(require,module,exports){
 "use strict";
 
 var angular = require('angular');
@@ -73291,7 +73281,7 @@ npdcMaterial.run(["$templateCache", function ($templateCache) {
   $templateCache.put('formula/material.html', require('./formula/template.html'));
 }]);
 
-},{"./formula/applyMdType":242,"./formula/template.html":244,"angular":33}],248:[function(require,module,exports){
+},{"./formula/applyMdType":241,"./formula/template.html":243,"angular":33}],247:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73299,7 +73289,7 @@ var angular = require('angular');
 
 angular.module('list', ['npdcMaterial']);
 
-},{"../../":241,"angular":33}],249:[function(require,module,exports){
+},{"../../":240,"angular":33}],248:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73327,7 +73317,7 @@ angular.module('main', ['npdcMaterial']).controller('MainCtrl', ["$scope", funct
   };
 }]);
 
-},{"../../":241,"angular":33}],250:[function(require,module,exports){
+},{"../../":240,"angular":33}],249:[function(require,module,exports){
 'use strict'; module.exports = angular.module("npdcMaterial").run(["$templateCache", function($templateCache) {$templateCache.put("angular-npolar/src/ui/auth/_user.html","<div class=\"login-logout\">\n  <div ng-show=\"security.isAuthenticated()\">\n    \n    <button ng-click=\"logout()\">Logout</button> <b>{{ user.name }}</b> (<a title=\"View profile for user {{user.username}}\" ng-href=\"/user/{{user.username}}\">{{ user.username }} </a>)\n    \n    <p>Login session expires {{ 1000*user.exp | date:\'HH:mm\' }}</p>\n    \n    <!--<section>\n    <h2>Recent edits</h2>\n    <dl ng-repeat=\"edit in edits\">\n      <dt>{{ edit.request.time }}</dt>\n      <dd><a href=\"{{ edit.response.header.Location }}\">{{ edit.response.header.Location }}</a></dd>\n    </dl>\n    </section>-->\n    \n    <section>\n      <h2>Permissions</h2>\n      <dl ng-repeat=\"system in user.systems\">\n        <dt>{{ system.uri }}</dt>\n        <dd>{{ system.rights }}</dd>\n      </dl>\n    </section>\n  </div>\n  \n  <div ng-show=\"security.notAuthenticated()\">\n    <h1>Login</h1>\n    <form role=\"form\">\n      <section ng-show=\"true\" ng-init=\"loginClicked = false;\">\n      <div>\n        <label for=\"username\">Username</label>\n        <input type=\"text\" ng-model=\"user.username\" id=\"username\" placeholder=\"Username (email)\">\n      </div>\n      <div>\n        <label for=\"password\">Password</label>\n        <input type=\"password\" id=\"password\" ng-model=\"user.password\" placeholder=\"Password\">\n      </div>\n      <button id=\"login2\" type=\"submit\" ng-click=\"login()\">Login</button> \n      </section>\n      <a ng-href=\"/user/reset?username={{user.username}}\">Forgot password?</a> <a href=\"/user/register\">Sign up</a></section>\n    </form>\n  </div>\n</div>");
 $templateCache.put("angular-npolar/src/ui/message/_message.html","<div ng-if=\"info\" class=\"info\">[info]{{ info | json }}</div>\n<div ng-if=\"error\" class=\"error\">[error] {{ error | json }}</div>");
 $templateCache.put("angular-npolar/src/ui/message/_message_toast.html","<md-toast>\n  <span flex> <b>{{explanation}}</b></span>\n  <md-button ng-click=\"closeToast()\">OK</md-button>\n</md-toast>");
@@ -73337,7 +73327,7 @@ $templateCache.put("angular-npolar/src/ui/template/_foot.html","");
 $templateCache.put("angular-npolar/src/ui/template/_head.html","<div ng-if=\"error\" ng-include=\"\'angular-npolar/src/ui/template/_error.html\'\"></div>\n<div ng-if=\"info\" ng-include=\"\'angular-npolar/src/ui/template/_info.html\'\"></div>\n");
 $templateCache.put("angular-npolar/src/ui/template/_info.html","<h2 ng-if=\"info\" class=\"alert alert-success\"><strong>{{info.header}}</strong> {{info.message }}</h2>");
 $templateCache.put("angular-npolar/src/ui/template/_search.html","<div>\n  <span ng-if=\"!feed.entries\">Fetching data from {{base}}</span>\n  <span ng-if=\"feed.opensearch.totalResults > 0\">{{feed.opensearch.totalResults}} results from {{ base }}</span>\n  <span ng-if=\"feed.opensearch.totalResults == 0\">No results</span>\n</div>\n\n<h3><span ng-if=\"filters.length\">Filters: {{filters | json}}</span><span ng-if=\"filters.length\"><a ng-href=\"/vessel\">Remove filters</a></span></h3>\n\n<h2><a ng-if=\"user.name\" href=\"__new/edit\"><button type=\"button\" class=\"pure-button\">New</button></a></h2>\n\n<p>Filter: <input ng-model=\"entryfilter\"></p>\n\n<div ng-repeat=\"e in feed.entries | filter:entryfilter\">\n  <h4 class=\"\"><a ng-href=\"{{e.id}}\">{{ e.title || e.name || e.id }}</a> {{e.updated }}</h4>\n</div>\n");}]);
-},{}]},{},[217,225,228,233,237,240,243,245,246,248,249,250])
+},{}]},{},[216,224,227,232,236,239,242,244,245,247,248,249])
 
 
 //# sourceMappingURL=demos.js.map
