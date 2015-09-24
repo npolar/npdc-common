@@ -6551,7 +6551,9 @@ md-tooltip {
  *                                          '200', 'a100')
  */
 .formula a {
-  text-decoration: none; }
+  text-decoration: none;
+  display: inline-block;
+  height: 1em; }
 
 .formula legend {
   display: table;
