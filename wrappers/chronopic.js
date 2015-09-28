@@ -12,19 +12,20 @@
       restrict: 'E',
       require: '?ngModel',
       link: function(scope, elem, attrs, model) {
-        if(scope.field && formats.indexOf(scope.field.format) > -1) {
+        if(model && scope.field && formats.indexOf(scope.field.format) > -1) {
           // Try parsing any pre-existing value as a date
-          var parsedDate = new Date(scope.field.value);
-          
+          var parsedDate = new Date(Date.parse(scope.field.value));
+
           // CSS Overrides
           elem.css('max-width', '340px');
-          
+
           // Inject Chronopic instance on element
           new Chronopic(elem[0], {
             date: isNaN(parsedDate) ? null : parsedDate,
             className: 'chronopic.chronopic-ext-md',
             onChange: function(elem, date) {
-              model.$setViewValue(date.toISOString());
+              model.$viewValue = date.toISOString();
+              scope.field.value = date.toISOString();
             }
           });
         }
