@@ -2,5 +2,5 @@
 
 module.exports = {
   AutoConfig: require('./config/AutoConfig'),
-  ui: require('./ui/'),
+  ui: require('./ui/')
 };
