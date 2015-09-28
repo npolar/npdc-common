@@ -25,6 +25,7 @@
   "devDependencies": {
     "babelify": "*",
     "browserify-ngannotate": "*",
+    "chronopic": "git://github.com/npolar/chronopic.js",
     "gulp": "^3.9.0",
     "npdc-gulp": "npolar/npdc-gulp",
     "partialify": "*",
