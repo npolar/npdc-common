@@ -32,7 +32,7 @@ var config = {
 
   'deps': {
     'root': deps,
-    'css' : [deps+'/angular-material/angular-material.css'],
+    'css' : [deps+'/angular-material/angular-material.css', deps+'/jusas-angularjs-slider/dist/rzslider.css'],
     'views': [deps+'/angular-npolar/src/**/*.html'],
     'demo' : []
   },
