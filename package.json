@@ -8,7 +8,8 @@
     "angular-animate": "1.4.5",
     "angular-aria": "1.4.5",
     "angular-material": "^0.11.0",
-    "angular-npolar": "npolar/angular-npolar"
+    "angular-npolar": "npolar/angular-npolar",
+    "jusas-angularjs-slider": "baelter/angularjs-slider"
   },
   "devDependencies": {
     "angular-route": "1.4.5",
@@ -28,6 +29,7 @@
     "gulp-concat": "^2.6.0",
     "gulp-css-globbing": "^0.1.8",
     "gulp-git": "^1.2.4",
+    "gulp-istanbul": "^0.10.1",
     "gulp-jshint": "^1.11.2",
     "gulp-minify-css": "~1.2.0",
     "gulp-mocha": "~2.1.3",
@@ -43,6 +45,7 @@
     "partialify": "^3.1.5",
     "run-sequence": "^1.1.2",
     "sass-material-colors": "0.0.5",
+    "should": "^7.1.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.3.1"
