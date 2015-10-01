@@ -48,9 +48,17 @@
               <md-input-container ng-if="field.mdType === 'select'" class="np-formula-select">
                 <label for="{{field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title) }}</label>
                 <div ng-include="'ft-field-info.html'" class="np-field-info" ng-if="field.description"></div>
-                <md-select ng-model="field.value">
+				
+				<!-- single-select -->
+				<md-select ng-model="field.value" ng-if="!field.multiple">
                   <md-option ng-repeat="val in field.enum" value="{{val}}">{{val}}</md-option>
                 </md-select>
+				
+				<!-- multi-select, ref: https://docs.angularjs.org/error/$compile/selmulti -->
+                <md-select ng-model="field.value" multiple ng-if="field.multiple">
+                  <md-option ng-repeat="val in field.enum" value="{{val}}">{{val}}</md-option>
+                </md-select>
+				
                 <div ng-include="'ft-validation-message.html'" class="np-validation-message"></div>
               </md-input-container>
 
@@ -83,6 +91,8 @@
                   <fieldset ng-class="{ valid: field.valid, error: field.error }">
                     <div ng-include="'ft-field-info.html'" class="np-field-info" ng-if="field.description"></div>
                     <legend>{{ field.title }} ({{ field.values.length || 0 }})</legend>
+					
+					<!-- fieldset -->
                     <div ng-if="field.typeOf('fieldset')">
                       <ul>
                         <li ng-repeat="value in field.values">
@@ -114,6 +124,7 @@
                       </div>
                     </div>
 
+					<!-- field -->
                     <div ng-if="field.typeOf('field')">
                       <ul class="np-formula-array">
                         <li ng-class="{ valid: value.valid, error: value.error }" ng-repeat="value in field.values" layout="row">

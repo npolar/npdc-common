@@ -19,7 +19,7 @@ let applyMdType = function() {
     field.mdType = field.schema.type;
     if (isNumberRange(field)) {
       field.mdType = 'range';
-    } else if (field.schema.enum) {
+	} else if (field.typeOf('select')) {
       field.mdType = 'select';
     } else if (isNormalInput(field)) {
       field.mdType = 'input';

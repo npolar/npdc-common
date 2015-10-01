@@ -2,3 +2,4 @@
 node_modules
 .tags*
 coverage
+dist/demos.js*
