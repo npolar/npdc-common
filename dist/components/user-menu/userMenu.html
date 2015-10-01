@@ -26,7 +26,7 @@
 
 <md-menu ng-if="security.isAuthenticated()">
   <md-button aria-label="Open user" class="md-icon-button" ng-click="$mdOpenMenu($event)">
-    <md-icon md-menu-origin>person<md-tooltip>{{ security.getUser().name }}</md-tooltip></md-icon>
+    <md-icon md-menu-origin>face<md-tooltip>{{ security.getUser().name }}</md-tooltip></md-icon>
   </md-button>
   <md-menu-content>
     <md-menu-item>
