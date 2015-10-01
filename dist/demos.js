@@ -4270,7 +4270,7 @@ module.exports = 'ngAria';
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.11.0
+ * v0.11.1
  */
 (function( window, angular, undefined ){
 "use strict";
@@ -4278,7 +4278,7 @@ module.exports = 'ngAria';
 (function(){
 "use strict";
 
-angular.module('ngMaterial', ["ng","ngAnimate","ngAria","material.core","material.core.gestures","material.core.layout","material.core.theming.palette","material.core.theming","material.core.animate","material.components.autocomplete","material.components.bottomSheet","material.components.backdrop","material.components.button","material.components.card","material.components.checkbox","material.components.chips","material.components.content","material.components.datepicker","material.components.dialog","material.components.divider","material.components.fabActions","material.components.fabShared","material.components.fabSpeedDial","material.components.fabToolbar","material.components.gridList","material.components.fabTrigger","material.components.icon","material.components.input","material.components.list","material.components.menu","material.components.menuBar","material.components.progressCircular","material.components.radioButton","material.components.progressLinear","material.components.select","material.components.slider","material.components.sidenav","material.components.sticky","material.components.subheader","material.components.swipe","material.components.switch","material.components.tabs","material.components.toast","material.components.toolbar","material.components.tooltip","material.components.virtualRepeat","material.components.whiteframe"]);
+angular.module('ngMaterial', ["ng","ngAnimate","ngAria","material.core","material.core.gestures","material.core.layout","material.core.theming.palette","material.core.theming","material.core.animate","material.components.autocomplete","material.components.backdrop","material.components.bottomSheet","material.components.button","material.components.card","material.components.checkbox","material.components.chips","material.components.content","material.components.datepicker","material.components.dialog","material.components.divider","material.components.fabActions","material.components.fabShared","material.components.fabSpeedDial","material.components.fabToolbar","material.components.fabTrigger","material.components.gridList","material.components.icon","material.components.input","material.components.menu","material.components.list","material.components.menuBar","material.components.progressCircular","material.components.radioButton","material.components.progressLinear","material.components.sidenav","material.components.select","material.components.slider","material.components.sticky","material.components.subheader","material.components.swipe","material.components.switch","material.components.tabs","material.components.toast","material.components.toolbar","material.components.tooltip","material.components.virtualRepeat","material.components.whiteframe"]);
 })();
 (function(){
 "use strict";
@@ -4914,23 +4914,51 @@ function UtilFactory($document, $timeout, $compile, $rootScope, $$mdAnimate, $in
      *  </md-list>
      * </md-bottom-sheet>
      *</hljs>
-     *
      **/
     findFocusTarget: function(containerEl, attributeVal) {
-      var elToFocus, items = containerEl[0].querySelectorAll(attributeVal || '[md-autofocus]');
+      var AUTO_FOCUS = '[md-autofocus]';
+      var elToFocus;
 
-      // Find the last child element with the focus attribute
-      items.length && angular.forEach(items, function(it) {
-        it = angular.element(it);
+      elToFocus = scanForFocusable(containerEl, attributeVal || AUTO_FOCUS);
 
-        // If the expression evaluates to FALSE, then it is not focusable target
-        var focusExpression = it[0].getAttribute('md-autofocus');
-        var isFocusable = focusExpression ? (it.scope().$eval(focusExpression) !== false ) : true;
+      if ( !elToFocus && attributeVal != AUTO_FOCUS) {
+        // Scan for deprecated attribute
+        elToFocus = scanForFocusable(containerEl, '[md-auto-focus]');
 
-        if (isFocusable) elToFocus = it;
-      });
+        if ( !elToFocus ) {
+          // Scan for fallback to 'universal' API
+          elToFocus = scanForFocusable(containerEl, AUTO_FOCUS);
+        }
+      }
 
       return elToFocus;
+
+      /**
+       * Can target and nested children for specified Selector (attribute)
+       * whose value may be an expression that evaluates to True/False.
+       */
+      function scanForFocusable(target, selector) {
+        var elFound, items = target[0].querySelectorAll(selector);
+
+        // Find the last child element with the focus attribute
+        if ( items && items.length ){
+          var EXP_ATTR = /\s*\[?([\-a-z]*)\]?\s*/i;
+          var matches = EXP_ATTR.exec(selector);
+          var attribute = matches ? matches[1] : null;
+
+          items.length && angular.forEach(items, function(it) {
+            it = angular.element(it);
+
+            // If the expression evaluates to FALSE, then it is not focusable target
+            var focusExpression = it[0].getAttribute(attribute);
+            var isFocusable = !focusExpression || !$mdUtil.validateScope(it) ? true :
+                              (it.scope().$eval(focusExpression) !== false );
+
+            if (isFocusable) elFound = it;
+          });
+        }
+        return elFound;
+      }
     },
 
     // Disables scroll around the passed element.
@@ -4978,11 +5006,10 @@ function UtilFactory($document, $timeout, $compile, $rootScope, $$mdAnimate, $in
         // (arrow keys, spacebar, tab, etc).
         function disableKeyNav(e) {
           //-- temporarily removed this logic, will possibly re-add at a later date
-          return;
-          if (!element[0].contains(e.target)) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-          }
+          //if (!element[0].contains(e.target)) {
+          //  e.preventDefault();
+          //  e.stopImmediatePropagation();
+          //}
         }
 
         function preventDefault(e) {
@@ -5082,7 +5109,9 @@ function UtilFactory($document, $timeout, $compile, $rootScope, $$mdAnimate, $in
           r = values;
         try {
           for (var s in p) {
-            r = r[p[s]];
+            if (p.hasOwnProperty(s) ) {
+              r = r[p[s]];
+            }
           }
         } catch (e) {
           r = a;
@@ -5186,6 +5215,22 @@ function UtilFactory($document, $timeout, $compile, $rootScope, $$mdAnimate, $in
       return '' + nextUniqueId++;
     },
 
+    /**
+     * By default AngularJS attaches information about binding and scopes to DOM nodes,
+     * and adds CSS classes to data-bound elements. But this information is NOT available
+     * when `$compileProvider.debugInfoEnabled(false);`
+     *
+     * @see https://docs.angularjs.org/guide/production
+     */
+    validateScope : function(element) {
+      var hasScope = element && angular.isDefined(element.scope());
+      if ( !hasScope ) {
+        $log.warn("element.scope() is not available when 'debug mode' == false. @see https://docs.angularjs.org/guide/production!");
+      }
+
+      return hasScope;
+    },
+
     // Stop watchers and events from firing on a scope without destroying it,
     // by disconnecting it from its parent and its siblings' linked lists.
     disconnectScope: function disconnectScope(scope) {
@@ -5265,16 +5310,59 @@ function UtilFactory($document, $timeout, $compile, $rootScope, $$mdAnimate, $in
     /**
      * Functional equivalent for $element.filter(‘md-bottom-sheet’)
      * useful with interimElements where the element and its container are important...
+     *
+     * @param {[]} elements to scan
+     * @param {string} name of node to find (e.g. 'md-dialog')
+     * @param {boolean=} optional flag to allow deep scans; defaults to 'false'.
+     * @param {boolean=} optional flag to enable log warnings; defaults to false
      */
-    extractElementByName: function(element, nodeName) {
-      for (var i = 0, len = element.length; i < len; i++) {
-        if (element[i].nodeName.toLowerCase() === nodeName) {
-          return angular.element(element[i]);
-        }
+    extractElementByName: function(element, nodeName, scanDeep, warnNotFound) {
+      var found = scanTree(element);
+      if (!found && !!warnNotFound) {
+        $log.warn( $mdUtil.supplant("Unable to find node '{0}' in element '{1}'.",[nodeName, element[0].outerHTML]) );
       }
 
-      $log.warn( $mdUtil.supplant("Unable to find node '{0}' in element.",[nodeName]) );
-      return element;
+      return angular.element(found || element);
+
+      /**
+       * Breadth-First tree scan for element with matching `nodeName`
+       */
+      function scanTree(element) {
+        return scanLevel(element) || (!!scanDeep ? scanChildren(element) : null);
+      }
+
+      /**
+       * Case-insensitive scan of current elements only (do not descend).
+       */
+      function scanLevel(element) {
+        if ( element ) {
+          for (var i = 0, len = element.length; i < len; i++) {
+            if (element[i].nodeName.toLowerCase() === nodeName) {
+              return element[i];
+            }
+          }
+        }
+        return null;
+      }
+
+      /**
+       * Scan children of specified node
+       */
+      function scanChildren(element) {
+        var found;
+        if ( element ) {
+          for (var i = 0, len = element.length; i < len; i++) {
+            var target = element[i];
+            if ( !found ) {
+              for (var j = 0, numChild = target.childNodes.length; j < numChild; j++) {
+                found = found || scanTree([target.childNodes[j]]);
+              }
+            }
+          }
+        }
+        return found;
+      }
+
     },
 
     /**
@@ -5299,7 +5387,7 @@ function UtilFactory($document, $timeout, $compile, $rootScope, $$mdAnimate, $in
      * @param digest
      * @returns {*}
      */
-    nextTick: function(callback, digest) {
+    nextTick: function(callback, digest, scope) {
       //-- grab function reference for storing state details
       var nextTick = $mdUtil.nextTick;
       var timeout = nextTick.timeout;
@@ -5325,8 +5413,9 @@ function UtilFactory($document, $timeout, $compile, $rootScope, $$mdAnimate, $in
        * Trigger digest if necessary
        */
       function processQueue() {
-        var queue = nextTick.queue;
-        var digest = nextTick.digest;
+        var skip = scope && scope.$$destroyed;
+        var queue = !skip ? nextTick.queue : [];
+        var digest = !skip ? nextTick.digest : null;
 
         nextTick.queue = [];
         nextTick.timeout = null;
@@ -6303,7 +6392,7 @@ angular.module('material.core')
 
 function InterimElementProvider() {
   createInterimElementProvider.$get = InterimElementFactory;
-  InterimElementFactory.$inject = ["$document", "$q", "$rootScope", "$timeout", "$rootElement", "$animate", "$mdUtil", "$mdCompiler", "$mdTheming", "$log"];
+  InterimElementFactory.$inject = ["$document", "$q", "$$q", "$rootScope", "$timeout", "$rootElement", "$animate", "$mdUtil", "$mdCompiler", "$mdTheming", "$log"];
   return createInterimElementProvider;
 
   /**
@@ -6394,8 +6483,13 @@ function InterimElementProvider() {
       var publicService = {
         hide: interimElementService.hide,
         cancel: interimElementService.cancel,
-        show: showInterimElement
+        show: showInterimElement,
+
+        // Special internal method to destroy an interim element without animations
+        // used when navigation changes causes a $scope.$destroy() action
+        destroy : destroyInterimElement
       };
+
 
       defaultMethods = providerConfig.methods || [];
       // This must be invoked after the publicService is initialized
@@ -6456,9 +6550,11 @@ function InterimElementProvider() {
           //
           // @example `$mdToast.simple('hello')` // sets options.content to hello
           //                                     // because argOption === 'content'
-          if (arguments.length && definition.argOption && !angular.isObject(arg) &&
-              !angular.isArray(arg)) {
+          if (arguments.length && definition.argOption &&
+              !angular.isObject(arg) && !angular.isArray(arg))  {
+
             return (new Preset())[definition.argOption](arg);
+
           } else {
             return new Preset(arg);
           }
@@ -6468,6 +6564,9 @@ function InterimElementProvider() {
 
       return publicService;
 
+      /**
+       *
+       */
       function showInterimElement(opts) {
         // opts is either a preset which stores its options on an _options field,
         // or just an object made up of options
@@ -6477,6 +6576,17 @@ function InterimElementProvider() {
         return interimElementService.show(
           angular.extend({}, defaultOptions, opts)
         );
+      }
+
+      /**
+       *  Special method to hide and destroy an interimElement WITHOUT
+       *  any 'leave` or hide animations ( an immediate force hide/remove )
+       *
+       *  NOTE: This calls the onRemove() subclass method for each component...
+       *  which must have code to respond to `options.$destroy == true`
+       */
+      function destroyInterimElement(opts) {
+          return interimElementService.destroy(opts);
       }
 
       /**
@@ -6497,7 +6607,7 @@ function InterimElementProvider() {
   }
 
   /* @ngInject */
-  function InterimElementFactory($document, $q, $rootScope, $timeout, $rootElement, $animate,
+  function InterimElementFactory($document, $q, $$q, $rootScope, $timeout, $rootElement, $animate,
                                  $mdUtil, $mdCompiler, $mdTheming, $log ) {
     return function createInterimElementService() {
       var SHOW_CANCELLED = false;
@@ -6519,7 +6629,8 @@ function InterimElementProvider() {
       return service = {
         show: show,
         hide: hide,
-        cancel: cancel
+        cancel: cancel,
+        destroy : destroy
       };
 
       /*
@@ -6537,7 +6648,7 @@ function InterimElementProvider() {
        */
       function show(options) {
         options = options || {};
-        var interimElement = new InterimElement(options);
+        var interimElement = new InterimElement(options || {});
         var hideExisting = !options.skipHide && stack.length ? service.hide() : $q.when(true);
 
         // This hide()s only the current interim element before showing the next, new one
@@ -6549,7 +6660,8 @@ function InterimElementProvider() {
           interimElement
             .show()
             .catch(function( reason ) {
-              // $log.error("InterimElement.show() error: " + reason );
+              //$log.error("InterimElement.show() error: " + reason );
+              return reason;
             });
 
         });
@@ -6589,9 +6701,10 @@ function InterimElementProvider() {
 
         function closeElement(interim) {
           interim
-            .remove(reason || SHOW_CLOSED, false)
+            .remove(reason || SHOW_CLOSED, false, options || { })
             .catch(function( reason ) {
-              // $log.error("InterimElement.hide() error: " + reason );
+              //$log.error("InterimElement.hide() error: " + reason );
+              return reason;
             });
           return interim.deferred.promise;
         }
@@ -6609,17 +6722,28 @@ function InterimElementProvider() {
        * @returns Promise that will be resolved after the element has been removed.
        *
        */
-      function cancel(reason) {
+      function cancel(reason, options) {
         var interim = stack.shift();
         if ( !interim ) return $q.when(reason || SHOW_CANCELLED);
 
         interim
-          .remove(reason || SHOW_CANCELLED, true)
+          .remove(reason || SHOW_CANCELLED, true, options || { })
           .catch(function( reason ) {
-            // $log.error("InterimElement.cancel() error: " + reason );
+            //$log.error("InterimElement.cancel() error: " + reason );
+            return reason;
           });
 
         return interim.deferred.promise;
+      }
+
+      /*
+       * Special method to quick-remove the interim element without animations
+       */
+      function destroy() {
+        var interim = stack.shift();
+
+        return interim ? interim.remove(SHOW_CANCELLED, false, {'$destroy':true}) :
+               $q.when(SHOW_CANCELLED);
       }
 
 
@@ -6653,7 +6777,7 @@ function InterimElementProvider() {
                 showAction = showElement(element, options, compiledData.controller)
                   .then(resolve, rejectAll );
 
-              });
+              }, rejectAll);
 
             function rejectAll(fault) {
               // Force the '$md<xxx>.show()' promise to reject
@@ -6671,39 +6795,48 @@ function InterimElementProvider() {
          * - perform the transition-out, and
          * - perform optional clean up scope.
          */
-        function transitionOutAndRemove(response, isCancelled) {
+        function transitionOutAndRemove(response, isCancelled, opts) {
+
+          // abort if the show() and compile failed
+          if ( !element ) return $q.when(false);
+
+          options = angular.extend(options || {}, opts || {});
           options.cancelAutoHide && options.cancelAutoHide();
+          options.element.triggerHandler('$mdInterimElementRemove');
 
-          return $q(function(resolve, reject){
+          if ( options.$destroy === true ) {
 
-            $q.when(showAction).finally(function(){
-              options.element.triggerHandler('$mdInterimElementRemove');
-              hideElement(options.element, options).then( function() {
+            return hideElement(options.element, options);
 
-                (isCancelled && rejectAll(response)) || resolveAll();
+          } else {
 
-              }, rejectAll );
+            $q.when(showAction)
+                .finally(function() {
+                  hideElement(options.element, options).then(function() {
 
-            });
+                    (isCancelled && rejectAll(response)) || resolveAll(response);
 
-            function resolveAll() {
-              // The `show()` returns a promise that will be resolved when the interim
-              // element is hidden or cancelled...
-              self.deferred.resolve(response);
+                  }, rejectAll);
+                });
 
-              // Now resolve the `.hide()` promise itself (optional)
-              resolve(response);
-            }
+            return self.deferred.promise;
+          }
 
-            function rejectAll(fault) {
-              // Force the '$md<xxx>.show()' promise to reject
-              self.deferred.reject(fault);
 
-              // Continue rejection propagation
-              reject(fault);
-            }
+          /**
+           * The `show()` returns a promise that will be resolved when the interim
+           * element is hidden or cancelled...
+           */
+          function resolveAll(response) {
+            self.deferred.resolve(response);
+          }
 
-          });
+          /**
+           * Force the '$md<xxx>.show()' promise to reject
+           */
+          function rejectAll(fault) {
+            self.deferred.reject(fault);
+          }
         }
 
         /**
@@ -6839,7 +6972,6 @@ function InterimElementProvider() {
               // Start transitionIn
               $q.when(options.onShow(options.scope, element, options, controller))
                 .then(function () {
-
                   notifyComplete(options.scope, element, options);
                   startAutoHide();
 
@@ -6856,21 +6988,32 @@ function InterimElementProvider() {
         function hideElement(element, options) {
           var announceRemoving = options.onRemoving || angular.noop;
 
-          return $q(function (resolve, reject) {
+          return $$q(function (resolve, reject) {
             try {
               // Start transitionIn
-              var action = $q.when(element ? options.onRemove(options.scope, element, options) : true);
+              var action = $$q.when( options.onRemove(options.scope, element, options) || true );
 
               // Trigger callback *before* the remove operation starts
               announceRemoving(element, action);
 
-              // Wait until transition-out is done
-              action.then(function () {
+              if ( options.$destroy == true ) {
 
-                !options.preserveScope && options.scope.$destroy();
+                // For $destroy, onRemove should be synchronous
                 resolve(element);
 
-              }, reject );
+              } else {
+
+                // Wait until transition-out is done
+                action.then(function () {
+
+                  if (!options.preserveScope && options.scope ) {
+                    options.scope.$destroy();
+                  }
+
+                  resolve(element);
+
+                }, reject );
+              }
 
             } catch(e) {
               reject(e.message);
@@ -6891,6 +7034,8 @@ function InterimElementProvider() {
 
 (function () {
   'use strict';
+
+  var $$mdLayout, $parse, $interpolate;
 
     /**
      *
@@ -6933,25 +7078,41 @@ function InterimElementProvider() {
      */
     angular.module('material.core.layout', [ 'ng' ])
 
+      /**
+       * Model of flags used by the Layout directives
+       * Allows changes while running tests or runtime app changes
+       */
+      .factory("$$mdLayout", function() {
+        return {
+          /**
+           * Should we remove the original layout Attribute selectors
+           * after translation injection
+           */
+          removeAttributes : true,
+
+          /**
+           * Special internal flag used to optimize
+           * noop(s) for the directive postLinks below
+           */
+          disablePostLinks : undefined
+        };
+      })
+
       // Attribute directives with optional value(s)
 
       .directive('layout'              , attributeWithObserve('layout' , true)       )
       .directive('layoutSm'            , attributeWithObserve('layout-sm'   , true)  )
       .directive('layoutGtSm'          , attributeWithObserve('layout-gt-sm', true)  )
-      .directive('layoutLtMd'          , warnAttrNotSupported('layout-lt-md',true)   )
       .directive('layoutMd'            , attributeWithObserve('layout-md'   , true)  )
       .directive('layoutGtMd'          , attributeWithObserve('layout-gt-md', true)  )
-      .directive('layoutLtLg'          , warnAttrNotSupported('layout-lt-lg',true)   )
       .directive('layoutLg'            , attributeWithObserve('layout-lg'   , true)  )
       .directive('layoutGtLg'          , attributeWithObserve('layout-gt-lg', true)  )
 
       .directive('flex'                , attributeWithObserve('flex'        , true)  )
       .directive('flexSm'              , attributeWithObserve('flex-sm'     , true)  )
       .directive('flexGtSm'            , attributeWithObserve('flex-gt-sm'  , true)  )
-      .directive('flexLtMd'            , warnAttrNotSupported('flex-lt-md'  ,true)   )
       .directive('flexMd'              , attributeWithObserve('flex-md'     , true)  )
       .directive('flexGtMd'            , attributeWithObserve('flex-gt-md'  , true)  )
-      .directive('flexLtLg'            , warnAttrNotSupported('flex-lt-lg'  ,true)   )
       .directive('flexLg'              , attributeWithObserve('flex-lg'     , true)  )
       .directive('flexGtLg'            , attributeWithObserve('flex-gt-lg'  , true)  )
 
@@ -6960,30 +7121,24 @@ function InterimElementProvider() {
       .directive('layoutAlign'         , attributeWithObserve('layout-align')        )
       .directive('layoutAlignSm'       , attributeWithObserve('layout-align-sm')     )
       .directive('layoutAlignGtSm'     , attributeWithObserve('layout-align-gt-sm')  )
-      .directive('layoutAlignLtMd'     , warnAttrNotSupported('layout-align-lt-md')  )
       .directive('layoutAlignMd'       , attributeWithObserve('layout-align-md')     )
       .directive('layoutAlignGtMd'     , attributeWithObserve('layout-align-gt-md')  )
-      .directive('layoutAlignLtLg'     , warnAttrNotSupported('layout-align-lt-lg')  )
       .directive('layoutAlignLg'       , attributeWithObserve('layout-align-lg')     )
       .directive('layoutAlignGtLg'     , attributeWithObserve('layout-align-gt-lg')  )
 
       .directive('flexOrder'           , attributeWithObserve('flex-order')          )
       .directive('flexOrderSm'         , attributeWithObserve('flex-order-sm')       )
       .directive('flexOrderGtSm'       , attributeWithObserve('flex-order-gt-sm')    )
-      .directive('flexOrderLtMd'       , warnAttrNotSupported('flex-order-lt-md')    )
       .directive('flexOrderMd'         , attributeWithObserve('flex-order-md')       )
       .directive('flexOrderGtMd'       , attributeWithObserve('flex-order-gt-md')    )
-      .directive('flexOrderLtLg'       , warnAttrNotSupported('flex-order-lt-lg')    )
       .directive('flexOrderLg'         , attributeWithObserve('flex-order-lg')       )
       .directive('flexOrderGtLg'       , attributeWithObserve('flex-order-gt-lg')    )
 
       .directive('offset'              , attributeWithObserve('offset')              )
       .directive('offsetSm'            , attributeWithObserve('offset-sm')           )
       .directive('offsetGtSm'          , attributeWithObserve('offset-gt-sm')        )
-      .directive('offsetLtMd'          , warnAttrNotSupported('offset-lt-md')        )
       .directive('offsetMd'            , attributeWithObserve('offset-md')           )
       .directive('offsetGtMd'          , attributeWithObserve('offset-gt-md')        )
-      .directive('offsetLtLg'          , warnAttrNotSupported('offset-lt-lg')        )
       .directive('offsetLg'            , attributeWithObserve('offset-lg')           )
       .directive('offsetGtLg'          , attributeWithObserve('offset-gt-lg')        )
 
@@ -6997,21 +7152,36 @@ function InterimElementProvider() {
       .directive('hide'                , attributeWithoutValue('hide')               )
       .directive('hideSm'              , attributeWithoutValue('hide-sm')            )
       .directive('hideGtSm'            , attributeWithoutValue('hide-gt-sm')         )
-      .directive('hideLtMd'            , warnAttrNotSupported ('hide-lt-md')         )
       .directive('hideMd'              , attributeWithoutValue('hide-md')            )
       .directive('hideGtMd'            , attributeWithoutValue('hide-gt-md')         )
-      .directive('hideLtLg'            , warnAttrNotSupported ('hide-lt-lg')         )
       .directive('hideLg'              , attributeWithoutValue('hide-lg')            )
       .directive('hideGtLg'            , attributeWithoutValue('hide-gt-lg')         )
       .directive('show'                , attributeWithoutValue('show')               )
       .directive('showSm'              , attributeWithoutValue('show-sm')            )
       .directive('showGtSm'            , attributeWithoutValue('show-gt-sm')         )
-      .directive('showLtMd'            , warnAttrNotSupported ('show-lt-md')         )
       .directive('showMd'              , attributeWithoutValue('show-md')            )
       .directive('showGtMd'            , attributeWithoutValue('show-gt-md')         )
-      .directive('showLtLg'            , warnAttrNotSupported ('show-lt-lg')         )
       .directive('showLg'              , attributeWithoutValue('show-lg')            )
-      .directive('showGtLg'            , attributeWithoutValue('show-gt-lg')         );
+      .directive('showGtLg'            , attributeWithoutValue('show-gt-lg')         )
+
+      // !! Deprecated attributes: use the `-lt` (aka less-than) notations
+
+      .directive('layoutLtMd'          , warnAttrNotSupported('layout-lt-md',true)   )
+      .directive('layoutLtLg'          , warnAttrNotSupported('layout-lt-lg',true)   )
+      .directive('flexLtMd'            , warnAttrNotSupported('flex-lt-md'  ,true)   )
+      .directive('flexLtLg'            , warnAttrNotSupported('flex-lt-lg'  ,true)   )
+
+      .directive('layoutAlignLtMd'     , warnAttrNotSupported('layout-align-lt-md')  )
+      .directive('layoutAlignLtLg'     , warnAttrNotSupported('layout-align-lt-lg')  )
+      .directive('flexOrderLtMd'       , warnAttrNotSupported('flex-order-lt-md')    )
+      .directive('flexOrderLtLg'       , warnAttrNotSupported('flex-order-lt-lg')    )
+      .directive('offsetLtMd'          , warnAttrNotSupported('offset-lt-md')        )
+      .directive('offsetLtLg'          , warnAttrNotSupported('offset-lt-lg')        )
+
+      .directive('hideLtMd'            , warnAttrNotSupported ('hide-lt-md')         )
+      .directive('hideLtLg'            , warnAttrNotSupported ('hide-lt-lg')         )
+      .directive('showLtMd'            , warnAttrNotSupported ('show-lt-md')         )
+      .directive('showLtLg'            , warnAttrNotSupported ('show-lt-lg')         );
 
     /**
      * These functions create registration functions for ngMaterial Layout attribute directives
@@ -7027,62 +7197,84 @@ function InterimElementProvider() {
      * @param {boolean=} addDirectiveAsClass
      */
     function attributeWithObserve(className, addDirectiveAsClass) {
-      return function() {
+
+      return ['$$mdLayout', '$document', '$parse', '$interpolate', function(_$$mdLayout_, $document, _$parse_, _$interpolate_) {
+        $$mdLayout = _$$mdLayout_;
+        $parse = _$parse_;
+        $interpolate = _$interpolate_;
+
         return {
+            restrict : 'A',
             compile: function(element, attr) {
+              if ( postLinkIsDisabled($document[0]) ) return angular.noop;
+
               attributeValueToClass(null, element, attr);
 
               // Use for postLink to account for transforms after ng-transclude.
               return attributeValueToClass;
             }
         };
-      };
+      }];
+
 
       /**
        * Add as transformed class selector(s), then
        * remove the deprecated attribute selector
        */
-      function attributeValueToClass(scope, element, attr) {
-        var directive = attr.$normalize(className);
+      function attributeValueToClass(scope, element, attrs) {
+        var updateClassFn = updateClassWithValue(element,className, attrs);
+        var normalizedAttr = attrs.$normalize(className);
+        var attrValue = attrs[normalizedAttr] ? attrs[normalizedAttr].replace(/\s+/g, "-") : null;
+        var addImmediate = attrValue ? !needsInterpolation(attrValue) : false;
+        var watchValue   = needsInterpolation(attrValue);
 
         // Add transformed class selector(s)
-        if (addDirectiveAsClass) {
-          element.addClass(className);
-        }
+        if (addDirectiveAsClass) element.addClass(className);
 
-        if (attr[directive]) {
-          element.addClass(className + "-" + attr[directive].replace(/\s+/g, "-"));
-        }
-
-        if ( scope ) {
-          /**
-           * After link-phase, do NOT remove deprecated layout attribute selector.
-           * Instead watch the attribute so interpolated data-bindings to layout
-           * selectors will continue to be supported.
-           *
-           * $observe the className and update with new class (after removing the last one)
-           *
-           * e.g. `layout="{{layoutDemo.direction}}"` will update...
-           */
-          var lastClass;
-
-          attr.$observe(function() {
-
-            return attr[className];
-
-          }, function(newVal) {
-
-            element.removeClass(lastClass);
-
-              lastClass = className + "-" + String(newVal).replace(/\s+/g, "-");
-
-            element.addClass(lastClass);
-
-          });
-
-        }
-
+        if ( addImmediate ) element.addClass(className + "-" + attrValue);
+        if ( watchValue ) attrs.$observe( normalizedAttr, updateClassFn );
+        if ( $$mdLayout.removeAttributes ) element.removeAttr(className);
       }
+
+    }
+
+    /**
+     * See if the original value has interpolation symbols:
+     * e.g.  flex-gt-md="{{triggerPoint}}"
+     */
+    function needsInterpolation(value) {
+      return (value ||"").indexOf($interpolate.startSymbol()) > -1;
+    }
+
+    /**
+     * After link-phase, do NOT remove deprecated layout attribute selector.
+     * Instead watch the attribute so interpolated data-bindings to layout
+     * selectors will continue to be supported.
+     *
+     * $observe() the className and update with new class (after removing the last one)
+     *
+     * e.g. `layout="{{layoutDemo.direction}}"` will update...
+     *
+     * NOTE: The value must match one of the specified styles in the CSS.
+     * For example `flex-gt-md="{{size}}`  where `scope.size == 47` will NOT work since
+     * only breakpoints for 0, 5, 10, 15... 100, 33, 34, 66, 67 are defined.
+     *
+     */
+    function updateClassWithValue(element, className, attr) {
+      var lastClass;
+
+      return function updateClassWithValue(newValue) {
+        var value = String(newValue || "").replace(/\s+/g, "-");
+
+        element.removeClass(lastClass);
+        lastClass = !value ? className : className + "-" + value;
+        element.addClass(lastClass);
+
+        // Conditionally remove the attribute selector in case the browser attempts to
+        // read it and suffers a performance downgrade (IE).
+
+        if ( $$mdLayout.removeAttributes ) element.removeAttr(className);
+      };
     }
 
     /**
@@ -7090,16 +7282,20 @@ function InterimElementProvider() {
      * This is a `simple` transpose of attribute usage to class usage
      */
     function attributeWithoutValue(className) {
-      return function() {
+      return ['$$mdLayout', '$document', function(_$$mdLayout_, $document) {
+        $$mdLayout = _$$mdLayout_;
         return {
-          compile: function(element, attr) {
+          restrict : 'A',
+          compile: function(element, attrs) {
+            if ( postLinkIsDisabled($document[0]) ) return angular.noop;
+
             attributeToClass(null, element);
 
             // Use for postLink to account for transforms after ng-transclude.
             return attributeToClass;
           }
         };
-      };
+      }];
 
       /**
        * Add as transformed class selector, then
@@ -7108,7 +7304,7 @@ function InterimElementProvider() {
       function attributeToClass(scope, element) {
         element.addClass(className);
 
-        if ( scope ) {
+        if ( $$mdLayout.removeAttributes ) {
           // After link-phase, remove deprecated layout attribute selector
           element.removeAttr(className);
         }
@@ -7126,6 +7322,35 @@ function InterimElementProvider() {
         return angular.noop;
       }];
 
+    }
+
+    /**
+     * Scan the body element. If it has a class 'md-css-only', then do NOT
+     * postLink process the directives for Attribute selectors.
+     * (recall that postlink injects Class selectors based on attribute selector settings)
+     *
+     * Instead the Layout CSS for Attributes is used:
+     * e.g
+     *       .md-css-only [layout=row] {
+     *          flex-direction: row;
+     *          -webkit-flex-direction: row;
+     *       }
+     *
+     * Note: this means that 'md-css-only' will not work for IE (due to performance issues)
+     * In these cases, the Layout translators (directives) should be enabled and the
+     * `angular-material.[min.]js` must be loaded.
+     */
+    function postLinkIsDisabled(document) {
+      var disablePostLinks = $$mdLayout.disablePostLinks;
+
+      // Perform a read-once (1x) check for the `md-css-only` class on the BODY
+
+      if ( angular.isUndefined(disablePostLinks) ) {
+        var body = document && document.body;
+        if (body) disablePostLinks = body.classList.contains('md-css-only');
+      }
+
+      return $$mdLayout.disablePostLinks = disablePostLinks;
     }
 
 })();
@@ -7272,7 +7497,7 @@ function InterimElementProvider() {
    *
    * @param {object=} scope Scope within the current context
    * @param {object=} element The element the ripple effect should be applied to
-   * @param {object=} options (Optional) Configuration options to override the defaultripple configuration
+   * @param {object=} options (Optional) Configuration options to override the default ripple configuration
    */
 
   angular.module('material.core')
@@ -7280,12 +7505,11 @@ function InterimElementProvider() {
 
   function MdButtonInkRipple($mdInkRipple) {
     return {
-      attach: attach
-    };
+      attach: function attachRipple(scope, element, options) {
+        options = angular.extend(optionsForElement(element), options);
 
-    function attach(scope, element, options) {
-      var elementOptions = optionsForElement(element);
-      return $mdInkRipple.attach(scope, element, angular.extend(elementOptions, options));
+        return $mdInkRipple.attach(scope, element, options);
+      }
     };
 
     function optionsForElement(element) {
@@ -7534,6 +7758,8 @@ InkRippleCtrl.prototype.bindEvents = function () {
  * @param event {MouseEvent}
  */
 InkRippleCtrl.prototype.handleMousedown = function (event) {
+  if ( this.mousedown ) return;
+
   // When jQuery is loaded, we have to get the original event
   if (event.hasOwnProperty('originalEvent')) event = event.originalEvent;
   this.mousedown = true;
@@ -7550,9 +7776,13 @@ InkRippleCtrl.prototype.handleMousedown = function (event) {
  * mouseup or mouseleave event)
  */
 InkRippleCtrl.prototype.handleMouseup = function () {
-  var ctrl       = this;
-  this.mousedown = false;
-  this.$mdUtil.nextTick(function () { ctrl.clearRipples(); }, false);
+  if ( this.mousedown || this.lastRipple ) {
+    var ctrl       = this;
+    this.mousedown = false;
+    this.$mdUtil.nextTick(function () {
+      ctrl.clearRipples();
+    }, false);
+  }
 };
 
 /**
@@ -7560,7 +7790,9 @@ InkRippleCtrl.prototype.handleMouseup = function () {
  * Depending on logic within `fadeInComplete`, some removals will be postponed.
  */
 InkRippleCtrl.prototype.clearRipples = function () {
-  for (var i = 0; i < this.ripples.length; i++) this.fadeInComplete(this.ripples[ i ]);
+  for (var i = 0; i < this.ripples.length; i++) {
+    this.fadeInComplete(this.ripples[ i ]);
+  }
 };
 
 /**
@@ -7580,12 +7812,23 @@ InkRippleCtrl.prototype.clearTimeout = function () {
   }
 };
 
+InkRippleCtrl.prototype.isRippleAllowed = function () {
+  var element = this.$element[0];
+  do {
+    if (!element.tagName || element.tagName === 'BODY') break;
+    if (element && element.hasAttribute && element.hasAttribute('disabled')) return false;
+  } while (element = element.parentNode);
+  return true;
+};
+
 /**
  * Creates a new ripple and adds it to the container.  Also tracks ripple in `this.ripples`.
  * @param left
  * @param top
  */
 InkRippleCtrl.prototype.createRipple = function (left, top) {
+  if (!this.isRippleAllowed()) return;
+
   var ctrl        = this;
   var ripple      = angular.element('<div class="md-ripple"></div>');
   var width       = this.$element.prop('clientWidth');
@@ -7616,9 +7859,14 @@ InkRippleCtrl.prototype.createRipple = function (left, top) {
   this.container.append(ripple);
   this.ripples.push(ripple);
   ripple.addClass('md-ripple-placed');
+
   this.$mdUtil.nextTick(function () {
+
     ripple.addClass('md-ripple-scaled md-ripple-active');
-    ctrl.$timeout(function () { ctrl.clearRipples(); }, DURATION, false);
+    ctrl.$timeout(function () {
+      ctrl.clearRipples();
+    }, DURATION, false);
+
   }, false);
 
   function rgbaToRGB (color) {
@@ -7640,7 +7888,9 @@ InkRippleCtrl.prototype.createRipple = function (left, top) {
  */
 InkRippleCtrl.prototype.fadeInComplete = function (ripple) {
   if (this.lastRipple === ripple) {
-    if (!this.timeout && !this.mousedown) this.removeRipple(ripple);
+    if (!this.timeout && !this.mousedown) {
+      this.removeRipple(ripple);
+    }
   } else {
     this.removeRipple(ripple);
   }
@@ -7659,14 +7909,19 @@ InkRippleCtrl.prototype.removeRipple = function (ripple) {
   if (this.ripples.length === 0) this.container.css({ backgroundColor: '' });
   // use a 2-second timeout in order to allow for the animation to finish
   // we don't actually care how long the animation takes
-  this.$timeout(function () { ctrl.fadeOutComplete(ripple); }, DURATION, false);
+  this.$timeout(function () {
+    ctrl.fadeOutComplete(ripple);
+  }, DURATION, false);
 };
 
 /**
  * Removes the provided ripple from the DOM
  * @param ripple
  */
-InkRippleCtrl.prototype.fadeOutComplete = function (ripple) { ripple.remove(); };
+InkRippleCtrl.prototype.fadeOutComplete = function (ripple) {
+  ripple.remove();
+  this.lastRipple = null;
+};
 
 /**
  * Used to create an empty directive.  This is used to track flag-directives whose children may have
@@ -8189,8 +8444,8 @@ var LIGHT_DEFAULT_HUES = {
 var DARK_DEFAULT_HUES = {
   'background': {
     'default': '800',
-    'hue-1': '300',
-    'hue-2': '600',
+    'hue-1': '600',
+    'hue-2': '300',
     'hue-3': '900'
   }
 };
@@ -8957,7 +9212,7 @@ if (angular.version.minor >= 4) {
 
   var forEach = angular.forEach;
 
-  var WEBKIT = window.ontransitionend === undefined && window.onwebkittransitionend !== undefined;
+  var WEBKIT = angular.isDefined(document.documentElement.style.WebkitAppearance);
   var TRANSITION_PROP = WEBKIT ? 'WebkitTransition' : 'transition';
   var ANIMATION_PROP = WEBKIT ? 'WebkitAnimation' : 'animation';
   var PREFIX = WEBKIT ? '-webkit-' : '';
@@ -9265,7 +9520,7 @@ if (angular.version.minor >= 4) {
 
       function parseMaxTime(str) {
         var maxValue = 0;
-        var values = str.split(/\s*,\s*/);
+        var values = (str || "").split(/\s*,\s*/);
         forEach(values, function(value) {
           // it's always safe to consider only second values and omit `ms` values since
           // getComputedStyle will always handle the conversion for us
@@ -9372,6 +9627,74 @@ angular.module('material.components.autocomplete', [
 (function(){
 "use strict";
 
+/*
+ * @ngdoc module
+ * @name material.components.backdrop
+ * @description Backdrop
+ */
+
+/**
+ * @ngdoc directive
+ * @name mdBackdrop
+ * @module material.components.backdrop
+ *
+ * @restrict E
+ *
+ * @description
+ * `<md-backdrop>` is a backdrop element used by other components, such as dialog and bottom sheet.
+ * Apply class `opaque` to make the backdrop use the theme backdrop color.
+ *
+ */
+
+angular
+  .module('material.components.backdrop', ['material.core'])
+  .directive('mdBackdrop', ["$mdTheming", "$animate", "$rootElement", "$window", "$log", "$$rAF", "$document", function BackdropDirective($mdTheming, $animate, $rootElement, $window, $log, $$rAF, $document) {
+    var ERROR_CSS_POSITION = "<md-backdrop> may not work properly in a scrolled, static-positioned parent container.";
+
+    return {
+      restrict: 'E',
+      link: postLink
+    };
+
+    function postLink(scope, element, attrs) {
+
+      // If body scrolling has been disabled using mdUtil.disableBodyScroll(),
+      // adjust the 'backdrop' height to account for the fixed 'body' top offset
+      var body = $window.getComputedStyle($document[0].body);
+      if (body.position == 'fixed') {
+        var hViewport = parseInt(body.height, 10) + Math.abs(parseInt(body.top, 10));
+        element.css({
+          height: hViewport + 'px'
+        });
+      }
+
+      // backdrop may be outside the $rootElement, tell ngAnimate to animate regardless
+      if ($animate.pin) $animate.pin(element, $rootElement);
+
+      $$rAF(function () {
+
+        // Often $animate.enter() is used to append the backDrop element
+        // so let's wait until $animate is done...
+        var parent = element.parent()[0];
+        if (parent) {
+          var styles = $window.getComputedStyle(parent);
+          if (styles.position == 'static') {
+            // backdrop uses position:absolute and will not work properly with parent position:static (default)
+            $log.warn(ERROR_CSS_POSITION);
+          }
+        }
+
+        $mdTheming.inherit(element, element.parent());
+      });
+
+    }
+
+  }]);
+
+})();
+(function(){
+"use strict";
+
 /**
  * @ngdoc module
  * @name material.components.bottomSheet
@@ -9386,11 +9709,20 @@ angular
   .directive('mdBottomSheet', MdBottomSheetDirective)
   .provider('$mdBottomSheet', MdBottomSheetProvider);
 
-function MdBottomSheetDirective() {
+/* @ngInject */
+function MdBottomSheetDirective($mdBottomSheet) {
   return {
-    restrict: 'E'
+    restrict: 'E',
+    link : function postLink(scope, element, attr) {
+      // When navigation force destroys an interimElement, then
+      // listen and $destroy() that interim instance...
+      scope.$on('$destroy', function() {
+        $mdBottomSheet.destroy();
+      });
+    }
   };
 }
+MdBottomSheetDirective.$inject = ["$mdBottomSheet"];
 
 
 /**
@@ -9634,74 +9966,6 @@ MdBottomSheetProvider.$inject = ["$$interimElementProvider"];
 (function(){
 "use strict";
 
-/*
- * @ngdoc module
- * @name material.components.backdrop
- * @description Backdrop
- */
-
-/**
- * @ngdoc directive
- * @name mdBackdrop
- * @module material.components.backdrop
- *
- * @restrict E
- *
- * @description
- * `<md-backdrop>` is a backdrop element used by other components, such as dialog and bottom sheet.
- * Apply class `opaque` to make the backdrop use the theme backdrop color.
- *
- */
-
-angular
-  .module('material.components.backdrop', ['material.core'])
-  .directive('mdBackdrop', ["$mdTheming", "$animate", "$rootElement", "$window", "$log", "$$rAF", "$document", function BackdropDirective($mdTheming, $animate, $rootElement, $window, $log, $$rAF, $document) {
-    var ERROR_CSS_POSITION = "<md-backdrop> may not work properly in a scrolled, static-positioned parent container.";
-
-    return {
-      restrict: 'E',
-      link: postLink
-    };
-
-    function postLink(scope, element, attrs) {
-
-      // If body scrolling has been disabled using mdUtil.disableBodyScroll(),
-      // adjust the 'backdrop' height to account for the fixed 'body' top offset
-      var body = $window.getComputedStyle($document[0].body);
-      if (body.position == 'fixed') {
-        var hViewport = parseInt(body.height, 10) + Math.abs(parseInt(body.top, 10));
-        element.css({
-          height: hViewport + 'px'
-        });
-      }
-
-      // backdrop may be outside the $rootElement, tell ngAnimate to animate regardless
-      if ($animate.pin) $animate.pin(element, $rootElement);
-
-      $$rAF(function () {
-
-        // Often $animate.enter() is used to append the backDrop element
-        // so let's wait until $animate is done...
-        var parent = element.parent()[0];
-        if (parent) {
-          var styles = $window.getComputedStyle(parent);
-          if (styles.position == 'static') {
-            // backdrop uses position:absolute and will not work properly with parent position:static (default)
-            $log.warn(ERROR_CSS_POSITION);
-          }
-        }
-
-        $mdTheming.inherit(element, element.parent());
-      });
-
-    }
-
-  }]);
-
-})();
-(function(){
-"use strict";
-
 /**
  * @ngdoc module
  * @name material.components.button
@@ -9820,9 +10084,13 @@ function MdButtonDirective($mdButtonInkRipple, $mdTheming, $mdAria, $timeout) {
         }, 100);
       })
       .on('focus', function() {
-        if (scope.mouseActive === false) { element.addClass('md-focused'); }
+        if (scope.mouseActive === false) {
+          element.addClass('md-focused');
+        }
       })
-      .on('blur', function() { element.removeClass('md-focused'); });
+      .on('blur', function(ev) {
+        element.removeClass('md-focused');
+      });
   }
 
 }
@@ -10672,10 +10940,13 @@ function iosScrollFix(node) {
    * This should only need to be called once during initialization.
    */
   CalendarCtrl.prototype.buildWeekHeader = function() {
+    var firstDayOfWeek = this.dateLocale.firstDayOfWeek;
+    var shortDays = this.dateLocale.shortDays;
+
     var row = document.createElement('tr');
     for (var i = 0; i < 7; i++) {
       var th = document.createElement('th');
-      th.textContent = this.dateLocale.shortDays[i];
+      th.textContent = shortDays[(i + firstDayOfWeek) % 7];
       row.appendChild(th);
     }
 
@@ -10878,7 +11149,7 @@ function iosScrollFix(node) {
     var date = this.dateUtil.isValidDate(opt_dateInMonth) ? opt_dateInMonth : new Date();
 
     var firstDayOfMonth = this.dateUtil.getFirstDateOfMonth(date);
-    var firstDayOfTheWeek = firstDayOfMonth.getDay();
+    var firstDayOfTheWeek = this.getLocaleDay_(firstDayOfMonth);
     var numberOfDaysInMonth = this.dateUtil.getNumberOfDaysInMonth(date);
 
     // Store rows for the month in a document fragment so that we can append them all at once.
@@ -10969,6 +11240,15 @@ function iosScrollFix(node) {
     return monthBody;
   };
 
+  /**
+   * Gets the day-of-the-week index for a date for the current locale.
+   * @private
+   * @param {Date} date
+   * @returns {number} The column index of the date in the calendar.
+   */
+  CalendarMonthCtrl.prototype.getLocaleDay_ = function(date) {
+    return (date.getDay() + (7 - this.dateLocale.firstDayOfWeek)) % 7
+  };
 })();
 
 })();
@@ -10995,6 +11275,8 @@ function iosScrollFix(node) {
    * @property {(Array<string>)=} shortDays Array of abbreviated dayes of the week.
    * @property {(Array<string>)=} dates Array of dates of the month. Only necessary for locales
    *     using a numeral system other than [1, 2, 3...].
+   * @property {(Array<string>)=} firstDayOfWeek The first day of the week. Sunday = 0, Monday = 1,
+   *    etc.
    * @property {(function(string): Date)=} parseDate Function to parse a date object from a string.
    * @property {(function(Date): string)=} formatDate Function to format a date object to a string.
    * @property {(function(Date): string)=} monthHeaderFormatter Function that returns the label for
@@ -11015,12 +11297,16 @@ function iosScrollFix(node) {
    *     $mdDateLocaleProvider.days = ['dimanche', 'lundi', 'mardi', ...];
    *     $mdDateLocaleProvider.shortDays = ['Di', 'Lu', 'Ma', ...];
    *
+   *     // Can change week display to start on Monday.
+   *     $mdDateLocaleProvider.firstDayOfWeek = 1;
+   *
    *     // Optional.
    *     $mdDateLocaleProvider.dates = [1, 2, 3, 4, 5, 6, ...];
    *
    *     // Example uses moment.js to parse and format dates.
    *     $mdDateLocaleProvider.parseDate = function(dateString) {
-   *       return moment(dateString).toDate();
+   *       var m = moment(dateString, 'L', true);
+   *       return m.isValid() ? m.toDate() : new Date(NaN);
    *     };
    *
    *     $mdDateLocaleProvider.formatDate = function(date) {
@@ -11028,7 +11314,7 @@ function iosScrollFix(node) {
    *     };
    *
    *     $mdDateLocaleProvider.monthHeaderFormatter = function(date) {
-   *       myShortMonths[date.getMonth()] + ' ' + date.getFullYear();
+   *       return myShortMonths[date.getMonth()] + ' ' + date.getFullYear();
    *     };
    *
    *     // In addition to date display, date components also need localized messages
@@ -11065,6 +11351,9 @@ function iosScrollFix(node) {
 
       /** Array of dates of a month (1 - 31). Characters might be different in some locales. */
       this.dates = null;
+
+      /** Index of the first day of the week. 0 = Sunday, 1 = Monday, etc. */
+      this.firstDayOfWeek = 0;
 
       /**
        * Function that converts the date portion of a Date to a string.
@@ -11123,7 +11412,23 @@ function iosScrollFix(node) {
        * @returns {string}
        */
       function defaultFormatDate(date) {
-        return date ? date.toLocaleDateString() : '';
+        if (!date) {
+          return '';
+        }
+
+        // All of the dates created through ng-material *should* be set to midnight.
+        // If we encounter a date where the localeTime shows at 11pm instead of midnight,
+        // we have run into an issue with DST where we need to increment the hour by one:
+        // var d = new Date(1992, 9, 8, 0, 0, 0);
+        // d.toLocaleString(); // == "10/7/1992, 11:00:00 PM"
+        var localeTime = date.toLocaleTimeString();
+        var formatDate = date;
+        if (date.getHours() == 0 &&
+            (localeTime.indexOf('11:') !== -1 || localeTime.indexOf('23:') !== -1)) {
+          formatDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 1, 0, 0);
+        }
+
+        return formatDate.toLocaleDateString();
       }
 
       /**
@@ -11208,6 +11513,7 @@ function iosScrollFix(node) {
         days: this.days || $locale.DATETIME_FORMATS.DAY,
         shortDays: this.shortDays || defaultShortDays,
         dates: this.dates || defaultDates,
+        firstDayOfWeek: this.firstDayOfWeek || 0,
         formatDate: this.formatDate || defaultFormatDate,
         parseDate: this.parseDate || defaultParseDate,
         isDateComplete: this.isDateComplete || defaultIsDateComplete,
@@ -11254,14 +11560,21 @@ function iosScrollFix(node) {
    *
    * @param {Date} ng-model The component's model. Expects a JavaScript Date object.
    * @param {expression=} ng-change Expression evaluated when the model value changes.
-   * @param {expression=} md-min-date Expression representing a min date (inclusive).
-   * @param {expression=} md-max-date Expression representing a max date (inclusive).
+   * @param {Date=} md-min-date Expression representing a min date (inclusive).
+   * @param {Date=} md-max-date Expression representing a max date (inclusive).
    * @param {boolean=} disabled Whether the datepicker is disabled.
+   * @param {boolean=} required Whether a value is required for the datepicker.
    *
    * @description
    * `<md-datepicker>` is a component used to select a single date.
    * For information on how to configure internationalization for the date picker,
    * see `$mdDateLocaleProvider`.
+   *
+   * This component supports [ngMessages](https://docs.angularjs.org/api/ngMessages/directive/ngMessages).
+   * Supported attributes are:
+   * * `required`: whether a required date is not set.
+   * * `mindate`: whether the selected date is before the minimum allowed date.
+   * * `maxdate`: whether the selected date is after the maximum allowed date.
    *
    * @usage
    * <hljs lang="html">
@@ -11330,6 +11643,26 @@ function iosScrollFix(node) {
 
   /** Default time in ms to debounce input event by. */
   var DEFAULT_DEBOUNCE_INTERVAL = 500;
+
+  /**
+   * Height of the calendar pane used to check if the pane is going outside the boundary of
+   * the viewport. See calendar.scss for how $md-calendar-height is computed; an extra 20px is
+   * also added to space the pane away from the exact edge of the screen.
+   *
+   *  This is computed statically now, but can be changed to be measured if the circumstances
+   *  of calendar sizing are changed.
+   */
+  var CALENDAR_PANE_HEIGHT = 368;
+
+  /**
+   * Width of the calendar pane used to check if the pane is going outside the boundary of
+   * the viewport. See calendar.scss for how $md-calendar-width is computed; an extra 20px is
+   * also added to space the pane away from the exact edge of the screen.
+   *
+   *  This is computed statically now, but can be changed to be measured if the circumstances
+   *  of calendar sizing are changed.
+   */
+  var CALENDAR_PANE_WIDTH = 360;
 
   /**
    * Controller for md-datepicker.
@@ -11419,6 +11752,9 @@ function iosScrollFix(node) {
     /** Pre-bound click handler is saved so that the event listener can be removed. */
     this.bodyClickHandler = angular.bind(this, this.handleBodyClick);
 
+    /** Pre-bound resize handler so that the event listener can be removed. */
+    this.windowResizeHandler = $mdUtil.debounce(angular.bind(this, this.closeCalendarPane), 100);
+
     // Unless the user specifies so, the datepicker should not be a tab stop.
     // This is necessary because ngAria might add a tabindex to anything with an ng-model
     // (based on whether or not the user has turned that particular feature on/off).
@@ -11449,6 +11785,7 @@ function iosScrollFix(node) {
       self.date = self.ngModelCtrl.$viewValue;
       self.inputElement.value = self.dateLocale.formatDate(self.date);
       self.resizeInputElement();
+      self.setErrorFlags();
     };
   };
 
@@ -11504,9 +11841,13 @@ function iosScrollFix(node) {
     if (this.$attrs['ngDisabled']) {
       // The expression is to be evaluated against the directive element's scope and not
       // the directive's isolate scope.
-      this.$element.scope().$watch(this.$attrs['ngDisabled'], function(isDisabled) {
-        self.setDisabled(isDisabled);
-      });
+      var scope = this.$mdUtil.validateScope(this.$element) ? this.$element.scope() : null;
+
+      if ( scope ) {
+        scope.$watch(this.$attrs['ngDisabled'], function(isDisabled) {
+          self.setDisabled(isDisabled);
+        });
+      }
     }
 
     Object.defineProperty(this, 'placeholder', {
@@ -11526,8 +11867,23 @@ function iosScrollFix(node) {
   };
 
   /**
-   * Resizes the input element based on the size of its content.
+   * Sets the custom ngModel.$error flags to be consumed by ngMessages. Flags are:
+   *   - mindate: whether the selected date is before the minimum date.
+   *   - maxdate: whether the selected flag is after the maximum date.
    */
+  DatePickerCtrl.prototype.setErrorFlags = function() {
+    if (this.dateUtil.isValidDate(this.date)) {
+      if (this.dateUtil.isValidDate(this.minDate)) {
+        this.ngModelCtrl.$error['mindate'] = this.date < this.minDate;
+      }
+
+      if (this.dateUtil.isValidDate(this.maxDate)) {
+        this.ngModelCtrl.$error['maxdate'] = this.date > this.maxDate;
+      }
+    }
+  };
+
+  /** Resizes the input element based on the size of its content. */
   DatePickerCtrl.prototype.resizeInputElement = function() {
     this.inputElement.size = this.inputElement.value.length + EXTRA_INPUT_SIZE;
   };
@@ -11540,8 +11896,11 @@ function iosScrollFix(node) {
     var inputString = this.inputElement.value;
     var parsedDate = this.dateLocale.parseDate(inputString);
     this.dateUtil.setDateTimeToMidnight(parsedDate);
-
-    if (this.dateUtil.isValidDate(parsedDate) &&
+    if (inputString === '') {
+      this.ngModelCtrl.$setViewValue(null);
+      this.date = null;
+      this.inputContainer.classList.remove(INVALID_CLASS);
+    } else if (this.dateUtil.isValidDate(parsedDate) &&
         this.dateLocale.isDateComplete(inputString) &&
         this.dateUtil.isDateWithinRange(parsedDate, this.minDate, this.maxDate)) {
       this.ngModelCtrl.$setViewValue(parsedDate);
@@ -11556,17 +11915,54 @@ function iosScrollFix(node) {
   /** Position and attach the floating calendar to the document. */
   DatePickerCtrl.prototype.attachCalendarPane = function() {
     var calendarPane = this.calendarPane;
+    calendarPane.style.transform = '';
     this.$element.addClass('md-datepicker-open');
 
     var elementRect = this.inputContainer.getBoundingClientRect();
     var bodyRect = document.body.getBoundingClientRect();
 
-    calendarPane.style.left = (elementRect.left - bodyRect.left) + 'px';
-    calendarPane.style.top = (elementRect.top - bodyRect.top) + 'px';
-    document.body.appendChild(this.calendarPane);
+    // Check to see if the calendar pane would go off the screen. If so, adjust position
+    // accordingly to keep it within the viewport.
+    var paneTop = elementRect.top - bodyRect.top;
+    var paneLeft = elementRect.left - bodyRect.left;
+
+    // If the right edge of the pane would be off the screen and shifting it left by the
+    // difference would not go past the left edge of the screen. If the calendar pane is too
+    // big to fit on the screen at all, move it to the left of the screen and scale the entire
+    // element down to fit.
+    if (paneLeft + CALENDAR_PANE_WIDTH > bodyRect.right) {
+      if (bodyRect.right - CALENDAR_PANE_WIDTH > 0) {
+        paneLeft = bodyRect.right - CALENDAR_PANE_WIDTH;
+      } else {
+        paneLeft = 0;
+        var scale = bodyRect.width / CALENDAR_PANE_WIDTH;
+        calendarPane.style.transform = 'scale(' + scale + ')';
+      }
+
+      calendarPane.classList.add('md-datepicker-pos-adjusted');
+    }
+
+
+    if (paneLeft + CALENDAR_PANE_WIDTH > bodyRect.right &&
+        bodyRect.right - CALENDAR_PANE_WIDTH > 0) {
+      paneLeft = bodyRect.right - CALENDAR_PANE_WIDTH;
+      calendarPane.classList.add('md-datepicker-pos-adjusted');
+    }
+
+    // If the bottom edge of the pane would be off the screen and shifting it up by the
+    // difference would not go past the top edge of the screen.
+    if (paneTop + CALENDAR_PANE_HEIGHT > bodyRect.bottom &&
+        bodyRect.bottom - CALENDAR_PANE_HEIGHT > 0) {
+      paneTop = bodyRect.bottom - CALENDAR_PANE_HEIGHT;
+      calendarPane.classList.add('md-datepicker-pos-adjusted');
+    }
+
+    calendarPane.style.left = paneLeft + 'px';
+    calendarPane.style.top = paneTop + 'px';
+    document.body.appendChild(calendarPane);
 
     // The top of the calendar pane is a transparent box that shows the text input underneath.
-    // Since the pane is flowing, though, the page underneath the pane *adjacent* to the input is
+    // Since the pane is floating, though, the page underneath the pane *adjacent* to the input is
     // also shown unless we cover it up. The inputMask does this by filling up the remaining space
     // based on the width of the input.
     this.inputMask.style.left = elementRect.width + 'px';
@@ -11581,6 +11977,7 @@ function iosScrollFix(node) {
   DatePickerCtrl.prototype.detachCalendarPane = function() {
     this.$element.removeClass('md-datepicker-open');
     this.calendarPane.classList.remove('md-pane-open');
+    this.calendarPane.classList.remove('md-datepicker-pos-adjusted');
 
     if (this.calendarPane.parentNode) {
       // Use native DOM removal because we do not want any of the angular state of this element
@@ -11613,6 +12010,8 @@ function iosScrollFix(node) {
       this.$mdUtil.nextTick(function() {
         document.body.addEventListener('click', self.bodyClickHandler);
       }, false);
+
+      window.addEventListener('resize', this.windowResizeHandler);
     }
   };
 
@@ -11625,6 +12024,7 @@ function iosScrollFix(node) {
     this.$mdUtil.enableScrolling();
 
     document.body.removeEventListener('click', this.bodyClickHandler);
+    window.removeEventListener('resize', this.windowResizeHandler);
   };
 
   /** Gets the controller instance for the calendar in the floating pane. */
@@ -11868,7 +12268,9 @@ function iosScrollFix(node) {
      * @param {Date} date
      */
     function setDateTimeToMidnight(date) {
-      date.setHours(0, 0, 0, 0);
+      if (isValidDate(date)) {
+        date.setHours(0, 0, 0, 0);
+      }
     }
 
     /**
@@ -11920,7 +12322,7 @@ angular
   .directive('mdDialog', MdDialogDirective)
   .provider('$mdDialog', MdDialogProvider);
 
-function MdDialogDirective($$rAF, $mdTheming) {
+function MdDialogDirective($$rAF, $mdTheming, $mdDialog) {
   return {
     restrict: 'E',
     link: function(scope, element, attr) {
@@ -11935,14 +12337,24 @@ function MdDialogDirective($$rAF, $mdTheming) {
           //-- delayed image loading may impact scroll height, check after images are loaded
           angular.element(images).on('load', addOverflowClass);
         }
+
+        scope.$on('$destroy', function() {
+          $mdDialog.destroy();
+        });
+
+        /**
+         *
+         */
         function addOverflowClass() {
           element.toggleClass('md-content-overflow', content.scrollHeight > content.clientHeight);
         }
+
+
       });
     }
   };
 }
-MdDialogDirective.$inject = ["$$rAF", "$mdTheming"];
+MdDialogDirective.$inject = ["$$rAF", "$mdTheming", "$mdDialog"];
 
 /**
  * @ngdoc service
@@ -12305,11 +12717,11 @@ function MdDialogProvider($$interimElementProvider) {
       options: dialogDefaultOptions
     })
     .addPreset('alert', {
-      methods: ['title', 'content', 'ariaLabel', 'ok', 'theme'],
+      methods: ['title', 'content', 'ariaLabel', 'ok', 'theme', 'css'],
       options: advancedDialogOptions
     })
     .addPreset('confirm', {
-      methods: ['title', 'content', 'ariaLabel', 'ok', 'cancel', 'theme'],
+      methods: ['title', 'content', 'ariaLabel', 'ok', 'cancel', 'theme', 'css'],
       options: advancedDialogOptions
     });
 
@@ -12317,10 +12729,10 @@ function MdDialogProvider($$interimElementProvider) {
   function advancedDialogOptions($mdDialog, $mdTheming) {
     return {
       template: [
-        '<md-dialog md-theme="{{ dialog.theme }}" aria-label="{{ dialog.ariaLabel }}">',
+        '<md-dialog md-theme="{{ dialog.theme }}" aria-label="{{ dialog.ariaLabel }}" class="{{ dialog.css }}">',
         ' <md-dialog-content role="document" tabIndex="-1">',
         '   <h2 class="md-title">{{ dialog.title }}</h2>',
-        '   <div class="md-dialog-content-body" md-template="::dialog.content"></div>',
+        '   <div class="md-dialog-content-body" md-template="::dialog.mdContent"></div>',
         ' </md-dialog-content>',
         ' <div class="md-actions">',
         '   <md-button ng-if="dialog.$type == \'confirm\'"' +
@@ -12376,7 +12788,6 @@ function MdDialogProvider($$interimElementProvider) {
      * Show method for dialogs
      */
     function onShow(scope, element, options, controller) {
-      element = $mdUtil.extractElementByName(element, 'md-dialog');
       angular.element($document[0].body).addClass('md-dialog-is-showing');
 
       wrapSimpleContent();
@@ -12424,7 +12835,7 @@ function MdDialogProvider($$interimElementProvider) {
       function wrapSimpleContent() {
         if ( controller ) {
           var HTML_END_TAG = /<\/[\w-]*>/gm;
-          var content = controller.content || "";
+          var content = controller.content || options.content || "";
 
           var hasHTML = HTML_END_TAG.test(content);
           if (!hasHTML) {
@@ -12432,7 +12843,7 @@ function MdDialogProvider($$interimElementProvider) {
           }
 
           // Publish updated dialog content body... to be compiled by mdTemplate directive
-          controller.content = content;
+          controller.mdContent = content;
         }
       }
 
@@ -12444,16 +12855,30 @@ function MdDialogProvider($$interimElementProvider) {
     function onRemove(scope, element, options) {
       options.deactivateListeners();
       options.unlockScreenReader();
+      options.hideBackdrop(options.$destroy);
 
-      options.hideBackdrop();
+      // For navigation $destroy events, do a quick, non-animated removal,
+      // but for normal closes (from clicks, etc) animate the removal
 
-      return dialogPopOut(element, options)
-        .finally(function() {
-          angular.element($document[0].body).removeClass('md-dialog-is-showing');
-          element.remove();
+      return !!options.$destroy ? detachAndClean() : animateRemoval().then( detachAndClean );
 
-          options.origin.focus();
-        });
+      /**
+       * For normal closes, animate the removal.
+       * For forced closes (like $destroy events), skip the animations
+       */
+      function animateRemoval() {
+        return dialogPopOut(element, options);
+      }
+
+      /**
+       * Detach the element
+       */
+      function detachAndClean() {
+        angular.element($document[0].body).removeClass('md-dialog-is-showing');
+        element.remove();
+
+        if (!options.$destroy) options.origin.focus();
+      }
     }
 
     /**
@@ -12462,8 +12887,11 @@ function MdDialogProvider($$interimElementProvider) {
      * unless overridden in the options.parent
      */
     function captureSourceAndParent(element, options) {
-      var origin = {element: null, bounds: null, focus: angular.noop};
-      options.origin = angular.extend({}, origin, options.origin || {});
+      options.origin = angular.extend({
+        element: null,
+        bounds: null,
+        focus: angular.noop
+      }, options.origin || {});
 
       var source = angular.element((options.targetEvent || {}).target);
       if (source && source.length) {
@@ -12477,7 +12905,14 @@ function MdDialogProvider($$interimElementProvider) {
         }
       }
 
-      // In case the user provides a raw dom element, always wrap it in jqLite
+      // If the parent specifier is a simple string selector, then query for
+      // the DOM element.
+      if ( angular.isString(options.parent) ) {
+        var simpleSelector = options.parent,
+            container = $document[0].querySelectorAll(simpleSelector);
+        options.parent = container.length ? container[0] : null;
+      }
+      // If we have a reference to a raw dom element, always wrap it in jqLite
       options.parent = angular.element(options.parent || $rootElement);
 
     }
@@ -12486,12 +12921,16 @@ function MdDialogProvider($$interimElementProvider) {
      * Listen for escape keys and outside clicks to auto close
      */
     function activateListeners(element, options) {
+      var window = angular.element($window);
+      var onWindowResize = $mdUtil.debounce(function(){
+        stretchDialogContainerToViewport(element, options);
+      }, 60);
+
       var removeListeners = [];
       var smartClose = function() {
         // Only 'confirm' dialogs have a cancel button... escape/clickOutside will
         // cancel or fallback to hide.
         var closeFn = ( options.$type == 'alert' ) ? $mdDialog.hide : $mdDialog.cancel;
-
         $mdUtil.nextTick(closeFn, true);
       };
 
@@ -12509,11 +12948,15 @@ function MdDialogProvider($$interimElementProvider) {
         // Add keyup listeners
         element.on('keyup', keyHandlerFn);
         target.on('keyup', keyHandlerFn);
+        window.on('resize', onWindowResize);
 
         // Queue remove listeners function
         removeListeners.push(function() {
+
           element.off('keyup', keyHandlerFn);
           target.off('keyup', keyHandlerFn);
+          window.off('resize', onWindowResize);
+
         });
       }
       if (options.clickOutsideToClose) {
@@ -12565,10 +13008,12 @@ function MdDialogProvider($$interimElementProvider) {
       /**
        * Hide modal backdrop element...
        */
-      options.hideBackdrop = function hideBackdrop() {
+      options.hideBackdrop = function hideBackdrop($destroy) {
         if (options.backdrop) {
-          $animate.leave(options.backdrop);
+          if ( !!$destroy ) options.backdrop.remove();
+          else              $animate.leave(options.backdrop);
         }
+
         if (options.disableParentScroll) {
           options.restoreScroll();
           delete options.restoreScroll;
@@ -12659,10 +13104,10 @@ function MdDialogProvider($$interimElementProvider) {
 
       var isFixed = $window.getComputedStyle($document[0].body).position == 'fixed';
       var backdrop = options.backdrop ? $window.getComputedStyle(options.backdrop[0]) : null;
-      var height = backdrop ? Math.ceil(Math.abs(parseInt(backdrop.height, 10))) : 0;
+      var height = backdrop ? Math.min($document[0].body.clientHeight, Math.ceil(Math.abs(parseInt(backdrop.height, 10)))) : 0;
 
       container.css({
-        top: (isFixed ? $mdUtil.scrollTop(options.parent) / 2 : 0) + 'px',
+        top: (isFixed ? $mdUtil.scrollTop(options.parent) : 0) + 'px',
         height: height ? height + 'px' : '100%'
       });
 
@@ -12688,6 +13133,9 @@ function MdDialogProvider($$interimElementProvider) {
       return animator
         .translate3d(dialogEl, from, to, translateOptions)
         .then(function(animateReversal) {
+
+
+
           // Build a reversal translate function synched to this translation...
           options.reverseAnimate = function() {
 
@@ -12888,6 +13336,9 @@ MdDividerDirective.$inject = ["$mdTheming"];
         angular.forEach(eventTypes, function(eventType) {
           $element.off(eventType, parseEvents);
         });
+        // remove any attached keyboard handlers in case element is removed while
+        // speed dial is open
+        disableKeyboard();
       });
     }
 
@@ -13154,6 +13605,7 @@ MdDividerDirective.$inject = ["$mdTheming"];
   }
   FabController.$inject = ["$scope", "$element", "$animate", "$mdUtil", "$mdConstant"];
 })();
+
 })();
 (function(){
 "use strict";
@@ -13585,6 +14037,47 @@ MdDividerDirective.$inject = ["$mdTheming"];
 (function(){
 "use strict";
 
+(function() {
+  'use strict';
+
+  /**
+   * @ngdoc module
+   * @name material.components.fabTrigger
+   */
+  angular
+    .module('material.components.fabTrigger', ['material.core'])
+    .directive('mdFabTrigger', MdFabTriggerDirective);
+
+  /**
+   * @ngdoc directive
+   * @name mdFabTrigger
+   * @module material.components.fabSpeedDial
+   *
+   * @restrict E
+   *
+   * @description
+   * The `<md-fab-trigger>` directive is used inside of a `<md-fab-speed-dial>` or
+   * `<md-fab-toolbar>` directive to mark the an element (or elements) as the trigger and setup the
+   * proper event listeners.
+   *
+   * @usage
+   * See the `<md-fab-speed-dial>` or `<md-fab-toolbar>` directives for example usage.
+   */
+  function MdFabTriggerDirective() {
+    // TODO: Remove this completely?
+    return {
+      restrict: 'E',
+
+      require: ['^?mdFabSpeedDial', '^?mdFabToolbar']
+    };
+  }
+})();
+
+
+})();
+(function(){
+"use strict";
+
 /**
  * @ngdoc module
  * @name material.components.gridList
@@ -13776,7 +14269,7 @@ function GridListDirective($interpolate, $mdConstant, $mdGridLayout, $mdMedia) {
                 return {
                   element: angular.element(tiles[i]),
                   style: getTileStyle(ps.position, ps.spans,
-                      props.colCount, props.rowCount,
+                      props.colCount, rowCount,
                       props.gutter, props.rowMode, props.rowHeight)
                 }
               })
@@ -14342,47 +14835,6 @@ function GridTileCaptionDirective() {
 (function(){
 "use strict";
 
-(function() {
-  'use strict';
-
-  /**
-   * @ngdoc module
-   * @name material.components.fabTrigger
-   */
-  angular
-    .module('material.components.fabTrigger', ['material.core'])
-    .directive('mdFabTrigger', MdFabTriggerDirective);
-
-  /**
-   * @ngdoc directive
-   * @name mdFabTrigger
-   * @module material.components.fabSpeedDial
-   *
-   * @restrict E
-   *
-   * @description
-   * The `<md-fab-trigger>` directive is used inside of a `<md-fab-speed-dial>` or
-   * `<md-fab-toolbar>` directive to mark the an element (or elements) as the trigger and setup the
-   * proper event listeners.
-   *
-   * @usage
-   * See the `<md-fab-speed-dial>` or `<md-fab-toolbar>` directives for example usage.
-   */
-  function MdFabTriggerDirective() {
-    // TODO: Remove this completely?
-    return {
-      restrict: 'E',
-
-      require: ['^?mdFabSpeedDial', '^?mdFabToolbar']
-    };
-  }
-})();
-
-
-})();
-(function(){
-"use strict";
-
 /**
  * @ngdoc module
  * @name material.components.icon
@@ -14410,7 +14862,8 @@ angular.module('material.components.input', [
   .directive('input', inputTextareaDirective)
   .directive('textarea', inputTextareaDirective)
   .directive('mdMaxlength', mdMaxlengthDirective)
-  .directive('placeholder', placeholderDirective);
+  .directive('placeholder', placeholderDirective)
+  .directive('ngMessages', ngMessagesDirective);
 
 /**
  * @ngdoc directive
@@ -14425,8 +14878,10 @@ angular.module('material.components.input', [
  * Input and textarea elements will not behave properly unless the md-input-container
  * parent is provided.
  *
- * @param md-is-error {expression=} When the given expression evaluates to true, the input container will go into error state. Defaults to erroring if the input has been touched and is invalid.
- * @param md-no-float {boolean=} When present, placeholders will not be converted to floating labels
+ * @param md-is-error {expression=} When the given expression evaluates to true, the input container
+ *   will go into error state. Defaults to erroring if the input has been touched and is invalid.
+ * @param md-no-float {boolean=} When present, placeholders will not be converted to floating
+ *   labels.
  *
  * @usage
  * <hljs lang="html">
@@ -14454,6 +14909,7 @@ function mdInputContainerDirective($mdTheming, $parse) {
   function postLink(scope, element, attr) {
     $mdTheming(element);
   }
+
   function ContainerCtrl($scope, $element, $attrs) {
     var self = this;
 
@@ -14468,6 +14924,12 @@ function mdInputContainerDirective($mdTheming, $parse) {
     };
     self.setHasValue = function(hasValue) {
       $element.toggleClass('md-input-has-value', !!hasValue);
+    };
+    self.setHasMessages = function(hasMessages) {
+      $element.toggleClass('md-input-has-messages', !!hasMessages);
+    };
+    self.setHasPlaceholder = function(hasPlaceholder) {
+      $element.toggleClass('md-input-has-placeholder', !!hasPlaceholder);
     };
     self.setInvalid = function(isInvalid) {
       $element.toggleClass('md-input-invalid', !!isInvalid);
@@ -14507,10 +14969,15 @@ function labelDirective() {
  * @description
  * Use the `<input>` or the  `<textarea>` as a child of an `<md-input-container>`.
  *
- * @param {number=} md-maxlength The maximum number of characters allowed in this input. If this is specified, a character counter will be shown underneath the input.<br/><br/>
- * The purpose of **`md-maxlength`** is exactly to show the max length counter text. If you don't want the counter text and only need "plain" validation, you can use the "simple" `ng-maxlength` or maxlength attributes.
- * @param {string=} aria-label Aria-label is required when no label is present.  A warning message will be logged in the console if not present.
- * @param {string=} placeholder An alternative approach to using aria-label when the label is not present.  The placeholder text is copied to the aria-label attribute.
+ * @param {number=} md-maxlength The maximum number of characters allowed in this input. If this is
+ *   specified, a character counter will be shown underneath the input.<br/><br/>
+ *   The purpose of **`md-maxlength`** is exactly to show the max length counter text. If you don't
+ *   want the counter text and only need "plain" validation, you can use the "simple" `ng-maxlength`
+ *   or maxlength attributes.
+ * @param {string=} aria-label Aria-label is required when no label is present.  A warning message
+ *   will be logged in the console if not present.
+ * @param {string=} placeholder An alternative approach to using aria-label when the label is not
+ *   PRESENT. The placeholder text is copied to the aria-label attribute.
  * @param md-no-autogrow {boolean=} When present, textareas will not grow automatically.
  *
  * @usage
@@ -14569,13 +15036,13 @@ function inputTextareaDirective($mdUtil, $window, $mdAria) {
     var ngModelCtrl = ctrls[1] || $mdUtil.fakeNgModel();
     var isReadonly = angular.isDefined(attr.readonly);
 
-    if ( !containerCtrl ) return;
+    if (!containerCtrl) return;
     if (containerCtrl.input) {
       throw new Error("<md-input-container> can only have *one* <input>, <textarea> or <md-select> child element!");
     }
     containerCtrl.input = element;
 
-    if(!containerCtrl.label) {
+    if (!containerCtrl.label) {
       $mdAria.expect(element, 'aria-label', element.attr('placeholder'));
     }
 
@@ -14596,8 +15063,8 @@ function inputTextareaDirective($mdUtil, $window, $mdAria) {
     }
 
     var isErrorGetter = containerCtrl.isErrorGetter || function() {
-      return ngModelCtrl.$invalid && ngModelCtrl.$touched;
-    };
+        return ngModelCtrl.$invalid && ngModelCtrl.$touched;
+      };
     scope.$watch(isErrorGetter, containerCtrl.setInvalid);
 
     ngModelCtrl.$parsers.push(ngModelPipelineCheckValue);
@@ -14633,14 +15100,15 @@ function inputTextareaDirective($mdUtil, $window, $mdAria) {
       containerCtrl.setHasValue(!ngModelCtrl.$isEmpty(arg));
       return arg;
     }
+
     function inputCheckValue() {
       // An input's value counts if its length > 0,
       // or if the input's validity state says it has bad input (eg string in a number input)
-      containerCtrl.setHasValue(element.val().length > 0 || (element[0].validity||{}).badInput);
+      containerCtrl.setHasValue(element.val().length > 0 || (element[0].validity || {}).badInput);
     }
 
     function setupTextarea() {
-      if(angular.isDefined(element.attr('md-no-autogrow'))) {
+      if (angular.isDefined(element.attr('md-no-autogrow'))) {
         return;
       }
 
@@ -14651,7 +15119,7 @@ function inputTextareaDirective($mdUtil, $window, $mdAria) {
       var lineHeight = null;
       // can't check if height was or not explicity set,
       // so rows attribute will take precedence if present
-      if(node.hasAttribute('rows')) {
+      if (node.hasAttribute('rows')) {
         min_rows = parseInt(node.getAttribute('rows'));
       }
 
@@ -14670,7 +15138,7 @@ function inputTextareaDirective($mdUtil, $window, $mdAria) {
       }
       element.on('keydown input', onChangeTextarea);
 
-      if(isNaN(min_rows)) {
+      if (isNaN(min_rows)) {
         element.attr('rows', '1');
 
         element.on('scroll', onScroll);
@@ -14689,7 +15157,7 @@ function inputTextareaDirective($mdUtil, $window, $mdAria) {
         // temporarily disables element's flex so its height 'runs free'
         element.addClass('md-no-flex');
 
-        if(isNaN(min_rows)) {
+        if (isNaN(min_rows)) {
           node.style.height = "auto";
           node.scrollTop = 0;
           var height = getHeight();
@@ -14697,7 +15165,7 @@ function inputTextareaDirective($mdUtil, $window, $mdAria) {
         } else {
           node.setAttribute("rows", 1);
 
-          if(!lineHeight) {
+          if (!lineHeight) {
             node.style.minHeight = '0';
 
             lineHeight = element.prop('clientHeight');
@@ -14714,7 +15182,7 @@ function inputTextareaDirective($mdUtil, $window, $mdAria) {
         container.style.height = 'auto';
       }
 
-      function getHeight () {
+      function getHeight() {
         var line = node.scrollHeight - node.offsetHeight;
         return node.offsetHeight + (line > 0 ? line : 0);
       }
@@ -14743,11 +15211,30 @@ function mdMaxlengthDirective($animate) {
     var ngModelCtrl = ctrls[0];
     var containerCtrl = ctrls[1];
     var charCountEl = angular.element('<div class="md-char-counter">');
+    var input = angular.element(containerCtrl.element[0].querySelector('[md-maxlength]'));
 
     // Stop model from trimming. This makes it so whitespace
     // over the maxlength still counts as invalid.
     attr.$set('ngTrim', 'false');
-    containerCtrl.element.append(charCountEl);
+
+    var ngMessagesSelectors = [
+      'ng-messages',
+      'data-ng-messages',
+      'x-ng-messages',
+      '[ng-messages]',
+      '[data-ng-messages]',
+      '[x-ng-messages]'
+    ];
+
+    var ngMessages = containerCtrl.element[0].querySelector(ngMessagesSelectors.join(','));
+
+    // If we have an ngMessages container, put the counter at the top; otherwise, put it after the
+    // input so it will be positioned properly in the SCSS
+    if (ngMessages) {
+      angular.element(ngMessages).prepend(charCountEl);
+    } else {
+      input.after(charCountEl);
+    }
 
     ngModelCtrl.$formatters.push(renderCharCount);
     ngModelCtrl.$viewChangeListeners.push(renderCharCount);
@@ -14759,8 +15246,7 @@ function mdMaxlengthDirective($animate) {
       maxlength = value;
       if (angular.isNumber(value) && value > 0) {
         if (!charCountEl.parent().length) {
-          $animate.enter(charCountEl, containerCtrl.element,
-                         angular.element(containerCtrl.element[0].lastElementChild));
+          $animate.enter(charCountEl, containerCtrl.element, input);
         }
         renderCharCount();
       } else {
@@ -14776,7 +15262,7 @@ function mdMaxlengthDirective($animate) {
     };
 
     function renderCharCount(value) {
-      charCountEl.text( ( element.val() || value || '' ).length + '/' + maxlength );
+      charCountEl.text(( element.val() || value || '' ).length + '/' + maxlength);
       return value;
     }
   }
@@ -14792,26 +15278,70 @@ function placeholderDirective($log) {
   };
 
   function postLink(scope, element, attr, inputContainer) {
+    // If there is no input container, just return
     if (!inputContainer) return;
-    if (angular.isDefined(inputContainer.element.attr('md-no-float'))) return;
 
+    // Add a placeholder class so we can target it in the CSS
+    inputContainer.setHasPlaceholder(true);
+
+    var label = inputContainer.element.find('label');
+    var hasNoFloat = angular.isDefined(inputContainer.element.attr('md-no-float'));
+
+    // If we have a label, or they specify the md-no-float attribute, just return
+    if ((label && label.length) || hasNoFloat) return;
+
+    // Otherwise, grab/remove the placeholder
     var placeholderText = attr.placeholder;
     element.removeAttr('placeholder');
 
-    if ( inputContainer.element.find('label').length == 0 ) {
-      if (inputContainer.input && inputContainer.input[0].nodeName != 'MD-SELECT') {
-        var placeholder = '<label ng-click="delegateClick()">' + placeholderText + '</label>';
+    // And add the placeholder text as a separate label
+    if (inputContainer.input && inputContainer.input[0].nodeName != 'MD-SELECT') {
+      var placeholder = '<label ng-click="delegateClick()">' + placeholderText + '</label>';
 
-        inputContainer.element.addClass('md-icon-float');
-        inputContainer.element.prepend(placeholder);
-      }
-    } else if (element[0].nodeName != 'MD-SELECT') {
-      $log.warn("The placeholder='" + placeholderText + "' will be ignored since this md-input-container has a child label element.");
+      inputContainer.element.addClass('md-icon-float');
+      inputContainer.element.prepend(placeholder);
     }
-
   }
 }
 placeholderDirective.$inject = ["$log"];
+
+function ngMessagesDirective() {
+  return {
+    restrict: 'EA',
+    link: postLink,
+
+    // This is optional because we don't want target *all* ngMessage instances, just those inside of
+    // mdInputContainer.
+    require: '^^?mdInputContainer'
+  };
+
+  function postLink(scope, element, attr, inputContainer) {
+    // If we are not a child of an input container, don't do anything
+    if (!inputContainer) return;
+
+    // Tell our parent input container we have messages so we can set the proper classes
+    inputContainer.setHasMessages(true);
+
+    // When destroyed, inform our input container
+    scope.$on('$destroy', function() {
+      inputContainer.setHasMessages(false);
+    });
+  }
+}
+
+})();
+(function(){
+"use strict";
+
+/**
+ * @ngdoc module
+ * @name material.components.menu
+ */
+
+angular.module('material.components.menu', [
+  'material.core',
+  'material.components.backdrop'
+]);
 
 })();
 (function(){
@@ -14884,7 +15414,7 @@ mdListDirective.$inject = ["$mdTheming"];
  * </hljs>
  *
  */
-function mdListItemDirective($mdAria, $mdConstant, $timeout) {
+function mdListItemDirective($mdAria, $mdConstant, $mdUtil, $timeout) {
   var proxiedTypes = ['md-checkbox', 'md-switch'];
   return {
     restrict: 'E',
@@ -15047,7 +15577,8 @@ function mdListItemDirective($mdAria, $mdConstant, $timeout) {
 
         if (proxies.length && firstChild) {
           $element.children().eq(0).on('click', function(e) {
-            if (firstChild.contains(e.target)) {
+            var parentButton = $mdUtil.getClosest(e.target, 'BUTTON');
+            if (!parentButton && firstChild.contains(e.target)) {
               angular.forEach(proxies, function(proxy) {
                 if (e.target !== proxy && !proxy.contains(e.target)) {
                   angular.element(proxy).triggerHandler('click');
@@ -15060,7 +15591,7 @@ function mdListItemDirective($mdAria, $mdConstant, $timeout) {
     }
   };
 }
-mdListItemDirective.$inject = ["$mdAria", "$mdConstant", "$timeout"];
+mdListItemDirective.$inject = ["$mdAria", "$mdConstant", "$mdUtil", "$timeout"];
 
 /*
  * @private
@@ -15080,20 +15611,6 @@ function MdListController($scope, $element, $mdListInkRipple) {
 }
 MdListController.$inject = ["$scope", "$element", "$mdListInkRipple"];
 
-
-})();
-(function(){
-"use strict";
-
-/**
- * @ngdoc module
- * @name material.components.menu
- */
-
-angular.module('material.components.menu', [
-  'material.core',
-  'material.components.backdrop'
-]);
 
 })();
 (function(){
@@ -15210,6 +15727,8 @@ function MdProgressCircularDirective($mdTheming, $mdUtil, $log) {
     var spinnerWrapper =  angular.element(element.children()[0]);
     var lastMode, toVendorCSS = $mdUtil.dom.animator.toCss;
 
+    element.attr('md-mode', mode());
+
     updateScale();
     validateMode();
     watchAttributes();
@@ -15325,7 +15844,7 @@ function MdProgressCircularDirective($mdTheming, $mdUtil, $log) {
      * Is the md-mode a valid option?
      */
     function mode() {
-      var value = attr.mdMode;
+      var value = (attr.mdMode || "").trim();
       if ( value ) {
         switch(value) {
           case MODE_DETERMINATE :
@@ -15432,10 +15951,35 @@ function mdRadioGroupDirective($mdUtil, $mdConstant, $mdTheming, $timeout) {
     var rgCtrl = ctrls[0];
     var ngModelCtrl = ctrls[1] || $mdUtil.fakeNgModel();
 
+    rgCtrl.init(ngModelCtrl);
+
+    scope.mouseActive = false;
+    element.attr({
+              'role': 'radiogroup',
+              'tabIndex': element.attr('tabindex') || '0'
+            })
+            .on('keydown', keydownListener)
+            .on('mousedown', function(event) {
+              scope.mouseActive = true;
+              $timeout(function() {
+                scope.mouseActive = false;
+              }, 100);
+            })
+            .on('focus', function() {
+              if(scope.mouseActive === false) { rgCtrl.$element.addClass('md-focused'); }
+            })
+            .on('blur', function() { rgCtrl.$element.removeClass('md-focused'); });
+
+    /**
+     *
+     */
     function setFocus() {
       if (!element.hasClass('md-focused')) { element.addClass('md-focused'); }
     }
 
+    /**
+     *
+     */
     function keydownListener(ev) {
       var keyCode = ev.which || ev.keyCode;
       switch(keyCode) {
@@ -15461,25 +16005,6 @@ function mdRadioGroupDirective($mdUtil, $mdConstant, $mdTheming, $timeout) {
           break;
       }
     }
-
-    rgCtrl.init(ngModelCtrl);
-
-    scope.mouseActive = false;
-    element.attr({
-              'role': 'radiogroup',
-              'tabIndex': element.attr('tabindex') || '0'
-            })
-            .on('keydown', keydownListener)
-            .on('mousedown', function(event) {
-              scope.mouseActive = true;
-              $timeout(function() {
-                scope.mouseActive = false;
-              }, 100);
-            })
-            .on('focus', function() {
-              if(scope.mouseActive === false) { rgCtrl.$element.addClass('md-focused'); }
-            })
-            .on('blur', function() { rgCtrl.$element.removeClass('md-focused'); });
   }
 
   function RadioGroupController($element) {
@@ -15539,8 +16064,10 @@ function mdRadioGroupDirective($mdUtil, $mdConstant, $mdTheming, $timeout) {
         // If disabled, then NOT valid
         return !angular.element(button).attr("disabled");
       };
+
       var selected = parent[0].querySelector('md-radio-button.md-checked');
       var target = buttons[increment < 0 ? 'previous' : 'next'](selected, validate) || buttons.first();
+
       // Activate radioButton's click listener (triggerHandler won't create a real click event)
       angular.element(target).triggerHandler('click');
 
@@ -15611,15 +16138,29 @@ function mdRadioButtonDirective($mdAria, $mdUtil, $mdTheming) {
     $mdTheming(element);
     configureAria(element, scope);
 
-    rgCtrl.add(render);
-    attr.$observe('value', render);
+    initialize();
 
-    element
-      .on('click', listener)
-      .on('$destroy', function() {
-        rgCtrl.remove(render);
-      });
+    /**
+     *
+     */
+    function initialize(controller) {
+      if ( !rgCtrl ) {
+        throw 'RadioGroupController not found.';
+      }
 
+      rgCtrl.add(render);
+      attr.$observe('value', render);
+
+      element
+        .on('click', listener)
+        .on('$destroy', function() {
+          rgCtrl.remove(render);
+        });
+    }
+
+    /**
+     *
+     */
     function listener(ev) {
       if (element[0].hasAttribute('disabled')) return;
 
@@ -15628,20 +16169,41 @@ function mdRadioButtonDirective($mdAria, $mdUtil, $mdTheming) {
       });
     }
 
+    /**
+     *  Add or remove the `.md-checked` class from the RadioButton (and conditionally its parent).
+     *  Update the `aria-activedescendant` attribute.
+     */
     function render() {
       var checked = (rgCtrl.getViewValue() == attr.value);
       if (checked === lastChecked) {
         return;
       }
+
       lastChecked = checked;
       element.attr('aria-checked', checked);
+
       if (checked) {
+        markParentAsChecked(true);
         element.addClass(CHECKED_CSS);
+
         rgCtrl.setActiveDescendant(element.attr('id'));
+
       } else {
+        markParentAsChecked(false);
         element.removeClass(CHECKED_CSS);
       }
+
+      /**
+       * If the radioButton is inside a div, then add class so highlighting will work...
+       */
+      function markParentAsChecked(addClass ) {
+        if ( element.parent()[0].nodeName != "MD-RADIO-GROUP") {
+          element.parent()[ !!addClass ? 'addClass' : 'removeClass'](CHECKED_CSS);
+        }
+
+      }
     }
+
     /**
      * Inject ARIA-specific attributes appropriate for each radio button
      */
@@ -15756,10 +16318,13 @@ function MdProgressLinearDirective($mdTheming, $mdUtil, $log) {
   }
   function postLink(scope, element, attr) {
     $mdTheming(element);
+
     var lastMode, toVendorCSS = $mdUtil.dom.animator.toCss;
     var bar1 = angular.element(element[0].querySelector('.md-bar1')),
         bar2 = angular.element(element[0].querySelector('.md-bar2')),
         container = angular.element(element[0].querySelector('.md-container'));
+
+    element.attr('md-mode', mode());
 
     validateMode();
     watchAttributes();
@@ -15785,8 +16350,7 @@ function MdProgressLinearDirective($mdTheming, $mdUtil, $log) {
           case MODE_BUFFER:
           case MODE_DETERMINATE:
           case MODE_INDETERMINATE:
-            container.removeClass('ng-hide');
-            container.removeClass( lastMode );
+            container.removeClass( 'ng-hide' + ' ' + lastMode );
             container.addClass( lastMode = "md-mode-" + mode );
             break;
           default:
@@ -15818,7 +16382,7 @@ function MdProgressLinearDirective($mdTheming, $mdUtil, $log) {
      * Is the md-mode a valid option?
      */
     function mode() {
-      var value = attr.mdMode;
+      var value = (attr.mdMode || "").trim();
       if ( value ) {
         switch(value) {
           case MODE_DETERMINATE:
@@ -15858,6 +16422,421 @@ function MdProgressLinearDirective($mdTheming, $mdUtil, $log) {
 }
 MdProgressLinearDirective.$inject = ["$mdTheming", "$mdUtil", "$log"];
 
+
+})();
+(function(){
+"use strict";
+
+/**
+ * @ngdoc module
+ * @name material.components.sidenav
+ *
+ * @description
+ * A Sidenav QP component.
+ */
+angular
+  .module('material.components.sidenav', [
+    'material.core',
+    'material.components.backdrop'
+  ])
+  .factory('$mdSidenav', SidenavService )
+  .directive('mdSidenav', SidenavDirective)
+  .directive('mdSidenavFocus', SidenavFocusDirective)
+  .controller('$mdSidenavController', SidenavController);
+
+
+/**
+ * @ngdoc service
+ * @name $mdSidenav
+ * @module material.components.sidenav
+ *
+ * @description
+ * `$mdSidenav` makes it easy to interact with multiple sidenavs
+ * in an app.
+ *
+ * @usage
+ * <hljs lang="js">
+ * // Async lookup for sidenav instance; will resolve when the instance is available
+ * $mdSidenav(componentId).then(function(instance) {
+ *   $log.debug( componentId + "is now ready" );
+ * });
+ * // Async toggle the given sidenav;
+ * // when instance is known ready and lazy lookup is not needed.
+ * $mdSidenav(componentId)
+ *    .toggle()
+ *    .then(function(){
+ *      $log.debug('toggled');
+ *    });
+ * // Async open the given sidenav
+ * $mdSidenav(componentId)
+ *    .open()
+ *    .then(function(){
+ *      $log.debug('opened');
+ *    });
+ * // Async close the given sidenav
+ * $mdSidenav(componentId)
+ *    .close()
+ *    .then(function(){
+ *      $log.debug('closed');
+ *    });
+ * // Sync check to see if the specified sidenav is set to be open
+ * $mdSidenav(componentId).isOpen();
+ * // Sync check to whether given sidenav is locked open
+ * // If this is true, the sidenav will be open regardless of close()
+ * $mdSidenav(componentId).isLockedOpen();
+ * </hljs>
+ */
+function SidenavService($mdComponentRegistry, $q) {
+  return function(handle) {
+
+    // Lookup the controller instance for the specified sidNav instance
+    var self;
+    var errorMsg = "SideNav '" + handle + "' is not available!";
+    var instance = $mdComponentRegistry.get(handle);
+
+    if(!instance) {
+      $mdComponentRegistry.notFoundError(handle);
+    }
+
+    return self = {
+      // -----------------
+      // Sync methods
+      // -----------------
+      isOpen: function() {
+        return instance && instance.isOpen();
+      },
+      isLockedOpen: function() {
+        return instance && instance.isLockedOpen();
+      },
+      // -----------------
+      // Async methods
+      // -----------------
+      toggle: function() {
+        return instance ? instance.toggle() : $q.reject(errorMsg);
+      },
+      open: function() {
+        return instance ? instance.open() : $q.reject(errorMsg);
+      },
+      close: function() {
+        return instance ? instance.close() : $q.reject(errorMsg);
+      },
+      then : function( callbackFn ) {
+        var promise = instance ? $q.when(instance) : waitForInstance();
+        return promise.then( callbackFn || angular.noop );
+      }
+    };
+
+    /**
+     * Deferred lookup of component instance using $component registry
+     */
+    function waitForInstance() {
+      return $mdComponentRegistry
+                .when(handle)
+                .then(function( it ){
+                  instance = it;
+                  return it;
+                });
+    }
+  };
+}
+SidenavService.$inject = ["$mdComponentRegistry", "$q"];
+/**
+ * @ngdoc directive
+ * @name mdSidenavFocus
+ * @module material.components.sidenav
+ *
+ * @restrict A
+ *
+ * @description
+ * `mdSidenavFocus` provides a way to specify the focused element when a sidenav opens.
+ * This is completely optional, as the sidenav itself is focused by default.
+ *
+ * @usage
+ * <hljs lang="html">
+ * <md-sidenav>
+ *   <form>
+ *     <md-input-container>
+ *       <label for="testInput">Label</label>
+ *       <input id="testInput" type="text" md-sidenav-focus>
+ *     </md-input-container>
+ *   </form>
+ * </md-sidenav>
+ * </hljs>
+ **/
+function SidenavFocusDirective() {
+  return {
+    restrict: 'A',
+    require: '^mdSidenav',
+    link: function(scope, element, attr, sidenavCtrl) {
+      // @see $mdUtil.findFocusTarget(...)
+    }
+  };
+}
+/**
+ * @ngdoc directive
+ * @name mdSidenav
+ * @module material.components.sidenav
+ * @restrict E
+ *
+ * @description
+ *
+ * A Sidenav component that can be opened and closed programatically.
+ *
+ * By default, upon opening it will slide out on top of the main content area.
+ *
+ * For keyboard and screen reader accessibility, focus is sent to the sidenav wrapper by default.
+ * It can be overridden with the `md-autofocus` directive on the child element you want focused.
+ *
+ * @usage
+ * <hljs lang="html">
+ * <div layout="row" ng-controller="MyController">
+ *   <md-sidenav md-component-id="left" class="md-sidenav-left">
+ *     Left Nav!
+ *   </md-sidenav>
+ *
+ *   <md-content>
+ *     Center Content
+ *     <md-button ng-click="openLeftMenu()">
+ *       Open Left Menu
+ *     </md-button>
+ *   </md-content>
+ *
+ *   <md-sidenav md-component-id="right"
+ *     md-is-locked-open="$mdMedia('min-width: 333px')"
+ *     class="md-sidenav-right">
+ *     <form>
+ *       <md-input-container>
+ *         <label for="testInput">Test input</label>
+ *         <input id="testInput" type="text"
+ *                ng-model="data" md-autofocus>
+ *       </md-input-container>
+ *     </form>
+ *   </md-sidenav>
+ * </div>
+ * </hljs>
+ *
+ * <hljs lang="js">
+ * var app = angular.module('myApp', ['ngMaterial']);
+ * app.controller('MyController', function($scope, $mdSidenav) {
+ *   $scope.openLeftMenu = function() {
+ *     $mdSidenav('left').toggle();
+ *   };
+ * });
+ * </hljs>
+ *
+ * @param {expression=} md-is-open A model bound to whether the sidenav is opened.
+ * @param {string=} md-component-id componentId to use with $mdSidenav service.
+ * @param {expression=} md-is-locked-open When this expression evalutes to true,
+ * the sidenav 'locks open': it falls into the content's flow instead
+ * of appearing over it. This overrides the `is-open` attribute.
+ *
+ * The $mdMedia() service is exposed to the is-locked-open attribute, which
+ * can be given a media query or one of the `sm`, `gt-sm`, `md`, `gt-md`, `lg` or `gt-lg` presets.
+ * Examples:
+ *
+ *   - `<md-sidenav md-is-locked-open="shouldLockOpen"></md-sidenav>`
+ *   - `<md-sidenav md-is-locked-open="$mdMedia('min-width: 1000px')"></md-sidenav>`
+ *   - `<md-sidenav md-is-locked-open="$mdMedia('sm')"></md-sidenav>` (locks open on small screens)
+ */
+function SidenavDirective($mdMedia, $mdUtil, $mdConstant, $mdTheming, $animate, $compile, $parse, $log, $q, $document) {
+  return {
+    restrict: 'E',
+    scope: {
+      isOpen: '=?mdIsOpen'
+    },
+    controller: '$mdSidenavController',
+    compile: function(element) {
+      element.addClass('md-closed');
+      element.attr('tabIndex', '-1');
+      return postLink;
+    }
+  };
+
+  /**
+   * Directive Post Link function...
+   */
+  function postLink(scope, element, attr, sidenavCtrl) {
+    var lastParentOverFlow;
+    var triggeringElement = null;
+    var promise = $q.when(true);
+
+    var isLockedOpenParsed = $parse(attr.mdIsLockedOpen);
+    var isLocked = function() {
+      return isLockedOpenParsed(scope.$parent, {
+        $media: function(arg) {
+          $log.warn("$media is deprecated for is-locked-open. Use $mdMedia instead.");
+          return $mdMedia(arg);
+        },
+        $mdMedia: $mdMedia
+      });
+    };
+    var backdrop = $mdUtil.createBackdrop(scope, "md-sidenav-backdrop md-opaque ng-enter");
+
+    $mdTheming.inherit(backdrop, element);
+
+    element.on('$destroy', function() {
+      backdrop.remove();
+      sidenavCtrl.destroy();
+    });
+
+    scope.$on('$destroy', angular.bind(backdrop, backdrop.remove));
+    scope.$watch(isLocked, updateIsLocked);
+    scope.$watch('isOpen', updateIsOpen);
+
+
+    // Publish special accessor for the Controller instance
+    sidenavCtrl.$toggleOpen = toggleOpen;
+
+    /**
+     * Toggle the DOM classes to indicate `locked`
+     * @param isLocked
+     */
+    function updateIsLocked(isLocked, oldValue) {
+      scope.isLockedOpen = isLocked;
+      if (isLocked === oldValue) {
+        element.toggleClass('md-locked-open', !!isLocked);
+      } else {
+        $animate[isLocked ? 'addClass' : 'removeClass'](element, 'md-locked-open');
+      }
+      backdrop.toggleClass('md-locked-open', !!isLocked);
+    }
+
+    /**
+     * Toggle the SideNav view and attach/detach listeners
+     * @param isOpen
+     */
+    function updateIsOpen(isOpen) {
+      // Support deprecated md-sidenav-focus attribute as fallback
+      var focusEl = $mdUtil.findFocusTarget(element) || $mdUtil.findFocusTarget(element,'[md-sidenav-focus]') || element;
+      var parent = element.parent();
+
+      parent[isOpen ? 'on' : 'off']('keydown', onKeyDown);
+      backdrop[isOpen ? 'on' : 'off']('click', close);
+
+      if ( isOpen ) {
+        // Capture upon opening..
+        triggeringElement = $document[0].activeElement;
+      }
+
+      disableParentScroll(isOpen);
+
+      return promise = $q.all([
+                isOpen ? $animate.enter(backdrop, parent) : $animate.leave(backdrop),
+                $animate[isOpen ? 'removeClass' : 'addClass'](element, 'md-closed')
+              ])
+              .then(function() {
+                // Perform focus when animations are ALL done...
+                if (scope.isOpen) {
+                  focusEl && focusEl.focus();
+                }
+              });
+    }
+
+    /**
+     * Prevent parent scrolling (when the SideNav is open)
+     */
+    function disableParentScroll(disabled) {
+      var parent = element.parent();
+      if ( disabled && !lastParentOverFlow ) {
+
+        lastParentOverFlow = parent.css('overflow');
+        parent.css('overflow', 'hidden');
+
+      } else if (angular.isDefined(lastParentOverFlow)) {
+
+        parent.css('overflow', lastParentOverFlow);
+        lastParentOverFlow = undefined;
+
+      }
+    }
+
+    /**
+     * Toggle the sideNav view and publish a promise to be resolved when
+     * the view animation finishes.
+     *
+     * @param isOpen
+     * @returns {*}
+     */
+    function toggleOpen( isOpen ) {
+      if (scope.isOpen == isOpen ) {
+
+        return $q.when(true);
+
+      } else {
+        return $q(function(resolve){
+          // Toggle value to force an async `updateIsOpen()` to run
+          scope.isOpen = isOpen;
+
+          $mdUtil.nextTick(function() {
+            // When the current `updateIsOpen()` animation finishes
+            promise.then(function(result) {
+
+              if ( !scope.isOpen ) {
+                // reset focus to originating element (if available) upon close
+                triggeringElement && triggeringElement.focus();
+                triggeringElement = null;
+              }
+
+              resolve(result);
+            });
+          });
+
+        });
+
+      }
+    }
+
+    /**
+     * Auto-close sideNav when the `escape` key is pressed.
+     * @param evt
+     */
+    function onKeyDown(ev) {
+      var isEscape = (ev.keyCode === $mdConstant.KEY_CODE.ESCAPE);
+      return isEscape ? close(ev) : $q.when(true);
+    }
+
+    /**
+     * With backdrop `clicks` or `escape` key-press, immediately
+     * apply the CSS close transition... Then notify the controller
+     * to close() and perform its own actions.
+     */
+    function close(ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+
+      return sidenavCtrl.close();
+    }
+
+  }
+}
+SidenavDirective.$inject = ["$mdMedia", "$mdUtil", "$mdConstant", "$mdTheming", "$animate", "$compile", "$parse", "$log", "$q", "$document"];
+
+/*
+ * @private
+ * @ngdoc controller
+ * @name SidenavController
+ * @module material.components.sidenav
+ *
+ */
+function SidenavController($scope, $element, $attrs, $mdComponentRegistry, $q) {
+
+  var self = this;
+
+  // Use Default internal method until overridden by directive postLink
+
+  // Synchronous getters
+  self.isOpen = function() { return !!$scope.isOpen; };
+  self.isLockedOpen = function() { return !!$scope.isLockedOpen; };
+
+  // Async actions
+  self.open   = function() { return self.$toggleOpen( true );  };
+  self.close  = function() { return self.$toggleOpen( false ); };
+  self.toggle = function() { return self.$toggleOpen( !$scope.isOpen );  };
+  self.$toggleOpen = function(value) { return $q.when($scope.isOpen = value); };
+
+  self.destroy = $mdComponentRegistry.register(self, $attrs.mdComponentId);
+}
+SidenavController.$inject = ["$scope", "$element", "$attrs", "$mdComponentRegistry", "$q"];
 
 })();
 (function(){
@@ -15935,7 +16914,7 @@ angular.module('material.components.select', [
  *   </md-input-container>
  * </hljs>
  */
-function SelectDirective($mdSelect, $mdUtil, $mdTheming, $mdAria, $rootElement, $compile, $parse) {
+function SelectDirective($mdSelect, $mdUtil, $mdTheming, $mdAria, $compile, $parse) {
   return {
     restrict: 'E',
     require: ['^?mdInputContainer', 'mdSelect', 'ngModel', '?^form'],
@@ -16009,7 +16988,6 @@ function SelectDirective($mdSelect, $mdUtil, $mdTheming, $mdAria, $rootElement, 
     attr.tabindex = attr.tabindex || '0';
 
     return function postLink(scope, element, attr, ctrls) {
-      var isOpen;
       var isDisabled;
 
       var containerCtrl = ctrls[0];
@@ -16048,6 +17026,12 @@ function SelectDirective($mdSelect, $mdUtil, $mdTheming, $mdAria, $rootElement, 
         if (controller) {
           formCtrl.$removeControl(controller);
         }
+      }
+
+      if (formCtrl) {
+        $mdUtil.nextTick(function() {
+          formCtrl.$setPristine();
+        });
       }
 
       var originalRender = ngModelCtrl.$render;
@@ -16146,7 +17130,7 @@ function SelectDirective($mdSelect, $mdUtil, $mdTheming, $mdAria, $rootElement, 
       });
 
       attr.$observe('disabled', function(disabled) {
-        if (typeof disabled == "string") {
+        if (angular.isString(disabled)) {
           disabled = true;
         }
         // Prevent click event being registered twice
@@ -16181,19 +17165,22 @@ function SelectDirective($mdSelect, $mdUtil, $mdTheming, $mdAria, $rootElement, 
       element.attr(ariaAttrs);
 
       scope.$on('$destroy', function() {
-        if (isOpen) {
-          $mdSelect.hide().finally(function() {
-            selectContainer.remove();
+        $mdSelect
+          .destroy()
+          .finally(function() {
+            if ( selectContainer ) {
+              selectContainer.remove();
+            }
+
+            if (containerCtrl) {
+              containerCtrl.setFocused(false);
+              containerCtrl.setHasValue(false);
+              containerCtrl.input = null;
+            }
           });
-        } else {
-          selectContainer.remove();
-        }
-        if (containerCtrl) {
-          containerCtrl.setFocused(false);
-          containerCtrl.setHasValue(false);
-          containerCtrl.input = null;
-        }
       });
+
+
 
       function inputCheckValue() {
         // The select counts as having a value if one or more options are selected,
@@ -16209,7 +17196,10 @@ function SelectDirective($mdSelect, $mdUtil, $mdTheming, $mdAria, $rootElement, 
         selectEl.data('$mdSelectController', mdSelectCtrl);
         selectScope = scope.$new();
         $mdTheming.inherit(selectContainer, element);
-        selectContainer[0].setAttribute('class', selectContainer[0].getAttribute('class') + ' ' + element.attr('md-container-class'));
+        if (element.attr('md-container-class')) {
+          var value = selectContainer[0].getAttribute('class') + ' ' + element.attr('md-container-class');
+          selectContainer[0].setAttribute('class', value);
+        }
         selectContainer = $compile(selectContainer)(selectScope);
         selectMenuCtrl = selectContainer.find('md-select-menu').controller('mdSelectMenu');
       }
@@ -16237,7 +17227,7 @@ function SelectDirective($mdSelect, $mdUtil, $mdTheming, $mdAria, $rootElement, 
       }
 
       function openSelect() {
-        scope.$apply('isOpen = true');
+        selectScope.isOpen = true;
 
         $mdSelect.show({
           scope: selectScope,
@@ -16248,13 +17238,13 @@ function SelectDirective($mdSelect, $mdUtil, $mdTheming, $mdAria, $rootElement, 
           hasBackdrop: true,
           loadingAsync: attr.mdOnOpen ? scope.$eval(attr.mdOnOpen) || true : false
         }).then(function() {
-          isOpen = false;
+          selectScope.isOpen = false;
         });
       }
     };
   }
 }
-SelectDirective.$inject = ["$mdSelect", "$mdUtil", "$mdTheming", "$mdAria", "$rootElement", "$compile", "$parse"];
+SelectDirective.$inject = ["$mdSelect", "$mdUtil", "$mdTheming", "$mdAria", "$compile", "$parse"];
 
 function SelectMenuDirective($parse, $mdUtil, $mdTheming) {
 
@@ -16351,6 +17341,7 @@ function SelectMenuDirective($parse, $mdUtil, $mdTheming) {
         // reference. This allowed the developer to also push and pop from their array.
         $scope.$watchCollection($attrs.ngModel, function(value) {
           if (validateArray(value)) renderMultiple(value);
+          self.ngModel.$setPristine();
         });
       } else {
         delete ngModel.$validators['md-multiple'];
@@ -16651,38 +17642,42 @@ function SelectProvider($$interimElementProvider) {
      * Interim-element onRemove logic....
      */
     function onRemove(scope, element, opts) {
+      opts = opts || { };
       opts.cleanupInteraction();
       opts.cleanupResizing();
       opts.hideBackdrop();
 
-      return $animateCss(element, {addClass: 'md-leave'})
-         .start()
-         .then(function(response) {
+      // For navigation $destroy events, do a quick, non-animated removal,
+      // but for normal closes (from clicks, etc) animate the removal
 
-           configureAria(opts.target, false);
-           element.removeClass('md-active');
+      return  (opts.$destroy === true) ? detachAndClean() : animateRemoval().then( detachAndClean );
 
-           announceClosed(opts);
-           detachElement(element, opts);
+      /**
+       * For normal closes (eg clicks), animate the removal.
+       * For forced closes (like $destroy events from navigation),
+       * skip the animations
+       */
+      function animateRemoval() {
+        return $animateCss(element, {addClass: 'md-leave'}).start();
+      }
 
-           return response;
-         })
-         .finally(function() {
-           opts.restoreFocus && opts.target.focus();
-         });
+      /**
+       * Detach the element and cleanup prior changes
+       */
+      function detachAndClean() {
+        configureAria(opts.target, false);
 
-      // If we want to ignore leave animations (and remove immediately):
-      //
-      //     configureAria(opts.target, false);
-      //
-      //     element.addClass('md-leave');
-      //     element.removeClass('md-active');
-      //
-      //     announceClosed(opts);
-      //     detachElement(element, opts);
-      //     opts.restoreFocus && opts.target.focus();
-      //
-      //     return $q.when(true);
+        element.attr('opacity', 0);
+        element.removeClass('md-active');
+        detachElement(element, opts);
+
+        announceClosed(opts);
+
+        if (!opts.$destroy && opts.restoreFocus) {
+          opts.target.focus();
+        }
+      }
+
     }
 
     /**
@@ -16780,14 +17775,10 @@ function SelectProvider($$interimElementProvider) {
          * Hide modal backdrop element...
          */
         return function hideBackdrop() {
-          if (options.backdrop) {
-            // Override duration to immediately remove invisible backdrop
-            $animate.leave(options.backdrop, {duration: 0});
-          }
-          if (options.disableParentScroll) {
-            options.restoreScroll();
-            delete options.restoreScroll;
-          }
+          if (options.backdrop) options.backdrop.remove();
+          if (options.disableParentScroll) options.restoreScroll();
+
+          delete options.restoreScroll;
         }
       }
 
@@ -16995,12 +17986,12 @@ function SelectProvider($$interimElementProvider) {
            */
           function mouseOnScrollbar() {
             var clickOnScrollbar = false;
-            if(ev && (ev.currentTarget.children.length > 0)) {
+            if (ev && (ev.currentTarget.children.length > 0)) {
               var child = ev.currentTarget.children[0];
               var hasScrollbar = child.scrollHeight > child.clientHeight;
               if (hasScrollbar && child.children.length > 0) {
                 var relPosX = ev.pageX - ev.currentTarget.getBoundingClientRect().left;
-                if(relPosX > child.children[0].offsetWidth)
+                if (relPosX > child.querySelector('md-option').offsetWidth)
                   clickOnScrollbar = true;
               }
             }
@@ -17033,7 +18024,7 @@ function SelectProvider($$interimElementProvider) {
     }
 
     /**
-     * Use browser to remove this element without triggering a $destory event
+     * Use browser to remove this element without triggering a $destroy event
      */
     function detachElement(element, opts) {
       if (element[0].parentNode === opts.parent[0]) {
@@ -17263,22 +18254,22 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
     scope: {},
     require: '?ngModel',
     template:
-      '<div class="md-slider-wrapper">\
-        <div class="md-track-container">\
-          <div class="md-track"></div>\
-          <div class="md-track md-track-fill"></div>\
-          <div class="md-track-ticks"></div>\
-        </div>\
-        <div class="md-thumb-container">\
-          <div class="md-thumb"></div>\
-          <div class="md-focus-thumb"></div>\
-          <div class="md-focus-ring"></div>\
-          <div class="md-sign">\
-            <span class="md-thumb-text"></span>\
-          </div>\
-          <div class="md-disabled-thumb"></div>\
-        </div>\
-      </div>',
+      '<div class="md-slider-wrapper">' +
+        '<div class="md-track-container">' +
+          '<div class="md-track"></div>' +
+          '<div class="md-track md-track-fill"></div>' +
+          '<div class="md-track-ticks"></div>' +
+        '</div>' +
+        '<div class="md-thumb-container">' +
+          '<div class="md-thumb"></div>' +
+          '<div class="md-focus-thumb"></div>' +
+          '<div class="md-focus-ring"></div>' +
+          '<div class="md-sign">' +
+            '<span class="md-thumb-text"></span>' +
+          '</div>' +
+          '<div class="md-disabled-thumb"></div>' +
+        '</div>' +
+      '</div>',
     compile: compile
   };
 
@@ -17311,10 +18302,13 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
       $viewChangeListeners: []
     };
 
-    var isDisabledParsed = attr.ngDisabled && $parse(attr.ngDisabled);
-    var isDisabledGetter = isDisabledParsed ?
-      function() { return isDisabledParsed(scope.$parent); } :
-      angular.noop;
+    var isDisabledGetter = angular.noop;
+    if (attr.disabled != null) {
+      isDisabledGetter = function() { return true; };
+    } else if (attr.ngDisabled) {
+      isDisabledGetter = angular.bind(null, $parse(attr.ngDisabled), scope.$parent);
+    }
+
     var thumb = angular.element(element[0].querySelector('.md-thumb'));
     var thumbText = angular.element(element[0].querySelector('.md-thumb-text'));
     var thumbContainer = thumb.parent();
@@ -17352,7 +18346,7 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
       ngModelRender();
       redrawTicks();
     }
-    setTimeout(updateAll);
+    setTimeout(updateAll, 0);
 
     var debouncedUpdateAll = $$rAF.throttle(updateAll);
     angular.element($window).on('resize', debouncedUpdateAll);
@@ -17519,7 +18513,7 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
     function onPressDown(ev) {
       if (isDisabledGetter()) return;
 
-      element.addClass('active');
+      element.addClass('md-active');
       element[0].focus();
       refreshSliderDimensions();
 
@@ -17533,7 +18527,7 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
     function onPressUp(ev) {
       if (isDisabledGetter()) return;
 
-      element.removeClass('dragging active');
+      element.removeClass('md-dragging md-active');
 
       var exactVal = percentToValue( positionToPercent( ev.pointer.x ));
       var closestVal = minMaxValidator( stepValidator(exactVal) );
@@ -17547,7 +18541,7 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
       isDragging = true;
       ev.stopPropagation();
 
-      element.addClass('dragging');
+      element.addClass('md-dragging');
       setSliderFromEvent(ev);
     }
     function onDrag(ev) {
@@ -17613,416 +18607,6 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
   }
 }
 SliderDirective.$inject = ["$$rAF", "$window", "$mdAria", "$mdUtil", "$mdConstant", "$mdTheming", "$mdGesture", "$parse", "$log"];
-
-})();
-(function(){
-"use strict";
-
-/**
- * @ngdoc module
- * @name material.components.sidenav
- *
- * @description
- * A Sidenav QP component.
- */
-angular
-  .module('material.components.sidenav', [
-    'material.core',
-    'material.components.backdrop'
-  ])
-  .factory('$mdSidenav', SidenavService )
-  .directive('mdSidenav', SidenavDirective)
-  .directive('mdSidenavFocus', SidenavFocusDirective)
-  .controller('$mdSidenavController', SidenavController);
-
-
-/**
- * @ngdoc service
- * @name $mdSidenav
- * @module material.components.sidenav
- *
- * @description
- * `$mdSidenav` makes it easy to interact with multiple sidenavs
- * in an app.
- *
- * @usage
- * <hljs lang="js">
- * // Async lookup for sidenav instance; will resolve when the instance is available
- * $mdSidenav(componentId).then(function(instance) {
- *   $log.debug( componentId + "is now ready" );
- * });
- * // Async toggle the given sidenav;
- * // when instance is known ready and lazy lookup is not needed.
- * $mdSidenav(componentId)
- *    .toggle()
- *    .then(function(){
- *      $log.debug('toggled');
- *    });
- * // Async open the given sidenav
- * $mdSidenav(componentId)
- *    .open()
- *    .then(function(){
- *      $log.debug('opened');
- *    });
- * // Async close the given sidenav
- * $mdSidenav(componentId)
- *    .close()
- *    .then(function(){
- *      $log.debug('closed');
- *    });
- * // Sync check to see if the specified sidenav is set to be open
- * $mdSidenav(componentId).isOpen();
- * // Sync check to whether given sidenav is locked open
- * // If this is true, the sidenav will be open regardless of close()
- * $mdSidenav(componentId).isLockedOpen();
- * </hljs>
- */
-function SidenavService($mdComponentRegistry, $q) {
-  return function(handle) {
-
-    // Lookup the controller instance for the specified sidNav instance
-    var self;
-    var errorMsg = "SideNav '" + handle + "' is not available!";
-    var instance = $mdComponentRegistry.get(handle);
-
-    if(!instance) {
-      $mdComponentRegistry.notFoundError(handle);
-    }
-
-    return self = {
-      // -----------------
-      // Sync methods
-      // -----------------
-      isOpen: function() {
-        return instance && instance.isOpen();
-      },
-      isLockedOpen: function() {
-        return instance && instance.isLockedOpen();
-      },
-      // -----------------
-      // Async methods
-      // -----------------
-      toggle: function() {
-        return instance ? instance.toggle() : $q.reject(errorMsg);
-      },
-      open: function() {
-        return instance ? instance.open() : $q.reject(errorMsg);
-      },
-      close: function() {
-        return instance ? instance.close() : $q.reject(errorMsg);
-      },
-      then : function( callbackFn ) {
-        var promise = instance ? $q.when(instance) : waitForInstance();
-        return promise.then( callbackFn || angular.noop );
-      }
-    };
-
-    /**
-     * Deferred lookup of component instance using $component registry
-     */
-    function waitForInstance() {
-      return $mdComponentRegistry
-                .when(handle)
-                .then(function( it ){
-                  instance = it;
-                  return it;
-                });
-    }
-  };
-}
-SidenavService.$inject = ["$mdComponentRegistry", "$q"];
-/**
- * @ngdoc directive
- * @name mdSidenavFocus
- * @module material.components.sidenav
- *
- * @restrict A
- *
- * @description
- * `mdSidenavFocus` provides a way to specify the focused element when a sidenav opens.
- * This is completely optional, as the sidenav itself is focused by default.
- *
- * @usage
- * <hljs lang="html">
- * <md-sidenav>
- *   <form>
- *     <md-input-container>
- *       <label for="testInput">Label</label>
- *       <input id="testInput" type="text" md-sidenav-focus>
- *     </md-input-container>
- *   </form>
- * </md-sidenav>
- * </hljs>
- **/
-function SidenavFocusDirective() {
-  return {
-    restrict: 'A',
-    require: '^mdSidenav',
-    link: function(scope, element, attr, sidenavCtrl) {
-      // @see $mdUtil.findFocusTarget(...)
-    }
-  };
-}
-/**
- * @ngdoc directive
- * @name mdSidenav
- * @module material.components.sidenav
- * @restrict E
- *
- * @description
- *
- * A Sidenav component that can be opened and closed programatically.
- *
- * By default, upon opening it will slide out on top of the main content area.
- *
- * For keyboard and screen reader accessibility, focus is sent to the sidenav wrapper by default.
- * It can be overridden with the `md-sidenav-focus` directive on the child element you want focused.
- *
- * @usage
- * <hljs lang="html">
- * <div layout="row" ng-controller="MyController">
- *   <md-sidenav md-component-id="left" class="md-sidenav-left">
- *     Left Nav!
- *   </md-sidenav>
- *
- *   <md-content>
- *     Center Content
- *     <md-button ng-click="openLeftMenu()">
- *       Open Left Menu
- *     </md-button>
- *   </md-content>
- *
- *   <md-sidenav md-component-id="right"
- *     md-is-locked-open="$mdMedia('min-width: 333px')"
- *     class="md-sidenav-right">
- *     <form>
- *       <md-input-container>
- *         <label for="testInput">Test input</label>
- *         <input id="testInput" type="text"
- *                ng-model="data" md-sidenav-focus>
- *       </md-input-container>
- *     </form>
- *   </md-sidenav>
- * </div>
- * </hljs>
- *
- * <hljs lang="js">
- * var app = angular.module('myApp', ['ngMaterial']);
- * app.controller('MyController', function($scope, $mdSidenav) {
- *   $scope.openLeftMenu = function() {
- *     $mdSidenav('left').toggle();
- *   };
- * });
- * </hljs>
- *
- * @param {expression=} md-is-open A model bound to whether the sidenav is opened.
- * @param {string=} md-component-id componentId to use with $mdSidenav service.
- * @param {expression=} md-is-locked-open When this expression evalutes to true,
- * the sidenav 'locks open': it falls into the content's flow instead
- * of appearing over it. This overrides the `is-open` attribute.
- *
- * The $mdMedia() service is exposed to the is-locked-open attribute, which
- * can be given a media query or one of the `sm`, `gt-sm`, `md`, `gt-md`, `lg` or `gt-lg` presets.
- * Examples:
- *
- *   - `<md-sidenav md-is-locked-open="shouldLockOpen"></md-sidenav>`
- *   - `<md-sidenav md-is-locked-open="$mdMedia('min-width: 1000px')"></md-sidenav>`
- *   - `<md-sidenav md-is-locked-open="$mdMedia('sm')"></md-sidenav>` (locks open on small screens)
- */
-function SidenavDirective($mdMedia, $mdUtil, $mdConstant, $mdTheming, $animate, $compile, $parse, $log, $q, $document) {
-  return {
-    restrict: 'E',
-    scope: {
-      isOpen: '=?mdIsOpen'
-    },
-    controller: '$mdSidenavController',
-    compile: function(element) {
-      element.addClass('md-closed');
-      element.attr('tabIndex', '-1');
-      return postLink;
-    }
-  };
-
-  /**
-   * Directive Post Link function...
-   */
-  function postLink(scope, element, attr, sidenavCtrl) {
-    var lastParentOverFlow;
-    var triggeringElement = null;
-    var promise = $q.when(true);
-
-    var isLockedOpenParsed = $parse(attr.mdIsLockedOpen);
-    var isLocked = function() {
-      return isLockedOpenParsed(scope.$parent, {
-        $media: function(arg) {
-          $log.warn("$media is deprecated for is-locked-open. Use $mdMedia instead.");
-          return $mdMedia(arg);
-        },
-        $mdMedia: $mdMedia
-      });
-    };
-    var backdrop = $mdUtil.createBackdrop(scope, "md-sidenav-backdrop md-opaque ng-enter");
-
-    element.on('$destroy', sidenavCtrl.destroy);
-    $mdTheming.inherit(backdrop, element);
-
-    scope.$watch(isLocked, updateIsLocked);
-    scope.$watch('isOpen', updateIsOpen);
-
-
-    // Publish special accessor for the Controller instance
-    sidenavCtrl.$toggleOpen = toggleOpen;
-
-    /**
-     * Toggle the DOM classes to indicate `locked`
-     * @param isLocked
-     */
-    function updateIsLocked(isLocked, oldValue) {
-      scope.isLockedOpen = isLocked;
-      if (isLocked === oldValue) {
-        element.toggleClass('md-locked-open', !!isLocked);
-      } else {
-        $animate[isLocked ? 'addClass' : 'removeClass'](element, 'md-locked-open');
-      }
-      backdrop.toggleClass('md-locked-open', !!isLocked);
-    }
-
-    /**
-     * Toggle the SideNav view and attach/detach listeners
-     * @param isOpen
-     */
-    function updateIsOpen(isOpen) {
-      // Support deprecated md-sidenav-focus attribute as fallback
-      var focusEl = $mdUtil.findFocusTarget(element) || $mdUtil.findFocusTarget(element,'[md-sidenav-focus]') || element;
-      var parent = element.parent();
-
-      parent[isOpen ? 'on' : 'off']('keydown', onKeyDown);
-      backdrop[isOpen ? 'on' : 'off']('click', close);
-
-      if ( isOpen ) {
-        // Capture upon opening..
-        triggeringElement = $document[0].activeElement;
-      }
-
-      disableParentScroll(isOpen);
-
-      return promise = $q.all([
-                isOpen ? $animate.enter(backdrop, parent) : $animate.leave(backdrop),
-                $animate[isOpen ? 'removeClass' : 'addClass'](element, 'md-closed')
-              ])
-              .then(function() {
-                // Perform focus when animations are ALL done...
-                if (scope.isOpen) {
-                  focusEl && focusEl.focus();
-                }
-              });
-    }
-
-    /**
-     * Prevent parent scrolling (when the SideNav is open)
-     */
-    function disableParentScroll(disabled) {
-      var parent = element.parent();
-      if ( disabled && !lastParentOverFlow ) {
-
-        lastParentOverFlow = parent.css('overflow');
-        parent.css('overflow', 'hidden');
-
-      } else if (angular.isDefined(lastParentOverFlow)) {
-
-        parent.css('overflow', lastParentOverFlow);
-        lastParentOverFlow = undefined;
-
-      }
-    }
-
-    /**
-     * Toggle the sideNav view and publish a promise to be resolved when
-     * the view animation finishes.
-     *
-     * @param isOpen
-     * @returns {*}
-     */
-    function toggleOpen( isOpen ) {
-      if (scope.isOpen == isOpen ) {
-
-        return $q.when(true);
-
-      } else {
-        return $q(function(resolve){
-          // Toggle value to force an async `updateIsOpen()` to run
-          scope.isOpen = isOpen;
-
-          $mdUtil.nextTick(function() {
-            // When the current `updateIsOpen()` animation finishes
-            promise.then(function(result) {
-
-              if ( !scope.isOpen ) {
-                // reset focus to originating element (if available) upon close
-                triggeringElement && triggeringElement.focus();
-                triggeringElement = null;
-              }
-
-              resolve(result);
-            });
-          });
-
-        });
-
-      }
-    }
-
-    /**
-     * Auto-close sideNav when the `escape` key is pressed.
-     * @param evt
-     */
-    function onKeyDown(ev) {
-      var isEscape = (ev.keyCode === $mdConstant.KEY_CODE.ESCAPE);
-      return isEscape ? close(ev) : $q.when(true);
-    }
-
-    /**
-     * With backdrop `clicks` or `escape` key-press, immediately
-     * apply the CSS close transition... Then notify the controller
-     * to close() and perform its own actions.
-     */
-    function close(ev) {
-      ev.preventDefault();
-      ev.stopPropagation();
-
-      return sidenavCtrl.close();
-    }
-
-  }
-}
-SidenavDirective.$inject = ["$mdMedia", "$mdUtil", "$mdConstant", "$mdTheming", "$animate", "$compile", "$parse", "$log", "$q", "$document"];
-
-/*
- * @private
- * @ngdoc controller
- * @name SidenavController
- * @module material.components.sidenav
- *
- */
-function SidenavController($scope, $element, $attrs, $mdComponentRegistry, $q) {
-
-  var self = this;
-
-  // Use Default internal method until overridden by directive postLink
-
-  // Synchronous getters
-  self.isOpen = function() { return !!$scope.isOpen; };
-  self.isLockedOpen = function() { return !!$scope.isLockedOpen; };
-
-  // Async actions
-  self.open   = function() { return self.$toggleOpen( true );  };
-  self.close  = function() { return self.$toggleOpen( false ); };
-  self.toggle = function() { return self.$toggleOpen( !$scope.isOpen );  };
-  self.$toggleOpen = function(value) { return $q.when($scope.isOpen = value); };
-
-  self.destroy = $mdComponentRegistry.register(self, $attrs.mdComponentId);
-}
-SidenavController.$inject = ["$scope", "$element", "$attrs", "$mdComponentRegistry", "$q"];
 
 })();
 (function(){
@@ -18326,7 +18910,7 @@ function MdSticky($document, $mdConstant, $$rAF, $mdUtil) {
     element.on('scroll touchmove', function() {
       if (!isScrolling) {
         isScrolling = true;
-        $$rAF(loopScrollEvent);
+        $$rAF.throttle(loopScrollEvent);
         element.triggerHandler('$scrollstart');
       }
       element.triggerHandler('$scroll');
@@ -18339,7 +18923,7 @@ function MdSticky($document, $mdConstant, $$rAF, $mdUtil) {
         element.triggerHandler('$scrollend');
       } else {
         element.triggerHandler('$scroll');
-        $$rAF(loopScrollEvent);
+        $$rAF.throttle(loopScrollEvent);
       }
     }
   }
@@ -18566,12 +19150,12 @@ angular.module('material.components.switch', [
  *
  * </hljs>
  */
-function MdSwitch(mdCheckboxDirective, $mdTheming, $mdUtil, $document, $mdConstant, $parse, $$rAF, $mdGesture) {
+function MdSwitch(mdCheckboxDirective, $mdUtil, $mdConstant, $parse, $$rAF, $mdGesture) {
   var checkboxDirective = mdCheckboxDirective[0];
 
   return {
     restrict: 'E',
-    priority:210, // Run before ngAria
+    priority: 210, // Run before ngAria
     transclude: true,
     template:
       '<div class="md-container">' +
@@ -18580,20 +19164,26 @@ function MdSwitch(mdCheckboxDirective, $mdTheming, $mdUtil, $document, $mdConsta
           '<div class="md-thumb" md-ink-ripple md-ink-ripple-checkbox></div>' +
         '</div>'+
       '</div>' +
-      '<div ng-transclude class="md-label">' +
-      '</div>',
+      '<div ng-transclude class="md-label"></div>',
     require: '?ngModel',
-    compile: compile
+    compile: mdSwitchCompile
   };
 
-  function compile(element, attr) {
+  function mdSwitchCompile(element, attr) {
     var checkboxLink = checkboxDirective.compile(element, attr);
-    // no transition on initial load
+    // No transition on initial load.
     element.addClass('md-dragging');
 
     return function (scope, element, attr, ngModel) {
       ngModel = ngModel || $mdUtil.fakeNgModel();
-      var disabledGetter = $parse(attr.ngDisabled);
+
+      var disabledGetter = null;
+      if (attr.disabled != null) {
+        disabledGetter = function() { return true; };
+      } else if (attr.ngDisabled) {
+        disabledGetter = $parse(attr.ngDisabled);
+      }
+
       var thumbContainer = angular.element(element[0].querySelector('.md-thumb-container'));
       var switchContainer = angular.element(element[0].querySelector('.md-container'));
 
@@ -18604,7 +19194,7 @@ function MdSwitch(mdCheckboxDirective, $mdTheming, $mdUtil, $document, $mdConsta
 
       checkboxLink(scope, element, attr, ngModel);
 
-      if (angular.isDefined(attr.ngDisabled)) {
+      if (disabledGetter) {
         scope.$watch(disabledGetter, function(isDisabled) {
           element.attr('tabindex', isDisabled ? -1 : 0);
         });
@@ -18619,14 +19209,12 @@ function MdSwitch(mdCheckboxDirective, $mdTheming, $mdUtil, $document, $mdConsta
 
       var drag;
       function onDragStart(ev) {
-        // Don't go if ng-disabled===true
-        if (disabledGetter(scope)) return;
+        // Don't go if the switch is disabled.
+        if (disabledGetter && disabledGetter(scope)) return;
         ev.stopPropagation();
 
         element.addClass('md-dragging');
-        drag = {
-          width: thumbContainer.prop('offsetWidth')
-        };
+        drag = {width: thumbContainer.prop('offsetWidth')};
         element.removeClass('transition');
       }
 
@@ -18655,7 +19243,7 @@ function MdSwitch(mdCheckboxDirective, $mdTheming, $mdUtil, $document, $mdConsta
 
         // We changed if there is no distance (this is a click a click),
         // or if the drag distance is >50% of the total.
-        var isChanged = ngModel.$viewValue ? drag.translate < 0.5 : drag.translate > 0.5;
+        var isChanged = ngModel.$viewValue ? drag.translate > 0.5 : drag.translate < 0.5;
         if (isChanged) {
           applyModelValue(!ngModel.$viewValue);
         }
@@ -18674,7 +19262,7 @@ function MdSwitch(mdCheckboxDirective, $mdTheming, $mdUtil, $document, $mdConsta
 
 
 }
-MdSwitch.$inject = ["mdCheckboxDirective", "$mdTheming", "$mdUtil", "$document", "$mdConstant", "$parse", "$$rAF", "$mdGesture"];
+MdSwitch.$inject = ["mdCheckboxDirective", "$mdUtil", "$mdConstant", "$parse", "$$rAF", "$mdGesture"];
 
 })();
 (function(){
@@ -18725,11 +19313,20 @@ angular.module('material.components.toast', [
   .directive('mdToast', MdToastDirective)
   .provider('$mdToast', MdToastProvider);
 
-function MdToastDirective() {
+/* @ngInject */
+function MdToastDirective($mdToast) {
   return {
-    restrict: 'E'
+    restrict: 'E',
+    link: function postLink(scope, element, attr) {
+      // When navigation force destroys an interimElement, then
+      // listen and $destroy() that interim instance...
+      scope.$on('$destroy', function() {
+        $mdToast.destroy();
+      });
+    }
   };
 }
+MdToastDirective.$inject = ["$mdToast"];
 
 /**
  * @ngdoc service
@@ -18837,7 +19434,7 @@ function MdToastDirective() {
  *   - `position` - `{string=}`: Where to place the toast. Available: any combination
  *     of 'bottom', 'left', 'top', 'right', 'fit'. Default: 'bottom left'.
  *   - `controller` - `{string=}`: The controller to associate with this toast.
- *     The controller will be injected the local `$hideToast`, which is a function
+ *     The controller will be injected the local `$mdToast.hide( )`, which is a function
  *     used to hide the toast.
  *   - `locals` - `{string=}`: An object containing key/value pairs. The keys will
  *     be used as names of values to inject into the controller. For example,
@@ -18946,7 +19543,7 @@ function MdToastProvider($$interimElementProvider) {
     function onShow(scope, element, options) {
       activeToastContent = options.content;
 
-      element = $mdUtil.extractElementByName(element, 'md-toast');
+      element = $mdUtil.extractElementByName(element, 'md-toast', true);
       options.onSwipe = function(ev, gesture) {
         //Add swipeleft/swiperight class to element so it can animate correctly
         element.addClass('md-' + ev.type.replace('$md.',''));
@@ -18969,7 +19566,7 @@ function MdToastProvider($$interimElementProvider) {
       element.off(SWIPE_EVENTS, options.onSwipe);
       options.parent.removeClass(options.openClass);
 
-      return $animate.leave(element);
+      return (options.$destroy == true) ? element.remove() : $animate.leave(element);
     }
 
     function toastOpenClass(position) {
@@ -19258,9 +19855,8 @@ function MdTooltipDirective($timeout, $window, $$rAF, $document, $mdUtil, $mdThe
     restrict: 'E',
     transclude: true,
     priority:210, // Before ngAria
-    template: '\
-        <div class="md-background"></div>\
-        <div class="md-content" ng-transclude></div>',
+    template: '<div class="md-background"></div>' +
+              '<div class="md-content" ng-transclude></div>',
     scope: {
       visible: '=?mdVisible',
       delay: '=?mdDelay',
@@ -19322,9 +19918,12 @@ function MdTooltipDirective($timeout, $window, $$rAF, $document, $mdUtil, $mdThe
      */
     function getParentWithPointerEvents () {
       var parent = element.parent();
-      while (parent && hasComputedStyleValue('pointer-events','none', parent[0])) {
+
+      // jqLite might return a non-null, but still empty, parent; so check for parent and length
+      while (hasComputedStyleValue('pointer-events','none', parent)) {
         parent = parent.parent();
       }
+
       return parent;
     }
 
@@ -19339,12 +19938,17 @@ function MdTooltipDirective($timeout, $window, $$rAF, $document, $mdUtil, $mdThe
 
 
     function hasComputedStyleValue(key, value, target) {
-      key    = attr.$normalize(key);
-      target = target || element[0];
+      var hasValue = false;
 
-      var computedStyles = $window.getComputedStyle(target);
+      if ( target && target.length  ) {
+        key    = attr.$normalize(key);
+        target = target[0] || element[0];
 
-      return angular.isDefined(computedStyles[key]) && (computedStyles[key] == value);
+        var computedStyles = $window.getComputedStyle(target);
+        hasValue = angular.isDefined(computedStyles[key]) && (computedStyles[key] == value);
+      }
+
+      return hasValue;
     }
 
     function bindEvents () {
@@ -19375,6 +19979,7 @@ function MdTooltipDirective($timeout, $window, $$rAF, $document, $mdUtil, $mdThe
         var autohide = scope.hasOwnProperty('autohide') ? scope.autohide : attr.hasOwnProperty('mdAutohide');
         if (autohide || mouseActive || ($document[0].activeElement !== parent[0]) ) {
           parent.off('blur mouseleave touchend touchcancel', leaveHandler );
+          parent.triggerHandler("blur");
           setVisible(false);
         }
         mouseActive = false;
@@ -19996,7 +20601,7 @@ VirtualRepeatController.prototype.containerUpdated = function() {
             this.$$rAF(angular.bind(this, this.readItemSize_));
           }
         }));
-    this.$scope.$digest();
+    if (!this.$scope.$root.$$phase) this.$scope.$digest();
 
     return;
   } else if (!this.sized) {
@@ -20377,7 +20982,7 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
    * @returns {*}
    */
   function positionDropdown () {
-    if (!elements) return $mdUtil.nextTick(positionDropdown, false);
+    if (!elements) return $mdUtil.nextTick(positionDropdown, false, $scope);
     var hrect  = elements.wrap.getBoundingClientRect(),
         vrect  = elements.snap.getBoundingClientRect(),
         root   = elements.root.getBoundingClientRect(),
@@ -20452,7 +21057,12 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
    */
   function cleanup () {
     angular.element($window).off('resize', positionDropdown);
-    elements.$.scrollContainer.remove();
+    if ( elements ){
+      var items = 'ul scroller scrollContainer input'.split(' ');
+      angular.forEach(items, function(key){
+        elements.$[key].remove();
+      });
+    }
   }
 
   /**
@@ -20507,10 +21117,20 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
   function handleHiddenChange (hidden, oldHidden) {
     if (!hidden && oldHidden) {
       positionDropdown();
-      if (elements) $mdUtil.nextTick(function () { $mdUtil.disableScrollAround(elements.ul); }, false);
-    } else if (hidden && !oldHidden) {
-      $mdUtil.nextTick(function () { $mdUtil.enableScrolling(); }, false);
-    }
+
+      if (elements)
+        $mdUtil.nextTick(function () {
+
+          $mdUtil.disableScrollAround(elements.ul);
+
+        }, false, $scope);
+      } else if (hidden && !oldHidden) {
+        $mdUtil.nextTick(function () {
+
+          $mdUtil.enableScrolling();
+
+        }, false, $scope);
+      }
   }
 
   /**
@@ -20832,7 +21452,7 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
         if (items.success) items.success(handleResults);
         if (items.then)    items.then(handleResults);
         if (items.finally) items.finally(function () { ctrl.loading = false; });
-      });
+      },true, $scope);
     }
     function handleResults (matches) {
       cache[ term ] = matches;
@@ -21123,7 +21743,7 @@ function MdAutocomplete () {
         var templateTag = element.find('md-item-template').detach(),
             html = templateTag.length ? templateTag.html() : element.html();
         if (!templateTag.length) element.empty();
-        return html;
+        return '<md-autocomplete-parent-scope md-autocomplete-replace>' + html + '</md-autocomplete-parent-scope>';
       }
 
       function getNoItemsTemplate() {
@@ -21196,6 +21816,56 @@ function MdAutocomplete () {
   };
 }
 
+})();
+(function(){
+"use strict";
+
+angular
+  .module('material.components.autocomplete')
+  .directive('mdAutocompleteParentScope', MdAutocompleteItemScopeDirective);
+
+function MdAutocompleteItemScopeDirective($compile, $mdUtil) {
+  return {
+    restrict: 'AE',
+    link: postLink,
+    terminal: true
+  };
+
+  function postLink(scope, element, attr) {
+    var ctrl = scope.$mdAutocompleteCtrl;
+    var newScope = ctrl.parent.$new();
+    var itemName = ctrl.itemName;
+
+    // Watch for changes to our scope's variables and copy them to the new scope
+    watchVariable('$index', '$index');
+    watchVariable('item', itemName);
+
+    // Recompile the contents with the new/modified scope
+    $compile(element.contents())(newScope);
+
+    // Replace it if required
+    if (attr.hasOwnProperty('mdAutocompleteReplace')) {
+      element.after(element.contents());
+      element.remove();
+    }
+
+    /**
+     * Creates a watcher for variables that are copied from the parent scope
+     * @param variable
+     * @param alias
+     */
+    function watchVariable(variable, alias) {
+      newScope[alias] = scope[variable];
+
+      scope.$watch(variable, function(value) {
+        $mdUtil.nextTick(function() {
+          newScope[alias] = value;
+        });
+      });
+    }
+  }
+}
+MdAutocompleteItemScopeDirective.$inject = ["$compile", "$mdUtil"];
 })();
 (function(){
 "use strict";
@@ -21295,35 +21965,6 @@ function MdHighlight ($interpolate, $parse) {
   };
 }
 MdHighlight.$inject = ["$interpolate", "$parse"];
-
-})();
-(function(){
-"use strict";
-
-angular
-    .module('material.components.autocomplete')
-    .directive('mdAutocompleteParentScope', MdAutocompleteParentScope);
-
-function MdAutocompleteParentScope ($compile) {
-  return {
-    restrict: 'A',
-    terminal: true,
-    link:     postLink,
-    scope:    false
-  };
-  function postLink (scope, element, attr) {
-    var ctrl = scope.$parent.$mdAutocompleteCtrl;
-
-    // TODO: transclude self might make it possible to do this without
-    // re-compiling, which is slow.
-    $compile(element.contents())(ctrl.parent);
-    if (attr.hasOwnProperty('mdAutocompleteReplace')) {
-      element.after(element.contents());
-      element.remove();
-    }
-  }
-}
-MdAutocompleteParentScope.$inject = ["$compile"];
 
 })();
 (function(){
@@ -21878,17 +22519,19 @@ MdChipsCtrl.prototype.configureUserInput = function(inputElement) {
 };
 
 MdChipsCtrl.prototype.configureAutocomplete = function(ctrl) {
-  this.hasAutocomplete = true;
-  ctrl.registerSelectedItemWatcher(angular.bind(this, function (item) {
-    if (item) {
-      this.appendChip(item);
-      this.resetChipBuffer();
-    }
-  }));
+  if ( ctrl ){
+    this.hasAutocomplete = true;
+    ctrl.registerSelectedItemWatcher(angular.bind(this, function (item) {
+      if (item) {
+        this.appendChip(item);
+        this.resetChipBuffer();
+      }
+    }));
 
-  this.$element.find('input')
-      .on('focus',angular.bind(this, this.onInputFocus) )
-      .on('blur', angular.bind(this, this.onInputBlur) );
+    this.$element.find('input')
+        .on('focus',angular.bind(this, this.onInputFocus) )
+        .on('blur', angular.bind(this, this.onInputBlur) );
+  }
 };
 
 MdChipsCtrl.prototype.hasFocus = function () {
@@ -23294,7 +23937,7 @@ function MenuController($mdMenu, $attrs, $element, $scope, $mdUtil, $timeout) {
       preserveElement: self.isInMenuBar || self.nestedMenus.length > 0,
       parent: self.isInMenuBar ? $element : 'body'
     });
-  }
+  };
 
   // Expose a open function to the child scope for html to use
   $scope.$mdOpenMenu = this.open;
@@ -23327,6 +23970,10 @@ function MenuController($mdMenu, $attrs, $element, $scope, $mdUtil, $timeout) {
     this.containerProxy && this.containerProxy(ev);
   };
 
+  this.destroy = function() {
+    return $mdMenu.destroy();
+  };
+
   // Use the $mdMenu interim element service to close the menu contents
   this.close = function closeMenu(skipFocus, closeOpts) {
     if ( !self.isOpen ) return;
@@ -23334,12 +23981,13 @@ function MenuController($mdMenu, $attrs, $element, $scope, $mdUtil, $timeout) {
 
     $scope.$emit('$mdMenuClose', $element);
     $mdMenu.hide(null, closeOpts);
+
     if (!skipFocus) {
       var el = self.restoreFocusTo || $element.find('button')[0];
       if (el instanceof angular.element) el = el[0];
-      el.focus();
+      if (el) el.focus();
     }
-  }
+  };
 
   /**
    * Build a nice object out of our string attribute which specifies the
@@ -23580,8 +24228,11 @@ function MenuDirective($mdUtil) {
     mdMenuCtrl.init(menuContainer, { isInMenuBar: isInMenuBar });
 
     scope.$on('$destroy', function() {
-      menuContainer.remove();
-      mdMenuCtrl.close();
+      mdMenuCtrl
+        .destroy()
+        .finally(function(){
+          menuContainer.remove();
+        });
     });
 
   }
@@ -23609,7 +24260,7 @@ angular
 function MenuProvider($$interimElementProvider) {
   var MENU_EDGE_MARGIN = 8;
 
-  menuDefaultOptions.$inject = ["$mdUtil", "$mdTheming", "$mdConstant", "$document", "$window", "$q", "$$rAF", "$animateCss", "$animate", "$timeout"];
+  menuDefaultOptions.$inject = ["$mdUtil", "$mdTheming", "$mdConstant", "$document", "$window", "$q", "$$rAF", "$animateCss", "$animate"];
   return $$interimElementProvider('$mdMenu')
     .setDefaults({
       methods: ['target'],
@@ -23617,7 +24268,7 @@ function MenuProvider($$interimElementProvider) {
     });
 
   /* @ngInject */
-  function menuDefaultOptions($mdUtil, $mdTheming, $mdConstant, $document, $window, $q, $$rAF, $animateCss, $animate, $timeout) {
+  function menuDefaultOptions($mdUtil, $mdTheming, $mdConstant, $document, $window, $q, $$rAF, $animateCss, $animate) {
     var animator = $mdUtil.dom.animator;
 
     return {
@@ -23658,14 +24309,8 @@ function MenuProvider($$interimElementProvider) {
        * Hide and destroys the backdrop created by showBackdrop()
        */
       return function hideBackdrop() {
-        if (options.backdrop) {
-          // Override duration to immediately remove invisible backdrop
-          options.backdrop.off('click');
-          $animate.leave(options.backdrop, {duration:0});
-        }
-        if (options.disableParentScroll) {
-          options.restoreScroll();
-        }
+        if (options.backdrop) options.backdrop.remove();
+        if (options.disableParentScroll) options.restoreScroll();
       };
     }
 
@@ -23678,14 +24323,28 @@ function MenuProvider($$interimElementProvider) {
       opts.cleanupResizing();
       opts.hideBackdrop();
 
-      return $animateCss(element, {addClass: 'md-leave'})
-        .start()
-        .then(function() {
-          element.removeClass('md-active');
+      // For navigation $destroy events, do a quick, non-animated removal,
+      // but for normal closes (from clicks, etc) animate the removal
 
-          detachElement(element, opts);
-          opts.alreadyOpen = false;
-        });
+      return (opts.$destroy === true) ? detachAndClean() : animateRemoval().then( detachAndClean );
+
+      /**
+       * For normal closes, animate the removal.
+       * For forced closes (like $destroy events), skip the animations
+       */
+      function animateRemoval() {
+        return $animateCss(element, {addClass: 'md-leave'}).start();
+      }
+
+      /**
+       * Detach the element
+       */
+      function detachAndClean() {
+        element.removeClass('md-active');
+        detachElement(element, opts);
+        opts.alreadyOpen = false;
+      }
+
     }
 
     /**
@@ -23800,10 +24459,14 @@ function MenuProvider($$interimElementProvider) {
         opts.menuContentEl[0].addEventListener('click', captureClickListener, true);
 
         // kick off initial focus in the menu on the first element
-        var focusTarget = opts.menuContentEl[0].querySelector('[md-menu-focus-target]') ||
-          opts.menuContentEl[0].firstElementChild.querySelector('[tabindex]') ||
-          opts.menuContentEl[0].firstElementChild.firstElementChild;
-        focusTarget.focus();
+        var focusTarget = opts.menuContentEl[0].querySelector('[md-menu-focus-target]');
+        if ( !focusTarget && firstChild ) {
+          var firstChild = opts.menuContentEl[0].firstElementChild;
+
+          focusTarget = firstChild.querySelector('[tabindex]') || firstChild.firstElementChild;
+        }
+
+        focusTarget && focusTarget.focus();
 
         return function cleanupInteraction() {
           element.removeClass('md-clickable');
@@ -23956,7 +24619,7 @@ function MenuProvider($$interimElementProvider) {
     }
 
     /**
-     * Use browser to remove this element without triggering a $destory event
+     * Use browser to remove this element without triggering a $destroy event
      */
     function detachElement(element, opts) {
       if (!opts.preserveElement) {
@@ -23993,24 +24656,22 @@ function MenuProvider($$interimElementProvider) {
         right: boundryNodeRect.right - MENU_EDGE_MARGIN
       };
 
-      var alignTarget, alignTargetRect, existingOffsets;
+      var alignTarget, alignTargetRect = { top:0, left : 0, right:0, bottom:0 }, existingOffsets  = { top:0, left : 0, right:0, bottom:0  };
       var positionMode = opts.mdMenuCtrl.positionMode();
 
       if (positionMode.top == 'target' || positionMode.left == 'target' || positionMode.left == 'target-right') {
-        // TODO: Allow centering on an arbitrary node, for now center on first menu-item's child
         alignTarget = firstVisibleChild();
-        if (!alignTarget) {
-          throw Error('Error positioning menu. No visible children.');
+        if ( alignTarget ) {
+          // TODO: Allow centering on an arbitrary node, for now center on first menu-item's child
+          alignTarget = alignTarget.firstElementChild || alignTarget;
+          alignTarget = alignTarget.querySelector('[md-menu-align-target]') || alignTarget;
+          alignTargetRect = alignTarget.getBoundingClientRect();
+
+          existingOffsets = {
+            top: parseFloat(containerNode.style.top || 0),
+            left: parseFloat(containerNode.style.left || 0)
+          };
         }
-
-        alignTarget = alignTarget.firstElementChild || alignTarget;
-        alignTarget = alignTarget.querySelector('[md-menu-align-target]') || alignTarget;
-        alignTargetRect = alignTarget.getBoundingClientRect();
-
-        existingOffsets = {
-          top: parseFloat(containerNode.style.top || 0),
-          left: parseFloat(containerNode.style.left || 0)
-        };
       }
 
       var position = {};
@@ -25092,7 +25753,6 @@ function MdTabsController ($scope, $element, $window, $mdConstant, $mdTabInkRipp
           handleResizeWhenVisible.watcher();
           handleResizeWhenVisible.watcher = null;
 
-          // we have to trigger our own $apply so that the DOM bindings will update
           handleWindowResize();
         }
       }, false);
@@ -25178,11 +25838,11 @@ function MdTabsController ($scope, $element, $window, $mdConstant, $mdTabInkRipp
    * Update size calculations when the window is resized.
    */
   function handleWindowResize () {
-    $scope.$apply(function () {
-      ctrl.lastSelectedIndex = ctrl.selectedIndex;
-      ctrl.offsetLeft        = fixOffset(ctrl.offsetLeft);
-      $mdUtil.nextTick(ctrl.updateInkBarStyles, false);
-      $mdUtil.nextTick(updatePagination);
+    ctrl.lastSelectedIndex = ctrl.selectedIndex;
+    ctrl.offsetLeft        = fixOffset(ctrl.offsetLeft);
+    $mdUtil.nextTick(function () {
+      ctrl.updateInkBarStyles();
+      updatePagination();
     });
   }
 
@@ -25330,7 +25990,7 @@ function MdTabsController ($scope, $element, $window, $mdConstant, $mdTabInkRipp
    */
   function shouldPaginate () {
     if (ctrl.noPagination || !loaded) return false;
-    var canvasWidth = Math.min($element.prop('clientWidth'), ctrl.maxTabWidth);
+    var canvasWidth = $element.prop('clientWidth');
     angular.forEach(elements.dummies, function (tab) { canvasWidth -= tab.offsetWidth; });
     return canvasWidth < 0;
   }
@@ -25433,7 +26093,7 @@ function MdTabsController ($scope, $element, $window, $mdConstant, $mdTabInkRipp
     var tab         = elements.tabs[ index ],
         left        = tab.offsetLeft,
         right       = tab.offsetWidth + left;
-    ctrl.offsetLeft = Math.max(ctrl.offsetLeft, fixOffset(right - elements.canvas.clientWidth));
+    ctrl.offsetLeft = Math.max(ctrl.offsetLeft, fixOffset(right - elements.canvas.clientWidth + 32 * 2));
     ctrl.offsetLeft = Math.min(ctrl.offsetLeft, fixOffset(left));
   }
 
@@ -25684,105 +26344,104 @@ function MdTabs () {
     },
     template:         function (element, attr) {
       attr[ "$mdTabsTemplate" ] = element.html();
-      return '\
-        <md-tabs-wrapper>\
-          <md-tab-data></md-tab-data>\
-          <md-prev-button\
-              tabindex="-1"\
-              role="button"\
-              aria-label="Previous Page"\
-              aria-disabled="{{!$mdTabsCtrl.canPageBack()}}"\
-              ng-class="{ \'md-disabled\': !$mdTabsCtrl.canPageBack() }"\
-              ng-if="$mdTabsCtrl.shouldPaginate"\
-              ng-click="$mdTabsCtrl.previousPage()">\
-            <md-icon md-svg-icon="md-tabs-arrow"></md-icon>\
-          </md-prev-button>\
-          <md-next-button\
-              tabindex="-1"\
-              role="button"\
-              aria-label="Next Page"\
-              aria-disabled="{{!$mdTabsCtrl.canPageForward()}}"\
-              ng-class="{ \'md-disabled\': !$mdTabsCtrl.canPageForward() }"\
-              ng-if="$mdTabsCtrl.shouldPaginate"\
-              ng-click="$mdTabsCtrl.nextPage()">\
-            <md-icon md-svg-icon="md-tabs-arrow"></md-icon>\
-          </md-next-button>\
-          <md-tabs-canvas\
-              tabindex="0"\
-              aria-activedescendant="tab-item-{{$mdTabsCtrl.tabs[$mdTabsCtrl.focusIndex].id}}"\
-              ng-focus="$mdTabsCtrl.redirectFocus()"\
-              ng-class="{\
-                  \'md-paginated\': $mdTabsCtrl.shouldPaginate,\
-                  \'md-center-tabs\': $mdTabsCtrl.shouldCenterTabs\
-              }"\
-              ng-keydown="$mdTabsCtrl.keydown($event)"\
-              role="tablist">\
-            <md-pagination-wrapper\
-                ng-class="{ \'md-center-tabs\': $mdTabsCtrl.shouldCenterTabs }"\
-                md-tab-scroll="$mdTabsCtrl.scroll($event)">\
-              <md-tab-item\
-                  tabindex="-1"\
-                  class="md-tab"\
-                  style="max-width: {{ $mdTabsCtrl.maxTabWidth + \'px\' }}"\
-                  ng-repeat="tab in $mdTabsCtrl.tabs"\
-                  role="tab"\
-                  aria-controls="tab-content-{{::tab.id}}"\
-                  aria-selected="{{tab.isActive()}}"\
-                  aria-disabled="{{tab.scope.disabled || \'false\'}}"\
-                  ng-click="$mdTabsCtrl.select(tab.getIndex())"\
-                  ng-class="{\
-                      \'md-active\':    tab.isActive(),\
-                      \'md-focused\':   tab.hasFocus(),\
-                      \'md-disabled\':  tab.scope.disabled\
-                  }"\
-                  ng-disabled="tab.scope.disabled"\
-                  md-swipe-left="$mdTabsCtrl.nextPage()"\
-                  md-swipe-right="$mdTabsCtrl.previousPage()"\
-                  md-tabs-template="::tab.label"\
-                  md-scope="::tab.parent"></md-tab-item>\
-              <md-ink-bar></md-ink-bar>\
-            </md-pagination-wrapper>\
-            <div class="md-visually-hidden md-dummy-wrapper">\
-              <md-dummy-tab\
-                  class="md-tab"\
-                  tabindex="-1"\
-                  id="tab-item-{{::tab.id}}"\
-                  role="tab"\
-                  aria-controls="tab-content-{{::tab.id}}"\
-                  aria-selected="{{tab.isActive()}}"\
-                  aria-disabled="{{tab.scope.disabled || \'false\'}}"\
-                  ng-focus="$mdTabsCtrl.hasFocus = true"\
-                  ng-blur="$mdTabsCtrl.hasFocus = false"\
-                  ng-repeat="tab in $mdTabsCtrl.tabs"\
-                  md-tabs-template="::tab.label"\
-                  md-scope="::tab.parent"></md-dummy-tab>\
-            </div>\
-          </md-tabs-canvas>\
-        </md-tabs-wrapper>\
-        <md-tabs-content-wrapper ng-show="$mdTabsCtrl.hasContent && $mdTabsCtrl.selectedIndex >= 0">\
-          <md-tab-content\
-              id="tab-content-{{::tab.id}}"\
-              role="tabpanel"\
-              aria-labelledby="tab-item-{{::tab.id}}"\
-              md-swipe-left="$mdTabsCtrl.swipeContent && $mdTabsCtrl.incrementIndex(1)"\
-              md-swipe-right="$mdTabsCtrl.swipeContent && $mdTabsCtrl.incrementIndex(-1)"\
-              ng-if="$mdTabsCtrl.hasContent"\
-              ng-repeat="(index, tab) in $mdTabsCtrl.tabs"\
-              ng-class="{\
-                \'md-no-transition\': $mdTabsCtrl.lastSelectedIndex == null,\
-                \'md-active\':        tab.isActive(),\
-                \'md-left\':          tab.isLeft(),\
-                \'md-right\':         tab.isRight(),\
-                \'md-no-scroll\':     $mdTabsCtrl.dynamicHeight\
-              }">\
-            <div\
-                md-tabs-template="::tab.template"\
-                md-connected-if="tab.isActive()"\
-                md-scope="::tab.parent"\
-                ng-if="$mdTabsCtrl.enableDisconnect || tab.shouldRender()"></div>\
-          </md-tab-content>\
-        </md-tabs-content-wrapper>\
-      ';
+      return '' +
+        '<md-tabs-wrapper> ' +
+          '<md-tab-data></md-tab-data> ' +
+          '<md-prev-button ' +
+              'tabindex="-1" ' +
+              'role="button" ' +
+              'aria-label="Previous Page" ' +
+              'aria-disabled="{{!$mdTabsCtrl.canPageBack()}}" ' +
+              'ng-class="{ \'md-disabled\': !$mdTabsCtrl.canPageBack() }" ' +
+              'ng-if="$mdTabsCtrl.shouldPaginate" ' +
+              'ng-click="$mdTabsCtrl.previousPage()"> ' +
+            '<md-icon md-svg-icon="md-tabs-arrow"></md-icon> ' +
+          '</md-prev-button> ' +
+          '<md-next-button ' +
+              'tabindex="-1" ' +
+              'role="button" ' +
+              'aria-label="Next Page" ' +
+              'aria-disabled="{{!$mdTabsCtrl.canPageForward()}}" ' +
+              'ng-class="{ \'md-disabled\': !$mdTabsCtrl.canPageForward() }" ' +
+              'ng-if="$mdTabsCtrl.shouldPaginate" ' +
+              'ng-click="$mdTabsCtrl.nextPage()"> ' +
+            '<md-icon md-svg-icon="md-tabs-arrow"></md-icon> ' +
+          '</md-next-button> ' +
+          '<md-tabs-canvas ' +
+              'tabindex="0" ' +
+              'aria-activedescendant="tab-item-{{$mdTabsCtrl.tabs[$mdTabsCtrl.focusIndex].id}}" ' +
+              'ng-focus="$mdTabsCtrl.redirectFocus()" ' +
+              'ng-class="{ ' +
+                  '\'md-paginated\': $mdTabsCtrl.shouldPaginate, ' +
+                  '\'md-center-tabs\': $mdTabsCtrl.shouldCenterTabs ' +
+              '}" ' +
+              'ng-keydown="$mdTabsCtrl.keydown($event)" ' +
+              'role="tablist"> ' +
+            '<md-pagination-wrapper ' +
+                'ng-class="{ \'md-center-tabs\': $mdTabsCtrl.shouldCenterTabs }" ' +
+                'md-tab-scroll="$mdTabsCtrl.scroll($event)"> ' +
+              '<md-tab-item ' +
+                  'tabindex="-1" ' +
+                  'class="md-tab" ' +
+                  'style="max-width: {{ $mdTabsCtrl.maxTabWidth + \'px\' }}" ' +
+                  'ng-repeat="tab in $mdTabsCtrl.tabs" ' +
+                  'role="tab" ' +
+                  'aria-controls="tab-content-{{::tab.id}}" ' +
+                  'aria-selected="{{tab.isActive()}}" ' +
+                  'aria-disabled="{{tab.scope.disabled || \'false\'}}" ' +
+                  'ng-click="$mdTabsCtrl.select(tab.getIndex())" ' +
+                  'ng-class="{ ' +
+                      '\'md-active\':    tab.isActive(), ' +
+                      '\'md-focused\':   tab.hasFocus(), ' +
+                      '\'md-disabled\':  tab.scope.disabled ' +
+                  '}" ' +
+                  'ng-disabled="tab.scope.disabled" ' +
+                  'md-swipe-left="$mdTabsCtrl.nextPage()" ' +
+                  'md-swipe-right="$mdTabsCtrl.previousPage()" ' +
+                  'md-tabs-template="::tab.label" ' +
+                  'md-scope="::tab.parent"></md-tab-item> ' +
+              '<md-ink-bar></md-ink-bar> ' +
+            '</md-pagination-wrapper> ' +
+            '<div class="md-visually-hidden md-dummy-wrapper"> ' +
+              '<md-dummy-tab ' +
+                  'class="md-tab" ' +
+                  'tabindex="-1" ' +
+                  'id="tab-item-{{::tab.id}}" ' +
+                  'role="tab" ' +
+                  'aria-controls="tab-content-{{::tab.id}}" ' +
+                  'aria-selected="{{tab.isActive()}}" ' +
+                  'aria-disabled="{{tab.scope.disabled || \'false\'}}" ' +
+                  'ng-focus="$mdTabsCtrl.hasFocus = true" ' +
+                  'ng-blur="$mdTabsCtrl.hasFocus = false" ' +
+                  'ng-repeat="tab in $mdTabsCtrl.tabs" ' +
+                  'md-tabs-template="::tab.label" ' +
+                  'md-scope="::tab.parent"></md-dummy-tab> ' +
+            '</div> ' +
+          '</md-tabs-canvas> ' +
+        '</md-tabs-wrapper> ' +
+        '<md-tabs-content-wrapper ng-show="$mdTabsCtrl.hasContent && $mdTabsCtrl.selectedIndex >= 0"> ' +
+          '<md-tab-content ' +
+              'id="tab-content-{{::tab.id}}" ' +
+              'role="tabpanel" ' +
+              'aria-labelledby="tab-item-{{::tab.id}}" ' +
+              'md-swipe-left="$mdTabsCtrl.swipeContent && $mdTabsCtrl.incrementIndex(1)" ' +
+              'md-swipe-right="$mdTabsCtrl.swipeContent && $mdTabsCtrl.incrementIndex(-1)" ' +
+              'ng-if="$mdTabsCtrl.hasContent" ' +
+              'ng-repeat="(index, tab) in $mdTabsCtrl.tabs" ' +
+              'ng-class="{ ' +
+                '\'md-no-transition\': $mdTabsCtrl.lastSelectedIndex == null, ' +
+                '\'md-active\':        tab.isActive(), ' +
+                '\'md-left\':          tab.isLeft(), ' +
+                '\'md-right\':         tab.isRight(), ' +
+                '\'md-no-scroll\':     $mdTabsCtrl.dynamicHeight ' +
+              '}"> ' +
+            '<div ' +
+                'md-tabs-template="::tab.template" ' +
+                'md-connected-if="tab.isActive()" ' +
+                'md-scope="::tab.parent" ' +
+                'ng-if="$mdTabsCtrl.enableDisconnect || tab.shouldRender()"></div> ' +
+          '</md-tab-content> ' +
+        '</md-tabs-content-wrapper>';
     },
     controller:       'MdTabsController',
     controllerAs:     '$mdTabsCtrl',
@@ -25838,7 +26497,7 @@ MdTabsTemplate.$inject = ["$compile", "$mdUtil"];
 
 })();
 (function(){ 
-angular.module("material.core").constant("$MD_THEME_CSS", "md-autocomplete.md-THEME_NAME-theme {  background: '{{background-50}}'; }  md-autocomplete.md-THEME_NAME-theme[disabled] {    background: '{{background-100}}'; }  md-autocomplete.md-THEME_NAME-theme button md-icon path {    fill: '{{background-600}}'; }  md-autocomplete.md-THEME_NAME-theme button:after {    background: '{{background-600-0.3}}'; }.md-autocomplete-suggestions-container.md-THEME_NAME-theme {  background: '{{background-50}}'; }  .md-autocomplete-suggestions-container.md-THEME_NAME-theme li {    color: '{{background-900}}'; }    .md-autocomplete-suggestions-container.md-THEME_NAME-theme li .highlight {      color: '{{background-600}}'; }    .md-autocomplete-suggestions-container.md-THEME_NAME-theme li:hover, .md-autocomplete-suggestions-container.md-THEME_NAME-theme li.selected {      background: '{{background-200}}'; }md-bottom-sheet.md-THEME_NAME-theme {  background-color: '{{background-50}}';  border-top-color: '{{background-300}}'; }  md-bottom-sheet.md-THEME_NAME-theme.md-list md-list-item {    color: '{{foreground-1}}'; }  md-bottom-sheet.md-THEME_NAME-theme .md-subheader {    background-color: '{{background-50}}'; }  md-bottom-sheet.md-THEME_NAME-theme .md-subheader {    color: '{{foreground-1}}'; }md-backdrop {  background-color: '{{background-900-0.0}}'; }  md-backdrop.md-opaque.md-THEME_NAME-theme {    background-color: '{{background-900-1.0}}'; }a.md-button.md-THEME_NAME-theme:not([disabled]):hover, .md-button.md-THEME_NAME-theme:not([disabled]):hover {  background-color: '{{background-500-0.2}}'; }a.md-button.md-THEME_NAME-theme:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme:not([disabled]).md-focused {  background-color: '{{background-500-0.2}}'; }a.md-button.md-THEME_NAME-theme:not([disabled]).md-icon-button:hover, .md-button.md-THEME_NAME-theme:not([disabled]).md-icon-button:hover {  background-color: transparent; }a.md-button.md-THEME_NAME-theme.md-fab, .md-button.md-THEME_NAME-theme.md-fab {  background-color: '{{accent-color}}';  color: '{{accent-contrast}}'; }  a.md-button.md-THEME_NAME-theme.md-fab md-icon, .md-button.md-THEME_NAME-theme.md-fab md-icon {    color: '{{accent-contrast}}'; }  a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover {    background-color: '{{accent-color}}'; }  a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused {    background-color: '{{accent-A700}}'; }a.md-button.md-THEME_NAME-theme.md-primary, .md-button.md-THEME_NAME-theme.md-primary {  color: '{{primary-color}}'; }  a.md-button.md-THEME_NAME-theme.md-primary.md-raised, a.md-button.md-THEME_NAME-theme.md-primary.md-fab, .md-button.md-THEME_NAME-theme.md-primary.md-raised, .md-button.md-THEME_NAME-theme.md-primary.md-fab {    color: '{{primary-contrast}}';    background-color: '{{primary-color}}'; }    a.md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]) md-icon, a.md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]) md-icon {      color: '{{primary-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]):hover, a.md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]):hover {      background-color: '{{primary-color}}'; }    a.md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]).md-focused, a.md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]).md-focused {      background-color: '{{primary-600}}'; }  a.md-button.md-THEME_NAME-theme.md-primary:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-primary:not([disabled]) md-icon {    color: '{{primary-color}}'; }a.md-button.md-THEME_NAME-theme.md-fab, .md-button.md-THEME_NAME-theme.md-fab {  background-color: '{{accent-color}}';  color: '{{accent-contrast}}'; }  a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]) .md-icon, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]) .md-icon {    color: '{{accent-contrast}}'; }  a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover {    background-color: '{{accent-color}}'; }  a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused {    background-color: '{{accent-A700}}'; }a.md-button.md-THEME_NAME-theme.md-raised, .md-button.md-THEME_NAME-theme.md-raised {  color: '{{background-contrast}}';  background-color: '{{background-50}}'; }  a.md-button.md-THEME_NAME-theme.md-raised:not([disabled]) .md-icon, .md-button.md-THEME_NAME-theme.md-raised:not([disabled]) .md-icon {    color: '{{background-contrast}}'; }  a.md-button.md-THEME_NAME-theme.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-raised:not([disabled]):hover {    background-color: '{{background-50}}'; }  a.md-button.md-THEME_NAME-theme.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-raised:not([disabled]).md-focused {    background-color: '{{background-200}}'; }a.md-button.md-THEME_NAME-theme.md-warn, .md-button.md-THEME_NAME-theme.md-warn {  color: '{{warn-color}}'; }  a.md-button.md-THEME_NAME-theme.md-warn.md-raised, a.md-button.md-THEME_NAME-theme.md-warn.md-fab, .md-button.md-THEME_NAME-theme.md-warn.md-raised, .md-button.md-THEME_NAME-theme.md-warn.md-fab {    color: '{{warn-contrast}}';    background-color: '{{warn-color}}'; }    a.md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]) md-icon, a.md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]) md-icon {      color: '{{warn-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]):hover, a.md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]):hover {      background-color: '{{warn-color}}'; }    a.md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]).md-focused, a.md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]).md-focused {      background-color: '{{warn-700}}'; }  a.md-button.md-THEME_NAME-theme.md-warn:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-warn:not([disabled]) md-icon {    color: '{{warn-color}}'; }a.md-button.md-THEME_NAME-theme.md-accent, .md-button.md-THEME_NAME-theme.md-accent {  color: '{{accent-color}}'; }  a.md-button.md-THEME_NAME-theme.md-accent.md-raised, a.md-button.md-THEME_NAME-theme.md-accent.md-fab, .md-button.md-THEME_NAME-theme.md-accent.md-raised, .md-button.md-THEME_NAME-theme.md-accent.md-fab {    color: '{{accent-contrast}}';    background-color: '{{accent-color}}'; }    a.md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]) md-icon, a.md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]) md-icon {      color: '{{accent-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]):hover, a.md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]):hover {      background-color: '{{accent-color}}'; }    a.md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]).md-focused, a.md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]).md-focused {      background-color: '{{accent-700}}'; }  a.md-button.md-THEME_NAME-theme.md-accent:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-accent:not([disabled]) md-icon {    color: '{{accent-color}}'; }a.md-button.md-THEME_NAME-theme[disabled], a.md-button.md-THEME_NAME-theme.md-raised[disabled], a.md-button.md-THEME_NAME-theme.md-fab[disabled], a.md-button.md-THEME_NAME-theme.md-accent[disabled], a.md-button.md-THEME_NAME-theme.md-warn[disabled], .md-button.md-THEME_NAME-theme[disabled], .md-button.md-THEME_NAME-theme.md-raised[disabled], .md-button.md-THEME_NAME-theme.md-fab[disabled], .md-button.md-THEME_NAME-theme.md-accent[disabled], .md-button.md-THEME_NAME-theme.md-warn[disabled] {  color: '{{foreground-3}}';  cursor: not-allowed; }  a.md-button.md-THEME_NAME-theme[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-raised[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-fab[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-accent[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-warn[disabled] md-icon, .md-button.md-THEME_NAME-theme[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-raised[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-fab[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-accent[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-warn[disabled] md-icon {    color: '{{foreground-3}}'; }a.md-button.md-THEME_NAME-theme.md-raised[disabled], a.md-button.md-THEME_NAME-theme.md-fab[disabled], .md-button.md-THEME_NAME-theme.md-raised[disabled], .md-button.md-THEME_NAME-theme.md-fab[disabled] {  background-color: '{{foreground-4}}'; }a.md-button.md-THEME_NAME-theme[disabled], .md-button.md-THEME_NAME-theme[disabled] {  background-color: transparent; }md-card.md-THEME_NAME-theme {  background-color: '{{background-color}}';  border-radius: 2px; }  md-card.md-THEME_NAME-theme .md-card-image {    border-radius: 2px 2px 0 0; }md-checkbox.md-THEME_NAME-theme .md-ripple {  color: '{{accent-600}}'; }md-checkbox.md-THEME_NAME-theme.md-checked .md-ripple {  color: '{{background-600}}'; }md-checkbox.md-THEME_NAME-theme.md-checked.md-focused .md-container:before {  background-color: '{{accent-color-0.26}}'; }md-checkbox.md-THEME_NAME-theme .md-icon {  border-color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme.md-checked .md-icon {  background-color: '{{accent-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme.md-checked .md-icon:after {  border-color: '{{background-200}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary .md-ripple {  color: '{{primary-600}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-ripple {  color: '{{background-600}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary .md-icon {  border-color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-icon {  background-color: '{{primary-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked.md-focused .md-container:before {  background-color: '{{primary-color-0.26}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-icon:after {  border-color: '{{background-200}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn .md-ripple {  color: '{{warn-600}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn .md-icon {  border-color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-icon {  background-color: '{{warn-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked.md-focused:not([disabled]) .md-container:before {  background-color: '{{warn-color-0.26}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-icon:after {  border-color: '{{background-200}}'; }md-checkbox.md-THEME_NAME-theme[disabled] .md-icon {  border-color: '{{foreground-3}}'; }md-checkbox.md-THEME_NAME-theme[disabled].md-checked .md-icon {  background-color: '{{foreground-3}}'; }md-checkbox.md-THEME_NAME-theme[disabled] .md-label {  color: '{{foreground-3}}'; }md-chips.md-THEME_NAME-theme .md-chips {  box-shadow: 0 1px '{{background-300}}'; }  md-chips.md-THEME_NAME-theme .md-chips.md-focused {    box-shadow: 0 2px '{{primary-color}}'; }md-chips.md-THEME_NAME-theme .md-chip {  background: '{{background-300}}';  color: '{{background-800}}'; }  md-chips.md-THEME_NAME-theme .md-chip.md-focused {    background: '{{primary-color}}';    color: '{{primary-contrast}}'; }    md-chips.md-THEME_NAME-theme .md-chip.md-focused md-icon {      color: '{{primary-contrast}}'; }md-chips.md-THEME_NAME-theme md-chip-remove .md-button md-icon path {  fill: '{{background-500}}'; }.md-contact-suggestion span.md-contact-email {  color: '{{background-400}}'; }md-content.md-THEME_NAME-theme {  color: '{{foreground-1}}';  background-color: '{{background-color}}'; }/** Theme styles for mdCalendar. */.md-calendar.md-THEME_NAME-theme {  color: '{{foreground-2}}'; }  .md-calendar.md-THEME_NAME-theme tr:last-child td {    border-bottom-color: '{{background-200}}'; }.md-THEME_NAME-theme .md-calendar-day-header {  background: '{{background-200}}';  color: '{{foreground-2}}'; }.md-THEME_NAME-theme .md-calendar-date.md-calendar-date-today {  color: '{{primary-500}}'; }  .md-THEME_NAME-theme .md-calendar-date.md-calendar-date-today.md-calendar-date-disabled {    color: '{{primary-500-0.6}}'; }.md-THEME_NAME-theme .md-calendar-date.md-focus .md-calendar-date-selection-indicator {  background: '{{background-300}}'; }.md-THEME_NAME-theme .md-calendar-date-selection-indicator:hover {  background: '{{background-300}}'; }.md-THEME_NAME-theme .md-calendar-date.md-calendar-selected-date .md-calendar-date-selection-indicator, .md-THEME_NAME-theme .md-calendar-date.md-focus.md-calendar-selected-date .md-calendar-date-selection-indicator {  background: '{{primary-500}}';  color: '{{primary-500-contrast}}'; }.md-THEME_NAME-theme .md-calendar-date-disabled, .md-THEME_NAME-theme .md-calendar-month-label-disabled {  color: '{{background-400}}'; }/** Theme styles for mdDatepicker. */md-datepicker.md-THEME_NAME-theme {  background: white; }.md-THEME_NAME-theme .md-datepicker-input-container {  border-bottom-color: '{{background-300}}'; }  .md-THEME_NAME-theme .md-datepicker-input-container.md-datepicker-focused {    border-bottom-color: '{{primary-500}}'; }  .md-THEME_NAME-theme .md-datepicker-input-container.md-datepicker-invalid {    border-bottom-color: '{{warn-500}}'; }.md-THEME_NAME-theme .md-datepicker-calendar-pane {  border-color: '{{background-300}}'; }.md-THEME_NAME-theme .md-datepicker-triangle-button:hover .md-datepicker-expand-triangle {  border-top-color: '{{foreground-2}}'; }.md-THEME_NAME-theme .md-datepicker-open .md-datepicker-calendar-icon {  fill: '{{primary-500}}'; }.md-THEME_NAME-theme .md-datepicker-calendar {  background: white; }md-dialog.md-THEME_NAME-theme {  border-radius: 4px;  background-color: '{{background-color}}'; }  md-dialog.md-THEME_NAME-theme.md-content-overflow .md-actions {    border-top-color: '{{foreground-4}}'; }md-divider.md-THEME_NAME-theme {  border-top-color: '{{foreground-4}}'; }md-icon.md-THEME_NAME-theme {  color: '{{foreground-2}}'; }  md-icon.md-THEME_NAME-theme.md-primary {    color: '{{primary-color}}'; }  md-icon.md-THEME_NAME-theme.md-accent {    color: '{{accent-color}}'; }  md-icon.md-THEME_NAME-theme.md-warn {    color: '{{warn-color}}'; }md-input-container.md-THEME_NAME-theme .md-input {  color: '{{foreground-1}}';  border-color: '{{foreground-4}}';  text-shadow: '{{foreground-shadow}}'; }  md-input-container.md-THEME_NAME-theme .md-input::-webkit-input-placeholder, md-input-container.md-THEME_NAME-theme .md-input::-moz-placeholder, md-input-container.md-THEME_NAME-theme .md-input:-moz-placeholder, md-input-container.md-THEME_NAME-theme .md-input:-ms-input-placeholder {    color: '{{foreground-3}}'; }md-input-container.md-THEME_NAME-theme > md-icon {  color: '{{foreground-1}}'; }md-input-container.md-THEME_NAME-theme label, md-input-container.md-THEME_NAME-theme .md-placeholder {  text-shadow: '{{foreground-shadow}}';  color: '{{foreground-3}}'; }md-input-container.md-THEME_NAME-theme ng-messages, md-input-container.md-THEME_NAME-theme [ng-message], md-input-container.md-THEME_NAME-theme [data-ng-message], md-input-container.md-THEME_NAME-theme [x-ng-message] {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-has-value label {  color: '{{foreground-2}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused .md-input {  border-color: '{{primary-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused label {  color: '{{primary-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused md-icon {  color: '{{primary-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-accent .md-input {  border-color: '{{accent-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-accent label {  color: '{{accent-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-warn .md-input {  border-color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-warn label {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme.md-input-invalid .md-input {  border-color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme.md-input-invalid.md-input-focused label {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme.md-input-invalid ng-message, md-input-container.md-THEME_NAME-theme.md-input-invalid data-ng-message, md-input-container.md-THEME_NAME-theme.md-input-invalid x-ng-message, md-input-container.md-THEME_NAME-theme.md-input-invalid [ng-message], md-input-container.md-THEME_NAME-theme.md-input-invalid [data-ng-message], md-input-container.md-THEME_NAME-theme.md-input-invalid [x-ng-message], md-input-container.md-THEME_NAME-theme.md-input-invalid .md-char-counter {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme .md-input[disabled], [disabled] md-input-container.md-THEME_NAME-theme .md-input {  border-bottom-color: transparent;  color: '{{foreground-3}}';  background-image: linear-gradient(to right, '{{foreground-3}}' 0%, '{{foreground-3}}' 33%, transparent 0%);  background-image: -ms-linear-gradient(left, transparent 0%, '{{foreground-3}}' 100%); }md-list.md-THEME_NAME-theme md-list-item.md-2-line .md-list-item-text h3, md-list.md-THEME_NAME-theme md-list-item.md-2-line .md-list-item-text h4, md-list.md-THEME_NAME-theme md-list-item.md-3-line .md-list-item-text h3, md-list.md-THEME_NAME-theme md-list-item.md-3-line .md-list-item-text h4 {  color: '{{foreground-1}}'; }md-list.md-THEME_NAME-theme md-list-item.md-2-line .md-list-item-text p, md-list.md-THEME_NAME-theme md-list-item.md-3-line .md-list-item-text p {  color: '{{foreground-2}}'; }md-list.md-THEME_NAME-theme .md-proxy-focus.md-focused div.md-no-style {  background-color: '{{background-100}}'; }md-list.md-THEME_NAME-theme md-list-item > md-icon {  color: '{{foreground-2}}'; }  md-list.md-THEME_NAME-theme md-list-item > md-icon.md-highlight {    color: '{{primary-color}}'; }    md-list.md-THEME_NAME-theme md-list-item > md-icon.md-highlight.md-accent {      color: '{{accent-color}}'; }md-list.md-THEME_NAME-theme md-list-item button {  background-color: '{{background-color}}'; }  md-list.md-THEME_NAME-theme md-list-item button.md-button:not([disabled]):hover {    background-color: '{{background-color}}'; }md-menu-content.md-THEME_NAME-theme {  background-color: '{{background-color}}'; }  md-menu-content.md-THEME_NAME-theme md-menu-divider {    background-color: '{{foreground-4}}'; }md-menu-bar.md-THEME_NAME-theme > button.md-button {  color: '{{foreground-2}}';  border-radius: 2px; }md-menu-bar.md-THEME_NAME-theme md-menu.md-open > button, md-menu-bar.md-THEME_NAME-theme md-menu > button:focus {  outline: none;  background: '{{background-200}}'; }md-menu-bar.md-THEME_NAME-theme.md-open:not(.md-keyboard-mode) md-menu:hover > button {  background-color: '{{ background-500-0.2}}'; }md-menu-bar.md-THEME_NAME-theme:not(.md-keyboard-mode):not(.md-open) md-menu button:hover, md-menu-bar.md-THEME_NAME-theme:not(.md-keyboard-mode):not(.md-open) md-menu button:focus {  background: transparent; }md-menu-content.md-THEME_NAME-theme .md-menu > .md-button:after {  color: '{{foreground-2}}'; }md-menu-content.md-THEME_NAME-theme .md-menu.md-open > .md-button {  background-color: '{{ background-500-0.2}}'; }md-toolbar.md-THEME_NAME-theme.md-menu-toolbar {  background-color: '{{background-color}}';  color: '{{foreground-1}}'; }  md-toolbar.md-THEME_NAME-theme.md-menu-toolbar md-toolbar-filler {    background-color: '{{primary-color}}';    color: '{{primary-contrast}}'; }    md-toolbar.md-THEME_NAME-theme.md-menu-toolbar md-toolbar-filler md-icon {      color: '{{primary-contrast}}'; }md-progress-circular.md-THEME_NAME-theme {  background-color: transparent; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-gap {    border-top-color: '{{primary-color}}';    border-bottom-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-left .md-half-circle, md-progress-circular.md-THEME_NAME-theme .md-inner .md-right .md-half-circle {    border-top-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-right .md-half-circle {    border-right-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-left .md-half-circle {    border-left-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-gap {    border-top-color: '{{warn-color}}';    border-bottom-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-left .md-half-circle, md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-right .md-half-circle {    border-top-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-right .md-half-circle {    border-right-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-left .md-half-circle {    border-left-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-gap {    border-top-color: '{{accent-color}}';    border-bottom-color: '{{accent-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-left .md-half-circle, md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-right .md-half-circle {    border-top-color: '{{accent-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-right .md-half-circle {    border-right-color: '{{accent-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-left .md-half-circle {    border-left-color: '{{accent-color}}'; }md-radio-button.md-THEME_NAME-theme .md-off {  border-color: '{{foreground-2}}'; }md-radio-button.md-THEME_NAME-theme .md-on {  background-color: '{{accent-color-0.87}}'; }md-radio-button.md-THEME_NAME-theme.md-checked .md-off {  border-color: '{{accent-color-0.87}}'; }md-radio-button.md-THEME_NAME-theme.md-checked .md-ink-ripple {  color: '{{accent-color-0.87}}'; }md-radio-button.md-THEME_NAME-theme .md-container .md-ripple {  color: '{{accent-600}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-on, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-on {  background-color: '{{primary-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-off {  border-color: '{{primary-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-ink-ripple {  color: '{{primary-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-container .md-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-container .md-ripple {  color: '{{primary-600}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-on, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-on {  background-color: '{{warn-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-off {  border-color: '{{warn-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-ink-ripple {  color: '{{warn-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-container .md-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-container .md-ripple {  color: '{{warn-600}}'; }md-radio-group.md-THEME_NAME-theme[disabled], md-radio-button.md-THEME_NAME-theme[disabled] {  color: '{{foreground-3}}'; }  md-radio-group.md-THEME_NAME-theme[disabled] .md-container .md-off, md-radio-button.md-THEME_NAME-theme[disabled] .md-container .md-off {    border-color: '{{foreground-3}}'; }  md-radio-group.md-THEME_NAME-theme[disabled] .md-container .md-on, md-radio-button.md-THEME_NAME-theme[disabled] .md-container .md-on {    border-color: '{{foreground-3}}'; }md-radio-group.md-THEME_NAME-theme.md-focused:not(:empty) .md-checked .md-container:before {  background-color: '{{accent-color-0.26}}'; }md-radio-group.md-THEME_NAME-theme.md-focused:not(:empty) .md-checked:not([disabled]).md-primary .md-container:before {  background-color: '{{primary-color-0.26}}'; }md-radio-group.md-THEME_NAME-theme.md-focused:not(:empty) .md-checked.md-primary .md-container:before {  background-color: '{{warn-color-0.26}}'; }md-progress-linear.md-THEME_NAME-theme .md-container {  background-color: '{{primary-100}}'; }md-progress-linear.md-THEME_NAME-theme .md-bar {  background-color: '{{primary-color}}'; }md-progress-linear.md-THEME_NAME-theme.md-warn .md-container {  background-color: '{{warn-100}}'; }md-progress-linear.md-THEME_NAME-theme.md-warn .md-bar {  background-color: '{{warn-color}}'; }md-progress-linear.md-THEME_NAME-theme.md-accent .md-container {  background-color: '{{accent-100}}'; }md-progress-linear.md-THEME_NAME-theme.md-accent .md-bar {  background-color: '{{accent-color}}'; }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-warn .md-bar1 {  background-color: '{{warn-100}}'; }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-warn .md-dashed:before {  background: radial-gradient('{{warn-100}}' 0%, '{{warn-100}}' 16%, transparent 42%); }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-accent .md-bar1 {  background-color: '{{accent-100}}'; }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-accent .md-dashed:before {  background: radial-gradient('{{accent-100}}' 0%, '{{accent-100}}' 16%, transparent 42%); }md-select.md-THEME_NAME-theme .md-select-value {  border-bottom-color: '{{foreground-4}}'; }  md-select.md-THEME_NAME-theme .md-select-value.md-select-placeholder {    color: '{{foreground-3}}'; }md-select.md-THEME_NAME-theme.ng-invalid.ng-dirty .md-select-value {  color: '{{warn-500}}' !important;  border-bottom-color: '{{warn-500}}' !important; }md-select.md-THEME_NAME-theme:not([disabled]):focus .md-select-value {  border-bottom-color: '{{primary-color}}';  color: '{{ foreground-1 }}'; }  md-select.md-THEME_NAME-theme:not([disabled]):focus .md-select-value.md-select-placeholder {    color: '{{ foreground-1 }}'; }md-select.md-THEME_NAME-theme:not([disabled]):focus.md-accent .md-select-value {  border-bottom-color: '{{accent-color}}'; }md-select.md-THEME_NAME-theme:not([disabled]):focus.md-warn .md-select-value {  border-bottom-color: '{{warn-color}}'; }md-select.md-THEME_NAME-theme[disabled] .md-select-value {  color: '{{foreground-3}}'; }  md-select.md-THEME_NAME-theme[disabled] .md-select-value.md-select-placeholder {    color: '{{foreground-3}}'; }md-select-menu.md-THEME_NAME-theme md-option[disabled] {  color: '{{foreground-3}}'; }md-select-menu.md-THEME_NAME-theme md-optgroup {  color: '{{foreground-2}}'; }  md-select-menu.md-THEME_NAME-theme md-optgroup md-option {    color: '{{foreground-1}}'; }md-select-menu.md-THEME_NAME-theme md-option[selected] {  color: '{{primary-500}}'; }  md-select-menu.md-THEME_NAME-theme md-option[selected]:focus {    color: '{{primary-600}}'; }  md-select-menu.md-THEME_NAME-theme md-option[selected].md-accent {    color: '{{accent-500}}'; }    md-select-menu.md-THEME_NAME-theme md-option[selected].md-accent:focus {      color: '{{accent-600}}'; }md-select-menu.md-THEME_NAME-theme md-option:focus:not([selected]) {  background: '{{background-200}}'; }md-slider.md-THEME_NAME-theme .md-track {  background-color: '{{foreground-3}}'; }md-slider.md-THEME_NAME-theme .md-track-ticks {  background-color: '{{foreground-4}}'; }md-slider.md-THEME_NAME-theme .md-focus-thumb {  background-color: '{{foreground-2}}'; }md-slider.md-THEME_NAME-theme .md-focus-ring {  background-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-disabled-thumb {  border-color: '{{background-color}}'; }md-slider.md-THEME_NAME-theme.md-min .md-thumb:after {  background-color: '{{background-color}}'; }md-slider.md-THEME_NAME-theme .md-track.md-track-fill {  background-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-thumb:after {  border-color: '{{accent-color}}';  background-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-sign {  background-color: '{{accent-color}}'; }  md-slider.md-THEME_NAME-theme .md-sign:after {    border-top-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-thumb-text {  color: '{{accent-contrast}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-focus-ring {  background-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-track.md-track-fill {  background-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-thumb:after {  border-color: '{{warn-color}}';  background-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-sign {  background-color: '{{warn-color}}'; }  md-slider.md-THEME_NAME-theme.md-warn .md-sign:after {    border-top-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-thumb-text {  color: '{{warn-contrast}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-focus-ring {  background-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-track.md-track-fill {  background-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-thumb:after {  border-color: '{{primary-color}}';  background-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-sign {  background-color: '{{primary-color}}'; }  md-slider.md-THEME_NAME-theme.md-primary .md-sign:after {    border-top-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-thumb-text {  color: '{{primary-contrast}}'; }md-slider.md-THEME_NAME-theme[disabled] .md-thumb:after {  border-color: '{{foreground-3}}'; }md-slider.md-THEME_NAME-theme[disabled]:not(.md-min) .md-thumb:after {  background-color: '{{foreground-3}}'; }md-sidenav.md-THEME_NAME-theme {  background-color: '{{background-color}}'; }.md-subheader.md-THEME_NAME-theme {  color: '{{ foreground-2-0.23 }}';  background-color: '{{background-color}}'; }  .md-subheader.md-THEME_NAME-theme.md-primary {    color: '{{primary-color}}'; }  .md-subheader.md-THEME_NAME-theme.md-accent {    color: '{{accent-color}}'; }  .md-subheader.md-THEME_NAME-theme.md-warn {    color: '{{warn-color}}'; }md-switch.md-THEME_NAME-theme .md-thumb {  background-color: '{{background-50}}'; }md-switch.md-THEME_NAME-theme .md-bar {  background-color: '{{background-500}}'; }md-switch.md-THEME_NAME-theme.md-checked .md-thumb {  background-color: '{{accent-color}}'; }md-switch.md-THEME_NAME-theme.md-checked .md-bar {  background-color: '{{accent-color-0.5}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-focused .md-thumb:before {  background-color: '{{accent-color-0.26}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-primary .md-thumb {  background-color: '{{primary-color}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-primary .md-bar {  background-color: '{{primary-color-0.5}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-primary.md-focused .md-thumb:before {  background-color: '{{primary-color-0.26}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-warn .md-thumb {  background-color: '{{warn-color}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-warn .md-bar {  background-color: '{{warn-color-0.5}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-warn.md-focused .md-thumb:before {  background-color: '{{warn-color-0.26}}'; }md-switch.md-THEME_NAME-theme[disabled] .md-thumb {  background-color: '{{background-400}}'; }md-switch.md-THEME_NAME-theme[disabled] .md-bar {  background-color: '{{foreground-4}}'; }md-tabs.md-THEME_NAME-theme md-tabs-wrapper {  background-color: transparent;  border-color: '{{foreground-4}}'; }md-tabs.md-THEME_NAME-theme .md-paginator md-icon {  color: '{{primary-color}}'; }md-tabs.md-THEME_NAME-theme md-ink-bar {  color: '{{accent-color}}';  background: '{{accent-color}}'; }md-tabs.md-THEME_NAME-theme .md-tab {  color: '{{foreground-2}}'; }  md-tabs.md-THEME_NAME-theme .md-tab[disabled] {    color: '{{foreground-3}}'; }  md-tabs.md-THEME_NAME-theme .md-tab.md-active, md-tabs.md-THEME_NAME-theme .md-tab.md-focused {    color: '{{primary-color}}'; }  md-tabs.md-THEME_NAME-theme .md-tab.md-focused {    background: '{{primary-color-0.1}}'; }  md-tabs.md-THEME_NAME-theme .md-tab .md-ripple-container {    color: '{{accent-100}}'; }md-tabs.md-THEME_NAME-theme.md-accent > md-tabs-wrapper {  background-color: '{{accent-color}}'; }  md-tabs.md-THEME_NAME-theme.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]) {    color: '{{accent-100}}'; }    md-tabs.md-THEME_NAME-theme.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-active, md-tabs.md-THEME_NAME-theme.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      color: '{{accent-contrast}}'; }    md-tabs.md-THEME_NAME-theme.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      background: '{{accent-contrast-0.1}}'; }  md-tabs.md-THEME_NAME-theme.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-ink-bar {    color: '{{primary-600-1}}';    background: '{{primary-600-1}}'; }md-tabs.md-THEME_NAME-theme.md-primary > md-tabs-wrapper {  background-color: '{{primary-color}}'; }  md-tabs.md-THEME_NAME-theme.md-primary > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]) {    color: '{{primary-100}}'; }    md-tabs.md-THEME_NAME-theme.md-primary > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-active, md-tabs.md-THEME_NAME-theme.md-primary > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      color: '{{primary-contrast}}'; }    md-tabs.md-THEME_NAME-theme.md-primary > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      background: '{{primary-contrast-0.1}}'; }md-tabs.md-THEME_NAME-theme.md-warn > md-tabs-wrapper {  background-color: '{{warn-color}}'; }  md-tabs.md-THEME_NAME-theme.md-warn > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]) {    color: '{{warn-100}}'; }    md-tabs.md-THEME_NAME-theme.md-warn > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-active, md-tabs.md-THEME_NAME-theme.md-warn > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      color: '{{warn-contrast}}'; }    md-tabs.md-THEME_NAME-theme.md-warn > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      background: '{{warn-contrast-0.1}}'; }md-toolbar > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper {  background-color: '{{primary-color}}'; }  md-toolbar > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]) {    color: '{{primary-100}}'; }    md-toolbar > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-active, md-toolbar > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      color: '{{primary-contrast}}'; }    md-toolbar > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      background: '{{primary-contrast-0.1}}'; }md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper {  background-color: '{{accent-color}}'; }  md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]) {    color: '{{accent-100}}'; }    md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-active, md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      color: '{{accent-contrast}}'; }    md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      background: '{{accent-contrast-0.1}}'; }  md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-ink-bar {    color: '{{primary-600-1}}';    background: '{{primary-600-1}}'; }md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper {  background-color: '{{warn-color}}'; }  md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]) {    color: '{{warn-100}}'; }    md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-active, md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      color: '{{warn-contrast}}'; }    md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      background: '{{warn-contrast-0.1}}'; }md-toast.md-THEME_NAME-theme {  background-color: #323232;  color: '{{background-50}}'; }  md-toast.md-THEME_NAME-theme .md-button {    color: '{{background-50}}'; }    md-toast.md-THEME_NAME-theme .md-button.md-highlight {      color: '{{primary-A200}}'; }      md-toast.md-THEME_NAME-theme .md-button.md-highlight.md-accent {        color: '{{accent-A200}}'; }      md-toast.md-THEME_NAME-theme .md-button.md-highlight.md-warn {        color: '{{warn-A200}}'; }md-toolbar.md-THEME_NAME-theme:not(.md-menu-toolbar) {  background-color: '{{primary-color}}';  color: '{{primary-contrast}}'; }  md-toolbar.md-THEME_NAME-theme:not(.md-menu-toolbar) md-icon {    color: '{{primary-contrast}}'; }  md-toolbar.md-THEME_NAME-theme:not(.md-menu-toolbar) .md-button {    color: '{{primary-contrast}}'; }  md-toolbar.md-THEME_NAME-theme:not(.md-menu-toolbar).md-accent {    background-color: '{{accent-color}}';    color: '{{accent-contrast}}'; }  md-toolbar.md-THEME_NAME-theme:not(.md-menu-toolbar).md-warn {    background-color: '{{warn-color}}';    color: '{{warn-contrast}}'; }md-tooltip.md-THEME_NAME-theme {  color: '{{background-A100}}'; }  md-tooltip.md-THEME_NAME-theme .md-background {    background-color: '{{foreground-2}}'; }"); 
+angular.module("material.core").constant("$MD_THEME_CSS", "md-autocomplete.md-THEME_NAME-theme {  background: '{{background-50}}'; }  md-autocomplete.md-THEME_NAME-theme[disabled] {    background: '{{background-100}}'; }  md-autocomplete.md-THEME_NAME-theme button md-icon path {    fill: '{{background-600}}'; }  md-autocomplete.md-THEME_NAME-theme button:after {    background: '{{background-600-0.3}}'; }.md-autocomplete-suggestions-container.md-THEME_NAME-theme {  background: '{{background-50}}'; }  .md-autocomplete-suggestions-container.md-THEME_NAME-theme li {    color: '{{background-900}}'; }    .md-autocomplete-suggestions-container.md-THEME_NAME-theme li .highlight {      color: '{{background-600}}'; }    .md-autocomplete-suggestions-container.md-THEME_NAME-theme li:hover, .md-autocomplete-suggestions-container.md-THEME_NAME-theme li.selected {      background: '{{background-200}}'; }md-backdrop {  background-color: '{{background-900-0.0}}'; }  md-backdrop.md-opaque.md-THEME_NAME-theme {    background-color: '{{background-900-1.0}}'; }md-bottom-sheet.md-THEME_NAME-theme {  background-color: '{{background-50}}';  border-top-color: '{{background-300}}'; }  md-bottom-sheet.md-THEME_NAME-theme.md-list md-list-item {    color: '{{foreground-1}}'; }  md-bottom-sheet.md-THEME_NAME-theme .md-subheader {    background-color: '{{background-50}}'; }  md-bottom-sheet.md-THEME_NAME-theme .md-subheader {    color: '{{foreground-1}}'; }a.md-button.md-THEME_NAME-theme:not([disabled]):hover, .md-button.md-THEME_NAME-theme:not([disabled]):hover {  background-color: '{{background-500-0.2}}'; }a.md-button.md-THEME_NAME-theme:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme:not([disabled]).md-focused {  background-color: '{{background-500-0.2}}'; }a.md-button.md-THEME_NAME-theme:not([disabled]).md-icon-button:hover, .md-button.md-THEME_NAME-theme:not([disabled]).md-icon-button:hover {  background-color: transparent; }a.md-button.md-THEME_NAME-theme.md-fab, .md-button.md-THEME_NAME-theme.md-fab {  background-color: '{{accent-color}}';  color: '{{accent-contrast}}'; }  a.md-button.md-THEME_NAME-theme.md-fab md-icon, .md-button.md-THEME_NAME-theme.md-fab md-icon {    color: '{{accent-contrast}}'; }  a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover {    background-color: '{{accent-color}}'; }  a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused {    background-color: '{{accent-A700}}'; }a.md-button.md-THEME_NAME-theme.md-primary, .md-button.md-THEME_NAME-theme.md-primary {  color: '{{primary-color}}'; }  a.md-button.md-THEME_NAME-theme.md-primary.md-raised, a.md-button.md-THEME_NAME-theme.md-primary.md-fab, .md-button.md-THEME_NAME-theme.md-primary.md-raised, .md-button.md-THEME_NAME-theme.md-primary.md-fab {    color: '{{primary-contrast}}';    background-color: '{{primary-color}}'; }    a.md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]) md-icon, a.md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]) md-icon {      color: '{{primary-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]):hover, a.md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]):hover {      background-color: '{{primary-color}}'; }    a.md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]).md-focused, a.md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]).md-focused {      background-color: '{{primary-600}}'; }  a.md-button.md-THEME_NAME-theme.md-primary:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-primary:not([disabled]) md-icon {    color: '{{primary-color}}'; }a.md-button.md-THEME_NAME-theme.md-fab, .md-button.md-THEME_NAME-theme.md-fab {  background-color: '{{accent-color}}';  color: '{{accent-contrast}}'; }  a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]) .md-icon, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]) .md-icon {    color: '{{accent-contrast}}'; }  a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover {    background-color: '{{accent-color}}'; }  a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused {    background-color: '{{accent-A700}}'; }a.md-button.md-THEME_NAME-theme.md-raised, .md-button.md-THEME_NAME-theme.md-raised {  color: '{{background-contrast}}';  background-color: '{{background-50}}'; }  a.md-button.md-THEME_NAME-theme.md-raised:not([disabled]) .md-icon, .md-button.md-THEME_NAME-theme.md-raised:not([disabled]) .md-icon {    color: '{{background-contrast}}'; }  a.md-button.md-THEME_NAME-theme.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-raised:not([disabled]):hover {    background-color: '{{background-50}}'; }  a.md-button.md-THEME_NAME-theme.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-raised:not([disabled]).md-focused {    background-color: '{{background-200}}'; }a.md-button.md-THEME_NAME-theme.md-warn, .md-button.md-THEME_NAME-theme.md-warn {  color: '{{warn-color}}'; }  a.md-button.md-THEME_NAME-theme.md-warn.md-raised, a.md-button.md-THEME_NAME-theme.md-warn.md-fab, .md-button.md-THEME_NAME-theme.md-warn.md-raised, .md-button.md-THEME_NAME-theme.md-warn.md-fab {    color: '{{warn-contrast}}';    background-color: '{{warn-color}}'; }    a.md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]) md-icon, a.md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]) md-icon {      color: '{{warn-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]):hover, a.md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]):hover {      background-color: '{{warn-color}}'; }    a.md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]).md-focused, a.md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]).md-focused {      background-color: '{{warn-700}}'; }  a.md-button.md-THEME_NAME-theme.md-warn:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-warn:not([disabled]) md-icon {    color: '{{warn-color}}'; }a.md-button.md-THEME_NAME-theme.md-accent, .md-button.md-THEME_NAME-theme.md-accent {  color: '{{accent-color}}'; }  a.md-button.md-THEME_NAME-theme.md-accent.md-raised, a.md-button.md-THEME_NAME-theme.md-accent.md-fab, .md-button.md-THEME_NAME-theme.md-accent.md-raised, .md-button.md-THEME_NAME-theme.md-accent.md-fab {    color: '{{accent-contrast}}';    background-color: '{{accent-color}}'; }    a.md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]) md-icon, a.md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]) md-icon {      color: '{{accent-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]):hover, a.md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]):hover {      background-color: '{{accent-color}}'; }    a.md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]).md-focused, a.md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]).md-focused {      background-color: '{{accent-700}}'; }  a.md-button.md-THEME_NAME-theme.md-accent:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-accent:not([disabled]) md-icon {    color: '{{accent-color}}'; }a.md-button.md-THEME_NAME-theme[disabled], a.md-button.md-THEME_NAME-theme.md-raised[disabled], a.md-button.md-THEME_NAME-theme.md-fab[disabled], a.md-button.md-THEME_NAME-theme.md-accent[disabled], a.md-button.md-THEME_NAME-theme.md-warn[disabled], .md-button.md-THEME_NAME-theme[disabled], .md-button.md-THEME_NAME-theme.md-raised[disabled], .md-button.md-THEME_NAME-theme.md-fab[disabled], .md-button.md-THEME_NAME-theme.md-accent[disabled], .md-button.md-THEME_NAME-theme.md-warn[disabled] {  color: '{{foreground-3}}';  cursor: not-allowed; }  a.md-button.md-THEME_NAME-theme[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-raised[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-fab[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-accent[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-warn[disabled] md-icon, .md-button.md-THEME_NAME-theme[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-raised[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-fab[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-accent[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-warn[disabled] md-icon {    color: '{{foreground-3}}'; }a.md-button.md-THEME_NAME-theme.md-raised[disabled], a.md-button.md-THEME_NAME-theme.md-fab[disabled], .md-button.md-THEME_NAME-theme.md-raised[disabled], .md-button.md-THEME_NAME-theme.md-fab[disabled] {  background-color: '{{foreground-4}}'; }a.md-button.md-THEME_NAME-theme[disabled], .md-button.md-THEME_NAME-theme[disabled] {  background-color: transparent; }md-card.md-THEME_NAME-theme {  background-color: '{{background-color}}';  border-radius: 2px; }  md-card.md-THEME_NAME-theme .md-card-image {    border-radius: 2px 2px 0 0; }md-checkbox.md-THEME_NAME-theme .md-ripple {  color: '{{accent-600}}'; }md-checkbox.md-THEME_NAME-theme.md-checked .md-ripple {  color: '{{background-600}}'; }md-checkbox.md-THEME_NAME-theme.md-checked.md-focused .md-container:before {  background-color: '{{accent-color-0.26}}'; }md-checkbox.md-THEME_NAME-theme .md-icon {  border-color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme.md-checked .md-icon {  background-color: '{{accent-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme.md-checked .md-icon:after {  border-color: '{{background-200}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary .md-ripple {  color: '{{primary-600}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-ripple {  color: '{{background-600}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary .md-icon {  border-color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-icon {  background-color: '{{primary-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked.md-focused .md-container:before {  background-color: '{{primary-color-0.26}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-icon:after {  border-color: '{{background-200}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn .md-ripple {  color: '{{warn-600}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn .md-icon {  border-color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-icon {  background-color: '{{warn-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked.md-focused:not([disabled]) .md-container:before {  background-color: '{{warn-color-0.26}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-icon:after {  border-color: '{{background-200}}'; }md-checkbox.md-THEME_NAME-theme[disabled] .md-icon {  border-color: '{{foreground-3}}'; }md-checkbox.md-THEME_NAME-theme[disabled].md-checked .md-icon {  background-color: '{{foreground-3}}'; }md-checkbox.md-THEME_NAME-theme[disabled] .md-label {  color: '{{foreground-3}}'; }md-chips.md-THEME_NAME-theme .md-chips {  box-shadow: 0 1px '{{background-300}}'; }  md-chips.md-THEME_NAME-theme .md-chips.md-focused {    box-shadow: 0 2px '{{primary-color}}'; }md-chips.md-THEME_NAME-theme .md-chip {  background: '{{background-300}}';  color: '{{background-800}}'; }  md-chips.md-THEME_NAME-theme .md-chip.md-focused {    background: '{{primary-color}}';    color: '{{primary-contrast}}'; }    md-chips.md-THEME_NAME-theme .md-chip.md-focused md-icon {      color: '{{primary-contrast}}'; }md-chips.md-THEME_NAME-theme md-chip-remove .md-button md-icon path {  fill: '{{background-500}}'; }.md-contact-suggestion span.md-contact-email {  color: '{{background-400}}'; }md-content.md-THEME_NAME-theme {  color: '{{foreground-1}}';  background-color: '{{background-color}}'; }/** Theme styles for mdCalendar. */.md-calendar.md-THEME_NAME-theme {  color: '{{foreground-1}}'; }  .md-calendar.md-THEME_NAME-theme tr:last-child td {    border-bottom-color: '{{background-200}}'; }.md-THEME_NAME-theme .md-calendar-day-header {  background: '{{background-hue-1}}';  color: '{{foreground-1}}'; }.md-THEME_NAME-theme .md-calendar-date.md-calendar-date-today .md-calendar-date-selection-indicator {  border: 1px solid '{{primary-500}}'; }.md-THEME_NAME-theme .md-calendar-date.md-calendar-date-today.md-calendar-date-disabled {  color: '{{primary-500-0.6}}'; }.md-THEME_NAME-theme .md-calendar-date.md-focus .md-calendar-date-selection-indicator {  background: '{{background-hue-1}}'; }.md-THEME_NAME-theme .md-calendar-date-selection-indicator:hover {  background: '{{background-hue-1}}'; }.md-THEME_NAME-theme .md-calendar-date.md-calendar-selected-date .md-calendar-date-selection-indicator, .md-THEME_NAME-theme .md-calendar-date.md-focus.md-calendar-selected-date .md-calendar-date-selection-indicator {  background: '{{primary-500}}';  color: '{{primary-500-contrast}}';  border-color: transparent; }.md-THEME_NAME-theme .md-calendar-date-disabled, .md-THEME_NAME-theme .md-calendar-month-label-disabled {  color: '{{foreground-3}}'; }/** Theme styles for mdDatepicker. */md-datepicker.md-THEME_NAME-theme {  background: '{{background-color}}'; }.md-THEME_NAME-theme .md-datepicker-input {  color: '{{background-contrast}}';  background: '{{background-color}}'; }  .md-THEME_NAME-theme .md-datepicker-input::-webkit-input-placeholder, .md-THEME_NAME-theme .md-datepicker-input::-moz-placeholder, .md-THEME_NAME-theme .md-datepicker-input:-moz-placeholder, .md-THEME_NAME-theme .md-datepicker-input:-ms-input-placeholder {    color: '{{foreground-3}}'; }.md-THEME_NAME-theme .md-datepicker-input-container {  border-bottom-color: '{{background-300}}'; }  .md-THEME_NAME-theme .md-datepicker-input-container.md-datepicker-focused {    border-bottom-color: '{{primary-500}}'; }  .md-THEME_NAME-theme .md-datepicker-input-container.md-datepicker-invalid {    border-bottom-color: '{{warn-500}}'; }.md-THEME_NAME-theme .md-datepicker-calendar-pane {  border-color: '{{background-300}}'; }.md-THEME_NAME-theme .md-datepicker-triangle-button .md-datepicker-expand-triangle {  border-top-color: '{{foreground-3}}'; }.md-THEME_NAME-theme .md-datepicker-triangle-button:hover .md-datepicker-expand-triangle {  border-top-color: '{{foreground-2}}'; }.md-THEME_NAME-theme .md-datepicker-open .md-datepicker-calendar-icon {  fill: '{{primary-500}}'; }.md-THEME_NAME-theme .md-datepicker-calendar, .md-THEME_NAME-theme .md-datepicker-input-mask-opaque {  background: '{{background-color}}'; }md-dialog.md-THEME_NAME-theme {  border-radius: 4px;  background-color: '{{background-color}}'; }  md-dialog.md-THEME_NAME-theme.md-content-overflow .md-actions {    border-top-color: '{{foreground-4}}'; }md-divider.md-THEME_NAME-theme {  border-top-color: '{{foreground-4}}'; }md-icon.md-THEME_NAME-theme {  color: '{{foreground-2}}'; }  md-icon.md-THEME_NAME-theme.md-primary {    color: '{{primary-color}}'; }  md-icon.md-THEME_NAME-theme.md-accent {    color: '{{accent-color}}'; }  md-icon.md-THEME_NAME-theme.md-warn {    color: '{{warn-color}}'; }md-input-container.md-THEME_NAME-theme .md-input {  color: '{{foreground-1}}';  border-color: '{{foreground-4}}';  text-shadow: '{{foreground-shadow}}'; }  md-input-container.md-THEME_NAME-theme .md-input::-webkit-input-placeholder, md-input-container.md-THEME_NAME-theme .md-input::-moz-placeholder, md-input-container.md-THEME_NAME-theme .md-input:-moz-placeholder, md-input-container.md-THEME_NAME-theme .md-input:-ms-input-placeholder {    color: '{{foreground-3}}'; }md-input-container.md-THEME_NAME-theme > md-icon {  color: '{{foreground-1}}'; }md-input-container.md-THEME_NAME-theme label, md-input-container.md-THEME_NAME-theme .md-placeholder {  text-shadow: '{{foreground-shadow}}';  color: '{{foreground-3}}'; }md-input-container.md-THEME_NAME-theme ng-messages :not(.md-char-counter), md-input-container.md-THEME_NAME-theme [ng-messages] :not(.md-char-counter), md-input-container.md-THEME_NAME-theme ng-message :not(.md-char-counter), md-input-container.md-THEME_NAME-theme data-ng-message :not(.md-char-counter), md-input-container.md-THEME_NAME-theme x-ng-message :not(.md-char-counter), md-input-container.md-THEME_NAME-theme [ng-message] :not(.md-char-counter), md-input-container.md-THEME_NAME-theme [data-ng-message] :not(.md-char-counter), md-input-container.md-THEME_NAME-theme [x-ng-message] :not(.md-char-counter), md-input-container.md-THEME_NAME-theme [ng-message-exp] :not(.md-char-counter), md-input-container.md-THEME_NAME-theme [data-ng-message-exp] :not(.md-char-counter), md-input-container.md-THEME_NAME-theme [x-ng-message-exp] :not(.md-char-counter) {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-has-value label {  color: '{{foreground-2}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused .md-input {  border-color: '{{primary-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused label {  color: '{{primary-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused md-icon {  color: '{{primary-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-accent .md-input {  border-color: '{{accent-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-accent label {  color: '{{accent-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-warn .md-input {  border-color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-warn label {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme.md-input-invalid .md-input {  border-color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme.md-input-invalid.md-input-focused label {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme.md-input-invalid ng-message, md-input-container.md-THEME_NAME-theme.md-input-invalid data-ng-message, md-input-container.md-THEME_NAME-theme.md-input-invalid x-ng-message, md-input-container.md-THEME_NAME-theme.md-input-invalid [ng-message], md-input-container.md-THEME_NAME-theme.md-input-invalid [data-ng-message], md-input-container.md-THEME_NAME-theme.md-input-invalid [x-ng-message], md-input-container.md-THEME_NAME-theme.md-input-invalid [ng-message-exp], md-input-container.md-THEME_NAME-theme.md-input-invalid [data-ng-message-exp], md-input-container.md-THEME_NAME-theme.md-input-invalid [x-ng-message-exp], md-input-container.md-THEME_NAME-theme.md-input-invalid .md-char-counter {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme .md-input[disabled], [disabled] md-input-container.md-THEME_NAME-theme .md-input {  border-bottom-color: transparent;  color: '{{foreground-3}}';  background-image: linear-gradient(to right, '{{foreground-3}}' 0%, '{{foreground-3}}' 33%, transparent 0%);  background-image: -ms-linear-gradient(left, transparent 0%, '{{foreground-3}}' 100%); }md-menu-content.md-THEME_NAME-theme {  background-color: '{{background-color}}'; }  md-menu-content.md-THEME_NAME-theme md-menu-divider {    background-color: '{{foreground-4}}'; }md-list.md-THEME_NAME-theme md-list-item.md-2-line .md-list-item-text h3, md-list.md-THEME_NAME-theme md-list-item.md-2-line .md-list-item-text h4, md-list.md-THEME_NAME-theme md-list-item.md-3-line .md-list-item-text h3, md-list.md-THEME_NAME-theme md-list-item.md-3-line .md-list-item-text h4 {  color: '{{foreground-1}}'; }md-list.md-THEME_NAME-theme md-list-item.md-2-line .md-list-item-text p, md-list.md-THEME_NAME-theme md-list-item.md-3-line .md-list-item-text p {  color: '{{foreground-2}}'; }md-list.md-THEME_NAME-theme .md-proxy-focus.md-focused div.md-no-style {  background-color: '{{background-100}}'; }md-list.md-THEME_NAME-theme md-list-item > md-icon {  color: '{{foreground-2}}'; }  md-list.md-THEME_NAME-theme md-list-item > md-icon.md-highlight {    color: '{{primary-color}}'; }    md-list.md-THEME_NAME-theme md-list-item > md-icon.md-highlight.md-accent {      color: '{{accent-color}}'; }md-list.md-THEME_NAME-theme md-list-item button {  background-color: '{{background-color}}'; }  md-list.md-THEME_NAME-theme md-list-item button.md-button:not([disabled]):hover {    background-color: '{{background-color}}'; }md-menu-bar.md-THEME_NAME-theme > button.md-button {  color: '{{foreground-2}}';  border-radius: 2px; }md-menu-bar.md-THEME_NAME-theme md-menu.md-open > button, md-menu-bar.md-THEME_NAME-theme md-menu > button:focus {  outline: none;  background: '{{background-200}}'; }md-menu-bar.md-THEME_NAME-theme.md-open:not(.md-keyboard-mode) md-menu:hover > button {  background-color: '{{ background-500-0.2}}'; }md-menu-bar.md-THEME_NAME-theme:not(.md-keyboard-mode):not(.md-open) md-menu button:hover, md-menu-bar.md-THEME_NAME-theme:not(.md-keyboard-mode):not(.md-open) md-menu button:focus {  background: transparent; }md-menu-content.md-THEME_NAME-theme .md-menu > .md-button:after {  color: '{{foreground-2}}'; }md-menu-content.md-THEME_NAME-theme .md-menu.md-open > .md-button {  background-color: '{{ background-500-0.2}}'; }md-toolbar.md-THEME_NAME-theme.md-menu-toolbar {  background-color: '{{background-color}}';  color: '{{foreground-1}}'; }  md-toolbar.md-THEME_NAME-theme.md-menu-toolbar md-toolbar-filler {    background-color: '{{primary-color}}';    color: '{{primary-contrast}}'; }    md-toolbar.md-THEME_NAME-theme.md-menu-toolbar md-toolbar-filler md-icon {      color: '{{primary-contrast}}'; }md-progress-circular.md-THEME_NAME-theme {  background-color: transparent; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-gap {    border-top-color: '{{primary-color}}';    border-bottom-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-left .md-half-circle, md-progress-circular.md-THEME_NAME-theme .md-inner .md-right .md-half-circle {    border-top-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-right .md-half-circle {    border-right-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-left .md-half-circle {    border-left-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-gap {    border-top-color: '{{warn-color}}';    border-bottom-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-left .md-half-circle, md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-right .md-half-circle {    border-top-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-right .md-half-circle {    border-right-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-left .md-half-circle {    border-left-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-gap {    border-top-color: '{{accent-color}}';    border-bottom-color: '{{accent-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-left .md-half-circle, md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-right .md-half-circle {    border-top-color: '{{accent-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-right .md-half-circle {    border-right-color: '{{accent-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-left .md-half-circle {    border-left-color: '{{accent-color}}'; }md-radio-button.md-THEME_NAME-theme .md-off {  border-color: '{{foreground-2}}'; }md-radio-button.md-THEME_NAME-theme .md-on {  background-color: '{{accent-color-0.87}}'; }md-radio-button.md-THEME_NAME-theme.md-checked .md-off {  border-color: '{{accent-color-0.87}}'; }md-radio-button.md-THEME_NAME-theme.md-checked .md-ink-ripple {  color: '{{accent-color-0.87}}'; }md-radio-button.md-THEME_NAME-theme .md-container .md-ripple {  color: '{{accent-600}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-on, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-on {  background-color: '{{primary-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-off {  border-color: '{{primary-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-ink-ripple {  color: '{{primary-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-container .md-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-container .md-ripple {  color: '{{primary-600}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-on, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-on {  background-color: '{{warn-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-off {  border-color: '{{warn-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-ink-ripple {  color: '{{warn-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-container .md-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-container .md-ripple {  color: '{{warn-600}}'; }md-radio-group.md-THEME_NAME-theme[disabled], md-radio-button.md-THEME_NAME-theme[disabled] {  color: '{{foreground-3}}'; }  md-radio-group.md-THEME_NAME-theme[disabled] .md-container .md-off, md-radio-button.md-THEME_NAME-theme[disabled] .md-container .md-off {    border-color: '{{foreground-3}}'; }  md-radio-group.md-THEME_NAME-theme[disabled] .md-container .md-on, md-radio-button.md-THEME_NAME-theme[disabled] .md-container .md-on {    border-color: '{{foreground-3}}'; }md-radio-group.md-THEME_NAME-theme.md-focused:not(:empty) .md-checked .md-container:before {  background-color: '{{accent-color-0.26}}'; }md-radio-group.md-THEME_NAME-theme.md-focused:not(:empty) .md-checked:not([disabled]).md-primary .md-container:before {  background-color: '{{primary-color-0.26}}'; }md-radio-group.md-THEME_NAME-theme.md-focused:not(:empty) .md-checked.md-primary .md-container:before {  background-color: '{{warn-color-0.26}}'; }md-progress-linear.md-THEME_NAME-theme .md-container {  background-color: '{{primary-100}}'; }md-progress-linear.md-THEME_NAME-theme .md-bar {  background-color: '{{primary-color}}'; }md-progress-linear.md-THEME_NAME-theme.md-warn .md-container {  background-color: '{{warn-100}}'; }md-progress-linear.md-THEME_NAME-theme.md-warn .md-bar {  background-color: '{{warn-color}}'; }md-progress-linear.md-THEME_NAME-theme.md-accent .md-container {  background-color: '{{accent-100}}'; }md-progress-linear.md-THEME_NAME-theme.md-accent .md-bar {  background-color: '{{accent-color}}'; }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-warn .md-bar1 {  background-color: '{{warn-100}}'; }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-warn .md-dashed:before {  background: radial-gradient('{{warn-100}}' 0%, '{{warn-100}}' 16%, transparent 42%); }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-accent .md-bar1 {  background-color: '{{accent-100}}'; }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-accent .md-dashed:before {  background: radial-gradient('{{accent-100}}' 0%, '{{accent-100}}' 16%, transparent 42%); }md-sidenav.md-THEME_NAME-theme {  background-color: '{{background-color}}'; }md-select.md-THEME_NAME-theme[disabled] .md-select-value {  border-bottom-color: transparent;  background-image: linear-gradient(to right, '{{foreground-3}}' 0%, '{{foreground-3}}' 33%, transparent 0%);  background-image: -ms-linear-gradient(left, transparent 0%, '{{foreground-3}}' 100%); }md-select.md-THEME_NAME-theme .md-select-value {  border-bottom-color: '{{foreground-4}}'; }  md-select.md-THEME_NAME-theme .md-select-value.md-select-placeholder {    color: '{{foreground-3}}'; }md-select.md-THEME_NAME-theme.ng-invalid.ng-dirty .md-select-value {  color: '{{warn-500}}' !important;  border-bottom-color: '{{warn-500}}' !important; }md-select.md-THEME_NAME-theme:not([disabled]):focus .md-select-value {  border-bottom-color: '{{primary-color}}';  color: '{{ foreground-1 }}'; }  md-select.md-THEME_NAME-theme:not([disabled]):focus .md-select-value.md-select-placeholder {    color: '{{ foreground-1 }}'; }md-select.md-THEME_NAME-theme:not([disabled]):focus.md-accent .md-select-value {  border-bottom-color: '{{accent-color}}'; }md-select.md-THEME_NAME-theme:not([disabled]):focus.md-warn .md-select-value {  border-bottom-color: '{{warn-color}}'; }md-select.md-THEME_NAME-theme[disabled] .md-select-value {  color: '{{foreground-3}}'; }  md-select.md-THEME_NAME-theme[disabled] .md-select-value.md-select-placeholder {    color: '{{foreground-3}}'; }md-select-menu.md-THEME_NAME-theme md-option[disabled] {  color: '{{foreground-3}}'; }md-select-menu.md-THEME_NAME-theme md-optgroup {  color: '{{foreground-2}}'; }  md-select-menu.md-THEME_NAME-theme md-optgroup md-option {    color: '{{foreground-1}}'; }md-select-menu.md-THEME_NAME-theme md-option[selected] {  color: '{{primary-500}}'; }  md-select-menu.md-THEME_NAME-theme md-option[selected]:focus {    color: '{{primary-600}}'; }  md-select-menu.md-THEME_NAME-theme md-option[selected].md-accent {    color: '{{accent-500}}'; }    md-select-menu.md-THEME_NAME-theme md-option[selected].md-accent:focus {      color: '{{accent-600}}'; }md-select-menu.md-THEME_NAME-theme md-option:focus:not([selected]) {  background: '{{background-200}}'; }md-slider.md-THEME_NAME-theme .md-track {  background-color: '{{foreground-3}}'; }md-slider.md-THEME_NAME-theme .md-track-ticks {  background-color: '{{foreground-4}}'; }md-slider.md-THEME_NAME-theme .md-focus-thumb {  background-color: '{{foreground-2}}'; }md-slider.md-THEME_NAME-theme .md-focus-ring {  background-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-disabled-thumb {  border-color: '{{background-color}}'; }md-slider.md-THEME_NAME-theme.md-min .md-thumb:after {  background-color: '{{background-color}}'; }md-slider.md-THEME_NAME-theme .md-track.md-track-fill {  background-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-thumb:after {  border-color: '{{accent-color}}';  background-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-sign {  background-color: '{{accent-color}}'; }  md-slider.md-THEME_NAME-theme .md-sign:after {    border-top-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-thumb-text {  color: '{{accent-contrast}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-focus-ring {  background-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-track.md-track-fill {  background-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-thumb:after {  border-color: '{{warn-color}}';  background-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-sign {  background-color: '{{warn-color}}'; }  md-slider.md-THEME_NAME-theme.md-warn .md-sign:after {    border-top-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-thumb-text {  color: '{{warn-contrast}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-focus-ring {  background-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-track.md-track-fill {  background-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-thumb:after {  border-color: '{{primary-color}}';  background-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-sign {  background-color: '{{primary-color}}'; }  md-slider.md-THEME_NAME-theme.md-primary .md-sign:after {    border-top-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-thumb-text {  color: '{{primary-contrast}}'; }md-slider.md-THEME_NAME-theme[disabled] .md-thumb:after {  border-color: '{{foreground-3}}'; }md-slider.md-THEME_NAME-theme[disabled]:not(.md-min) .md-thumb:after {  background-color: '{{foreground-3}}'; }.md-subheader.md-THEME_NAME-theme {  color: '{{ foreground-2-0.23 }}';  background-color: '{{background-color}}'; }  .md-subheader.md-THEME_NAME-theme.md-primary {    color: '{{primary-color}}'; }  .md-subheader.md-THEME_NAME-theme.md-accent {    color: '{{accent-color}}'; }  .md-subheader.md-THEME_NAME-theme.md-warn {    color: '{{warn-color}}'; }md-switch.md-THEME_NAME-theme .md-thumb {  background-color: '{{background-50}}'; }md-switch.md-THEME_NAME-theme .md-bar {  background-color: '{{background-500}}'; }md-switch.md-THEME_NAME-theme.md-checked .md-thumb {  background-color: '{{accent-color}}'; }md-switch.md-THEME_NAME-theme.md-checked .md-bar {  background-color: '{{accent-color-0.5}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-focused .md-thumb:before {  background-color: '{{accent-color-0.26}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-primary .md-thumb {  background-color: '{{primary-color}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-primary .md-bar {  background-color: '{{primary-color-0.5}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-primary.md-focused .md-thumb:before {  background-color: '{{primary-color-0.26}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-warn .md-thumb {  background-color: '{{warn-color}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-warn .md-bar {  background-color: '{{warn-color-0.5}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-warn.md-focused .md-thumb:before {  background-color: '{{warn-color-0.26}}'; }md-switch.md-THEME_NAME-theme[disabled] .md-thumb {  background-color: '{{background-400}}'; }md-switch.md-THEME_NAME-theme[disabled] .md-bar {  background-color: '{{foreground-4}}'; }md-tabs.md-THEME_NAME-theme md-tabs-wrapper {  background-color: transparent;  border-color: '{{foreground-4}}'; }md-tabs.md-THEME_NAME-theme .md-paginator md-icon {  color: '{{primary-color}}'; }md-tabs.md-THEME_NAME-theme md-ink-bar {  color: '{{accent-color}}';  background: '{{accent-color}}'; }md-tabs.md-THEME_NAME-theme .md-tab {  color: '{{foreground-2}}'; }  md-tabs.md-THEME_NAME-theme .md-tab[disabled] {    color: '{{foreground-3}}'; }  md-tabs.md-THEME_NAME-theme .md-tab.md-active, md-tabs.md-THEME_NAME-theme .md-tab.md-focused {    color: '{{primary-color}}'; }  md-tabs.md-THEME_NAME-theme .md-tab.md-focused {    background: '{{primary-color-0.1}}'; }  md-tabs.md-THEME_NAME-theme .md-tab .md-ripple-container {    color: '{{accent-100}}'; }md-tabs.md-THEME_NAME-theme.md-accent > md-tabs-wrapper {  background-color: '{{accent-color}}'; }  md-tabs.md-THEME_NAME-theme.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]) {    color: '{{accent-100}}'; }    md-tabs.md-THEME_NAME-theme.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-active, md-tabs.md-THEME_NAME-theme.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      color: '{{accent-contrast}}'; }    md-tabs.md-THEME_NAME-theme.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      background: '{{accent-contrast-0.1}}'; }  md-tabs.md-THEME_NAME-theme.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-ink-bar {    color: '{{primary-600-1}}';    background: '{{primary-600-1}}'; }md-tabs.md-THEME_NAME-theme.md-primary > md-tabs-wrapper {  background-color: '{{primary-color}}'; }  md-tabs.md-THEME_NAME-theme.md-primary > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]) {    color: '{{primary-100}}'; }    md-tabs.md-THEME_NAME-theme.md-primary > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-active, md-tabs.md-THEME_NAME-theme.md-primary > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      color: '{{primary-contrast}}'; }    md-tabs.md-THEME_NAME-theme.md-primary > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      background: '{{primary-contrast-0.1}}'; }md-tabs.md-THEME_NAME-theme.md-warn > md-tabs-wrapper {  background-color: '{{warn-color}}'; }  md-tabs.md-THEME_NAME-theme.md-warn > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]) {    color: '{{warn-100}}'; }    md-tabs.md-THEME_NAME-theme.md-warn > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-active, md-tabs.md-THEME_NAME-theme.md-warn > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      color: '{{warn-contrast}}'; }    md-tabs.md-THEME_NAME-theme.md-warn > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      background: '{{warn-contrast-0.1}}'; }md-toolbar > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper {  background-color: '{{primary-color}}'; }  md-toolbar > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]) {    color: '{{primary-100}}'; }    md-toolbar > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-active, md-toolbar > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      color: '{{primary-contrast}}'; }    md-toolbar > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      background: '{{primary-contrast-0.1}}'; }md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper {  background-color: '{{accent-color}}'; }  md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]) {    color: '{{accent-100}}'; }    md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-active, md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      color: '{{accent-contrast}}'; }    md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      background: '{{accent-contrast-0.1}}'; }  md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-ink-bar {    color: '{{primary-600-1}}';    background: '{{primary-600-1}}'; }md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper {  background-color: '{{warn-color}}'; }  md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]) {    color: '{{warn-100}}'; }    md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-active, md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      color: '{{warn-contrast}}'; }    md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      background: '{{warn-contrast-0.1}}'; }md-toast.md-THEME_NAME-theme {  background-color: #323232;  color: '{{background-50}}'; }  md-toast.md-THEME_NAME-theme .md-button {    color: '{{background-50}}'; }    md-toast.md-THEME_NAME-theme .md-button.md-highlight {      color: '{{primary-A200}}'; }      md-toast.md-THEME_NAME-theme .md-button.md-highlight.md-accent {        color: '{{accent-A200}}'; }      md-toast.md-THEME_NAME-theme .md-button.md-highlight.md-warn {        color: '{{warn-A200}}'; }md-toolbar.md-THEME_NAME-theme:not(.md-menu-toolbar) {  background-color: '{{primary-color}}';  color: '{{primary-contrast}}'; }  md-toolbar.md-THEME_NAME-theme:not(.md-menu-toolbar) md-icon {    color: '{{primary-contrast}}'; }  md-toolbar.md-THEME_NAME-theme:not(.md-menu-toolbar) .md-button {    color: '{{primary-contrast}}'; }  md-toolbar.md-THEME_NAME-theme:not(.md-menu-toolbar).md-accent {    background-color: '{{accent-color}}';    color: '{{accent-contrast}}'; }  md-toolbar.md-THEME_NAME-theme:not(.md-menu-toolbar).md-warn {    background-color: '{{warn-color}}';    color: '{{warn-contrast}}'; }md-tooltip.md-THEME_NAME-theme {  color: '{{background-A100}}'; }  md-tooltip.md-THEME_NAME-theme .md-background {    background-color: '{{foreground-2}}'; }"); 
 })();
 
 
@@ -33698,26 +34357,10 @@ module.exports = config;
 },{}],14:[function(require,module,exports){
 /**
 * NpolarBaseController is meant to be the parent of a safe controller,
-* ie. a controller dealing with only with presentation, search, etc. See also NpolarEditController.
+* ie. a controller dealing with only with presentation, search, etc.
+* See also NpolarEditController.
 *
-*
-* Usage:
-*
-* angular.module('myApp').controller('MyApiController', function($scope, $routeParams, $controller, MyModel) {
-*
-* // 1. MyApiController -> NpolarBaseController
-* $controller('NpolarBaseController', {$scope: $scope});
-*
-* // 2. Set resource for parent document operations
-* $scope.resource = MyModel;
-*
-* // 3. Set document for resource (and view)
-* MyModel.fetch($routeParams, function(document) {
-*   $scope.document = document;
-* }, function() error {
-*   $scope.error = error;
-* });
-*
+* Usage example: 
 */
 
 'use strict';
@@ -33740,16 +34383,13 @@ var BaseController = function BaseController($scope, $location, $route, $routePa
   $scope.show = function () {
     $scope.resource.fetch($routeParams, function (document) {
       $scope.document = document;
-    }, function (error) {
-      $scope.error = NpolarApiResource.error(error);
     });
   };
 
+  // Search action, ie. fetch feed and inject into scope
   $scope.search = function (query) {
     $scope.resource.feed(query, function (response) {
       $scope.feed = response.feed;
-    }, function (error) {
-      $scope.error = NpolarApiResource.error(error);
     });
   };
 
@@ -33773,40 +34413,19 @@ BaseController.$inject = ["$scope", "$location", "$route", "$routeParams", "$win
 module.exports = BaseController;
 
 },{"lodash":12}],15:[function(require,module,exports){
+'use strict';
 /**
- * NpolarEditController provides methods for manipulating documents (using ngResource)
- * and controller action methods like edit().
+ * NpolarEditController extends [NpolarBaseController](https://github.com/npolar/angular-npolar/blob/master/src/api/controller/BaseController.js) with scope methods for REST-style document editing (using ngResource)
+ * and [formula](https://github.com/npolar/formula)-bound controller action methods, like $scope.edit()
  *
- * The following ngResource-bound methods are defined
+ * For following ngResource-bound scope methods are defined
  * - create()
  * - update()
  * - delete()
  * - save()
  *
- * Usage:
+ * Usage example: https://github.com/npolar/npdc-dataset/blob/ae0dc74d33708c76ac88fc8f0f492ac14759cae7/src/edit/DatasetEditController.js  
  *
- * angular.module('myApp').controller('MyApiController', function($scope, $routeParams, $controller, MyModel) {
- *
- * // 1. MyApiController -> NpolarEditController
- * $controller('NpolarBaseController', {$scope: $scope});
- *
- * // 2. Set resource for parent document operations
- * $scope.resource = MyModel;
- *
- * // 3. Set document for resource (and view)
- * MyModel.fetch($routeParams, function(document) {
- *   $scope.document = document;
- *   $scope.formula.model = document;
- * }, function() error {
- *   $scope.error = error;
- * });
- *
- */
-
-'use strict';
-var angular = require('angular');
-
-/**
  * @ngInject
  */
 var EditController = function EditController($scope, $location, $route, $routeParams, $window, $controller, npolarApiConfig, NpolarApiMessage, NpolarApiSecurity, NpolarApiResource) {
@@ -33824,29 +34443,21 @@ var EditController = function EditController($scope, $location, $route, $routePa
     }
   };
 
-  // Create action, ie. save document and reload app
+  // Create action, ie. save document and redirect to new URI
   $scope.create = function () {
-
-    $scope.resource.save($scope.document, function (data) {
-      var uri = $location.path().replace(/\/__new(\/edit)?$/, '/' + data.id + '/edit');
-
-      $scope.document = data;
+    $scope.resource.save($scope.document, function (document) {
+      var uri = $location.path().replace(/\/__new(\/edit)?$/, '/' + document.id + '/edit');
+      $scope.document = document;
+      $scope.formula.model = document;
       $location.path(uri);
-      $route.reload();
-    }, function (error) {
-      $scope.error = error;
     });
   };
 
   // Edit action, ie. fetch document and edit with formula
   $scope.editAction = function () {
-
     $scope.resource.fetch($routeParams, function (document) {
-
       $scope.document = document;
       $scope.formula.model = document;
-    }, function (error) {
-      $scope.error = NpolarApiResource.error(error);
     });
   };
 
@@ -33867,34 +34478,20 @@ var EditController = function EditController($scope, $location, $route, $routePa
 
   // PUT document, ie resource update
   $scope.update = function () {
-
-    $scope.resource.update($scope.document, function (data) {
-
-      $scope.document = data;
-
-      var message = { header: 'Success', message: 'Saved document revision #' + data._rev.split('-')[0] + ' at ' + new Date().toISOString() };
-      console.log(message);
-
-      $route.reload();
-    }, function (error) {
-      $scope.info = null;
-      $scope.error = error;
+    $scope.resource.update($scope.document, function (document) {
+      $scope.document = document;
+      $scope.formula.model = document;
     });
   };
 
   // DELETE document, ie. resource remove
   $scope['delete'] = function () {
-
     $scope.resource.remove({ id: $scope.document.id }, function () {
-
-      // $scope.info = { header: 'Success', message: 'Deleted document revision #'+data._rev.split('-')[0] +' at ' + new Date().toISOString() }
       $location.path('/');
-    }, function (error) {
-      $scope.error = error;
     });
   };
 
-  // Save document, ie. create or update
+  // Save document action, ie. create or update
   $scope.save = function () {
     if (angular.isUndefined($scope.document.id)) {
       $scope.create();
@@ -33907,7 +34504,7 @@ EditController.$inject = ["$scope", "$location", "$route", "$routeParams", "$win
 
 module.exports = EditController;
 
-},{"angular":33}],16:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 /**
 * Npolar API HTTP interceptor:
 * - adds JWT (Bearer token) in the Authorization header
@@ -34038,46 +34635,62 @@ var HttpMessage = function HttpMessage() {
 
 module.exports = HttpMessage;
 
-},{"angular":33,"events":218}],18:[function(require,module,exports){
-/**
-*
-*
-*/
-
+},{"angular":33,"events":222}],18:[function(require,module,exports){
 'use strict';
 var angular = require('angular');
-var _ = require('lodash');
+var _ = require('lodash'); //@todo eliminate
 
 /**
  * @ngInject
  */
-var Resource = function Resource(npolarApiConfig, NpolarApiSecurity, $resource, $location) {
+var Resource = function Resource($resource, $location, $log, npolarApiConfig, NpolarApiSecurity) {
 
-  this.info = function () {
-    //return { status: status, statusText: 'Npolar API error, failed accessing '+npolarApiConfig.base, data: 'Please inform data@npolar.no if this problem persists' };
+  // @return Array of path segments "under" the current request URI
+  var pathSegments = function pathSegments() {
+    // Split request URI into parts and remove hostname & appname from array [via the slice(2)]
+    var segments = $location.absUrl().split("//")[1].split("?")[0].split("/").filter(function (s) {
+      return s !== "";
+    });
+    return segments.slice(2);
+  };
+
+  // Get href for id [warn:] relative to current application /path/
+  // @return href
+  this.href = function (id) {
+    // Add .json if id contains dots, otherwise the API barfs
+    if (/[.]/.test(id)) {
+      id += ".json";
+    }
+    var segments = pathSegments();
+
+    // For apps at /something, we just need to link to the id
+    if (segments.length === 0) {
+      return id;
+
+      // For /cat app with children like /cat/lynx we need to link to `lynx/${id}`
+    } else {
+        return segments.join("/") + '/' + id;
+      }
+  };
+
+  this.editHref = function (id) {
+    // @todo test that provided id is last segment before edit
+    // @warn now only works if id is in current request URI
+    return pathSegments().join('/') + '/edit';
+  };
+
+  // Path to new, relative to /base/ defined in index.html
+  this.newHref = function () {
+
+    var base = pathSegments().join('/');
+    if ('' === base) {
+      base = '.';
+    }
+    return base + '/__new/edit';
   };
 
   this.base = function (service) {
     return angular.isString(service.base) ? service.base : npolarApiConfig.base;
-  };
-
-  /**
-   * Generic error handler
-   *
-   *  MyResource.feed(angular.extend({ limit: 10 }, $location.search()), function(response) {
-   *    $scope.feed = response.feed;
-   *  }, function(error) {
-   *    $scope.error = NpolarApiResource.error(error);
-   *  });
-   */
-  this.error = function (error) {
-    // response: {data: null, status: 0, headers: function, config: Object, statusText: ''}
-    if (error.status >= 400) {
-      return error;
-    } else {
-      var status = error.status === undefined ? 500 : error.status;
-      return { status: status, statusText: 'Npolar API error, failed accessing ' + npolarApiConfig.base, data: 'Please inform data@npolar.no if this problem persists' };
-    }
   };
 
   // NpolarApiResource factory
@@ -34090,6 +34703,10 @@ var Resource = function Resource(npolarApiConfig, NpolarApiSecurity, $resource, 
   this.resource = function (service) {
 
     var base = this.base(service);
+    var cache = false;
+    if (service.cache && true === service.cache) {
+      cache = true;
+    }
 
     // Default parameters
     var params = { id: null, limit: 100, format: 'json', q: '', variant: 'atom' };
@@ -34101,15 +34718,19 @@ var Resource = function Resource(npolarApiConfig, NpolarApiSecurity, $resource, 
     var params_query = angular.extend({}, params, { variant: 'array', limit: 1000, fields: fields_query });
 
     var resource = $resource(base + service.path + '/:id', {}, {
-      feed: { method: 'GET', params: params, headers: { Accept: 'application/json, application/vnd.geo+json' } },
-      query: { method: 'GET', params: params_query, isArray: true },
-      array: { method: 'GET', params: params_query, isArray: true },
-      fetch: { method: 'GET', params: {}, headers: { Accept: 'application/json' } },
+      feed: { method: 'GET', params: params, headers: { Accept: 'application/json, application/vnd.geo+json' }, cache: cache },
+      query: { method: 'GET', params: params_query, isArray: true, cache: cache },
+      array: { method: 'GET', params: params_query, isArray: true, cache: cache },
+      fetch: { method: 'GET', params: {}, headers: { Accept: 'application/json' }, cache: cache },
       //delete: { method:'DELETE', params: {  }, headers: { Accept:'application/json', Authorization: NpolarApiSecurity.authorization() } },
       update: { method: 'PUT', params: { id: '@id' }, headers: { Accept: 'application/json' } }
     });
 
     resource.path = base + service.path;
+
+    resource.href = this.href;
+    resource.newHref = this.newHref;
+    resource.editHref = this.editHref;
 
     // Extend Npolar API resources (individual documents)
     angular.extend(resource.prototype, {
@@ -34139,7 +34760,7 @@ var Resource = function Resource(npolarApiConfig, NpolarApiSecurity, $resource, 
     return resource;
   };
 };
-Resource.$inject = ["npolarApiConfig", "NpolarApiSecurity", "$resource", "$location"];
+Resource.$inject = ["$resource", "$location", "$log", "npolarApiConfig", "NpolarApiSecurity"];
 
 module.exports = Resource;
 
@@ -34149,8 +34770,10 @@ module.exports = Resource;
 /**
  * @ngInject
  */
-var Security = function Security(base64, jwtHelper, npolarApiConfig, NpolarApiUser) {
+var Security = function Security($log, base64, jwtHelper, npolarApiConfig, NpolarApiUser) {
   var _this = this;
+
+  this.actions = ['create', 'read', 'update', 'delete'];
 
   this.authorization = function () {
 
@@ -34191,12 +34814,22 @@ var Security = function Security(base64, jwtHelper, npolarApiConfig, NpolarApiUs
   };
 
   // Is user authenticated and authorized to perform action on current URI?
-  // @var action "create" | "read" | "update" | "delete"
+  // @var action ["create" | "read" | "update" | "delete"] => this.actions
   this.isAuthorized = function (action, uri) {
+
+    if (false === this.actions.includes(action)) {
+      $log.error('isAuthorized(' + action + ', ' + uri + ') called with invalid action');
+      return false;
+    }
+
     // @todo support relative URIs
-    //if (uri === undefined) {
-    // return false;
-    //}
+    // @todo support just ngResource or NpolarApiResurce => get path from that
+    // @todo fallback to application path?
+
+    if (uri === undefined || false === /\/\//.test(uri)) {
+      $log.error('isAuthorized(' + action + ', ' + uri + ') called with invalid URI');
+      return false;
+    }
 
     if (uri instanceof String && /^\/[^/]/.test(uri)) {
       //  uri = npolarApiConfig.base + uri;
@@ -34230,7 +34863,7 @@ var Security = function Security(base64, jwtHelper, npolarApiConfig, NpolarApiUs
 
     // User is authorized if we are left with at least 1 system
     var isAuthorized = systems.length > 0;
-    console.log('isAuthorized(' + action + ', ' + uri + ')', isAuthorized);
+    //console.log(`isAuthorized(${action}, ${uri})`, isAuthorized);
     return isAuthorized;
   };
 
@@ -34268,7 +34901,7 @@ var Security = function Security(base64, jwtHelper, npolarApiConfig, NpolarApiUs
     return NpolarApiUser.setUser(user);
   };
 };
-Security.$inject = ["base64", "jwtHelper", "npolarApiConfig", "NpolarApiUser"];
+Security.$inject = ["$log", "base64", "jwtHelper", "npolarApiConfig", "NpolarApiUser"];
 
 module.exports = Security;
 
@@ -34309,8 +34942,10 @@ var angular = require('angular');
  */
 var User = function User(base64, npolarApiConfig) {
 
+  var storage = localStorage;
+
   this.getUser = function () {
-    var user = sessionStorage.getItem(this.getStorageKey());
+    var user = storage.getItem(this.getStorageKey());
     if (angular.isString(user)) {
       return JSON.parse(base64.decode(user));
     } else {
@@ -34320,11 +34955,11 @@ var User = function User(base64, npolarApiConfig) {
 
   this.setUser = function (user) {
     var key = this.getStorageKey(user);
-    sessionStorage.setItem(key, base64.encode(JSON.stringify(user)));
+    storage.setItem(key, base64.encode(JSON.stringify(user)));
   };
 
   this.removeUser = function () {
-    sessionStorage.removeItem(this.getStorageKey());
+    storage.removeItem(this.getStorageKey());
   };
 
   this.getStorageKey = function () {
@@ -34438,34 +35073,15 @@ var LoginController = function LoginController($scope, $http, $route, $location,
     var now = Date.now();
 
     $scope.user = { name: token.name || $scope.user.username,
-      email: $scope.user.username,
-      username: $scope.user.username,
+      email: token.email || $scope.user.username,
       jwt: data.token,
-      uri: token.uri,
-      exp: token.exp,
+      uri: token.uri || '',
       expires: expires,
-      systems: token.systems
+      systems: token.systems || []
     };
 
     NpolarApiUser.setUser($scope.user);
-
-    // Merge user name, email, and uuid from the Person API
-    // FIXME
-    if (/^http/.test(token.uri)) {
-
-      $http.get(token.uri).success(function (person) {
-
-        $scope.user.name = person.first_name + " " + person.last_name;
-        $scope.user.email = person.email;
-        $scope.user.uuid = person.uuid;
-
-        NpolarApiUser.setUser($scope.user);
-
-        message.emit("npolar-login", $scope.user);
-      });
-    } else {
-      message.emit("npolar-login", $scope.user);
-    }
+    message.emit("npolar-login", $scope.user);
     $route.reload();
   };
 
@@ -34600,7 +35216,7 @@ var MessageController = function MessageController($scope, $route, $http, $locat
       hideDelay: 5000,
       action: "OK",
       locals: { message: message, explanation: explanation },
-      position: "bottom right"
+      position: "bottom left"
     }).then(function () {
       // noop
     });
@@ -64355,7 +64971,7 @@ if (global._babelPolyfill) {
 global._babelPolyfill = true;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"core-js/shim":214,"regenerator/runtime":215}],35:[function(require,module,exports){
+},{"core-js/shim":218,"regenerator/runtime":219}],35:[function(require,module,exports){
 module.exports = function(it){
   if(typeof it != 'function')throw TypeError(it + ' is not a function!');
   return it;
@@ -64366,7 +64982,49 @@ module.exports = function(it){
   if(!isObject(it))throw TypeError(it + ' is not an object!');
   return it;
 };
-},{"./$.is-object":66}],37:[function(require,module,exports){
+},{"./$.is-object":70}],37:[function(require,module,exports){
+// 22.1.3.3 Array.prototype.copyWithin(target, start, end = this.length)
+'use strict';
+var toObject = require('./$.to-object')
+  , toIndex  = require('./$.to-index')
+  , toLength = require('./$.to-length');
+
+module.exports = [].copyWithin || function copyWithin(target/*= 0*/, start/*= 0, end = @length*/){
+  var O     = toObject(this)
+    , len   = toLength(O.length)
+    , to    = toIndex(target, len)
+    , from  = toIndex(start, len)
+    , end   = arguments[2]
+    , count = Math.min((end === undefined ? len : toIndex(end, len)) - from, len - to)
+    , inc   = 1;
+  if(from < to && to < from + count){
+    inc  = -1;
+    from += count - 1;
+    to   += count - 1;
+  }
+  while(count-- > 0){
+    if(from in O)O[to] = O[from];
+    else delete O[to];
+    to   += inc;
+    from += inc;
+  } return O;
+};
+},{"./$.to-index":106,"./$.to-length":109,"./$.to-object":110}],38:[function(require,module,exports){
+// 22.1.3.6 Array.prototype.fill(value, start = 0, end = this.length)
+'use strict';
+var toObject = require('./$.to-object')
+  , toIndex  = require('./$.to-index')
+  , toLength = require('./$.to-length');
+module.exports = [].fill || function fill(value /*, start = 0, end = @length */){
+  var O      = toObject(this, true)
+    , length = toLength(O.length)
+    , index  = toIndex(arguments[1], length)
+    , end    = arguments[2]
+    , endPos = end === undefined ? length : toIndex(end, length);
+  while(endPos > index)O[index++] = value;
+  return O;
+};
+},{"./$.to-index":106,"./$.to-length":109,"./$.to-object":110}],39:[function(require,module,exports){
 // false -> Array#indexOf
 // true  -> Array#includes
 var toIObject = require('./$.to-iobject')
@@ -64388,7 +65046,7 @@ module.exports = function(IS_INCLUDES){
     } return !IS_INCLUDES && -1;
   };
 };
-},{"./$.to-index":102,"./$.to-iobject":104,"./$.to-length":105}],38:[function(require,module,exports){
+},{"./$.to-index":106,"./$.to-iobject":108,"./$.to-length":109}],40:[function(require,module,exports){
 // 0 -> Array#forEach
 // 1 -> Array#map
 // 2 -> Array#filter
@@ -64397,9 +65055,20 @@ module.exports = function(IS_INCLUDES){
 // 5 -> Array#find
 // 6 -> Array#findIndex
 var ctx      = require('./$.ctx')
+  , isObject = require('./$.is-object')
   , IObject  = require('./$.iobject')
   , toObject = require('./$.to-object')
-  , toLength = require('./$.to-length');
+  , toLength = require('./$.to-length')
+  , isArray  = require('./$.is-array')
+  , SPECIES  = require('./$.wks')('species');
+// 9.4.2.3 ArraySpeciesCreate(originalArray, length)
+var ASC = function(original, length){
+  var C;
+  if(isArray(original) && isObject(C = original.constructor)){
+    C = C[SPECIES];
+    if(C === null)C = undefined;
+  } return new(C === undefined ? Array : C)(length);
+};
 module.exports = function(TYPE){
   var IS_MAP        = TYPE == 1
     , IS_FILTER     = TYPE == 2
@@ -64413,7 +65082,7 @@ module.exports = function(TYPE){
       , f      = ctx(callbackfn, that, 3)
       , length = toLength(self.length)
       , index  = 0
-      , result = IS_MAP ? Array(length) : IS_FILTER ? [] : undefined
+      , result = IS_MAP ? ASC($this, length) : IS_FILTER ? ASC($this, 0) : undefined
       , val, res;
     for(;length > index; index++)if(NO_HOLES || index in self){
       val = self[index];
@@ -64431,14 +65100,24 @@ module.exports = function(TYPE){
     return IS_FIND_INDEX ? -1 : IS_SOME || IS_EVERY ? IS_EVERY : result;
   };
 };
-},{"./$.ctx":47,"./$.iobject":63,"./$.to-length":105,"./$.to-object":106}],39:[function(require,module,exports){
+},{"./$.ctx":49,"./$.iobject":66,"./$.is-array":68,"./$.is-object":70,"./$.to-length":109,"./$.to-object":110,"./$.wks":113}],41:[function(require,module,exports){
 // 19.1.2.1 Object.assign(target, source, ...)
 var toObject = require('./$.to-object')
   , IObject  = require('./$.iobject')
-  , enumKeys = require('./$.enum-keys');
-/* eslint-disable no-unused-vars */
-module.exports = Object.assign || function assign(target, source){
-/* eslint-enable no-unused-vars */
+  , enumKeys = require('./$.enum-keys')
+  , has      = require('./$.has');
+
+// should work with symbols and should have deterministic property order (V8 bug)
+module.exports = require('./$.fails')(function(){
+  var a = Object.assign
+    , A = {}
+    , B = {}
+    , S = Symbol()
+    , K = 'abcdefghijklmnopqrst';
+  A[S] = 7;
+  K.split('').forEach(function(k){ B[k] = k; });
+  return a({}, A)[S] != 7 || Object.keys(a({}, B)).join('') != K;
+}) ? function assign(target, source){   // eslint-disable-line no-unused-vars
   var T = toObject(target)
     , l = arguments.length
     , i = 1;
@@ -64448,11 +65127,11 @@ module.exports = Object.assign || function assign(target, source){
       , length = keys.length
       , j      = 0
       , key;
-    while(length > j)T[key = keys[j++]] = S[key];
+    while(length > j)if(has(S, key = keys[j++]))T[key] = S[key];
   }
   return T;
-};
-},{"./$.enum-keys":51,"./$.iobject":63,"./$.to-object":106}],40:[function(require,module,exports){
+} : Object.assign;
+},{"./$.enum-keys":53,"./$.fails":56,"./$.has":62,"./$.iobject":66,"./$.to-object":110}],42:[function(require,module,exports){
 // getting tag from 19.1.3.6 Object.prototype.toString()
 var cof = require('./$.cof')
   , TAG = require('./$.wks')('toStringTag')
@@ -64469,13 +65148,13 @@ module.exports = function(it){
     // ES3 arguments fallback
     : (B = cof(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : B;
 };
-},{"./$.cof":41,"./$.wks":109}],41:[function(require,module,exports){
+},{"./$.cof":43,"./$.wks":113}],43:[function(require,module,exports){
 var toString = {}.toString;
 
 module.exports = function(it){
   return toString.call(it).slice(8, -1);
 };
-},{}],42:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 'use strict';
 var $            = require('./$')
   , hide         = require('./$.hide')
@@ -64634,7 +65313,7 @@ module.exports = {
     species(require('./$.core')[NAME]); // for wrapper
   }
 };
-},{"./$":74,"./$.core":46,"./$.ctx":47,"./$.defined":49,"./$.for-of":56,"./$.has":59,"./$.hide":60,"./$.is-object":66,"./$.iter-define":70,"./$.iter-step":72,"./$.mix":79,"./$.species":92,"./$.strict-new":93,"./$.support-desc":99,"./$.uid":107}],43:[function(require,module,exports){
+},{"./$":78,"./$.core":48,"./$.ctx":49,"./$.defined":51,"./$.for-of":59,"./$.has":62,"./$.hide":63,"./$.is-object":70,"./$.iter-define":74,"./$.iter-step":76,"./$.mix":83,"./$.species":96,"./$.strict-new":97,"./$.support-desc":103,"./$.uid":111}],45:[function(require,module,exports){
 // https://github.com/DavidBruant/Map-Set.prototype.toJSON
 var forOf   = require('./$.for-of')
   , classof = require('./$.classof');
@@ -64646,7 +65325,7 @@ module.exports = function(NAME){
     return arr;
   };
 };
-},{"./$.classof":40,"./$.for-of":56}],44:[function(require,module,exports){
+},{"./$.classof":42,"./$.for-of":59}],46:[function(require,module,exports){
 'use strict';
 var hide         = require('./$.hide')
   , anObject     = require('./$.an-object')
@@ -64732,11 +65411,10 @@ module.exports = {
   frozenStore: frozenStore,
   WEAK: WEAK
 };
-},{"./$.an-object":36,"./$.array-methods":38,"./$.for-of":56,"./$.has":59,"./$.hide":60,"./$.is-object":66,"./$.mix":79,"./$.strict-new":93,"./$.uid":107}],45:[function(require,module,exports){
+},{"./$.an-object":36,"./$.array-methods":40,"./$.for-of":59,"./$.has":62,"./$.hide":63,"./$.is-object":70,"./$.mix":83,"./$.strict-new":97,"./$.uid":111}],47:[function(require,module,exports){
 'use strict';
 var global     = require('./$.global')
   , $def       = require('./$.def')
-  , BUGGY      = require('./$.iter-buggy')
   , forOf      = require('./$.for-of')
   , strictNew  = require('./$.strict-new');
 
@@ -64756,7 +65434,9 @@ module.exports = function(NAME, wrapper, methods, common, IS_MAP, IS_WEAK){
       : function set(a, b){ fn.call(this, a === 0 ? 0 : a, b); return this; }
     );
   };
-  if(typeof C != 'function' || !(IS_WEAK || !BUGGY && proto.forEach && proto.entries)){
+  if(typeof C != 'function' || !(IS_WEAK || proto.forEach && !require('./$.fails')(function(){
+    new C().entries().next();
+  }))){
     // create collection constructor
     C = common.getConstructor(wrapper, NAME, IS_MAP, ADDER);
     require('./$.mix')(C.prototype, methods);
@@ -64799,10 +65479,10 @@ module.exports = function(NAME, wrapper, methods, common, IS_MAP, IS_WEAK){
 
   return C;
 };
-},{"./$.def":48,"./$.for-of":56,"./$.global":58,"./$.iter-buggy":67,"./$.iter-detect":71,"./$.mix":79,"./$.redef":86,"./$.strict-new":93,"./$.tag":100}],46:[function(require,module,exports){
-var core = module.exports = {};
+},{"./$.def":50,"./$.fails":56,"./$.for-of":59,"./$.global":61,"./$.iter-detect":75,"./$.mix":83,"./$.redef":90,"./$.strict-new":97,"./$.tag":104}],48:[function(require,module,exports){
+var core = module.exports = {version: '1.2.0'};
 if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
-},{}],47:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 // optional / simple context binding
 var aFunction = require('./$.a-function');
 module.exports = function(fn, that, length){
@@ -64818,11 +65498,12 @@ module.exports = function(fn, that, length){
     case 3: return function(a, b, c){
       return fn.call(that, a, b, c);
     };
-  } return function(/* ...args */){
-      return fn.apply(that, arguments);
-    };
+  }
+  return function(/* ...args */){
+    return fn.apply(that, arguments);
+  };
 };
-},{"./$.a-function":35}],48:[function(require,module,exports){
+},{"./$.a-function":35}],50:[function(require,module,exports){
 var global     = require('./$.global')
   , core       = require('./$.core')
   , hide       = require('./$.hide')
@@ -64865,13 +65546,13 @@ $def.P = 8;  // proto
 $def.B = 16; // bind
 $def.W = 32; // wrap
 module.exports = $def;
-},{"./$.core":46,"./$.global":58,"./$.hide":60,"./$.redef":86}],49:[function(require,module,exports){
+},{"./$.core":48,"./$.global":61,"./$.hide":63,"./$.redef":90}],51:[function(require,module,exports){
 // 7.2.1 RequireObjectCoercible(argument)
 module.exports = function(it){
   if(it == undefined)throw TypeError("Can't call method on  " + it);
   return it;
 };
-},{}],50:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 var isObject = require('./$.is-object')
   , document = require('./$.global').document
   // in old IE typeof document.createElement is 'object'
@@ -64879,7 +65560,7 @@ var isObject = require('./$.is-object')
 module.exports = function(it){
   return is ? document.createElement(it) : {};
 };
-},{"./$.global":58,"./$.is-object":66}],51:[function(require,module,exports){
+},{"./$.global":61,"./$.is-object":70}],53:[function(require,module,exports){
 // all enumerable object keys, includes symbols
 var $ = require('./$');
 module.exports = function(it){
@@ -64894,12 +65575,24 @@ module.exports = function(it){
   }
   return keys;
 };
-},{"./$":74}],52:[function(require,module,exports){
+},{"./$":78}],54:[function(require,module,exports){
 // 20.2.2.14 Math.expm1(x)
 module.exports = Math.expm1 || function expm1(x){
   return (x = +x) == 0 ? x : x > -1e-6 && x < 1e-6 ? x + x * x / 2 : Math.exp(x) - 1;
 };
-},{}],53:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
+module.exports = function(KEY){
+  var re = /./;
+  try {
+    '/./'[KEY](re);
+  } catch(e){
+    try {
+      re[require('./$.wks')('match')] = false;
+      return !'/./'[KEY](re);
+    } catch(e){ /* empty */ }
+  } return true;
+};
+},{"./$.wks":113}],56:[function(require,module,exports){
 module.exports = function(exec){
   try {
     return !!exec();
@@ -64907,7 +65600,7 @@ module.exports = function(exec){
     return true;
   }
 };
-},{}],54:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 'use strict';
 module.exports = function(KEY, length, exec){
   var defined  = require('./$.defined')
@@ -64929,7 +65622,7 @@ module.exports = function(KEY, length, exec){
     );
   }
 };
-},{"./$.defined":49,"./$.fails":53,"./$.hide":60,"./$.redef":86,"./$.wks":109}],55:[function(require,module,exports){
+},{"./$.defined":51,"./$.fails":56,"./$.hide":63,"./$.redef":90,"./$.wks":113}],58:[function(require,module,exports){
 'use strict';
 // 21.2.5.3 get RegExp.prototype.flags
 var anObject = require('./$.an-object');
@@ -64943,7 +65636,7 @@ module.exports = function(){
   if(that.sticky)result += 'y';
   return result;
 };
-},{"./$.an-object":36}],56:[function(require,module,exports){
+},{"./$.an-object":36}],59:[function(require,module,exports){
 var ctx         = require('./$.ctx')
   , call        = require('./$.iter-call')
   , isArrayIter = require('./$.is-array-iter')
@@ -64963,7 +65656,7 @@ module.exports = function(iterable, entries, fn, that){
     call(iterator, f, step.value, entries);
   }
 };
-},{"./$.an-object":36,"./$.ctx":47,"./$.is-array-iter":64,"./$.iter-call":68,"./$.to-length":105,"./core.get-iterator-method":110}],57:[function(require,module,exports){
+},{"./$.an-object":36,"./$.ctx":49,"./$.is-array-iter":67,"./$.iter-call":72,"./$.to-length":109,"./core.get-iterator-method":114}],60:[function(require,module,exports){
 // fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
 var toString  = {}.toString
   , toIObject = require('./$.to-iobject')
@@ -64984,18 +65677,18 @@ module.exports.get = function getOwnPropertyNames(it){
   if(windowNames && toString.call(it) == '[object Window]')return getWindowNames(it);
   return getNames(toIObject(it));
 };
-},{"./$":74,"./$.to-iobject":104}],58:[function(require,module,exports){
+},{"./$":78,"./$.to-iobject":108}],61:[function(require,module,exports){
 // https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
 var UNDEFINED = 'undefined';
 var global = module.exports = typeof window != UNDEFINED && window.Math == Math
   ? window : typeof self != UNDEFINED && self.Math == Math ? self : Function('return this')();
 if(typeof __g == 'number')__g = global; // eslint-disable-line no-undef
-},{}],59:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 var hasOwnProperty = {}.hasOwnProperty;
 module.exports = function(it, key){
   return hasOwnProperty.call(it, key);
 };
-},{}],60:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 var $          = require('./$')
   , createDesc = require('./$.property-desc');
 module.exports = require('./$.support-desc') ? function(object, key, value){
@@ -65004,9 +65697,9 @@ module.exports = require('./$.support-desc') ? function(object, key, value){
   object[key] = value;
   return object;
 };
-},{"./$":74,"./$.property-desc":85,"./$.support-desc":99}],61:[function(require,module,exports){
+},{"./$":78,"./$.property-desc":89,"./$.support-desc":103}],64:[function(require,module,exports){
 module.exports = require('./$.global').document && document.documentElement;
-},{"./$.global":58}],62:[function(require,module,exports){
+},{"./$.global":61}],65:[function(require,module,exports){
 // fast apply, http://jsperf.lnkit.com/fast-apply/5
 module.exports = function(fn, args, that){
   var un = that === undefined;
@@ -65023,35 +65716,46 @@ module.exports = function(fn, args, that){
                       : fn.call(that, args[0], args[1], args[2], args[3]);
   } return              fn.apply(that, args);
 };
-},{}],63:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
 // indexed object, fallback for non-array-like ES3 strings
 var cof = require('./$.cof');
 module.exports = 0 in Object('z') ? Object : function(it){
   return cof(it) == 'String' ? it.split('') : Object(it);
 };
-},{"./$.cof":41}],64:[function(require,module,exports){
+},{"./$.cof":43}],67:[function(require,module,exports){
 // check on default Array iterator
 var Iterators = require('./$.iterators')
   , ITERATOR  = require('./$.wks')('iterator');
 module.exports = function(it){
   return (Iterators.Array || Array.prototype[ITERATOR]) === it;
 };
-},{"./$.iterators":73,"./$.wks":109}],65:[function(require,module,exports){
+},{"./$.iterators":77,"./$.wks":113}],68:[function(require,module,exports){
+// 7.2.2 IsArray(argument)
+var cof = require('./$.cof');
+module.exports = Array.isArray || function(arg){
+  return cof(arg) == 'Array';
+};
+},{"./$.cof":43}],69:[function(require,module,exports){
 // 20.1.2.3 Number.isInteger(number)
 var isObject = require('./$.is-object')
   , floor    = Math.floor;
 module.exports = function isInteger(it){
   return !isObject(it) && isFinite(it) && floor(it) === it;
 };
-},{"./$.is-object":66}],66:[function(require,module,exports){
-// http://jsperf.com/core-js-isobject
+},{"./$.is-object":70}],70:[function(require,module,exports){
 module.exports = function(it){
-  return it !== null && (typeof it == 'object' || typeof it == 'function');
+  return typeof it === 'object' ? it !== null : typeof it === 'function';
 };
-},{}],67:[function(require,module,exports){
-// Safari has buggy iterators w/o `next`
-module.exports = 'keys' in [] && !('next' in [].keys());
-},{}],68:[function(require,module,exports){
+},{}],71:[function(require,module,exports){
+// 7.2.8 IsRegExp(argument)
+var isObject = require('./$.is-object')
+  , cof      = require('./$.cof')
+  , MATCH    = require('./$.wks')('match');
+module.exports = function(it){
+  var isRegExp;
+  return isObject(it) && ((isRegExp = it[MATCH]) !== undefined ? !!isRegExp : cof(it) == 'RegExp');
+};
+},{"./$.cof":43,"./$.is-object":70,"./$.wks":113}],72:[function(require,module,exports){
 // call something on iterator step with safe closing on error
 var anObject = require('./$.an-object');
 module.exports = function(iterator, fn, value, entries){
@@ -65064,7 +65768,7 @@ module.exports = function(iterator, fn, value, entries){
     throw e;
   }
 };
-},{"./$.an-object":36}],69:[function(require,module,exports){
+},{"./$.an-object":36}],73:[function(require,module,exports){
 'use strict';
 var $ = require('./$')
   , IteratorPrototype = {};
@@ -65076,7 +65780,7 @@ module.exports = function(Constructor, NAME, next){
   Constructor.prototype = $.create(IteratorPrototype, {next: require('./$.property-desc')(1,next)});
   require('./$.tag')(Constructor, NAME + ' Iterator');
 };
-},{"./$":74,"./$.hide":60,"./$.property-desc":85,"./$.tag":100,"./$.wks":109}],70:[function(require,module,exports){
+},{"./$":78,"./$.hide":63,"./$.property-desc":89,"./$.tag":104,"./$.wks":113}],74:[function(require,module,exports){
 'use strict';
 var LIBRARY         = require('./$.library')
   , $def            = require('./$.def')
@@ -65085,6 +65789,7 @@ var LIBRARY         = require('./$.library')
   , has             = require('./$.has')
   , SYMBOL_ITERATOR = require('./$.wks')('iterator')
   , Iterators       = require('./$.iterators')
+  , BUGGY           = !([].keys && 'next' in [].keys()) // Safari has buggy iterators w/o `next`
   , FF_ITERATOR     = '@@iterator'
   , KEYS            = 'keys'
   , VALUES          = 'values';
@@ -65123,10 +65828,10 @@ module.exports = function(Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCE)
     };
     if(FORCE)for(key in methods){
       if(!(key in proto))$redef(proto, key, methods[key]);
-    } else $def($def.P + $def.F * require('./$.iter-buggy'), NAME, methods);
+    } else $def($def.P + $def.F * BUGGY, NAME, methods);
   }
 };
-},{"./$":74,"./$.def":48,"./$.has":59,"./$.hide":60,"./$.iter-buggy":67,"./$.iter-create":69,"./$.iterators":73,"./$.library":76,"./$.redef":86,"./$.tag":100,"./$.wks":109}],71:[function(require,module,exports){
+},{"./$":78,"./$.def":50,"./$.has":62,"./$.hide":63,"./$.iter-create":73,"./$.iterators":77,"./$.library":80,"./$.redef":90,"./$.tag":104,"./$.wks":113}],75:[function(require,module,exports){
 var SYMBOL_ITERATOR = require('./$.wks')('iterator')
   , SAFE_CLOSING    = false;
 try {
@@ -65146,13 +65851,13 @@ module.exports = function(exec){
   } catch(e){ /* empty */ }
   return safe;
 };
-},{"./$.wks":109}],72:[function(require,module,exports){
+},{"./$.wks":113}],76:[function(require,module,exports){
 module.exports = function(done, value){
   return {value: value, done: !!done};
 };
-},{}],73:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
 module.exports = {};
-},{}],74:[function(require,module,exports){
+},{}],78:[function(require,module,exports){
 var $Object = Object;
 module.exports = {
   create:     $Object.create,
@@ -65166,7 +65871,7 @@ module.exports = {
   getSymbols: $Object.getOwnPropertySymbols,
   each:       [].forEach
 };
-},{}],75:[function(require,module,exports){
+},{}],79:[function(require,module,exports){
 var $         = require('./$')
   , toIObject = require('./$.to-iobject');
 module.exports = function(object, el){
@@ -65177,14 +65882,14 @@ module.exports = function(object, el){
     , key;
   while(length > index)if(O[key = keys[index++]] === el)return key;
 };
-},{"./$":74,"./$.to-iobject":104}],76:[function(require,module,exports){
+},{"./$":78,"./$.to-iobject":108}],80:[function(require,module,exports){
 module.exports = false;
-},{}],77:[function(require,module,exports){
+},{}],81:[function(require,module,exports){
 // 20.2.2.20 Math.log1p(x)
 module.exports = Math.log1p || function log1p(x){
   return (x = +x) > -1e-8 && x < 1e-8 ? x - x * x / 2 : Math.log(1 + x);
 };
-},{}],78:[function(require,module,exports){
+},{}],82:[function(require,module,exports){
 var global    = require('./$.global')
   , macrotask = require('./$.task').set
   , Observer  = global.MutationObserver || global.WebKitMutationObserver
@@ -65242,13 +65947,13 @@ module.exports = function asap(fn){
     notify();
   } last = task;
 };
-},{"./$.cof":41,"./$.global":58,"./$.task":101}],79:[function(require,module,exports){
+},{"./$.cof":43,"./$.global":61,"./$.task":105}],83:[function(require,module,exports){
 var $redef = require('./$.redef');
 module.exports = function(target, src){
   for(var key in src)$redef(target, key, src[key]);
   return target;
 };
-},{"./$.redef":86}],80:[function(require,module,exports){
+},{"./$.redef":90}],84:[function(require,module,exports){
 // most Object methods by ES6 should accept primitives
 module.exports = function(KEY, exec){
   var $def = require('./$.def')
@@ -65257,8 +65962,9 @@ module.exports = function(KEY, exec){
   exp[KEY] = exec(fn);
   $def($def.S + $def.F * require('./$.fails')(function(){ fn(1); }), 'Object', exp);
 };
-},{"./$.core":46,"./$.def":48,"./$.fails":53}],81:[function(require,module,exports){
+},{"./$.core":48,"./$.def":50,"./$.fails":56}],85:[function(require,module,exports){
 var $         = require('./$')
+  , has       = require('./$.has')
   , toIObject = require('./$.to-iobject');
 module.exports = function(isEntries){
   return function(it){
@@ -65266,14 +65972,13 @@ module.exports = function(isEntries){
       , keys   = $.getKeys(O)
       , length = keys.length
       , i      = 0
-      , result = Array(length)
+      , result = []
       , key;
-    if(isEntries)while(length > i)result[i] = [key = keys[i++], O[key]];
-    else while(length > i)result[i] = O[keys[i++]];
+    while(length > i)has(O, key = keys[i++]) && result.push(isEntries ? [key, O[key]] : O[key]);
     return result;
   };
 };
-},{"./$":74,"./$.to-iobject":104}],82:[function(require,module,exports){
+},{"./$":78,"./$.has":62,"./$.to-iobject":108}],86:[function(require,module,exports){
 // all object keys, includes non-enumerable and symbols
 var $        = require('./$')
   , anObject = require('./$.an-object')
@@ -65283,7 +65988,7 @@ module.exports = Reflect && Reflect.ownKeys || function ownKeys(it){
     , getSymbols = $.getSymbols;
   return getSymbols ? keys.concat(getSymbols(it)) : keys;
 };
-},{"./$":74,"./$.an-object":36,"./$.global":58}],83:[function(require,module,exports){
+},{"./$":78,"./$.an-object":36,"./$.global":61}],87:[function(require,module,exports){
 'use strict';
 var path      = require('./$.path')
   , invoke    = require('./$.invoke')
@@ -65307,9 +66012,9 @@ module.exports = function(/* ...pargs */){
     return invoke(fn, args, that);
   };
 };
-},{"./$.a-function":35,"./$.invoke":62,"./$.path":84}],84:[function(require,module,exports){
+},{"./$.a-function":35,"./$.invoke":65,"./$.path":88}],88:[function(require,module,exports){
 module.exports = require('./$.global');
-},{"./$.global":58}],85:[function(require,module,exports){
+},{"./$.global":61}],89:[function(require,module,exports){
 module.exports = function(bitmap, value){
   return {
     enumerable  : !(bitmap & 1),
@@ -65318,7 +66023,7 @@ module.exports = function(bitmap, value){
     value       : value
   };
 };
-},{}],86:[function(require,module,exports){
+},{}],90:[function(require,module,exports){
 // add fake Function#toString
 // for correct work wrapped methods / constructors with methods like LoDash isNative
 var global    = require('./$.global')
@@ -65346,7 +66051,7 @@ require('./$.core').inspectSource = function(it){
 })(Function.prototype, TO_STRING, function toString(){
   return typeof this == 'function' && this[SRC] || $toString.call(this);
 });
-},{"./$.core":46,"./$.global":58,"./$.hide":60,"./$.uid":107}],87:[function(require,module,exports){
+},{"./$.core":48,"./$.global":61,"./$.hide":63,"./$.uid":111}],91:[function(require,module,exports){
 module.exports = function(regExp, replace){
   var replacer = replace === Object(replace) ? function(part){
     return replace[part];
@@ -65355,11 +66060,11 @@ module.exports = function(regExp, replace){
     return String(it).replace(regExp, replacer);
   };
 };
-},{}],88:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 module.exports = Object.is || function is(x, y){
   return x === y ? x !== 0 || 1 / x === 1 / y : x != x && y != y;
 };
-},{}],89:[function(require,module,exports){
+},{}],93:[function(require,module,exports){
 // Works with __proto__ only. Old v8 can't work with null proto objects.
 /* eslint-disable no-proto */
 var getDesc  = require('./$').getDesc
@@ -65370,35 +66075,35 @@ var check = function(O, proto){
   if(!isObject(proto) && proto !== null)throw TypeError(proto + ": can't set as prototype!");
 };
 module.exports = {
-  set: Object.setPrototypeOf || ('__proto__' in {} // eslint-disable-line
-    ? function(buggy, set){
-        try {
-          set = require('./$.ctx')(Function.call, getDesc(Object.prototype, '__proto__').set, 2);
-          set({}, []);
-        } catch(e){ buggy = true; }
-        return function setPrototypeOf(O, proto){
-          check(O, proto);
-          if(buggy)O.__proto__ = proto;
-          else set(O, proto);
-          return O;
-        };
-      }()
-    : undefined),
+  set: Object.setPrototypeOf || ('__proto__' in {} ? // eslint-disable-line no-proto
+    function(test, buggy, set){
+      try {
+        set = require('./$.ctx')(Function.call, getDesc(Object.prototype, '__proto__').set, 2);
+        set(test, []);
+        buggy = !(test instanceof Array);
+      } catch(e){ buggy = true; }
+      return function setPrototypeOf(O, proto){
+        check(O, proto);
+        if(buggy)O.__proto__ = proto;
+        else set(O, proto);
+        return O;
+      };
+    }({}, false) : undefined),
   check: check
 };
-},{"./$":74,"./$.an-object":36,"./$.ctx":47,"./$.is-object":66}],90:[function(require,module,exports){
+},{"./$":78,"./$.an-object":36,"./$.ctx":49,"./$.is-object":70}],94:[function(require,module,exports){
 var global = require('./$.global')
   , SHARED = '__core-js_shared__'
   , store  = global[SHARED] || (global[SHARED] = {});
 module.exports = function(key){
   return store[key] || (store[key] = {});
 };
-},{"./$.global":58}],91:[function(require,module,exports){
+},{"./$.global":61}],95:[function(require,module,exports){
 // 20.2.2.28 Math.sign(x)
 module.exports = Math.sign || function sign(x){
   return (x = +x) == 0 || x != x ? x : x < 0 ? -1 : 1;
 };
-},{}],92:[function(require,module,exports){
+},{}],96:[function(require,module,exports){
 'use strict';
 var $       = require('./$')
   , SPECIES = require('./$.wks')('species');
@@ -65408,12 +66113,12 @@ module.exports = function(C){
     get: function(){ return this; }
   });
 };
-},{"./$":74,"./$.support-desc":99,"./$.wks":109}],93:[function(require,module,exports){
+},{"./$":78,"./$.support-desc":103,"./$.wks":113}],97:[function(require,module,exports){
 module.exports = function(it, Constructor, name){
   if(!(it instanceof Constructor))throw TypeError(name + ": use the 'new' operator!");
   return it;
 };
-},{}],94:[function(require,module,exports){
+},{}],98:[function(require,module,exports){
 // true  -> String#at
 // false -> String#codePointAt
 var toInteger = require('./$.to-integer')
@@ -65432,16 +66137,16 @@ module.exports = function(TO_STRING){
         : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
   };
 };
-},{"./$.defined":49,"./$.to-integer":103}],95:[function(require,module,exports){
+},{"./$.defined":51,"./$.to-integer":107}],99:[function(require,module,exports){
 // helper for String#{startsWith, endsWith, includes}
-var defined = require('./$.defined')
-  , cof     = require('./$.cof');
+var isRegExp = require('./$.is-regexp')
+  , defined  = require('./$.defined');
 
 module.exports = function(that, searchString, NAME){
-  if(cof(searchString) == 'RegExp')throw TypeError('String#' + NAME + " doesn't accept regex!");
+  if(isRegExp(searchString))throw TypeError('String#' + NAME + " doesn't accept regex!");
   return String(defined(that));
 };
-},{"./$.cof":41,"./$.defined":49}],96:[function(require,module,exports){
+},{"./$.defined":51,"./$.is-regexp":71}],100:[function(require,module,exports){
 // https://github.com/ljharb/proposal-string-pad-left-right
 var toLength = require('./$.to-length')
   , repeat   = require('./$.string-repeat')
@@ -65456,12 +66161,10 @@ module.exports = function(that, maxLength, fillString, left){
   if(fillStr == '')fillStr = ' ';
   var fillLen = intMaxLength - stringLength
     , stringFiller = repeat.call(fillStr, Math.ceil(fillLen / fillStr.length));
-  if(stringFiller.length > fillLen)stringFiller = left
-    ? stringFiller.slice(stringFiller.length - fillLen)
-    : stringFiller.slice(0, fillLen);
+  if(stringFiller.length > fillLen)stringFiller = stringFiller.slice(0, fillLen);
   return left ? stringFiller + S : S + stringFiller;
 };
-},{"./$.defined":49,"./$.string-repeat":97,"./$.to-length":105}],97:[function(require,module,exports){
+},{"./$.defined":51,"./$.string-repeat":101,"./$.to-length":109}],101:[function(require,module,exports){
 'use strict';
 var toInteger = require('./$.to-integer')
   , defined   = require('./$.defined');
@@ -65474,7 +66177,7 @@ module.exports = function repeat(count){
   for(;n > 0; (n >>>= 1) && (str += str))if(n & 1)res += str;
   return res;
 };
-},{"./$.defined":49,"./$.to-integer":103}],98:[function(require,module,exports){
+},{"./$.defined":51,"./$.to-integer":107}],102:[function(require,module,exports){
 // 1 -> String#trimLeft
 // 2 -> String#trimRight
 // 3 -> String#trim
@@ -65501,12 +66204,12 @@ module.exports = function(KEY, exec){
     return !!spaces[KEY]() || non[KEY]() != non;
   }), 'String', exp);
 };
-},{"./$.def":48,"./$.defined":49,"./$.fails":53}],99:[function(require,module,exports){
+},{"./$.def":50,"./$.defined":51,"./$.fails":56}],103:[function(require,module,exports){
 // Thank's IE8 for his funny defineProperty
 module.exports = !require('./$.fails')(function(){
   return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
 });
-},{"./$.fails":53}],100:[function(require,module,exports){
+},{"./$.fails":56}],104:[function(require,module,exports){
 var has  = require('./$.has')
   , hide = require('./$.hide')
   , TAG  = require('./$.wks')('toStringTag');
@@ -65514,7 +66217,7 @@ var has  = require('./$.has')
 module.exports = function(it, tag, stat){
   if(it && !has(it = stat ? it : it.prototype, TAG))hide(it, TAG, tag);
 };
-},{"./$.has":59,"./$.hide":60,"./$.wks":109}],101:[function(require,module,exports){
+},{"./$.has":62,"./$.hide":63,"./$.wks":113}],105:[function(require,module,exports){
 'use strict';
 var ctx                = require('./$.ctx')
   , invoke             = require('./$.invoke')
@@ -65591,7 +66294,7 @@ module.exports = {
   set:   setTask,
   clear: clearTask
 };
-},{"./$.cof":41,"./$.ctx":47,"./$.dom-create":50,"./$.global":58,"./$.html":61,"./$.invoke":62}],102:[function(require,module,exports){
+},{"./$.cof":43,"./$.ctx":49,"./$.dom-create":52,"./$.global":61,"./$.html":64,"./$.invoke":65}],106:[function(require,module,exports){
 var toInteger = require('./$.to-integer')
   , max       = Math.max
   , min       = Math.min;
@@ -65599,61 +66302,61 @@ module.exports = function(index, length){
   index = toInteger(index);
   return index < 0 ? max(index + length, 0) : min(index, length);
 };
-},{"./$.to-integer":103}],103:[function(require,module,exports){
+},{"./$.to-integer":107}],107:[function(require,module,exports){
 // 7.1.4 ToInteger
 var ceil  = Math.ceil
   , floor = Math.floor;
 module.exports = function(it){
   return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
 };
-},{}],104:[function(require,module,exports){
+},{}],108:[function(require,module,exports){
 // to indexed object, toObject with fallback for non-array-like ES3 strings
 var IObject = require('./$.iobject')
   , defined = require('./$.defined');
 module.exports = function(it){
   return IObject(defined(it));
 };
-},{"./$.defined":49,"./$.iobject":63}],105:[function(require,module,exports){
+},{"./$.defined":51,"./$.iobject":66}],109:[function(require,module,exports){
 // 7.1.15 ToLength
 var toInteger = require('./$.to-integer')
   , min       = Math.min;
 module.exports = function(it){
   return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
 };
-},{"./$.to-integer":103}],106:[function(require,module,exports){
+},{"./$.to-integer":107}],110:[function(require,module,exports){
 // 7.1.13 ToObject(argument)
 var defined = require('./$.defined');
 module.exports = function(it){
   return Object(defined(it));
 };
-},{"./$.defined":49}],107:[function(require,module,exports){
+},{"./$.defined":51}],111:[function(require,module,exports){
 var id = 0
   , px = Math.random();
 module.exports = function(key){
   return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id + px).toString(36));
 };
-},{}],108:[function(require,module,exports){
+},{}],112:[function(require,module,exports){
 // 22.1.3.31 Array.prototype[@@unscopables]
 var UNSCOPABLES = require('./$.wks')('unscopables');
-if(!(UNSCOPABLES in []))require('./$.hide')(Array.prototype, UNSCOPABLES, {});
+if([][UNSCOPABLES] == undefined)require('./$.hide')(Array.prototype, UNSCOPABLES, {});
 module.exports = function(key){
   [][UNSCOPABLES][key] = true;
 };
-},{"./$.hide":60,"./$.wks":109}],109:[function(require,module,exports){
+},{"./$.hide":63,"./$.wks":113}],113:[function(require,module,exports){
 var store  = require('./$.shared')('wks')
   , Symbol = require('./$.global').Symbol;
 module.exports = function(name){
   return store[name] || (store[name] =
     Symbol && Symbol[name] || (Symbol || require('./$.uid'))('Symbol.' + name));
 };
-},{"./$.global":58,"./$.shared":90,"./$.uid":107}],110:[function(require,module,exports){
+},{"./$.global":61,"./$.shared":94,"./$.uid":111}],114:[function(require,module,exports){
 var classof   = require('./$.classof')
   , ITERATOR  = require('./$.wks')('iterator')
   , Iterators = require('./$.iterators');
 module.exports = require('./$.core').getIteratorMethod = function(it){
   if(it != undefined)return it[ITERATOR] || it['@@iterator'] || Iterators[classof(it)];
 };
-},{"./$.classof":40,"./$.core":46,"./$.iterators":73,"./$.wks":109}],111:[function(require,module,exports){
+},{"./$.classof":42,"./$.core":48,"./$.iterators":77,"./$.wks":113}],115:[function(require,module,exports){
 'use strict';
 var $                = require('./$')
   , SUPPORT_DESC     = require('./$.support-desc')
@@ -65844,7 +66547,7 @@ $def($def.P + $def.F * (IObject != Object), 'Array', {
 });
 
 // 22.1.2.2 / 15.4.3.2 Array.isArray(arg)
-$def($def.S, 'Array', {isArray: function(arg){ return cof(arg) == 'Array'; }});
+$def($def.S, 'Array', {isArray: require('./$.is-array')});
 
 var createArrayReduce = function(isRight){
   return function(callbackfn, memo){
@@ -65929,57 +66632,22 @@ $def($def.P + $def.F * brokenDate, 'Date', {
       ':' + lz(d.getUTCSeconds()) + '.' + (m > 99 ? m : '0' + lz(m)) + 'Z';
   }
 });
-},{"./$":74,"./$.a-function":35,"./$.an-object":36,"./$.array-includes":37,"./$.array-methods":38,"./$.cof":41,"./$.def":48,"./$.dom-create":50,"./$.fails":53,"./$.has":59,"./$.html":61,"./$.invoke":62,"./$.iobject":63,"./$.is-object":66,"./$.property-desc":85,"./$.support-desc":99,"./$.to-index":102,"./$.to-integer":103,"./$.to-iobject":104,"./$.to-length":105,"./$.to-object":106,"./$.uid":107}],112:[function(require,module,exports){
+},{"./$":78,"./$.a-function":35,"./$.an-object":36,"./$.array-includes":39,"./$.array-methods":40,"./$.cof":43,"./$.def":50,"./$.dom-create":52,"./$.fails":56,"./$.has":62,"./$.html":64,"./$.invoke":65,"./$.iobject":66,"./$.is-array":68,"./$.is-object":70,"./$.property-desc":89,"./$.support-desc":103,"./$.to-index":106,"./$.to-integer":107,"./$.to-iobject":108,"./$.to-length":109,"./$.to-object":110,"./$.uid":111}],116:[function(require,module,exports){
+// 22.1.3.3 Array.prototype.copyWithin(target, start, end = this.length)
 'use strict';
-var $def     = require('./$.def')
-  , toObject = require('./$.to-object')
-  , toIndex  = require('./$.to-index')
-  , toLength = require('./$.to-length');
-$def($def.P, 'Array', {
-  // 22.1.3.3 Array.prototype.copyWithin(target, start, end = this.length)
-  copyWithin: function copyWithin(target/* = 0 */, start /* = 0, end = @length */){
-    var O     = toObject(this)
-      , len   = toLength(O.length)
-      , to    = toIndex(target, len)
-      , from  = toIndex(start, len)
-      , end   = arguments[2]
-      , fin   = end === undefined ? len : toIndex(end, len)
-      , count = Math.min(fin - from, len - to)
-      , inc   = 1;
-    if(from < to && to < from + count){
-      inc  = -1;
-      from = from + count - 1;
-      to   = to   + count - 1;
-    }
-    while(count-- > 0){
-      if(from in O)O[to] = O[from];
-      else delete O[to];
-      to   += inc;
-      from += inc;
-    } return O;
-  }
-});
+var $def = require('./$.def');
+
+$def($def.P, 'Array', {copyWithin: require('./$.array-copy-within')});
+
 require('./$.unscope')('copyWithin');
-},{"./$.def":48,"./$.to-index":102,"./$.to-length":105,"./$.to-object":106,"./$.unscope":108}],113:[function(require,module,exports){
-'use strict';
-var $def     = require('./$.def')
-  , toObject = require('./$.to-object')
-  , toIndex  = require('./$.to-index')
-  , toLength = require('./$.to-length');
-$def($def.P, 'Array', {
-  // 22.1.3.6 Array.prototype.fill(value, start = 0, end = this.length)
-  fill: function fill(value /*, start = 0, end = @length */){
-    var O      = toObject(this, true)
-      , length = toLength(O.length)
-      , index  = toIndex(arguments[1], length)
-      , end    = arguments[2]
-      , endPos = end === undefined ? length : toIndex(end, length);
-    while(endPos > index)O[index++] = value;
-    return O;
-  }
-});
+},{"./$.array-copy-within":37,"./$.def":50,"./$.unscope":112}],117:[function(require,module,exports){
+// 22.1.3.6 Array.prototype.fill(value, start = 0, end = this.length)
+var $def = require('./$.def');
+
+$def($def.P, 'Array', {fill: require('./$.array-fill')});
+
 require('./$.unscope')('fill');
-},{"./$.def":48,"./$.to-index":102,"./$.to-length":105,"./$.to-object":106,"./$.unscope":108}],114:[function(require,module,exports){
+},{"./$.array-fill":38,"./$.def":50,"./$.unscope":112}],118:[function(require,module,exports){
 'use strict';
 // 22.1.3.9 Array.prototype.findIndex(predicate, thisArg = undefined)
 var KEY    = 'findIndex'
@@ -65994,7 +66662,7 @@ $def($def.P + $def.F * forced, 'Array', {
   }
 });
 require('./$.unscope')(KEY);
-},{"./$.array-methods":38,"./$.def":48,"./$.unscope":108}],115:[function(require,module,exports){
+},{"./$.array-methods":40,"./$.def":50,"./$.unscope":112}],119:[function(require,module,exports){
 'use strict';
 // 22.1.3.8 Array.prototype.find(predicate, thisArg = undefined)
 var KEY    = 'find'
@@ -66009,7 +66677,7 @@ $def($def.P + $def.F * forced, 'Array', {
   }
 });
 require('./$.unscope')(KEY);
-},{"./$.array-methods":38,"./$.def":48,"./$.unscope":108}],116:[function(require,module,exports){
+},{"./$.array-methods":40,"./$.def":50,"./$.unscope":112}],120:[function(require,module,exports){
 'use strict';
 var ctx         = require('./$.ctx')
   , $def        = require('./$.def')
@@ -66035,7 +66703,8 @@ $def($def.S + $def.F * !require('./$.iter-detect')(function(iter){ Array.from(it
         result[index] = mapping ? call(iterator, mapfn, [step.value, index], true) : step.value;
       }
     } else {
-      for(result = new C(length = toLength(O.length)); length > index; index++){
+      length = toLength(O.length);
+      for(result = new C(length); length > index; index++){
         result[index] = mapping ? mapfn(O[index], index) : O[index];
       }
     }
@@ -66043,7 +66712,8 @@ $def($def.S + $def.F * !require('./$.iter-detect')(function(iter){ Array.from(it
     return result;
   }
 });
-},{"./$.ctx":47,"./$.def":48,"./$.is-array-iter":64,"./$.iter-call":68,"./$.iter-detect":71,"./$.to-length":105,"./$.to-object":106,"./core.get-iterator-method":110}],117:[function(require,module,exports){
+
+},{"./$.ctx":49,"./$.def":50,"./$.is-array-iter":67,"./$.iter-call":72,"./$.iter-detect":75,"./$.to-length":109,"./$.to-object":110,"./core.get-iterator-method":114}],121:[function(require,module,exports){
 'use strict';
 var setUnscope = require('./$.unscope')
   , step       = require('./$.iter-step')
@@ -66078,10 +66748,15 @@ Iterators.Arguments = Iterators.Array;
 setUnscope('keys');
 setUnscope('values');
 setUnscope('entries');
-},{"./$.iter-define":70,"./$.iter-step":72,"./$.iterators":73,"./$.to-iobject":104,"./$.unscope":108}],118:[function(require,module,exports){
+},{"./$.iter-define":74,"./$.iter-step":76,"./$.iterators":77,"./$.to-iobject":108,"./$.unscope":112}],122:[function(require,module,exports){
 'use strict';
 var $def = require('./$.def');
-$def($def.S, 'Array', {
+
+// WebKit Array.of isn't generic
+$def($def.S + $def.F * require('./$.fails')(function(){
+  function F(){}
+  return !(Array.of.call(F) instanceof F);
+}), 'Array', {
   // 22.1.2.3 Array.of( ...items)
   of: function of(/* ...args */){
     var index  = 0
@@ -66092,9 +66767,9 @@ $def($def.S, 'Array', {
     return result;
   }
 });
-},{"./$.def":48}],119:[function(require,module,exports){
+},{"./$.def":50,"./$.fails":56}],123:[function(require,module,exports){
 require('./$.species')(Array);
-},{"./$.species":92}],120:[function(require,module,exports){
+},{"./$.species":96}],124:[function(require,module,exports){
 'use strict';
 var $             = require('./$')
   , isObject      = require('./$.is-object')
@@ -66108,7 +66783,7 @@ if(!(HAS_INSTANCE in FunctionProto))$.setDesc(FunctionProto, HAS_INSTANCE, {valu
   while(O = $.getProto(O))if(this.prototype === O)return true;
   return false;
 }});
-},{"./$":74,"./$.is-object":66,"./$.wks":109}],121:[function(require,module,exports){
+},{"./$":78,"./$.is-object":70,"./$.wks":113}],125:[function(require,module,exports){
 var setDesc    = require('./$').setDesc
   , createDesc = require('./$.property-desc')
   , has        = require('./$.has')
@@ -66125,7 +66800,7 @@ NAME in FProto || require('./$.support-desc') && setDesc(FProto, NAME, {
     return name;
   }
 });
-},{"./$":74,"./$.has":59,"./$.property-desc":85,"./$.support-desc":99}],122:[function(require,module,exports){
+},{"./$":78,"./$.has":62,"./$.property-desc":89,"./$.support-desc":103}],126:[function(require,module,exports){
 'use strict';
 var strong = require('./$.collection-strong');
 
@@ -66143,7 +66818,7 @@ require('./$.collection')('Map', function(get){
     return strong.def(this, key === 0 ? 0 : key, value);
   }
 }, strong, true);
-},{"./$.collection":45,"./$.collection-strong":42}],123:[function(require,module,exports){
+},{"./$.collection":47,"./$.collection-strong":44}],127:[function(require,module,exports){
 // 20.2.2.3 Math.acosh(x)
 var $def   = require('./$.def')
   , log1p  = require('./$.log1p')
@@ -66158,7 +66833,7 @@ $def($def.S + $def.F * !($acosh && Math.floor($acosh(Number.MAX_VALUE)) == 710),
       : log1p(x - 1 + sqrt(x - 1) * sqrt(x + 1));
   }
 });
-},{"./$.def":48,"./$.log1p":77}],124:[function(require,module,exports){
+},{"./$.def":50,"./$.log1p":81}],128:[function(require,module,exports){
 // 20.2.2.5 Math.asinh(x)
 var $def = require('./$.def');
 
@@ -66167,7 +66842,7 @@ function asinh(x){
 }
 
 $def($def.S, 'Math', {asinh: asinh});
-},{"./$.def":48}],125:[function(require,module,exports){
+},{"./$.def":50}],129:[function(require,module,exports){
 // 20.2.2.7 Math.atanh(x)
 var $def = require('./$.def');
 
@@ -66176,7 +66851,7 @@ $def($def.S, 'Math', {
     return (x = +x) == 0 ? x : Math.log((1 + x) / (1 - x)) / 2;
   }
 });
-},{"./$.def":48}],126:[function(require,module,exports){
+},{"./$.def":50}],130:[function(require,module,exports){
 // 20.2.2.9 Math.cbrt(x)
 var $def = require('./$.def')
   , sign = require('./$.sign');
@@ -66186,7 +66861,7 @@ $def($def.S, 'Math', {
     return sign(x = +x) * Math.pow(Math.abs(x), 1 / 3);
   }
 });
-},{"./$.def":48,"./$.sign":91}],127:[function(require,module,exports){
+},{"./$.def":50,"./$.sign":95}],131:[function(require,module,exports){
 // 20.2.2.11 Math.clz32(x)
 var $def = require('./$.def');
 
@@ -66195,7 +66870,7 @@ $def($def.S, 'Math', {
     return (x >>>= 0) ? 31 - Math.floor(Math.log(x + 0.5) * Math.LOG2E) : 32;
   }
 });
-},{"./$.def":48}],128:[function(require,module,exports){
+},{"./$.def":50}],132:[function(require,module,exports){
 // 20.2.2.12 Math.cosh(x)
 var $def = require('./$.def')
   , exp  = Math.exp;
@@ -66205,12 +66880,12 @@ $def($def.S, 'Math', {
     return (exp(x = +x) + exp(-x)) / 2;
   }
 });
-},{"./$.def":48}],129:[function(require,module,exports){
+},{"./$.def":50}],133:[function(require,module,exports){
 // 20.2.2.14 Math.expm1(x)
 var $def = require('./$.def');
 
 $def($def.S, 'Math', {expm1: require('./$.expm1')});
-},{"./$.def":48,"./$.expm1":52}],130:[function(require,module,exports){
+},{"./$.def":50,"./$.expm1":54}],134:[function(require,module,exports){
 // 20.2.2.16 Math.fround(x)
 var $def  = require('./$.def')
   , sign  = require('./$.sign')
@@ -66237,7 +66912,7 @@ $def($def.S, 'Math', {
     return $sign * result;
   }
 });
-},{"./$.def":48,"./$.sign":91}],131:[function(require,module,exports){
+},{"./$.def":50,"./$.sign":95}],135:[function(require,module,exports){
 // 20.2.2.17 Math.hypot([value1[, value2[, … ]]])
 var $def = require('./$.def')
   , abs  = Math.abs;
@@ -66263,7 +66938,7 @@ $def($def.S, 'Math', {
     return larg === Infinity ? Infinity : larg * Math.sqrt(sum);
   }
 });
-},{"./$.def":48}],132:[function(require,module,exports){
+},{"./$.def":50}],136:[function(require,module,exports){
 // 20.2.2.18 Math.imul(x, y)
 var $def = require('./$.def');
 
@@ -66280,7 +66955,7 @@ $def($def.S + $def.F * require('./$.fails')(function(){
     return 0 | xl * yl + ((UINT16 & xn >>> 16) * yl + xl * (UINT16 & yn >>> 16) << 16 >>> 0);
   }
 });
-},{"./$.def":48,"./$.fails":53}],133:[function(require,module,exports){
+},{"./$.def":50,"./$.fails":56}],137:[function(require,module,exports){
 // 20.2.2.21 Math.log10(x)
 var $def = require('./$.def');
 
@@ -66289,12 +66964,12 @@ $def($def.S, 'Math', {
     return Math.log(x) / Math.LN10;
   }
 });
-},{"./$.def":48}],134:[function(require,module,exports){
+},{"./$.def":50}],138:[function(require,module,exports){
 // 20.2.2.20 Math.log1p(x)
 var $def = require('./$.def');
 
 $def($def.S, 'Math', {log1p: require('./$.log1p')});
-},{"./$.def":48,"./$.log1p":77}],135:[function(require,module,exports){
+},{"./$.def":50,"./$.log1p":81}],139:[function(require,module,exports){
 // 20.2.2.22 Math.log2(x)
 var $def = require('./$.def');
 
@@ -66303,25 +66978,28 @@ $def($def.S, 'Math', {
     return Math.log(x) / Math.LN2;
   }
 });
-},{"./$.def":48}],136:[function(require,module,exports){
+},{"./$.def":50}],140:[function(require,module,exports){
 // 20.2.2.28 Math.sign(x)
 var $def = require('./$.def');
 
 $def($def.S, 'Math', {sign: require('./$.sign')});
-},{"./$.def":48,"./$.sign":91}],137:[function(require,module,exports){
+},{"./$.def":50,"./$.sign":95}],141:[function(require,module,exports){
 // 20.2.2.30 Math.sinh(x)
 var $def  = require('./$.def')
   , expm1 = require('./$.expm1')
   , exp   = Math.exp;
 
-$def($def.S, 'Math', {
+// V8 near Chromium 38 has a problem with very small numbers
+$def($def.S + $def.F * require('./$.fails')(function(){
+  return !Math.sinh(-2e-17) != -2e-17;
+}), 'Math', {
   sinh: function sinh(x){
     return Math.abs(x = +x) < 1
       ? (expm1(x) - expm1(-x)) / 2
       : (exp(x - 1) - exp(-x - 1)) * (Math.E / 2);
   }
 });
-},{"./$.def":48,"./$.expm1":52}],138:[function(require,module,exports){
+},{"./$.def":50,"./$.expm1":54,"./$.fails":56}],142:[function(require,module,exports){
 // 20.2.2.33 Math.tanh(x)
 var $def  = require('./$.def')
   , expm1 = require('./$.expm1')
@@ -66334,7 +67012,7 @@ $def($def.S, 'Math', {
     return a == Infinity ? 1 : b == Infinity ? -1 : (a - b) / (exp(x) + exp(-x));
   }
 });
-},{"./$.def":48,"./$.expm1":52}],139:[function(require,module,exports){
+},{"./$.def":50,"./$.expm1":54}],143:[function(require,module,exports){
 // 20.2.2.34 Math.trunc(x)
 var $def = require('./$.def');
 
@@ -66343,7 +67021,7 @@ $def($def.S, 'Math', {
     return (it > 0 ? Math.floor : Math.ceil)(it);
   }
 });
-},{"./$.def":48}],140:[function(require,module,exports){
+},{"./$.def":50}],144:[function(require,module,exports){
 'use strict';
 var $          = require('./$')
   , global     = require('./$.global')
@@ -66397,12 +67075,12 @@ if(!($Number('0o1') && $Number('0b1'))){
   proto.constructor = $Number;
   require('./$.redef')(global, NUMBER, $Number);
 }
-},{"./$":74,"./$.cof":41,"./$.fails":53,"./$.global":58,"./$.has":59,"./$.is-object":66,"./$.redef":86,"./$.support-desc":99}],141:[function(require,module,exports){
+},{"./$":78,"./$.cof":43,"./$.fails":56,"./$.global":61,"./$.has":62,"./$.is-object":70,"./$.redef":90,"./$.support-desc":103}],145:[function(require,module,exports){
 // 20.1.2.1 Number.EPSILON
 var $def = require('./$.def');
 
 $def($def.S, 'Number', {EPSILON: Math.pow(2, -52)});
-},{"./$.def":48}],142:[function(require,module,exports){
+},{"./$.def":50}],146:[function(require,module,exports){
 // 20.1.2.2 Number.isFinite(number)
 var $def      = require('./$.def')
   , _isFinite = require('./$.global').isFinite;
@@ -66412,12 +67090,12 @@ $def($def.S, 'Number', {
     return typeof it == 'number' && _isFinite(it);
   }
 });
-},{"./$.def":48,"./$.global":58}],143:[function(require,module,exports){
+},{"./$.def":50,"./$.global":61}],147:[function(require,module,exports){
 // 20.1.2.3 Number.isInteger(number)
 var $def = require('./$.def');
 
 $def($def.S, 'Number', {isInteger: require('./$.is-integer')});
-},{"./$.def":48,"./$.is-integer":65}],144:[function(require,module,exports){
+},{"./$.def":50,"./$.is-integer":69}],148:[function(require,module,exports){
 // 20.1.2.4 Number.isNaN(number)
 var $def = require('./$.def');
 
@@ -66426,7 +67104,7 @@ $def($def.S, 'Number', {
     return number != number;
   }
 });
-},{"./$.def":48}],145:[function(require,module,exports){
+},{"./$.def":50}],149:[function(require,module,exports){
 // 20.1.2.5 Number.isSafeInteger(number)
 var $def      = require('./$.def')
   , isInteger = require('./$.is-integer')
@@ -66437,31 +67115,32 @@ $def($def.S, 'Number', {
     return isInteger(number) && abs(number) <= 0x1fffffffffffff;
   }
 });
-},{"./$.def":48,"./$.is-integer":65}],146:[function(require,module,exports){
+},{"./$.def":50,"./$.is-integer":69}],150:[function(require,module,exports){
 // 20.1.2.6 Number.MAX_SAFE_INTEGER
 var $def = require('./$.def');
 
 $def($def.S, 'Number', {MAX_SAFE_INTEGER: 0x1fffffffffffff});
-},{"./$.def":48}],147:[function(require,module,exports){
+},{"./$.def":50}],151:[function(require,module,exports){
 // 20.1.2.10 Number.MIN_SAFE_INTEGER
 var $def = require('./$.def');
 
 $def($def.S, 'Number', {MIN_SAFE_INTEGER: -0x1fffffffffffff});
-},{"./$.def":48}],148:[function(require,module,exports){
+},{"./$.def":50}],152:[function(require,module,exports){
 // 20.1.2.12 Number.parseFloat(string)
 var $def = require('./$.def');
 
 $def($def.S, 'Number', {parseFloat: parseFloat});
-},{"./$.def":48}],149:[function(require,module,exports){
+},{"./$.def":50}],153:[function(require,module,exports){
 // 20.1.2.13 Number.parseInt(string, radix)
 var $def = require('./$.def');
 
 $def($def.S, 'Number', {parseInt: parseInt});
-},{"./$.def":48}],150:[function(require,module,exports){
+},{"./$.def":50}],154:[function(require,module,exports){
 // 19.1.3.1 Object.assign(target, source)
 var $def = require('./$.def');
-$def($def.S, 'Object', {assign: require('./$.assign')});
-},{"./$.assign":39,"./$.def":48}],151:[function(require,module,exports){
+
+$def($def.S + $def.F, 'Object', {assign: require('./$.assign')});
+},{"./$.assign":41,"./$.def":50}],155:[function(require,module,exports){
 // 19.1.2.5 Object.freeze(O)
 var isObject = require('./$.is-object');
 
@@ -66470,7 +67149,7 @@ require('./$.object-sap')('freeze', function($freeze){
     return $freeze && isObject(it) ? $freeze(it) : it;
   };
 });
-},{"./$.is-object":66,"./$.object-sap":80}],152:[function(require,module,exports){
+},{"./$.is-object":70,"./$.object-sap":84}],156:[function(require,module,exports){
 // 19.1.2.6 Object.getOwnPropertyDescriptor(O, P)
 var toIObject = require('./$.to-iobject');
 
@@ -66479,12 +67158,12 @@ require('./$.object-sap')('getOwnPropertyDescriptor', function($getOwnPropertyDe
     return $getOwnPropertyDescriptor(toIObject(it), key);
   };
 });
-},{"./$.object-sap":80,"./$.to-iobject":104}],153:[function(require,module,exports){
+},{"./$.object-sap":84,"./$.to-iobject":108}],157:[function(require,module,exports){
 // 19.1.2.7 Object.getOwnPropertyNames(O)
 require('./$.object-sap')('getOwnPropertyNames', function(){
   return require('./$.get-names').get;
 });
-},{"./$.get-names":57,"./$.object-sap":80}],154:[function(require,module,exports){
+},{"./$.get-names":60,"./$.object-sap":84}],158:[function(require,module,exports){
 // 19.1.2.9 Object.getPrototypeOf(O)
 var toObject = require('./$.to-object');
 
@@ -66493,7 +67172,7 @@ require('./$.object-sap')('getPrototypeOf', function($getPrototypeOf){
     return $getPrototypeOf(toObject(it));
   };
 });
-},{"./$.object-sap":80,"./$.to-object":106}],155:[function(require,module,exports){
+},{"./$.object-sap":84,"./$.to-object":110}],159:[function(require,module,exports){
 // 19.1.2.11 Object.isExtensible(O)
 var isObject = require('./$.is-object');
 
@@ -66502,7 +67181,7 @@ require('./$.object-sap')('isExtensible', function($isExtensible){
     return isObject(it) ? $isExtensible ? $isExtensible(it) : true : false;
   };
 });
-},{"./$.is-object":66,"./$.object-sap":80}],156:[function(require,module,exports){
+},{"./$.is-object":70,"./$.object-sap":84}],160:[function(require,module,exports){
 // 19.1.2.12 Object.isFrozen(O)
 var isObject = require('./$.is-object');
 
@@ -66511,7 +67190,7 @@ require('./$.object-sap')('isFrozen', function($isFrozen){
     return isObject(it) ? $isFrozen ? $isFrozen(it) : false : true;
   };
 });
-},{"./$.is-object":66,"./$.object-sap":80}],157:[function(require,module,exports){
+},{"./$.is-object":70,"./$.object-sap":84}],161:[function(require,module,exports){
 // 19.1.2.13 Object.isSealed(O)
 var isObject = require('./$.is-object');
 
@@ -66520,13 +67199,13 @@ require('./$.object-sap')('isSealed', function($isSealed){
     return isObject(it) ? $isSealed ? $isSealed(it) : false : true;
   };
 });
-},{"./$.is-object":66,"./$.object-sap":80}],158:[function(require,module,exports){
+},{"./$.is-object":70,"./$.object-sap":84}],162:[function(require,module,exports){
 // 19.1.3.10 Object.is(value1, value2)
 var $def = require('./$.def');
 $def($def.S, 'Object', {
   is: require('./$.same')
 });
-},{"./$.def":48,"./$.same":88}],159:[function(require,module,exports){
+},{"./$.def":50,"./$.same":92}],163:[function(require,module,exports){
 // 19.1.2.14 Object.keys(O)
 var toObject = require('./$.to-object');
 
@@ -66535,7 +67214,7 @@ require('./$.object-sap')('keys', function($keys){
     return $keys(toObject(it));
   };
 });
-},{"./$.object-sap":80,"./$.to-object":106}],160:[function(require,module,exports){
+},{"./$.object-sap":84,"./$.to-object":110}],164:[function(require,module,exports){
 // 19.1.2.15 Object.preventExtensions(O)
 var isObject = require('./$.is-object');
 
@@ -66544,7 +67223,7 @@ require('./$.object-sap')('preventExtensions', function($preventExtensions){
     return $preventExtensions && isObject(it) ? $preventExtensions(it) : it;
   };
 });
-},{"./$.is-object":66,"./$.object-sap":80}],161:[function(require,module,exports){
+},{"./$.is-object":70,"./$.object-sap":84}],165:[function(require,module,exports){
 // 19.1.2.17 Object.seal(O)
 var isObject = require('./$.is-object');
 
@@ -66553,11 +67232,11 @@ require('./$.object-sap')('seal', function($seal){
     return $seal && isObject(it) ? $seal(it) : it;
   };
 });
-},{"./$.is-object":66,"./$.object-sap":80}],162:[function(require,module,exports){
+},{"./$.is-object":70,"./$.object-sap":84}],166:[function(require,module,exports){
 // 19.1.3.19 Object.setPrototypeOf(O, proto)
 var $def = require('./$.def');
 $def($def.S, 'Object', {setPrototypeOf: require('./$.set-proto').set});
-},{"./$.def":48,"./$.set-proto":89}],163:[function(require,module,exports){
+},{"./$.def":50,"./$.set-proto":93}],167:[function(require,module,exports){
 'use strict';
 // 19.1.3.6 Object.prototype.toString()
 var classof = require('./$.classof')
@@ -66568,7 +67247,7 @@ if(test + '' != '[object z]'){
     return '[object ' + classof(this) + ']';
   }, true);
 }
-},{"./$.classof":40,"./$.redef":86,"./$.wks":109}],164:[function(require,module,exports){
+},{"./$.classof":42,"./$.redef":90,"./$.wks":113}],168:[function(require,module,exports){
 'use strict';
 var $          = require('./$')
   , LIBRARY    = require('./$.library')
@@ -66672,16 +67351,17 @@ var notify = function(record, isReject){
     chain.length = 0;
     record.n = false;
     if(isReject)setTimeout(function(){
-      asap(function(){
-        if(isUnhandled(record.p)){
-          if(isNode){
-            process.emit('unhandledRejection', value, record.p);
-          } else if(global.console && console.error){
-            console.error('Unhandled promise rejection', value);
-          }
+      var promise = record.p
+        , handler, console;
+      if(isUnhandled(promise)){
+        if(isNode){
+          process.emit('unhandledRejection', value, promise);
+        } else if(handler = global.onunhandledrejection){
+          handler({promise: promise, reason: value});
+        } else if((console = global.console) && console.error){
+          console.error('Unhandled promise rejection', value);
         }
-        record.a = undefined;
-      });
+      } record.a = undefined;
     }, 1);
   });
 };
@@ -66763,9 +67443,11 @@ if(!useNative){
         fail: typeof onRejected == 'function'  ? onRejected  : false
       };
       var promise = react.P = new (S != undefined ? S : P)(function(res, rej){
-        react.res = aFunction(res);
-        react.rej = aFunction(rej);
+        react.res = res;
+        react.rej = rej;
       });
+      aFunction(react.res);
+      aFunction(react.rej);
       var record = this[RECORD];
       record.c.push(react);
       if(record.a)record.a.push(react);
@@ -66829,7 +67511,7 @@ $def($def.S + $def.F * !(useNative && require('./$.iter-detect')(function(iter){
     });
   }
 });
-},{"./$":74,"./$.a-function":35,"./$.an-object":36,"./$.classof":40,"./$.core":46,"./$.ctx":47,"./$.def":48,"./$.for-of":56,"./$.global":58,"./$.is-object":66,"./$.iter-detect":71,"./$.library":76,"./$.microtask":78,"./$.mix":79,"./$.same":88,"./$.set-proto":89,"./$.species":92,"./$.strict-new":93,"./$.support-desc":99,"./$.tag":100,"./$.uid":107,"./$.wks":109}],165:[function(require,module,exports){
+},{"./$":78,"./$.a-function":35,"./$.an-object":36,"./$.classof":42,"./$.core":48,"./$.ctx":49,"./$.def":50,"./$.for-of":59,"./$.global":61,"./$.is-object":70,"./$.iter-detect":75,"./$.library":80,"./$.microtask":82,"./$.mix":83,"./$.same":92,"./$.set-proto":93,"./$.species":96,"./$.strict-new":97,"./$.support-desc":103,"./$.tag":104,"./$.uid":111,"./$.wks":113}],169:[function(require,module,exports){
 // 26.1.1 Reflect.apply(target, thisArgument, argumentsList)
 var $def   = require('./$.def')
   , _apply = Function.apply;
@@ -66839,7 +67521,7 @@ $def($def.S, 'Reflect', {
     return _apply.call(target, thisArgument, argumentsList);
   }
 });
-},{"./$.def":48}],166:[function(require,module,exports){
+},{"./$.def":50}],170:[function(require,module,exports){
 // 26.1.2 Reflect.construct(target, argumentsList [, newTarget])
 var $         = require('./$')
   , $def      = require('./$.def')
@@ -66856,8 +67538,9 @@ $def($def.S + $def.F * require('./$.fails')(function(){
 }), 'Reflect', {
   construct: function construct(Target, args /*, newTarget*/){
     aFunction(Target);
-    if(arguments.length < 3){
-      // w/o newTarget, optimization for 0-4 arguments
+    var newTarget = arguments.length < 3 ? Target : aFunction(arguments[2]);
+    if(Target == newTarget){
+      // w/o altered newTarget, optimization for 0-4 arguments
       if(args != undefined)switch(anObject(args).length){
         case 0: return new Target;
         case 1: return new Target(args[0]);
@@ -66865,19 +67548,19 @@ $def($def.S + $def.F * require('./$.fails')(function(){
         case 3: return new Target(args[0], args[1], args[2]);
         case 4: return new Target(args[0], args[1], args[2], args[3]);
       }
-      // w/o newTarget, lot of arguments case
+      // w/o altered newTarget, lot of arguments case
       var $args = [null];
       $args.push.apply($args, args);
       return new (bind.apply(Target, $args));
     }
-    // with newTarget, not support built-in constructors
-    var proto    = aFunction(arguments[2]).prototype
+    // with altered newTarget, not support built-in constructors
+    var proto    = newTarget.prototype
       , instance = $.create(isObject(proto) ? proto : Object.prototype)
       , result   = Function.apply.call(Target, instance, args);
     return isObject(result) ? result : instance;
   }
 });
-},{"./$":74,"./$.a-function":35,"./$.an-object":36,"./$.core":46,"./$.def":48,"./$.fails":53,"./$.is-object":66}],167:[function(require,module,exports){
+},{"./$":78,"./$.a-function":35,"./$.an-object":36,"./$.core":48,"./$.def":50,"./$.fails":56,"./$.is-object":70}],171:[function(require,module,exports){
 // 26.1.3 Reflect.defineProperty(target, propertyKey, attributes)
 var $        = require('./$')
   , $def     = require('./$.def')
@@ -66897,7 +67580,7 @@ $def($def.S + $def.F * require('./$.fails')(function(){
     }
   }
 });
-},{"./$":74,"./$.an-object":36,"./$.def":48,"./$.fails":53}],168:[function(require,module,exports){
+},{"./$":78,"./$.an-object":36,"./$.def":50,"./$.fails":56}],172:[function(require,module,exports){
 // 26.1.4 Reflect.deleteProperty(target, propertyKey)
 var $def     = require('./$.def')
   , getDesc  = require('./$').getDesc
@@ -66909,7 +67592,7 @@ $def($def.S, 'Reflect', {
     return desc && !desc.configurable ? false : delete target[propertyKey];
   }
 });
-},{"./$":74,"./$.an-object":36,"./$.def":48}],169:[function(require,module,exports){
+},{"./$":78,"./$.an-object":36,"./$.def":50}],173:[function(require,module,exports){
 'use strict';
 // 26.1.5 Reflect.enumerate(target)
 var $def     = require('./$.def')
@@ -66936,7 +67619,7 @@ $def($def.S, 'Reflect', {
     return new Enumerate(target);
   }
 });
-},{"./$.an-object":36,"./$.def":48,"./$.iter-create":69}],170:[function(require,module,exports){
+},{"./$.an-object":36,"./$.def":50,"./$.iter-create":73}],174:[function(require,module,exports){
 // 26.1.7 Reflect.getOwnPropertyDescriptor(target, propertyKey)
 var $        = require('./$')
   , $def     = require('./$.def')
@@ -66947,7 +67630,7 @@ $def($def.S, 'Reflect', {
     return $.getDesc(anObject(target), propertyKey);
   }
 });
-},{"./$":74,"./$.an-object":36,"./$.def":48}],171:[function(require,module,exports){
+},{"./$":78,"./$.an-object":36,"./$.def":50}],175:[function(require,module,exports){
 // 26.1.8 Reflect.getPrototypeOf(target)
 var $def     = require('./$.def')
   , getProto = require('./$').getProto
@@ -66958,7 +67641,7 @@ $def($def.S, 'Reflect', {
     return getProto(anObject(target));
   }
 });
-},{"./$":74,"./$.an-object":36,"./$.def":48}],172:[function(require,module,exports){
+},{"./$":78,"./$.an-object":36,"./$.def":50}],176:[function(require,module,exports){
 // 26.1.6 Reflect.get(target, propertyKey [, receiver])
 var $        = require('./$')
   , has      = require('./$.has')
@@ -66979,7 +67662,7 @@ function get(target, propertyKey/*, receiver*/){
 }
 
 $def($def.S, 'Reflect', {get: get});
-},{"./$":74,"./$.an-object":36,"./$.def":48,"./$.has":59,"./$.is-object":66}],173:[function(require,module,exports){
+},{"./$":78,"./$.an-object":36,"./$.def":50,"./$.has":62,"./$.is-object":70}],177:[function(require,module,exports){
 // 26.1.9 Reflect.has(target, propertyKey)
 var $def = require('./$.def');
 
@@ -66988,7 +67671,7 @@ $def($def.S, 'Reflect', {
     return propertyKey in target;
   }
 });
-},{"./$.def":48}],174:[function(require,module,exports){
+},{"./$.def":50}],178:[function(require,module,exports){
 // 26.1.10 Reflect.isExtensible(target)
 var $def          = require('./$.def')
   , anObject      = require('./$.an-object')
@@ -67000,12 +67683,12 @@ $def($def.S, 'Reflect', {
     return $isExtensible ? $isExtensible(target) : true;
   }
 });
-},{"./$.an-object":36,"./$.def":48}],175:[function(require,module,exports){
+},{"./$.an-object":36,"./$.def":50}],179:[function(require,module,exports){
 // 26.1.11 Reflect.ownKeys(target)
 var $def = require('./$.def');
 
 $def($def.S, 'Reflect', {ownKeys: require('./$.own-keys')});
-},{"./$.def":48,"./$.own-keys":82}],176:[function(require,module,exports){
+},{"./$.def":50,"./$.own-keys":86}],180:[function(require,module,exports){
 // 26.1.12 Reflect.preventExtensions(target)
 var $def               = require('./$.def')
   , anObject           = require('./$.an-object')
@@ -67022,7 +67705,7 @@ $def($def.S, 'Reflect', {
     }
   }
 });
-},{"./$.an-object":36,"./$.def":48}],177:[function(require,module,exports){
+},{"./$.an-object":36,"./$.def":50}],181:[function(require,module,exports){
 // 26.1.14 Reflect.setPrototypeOf(target, proto)
 var $def     = require('./$.def')
   , setProto = require('./$.set-proto');
@@ -67038,7 +67721,7 @@ if(setProto)$def($def.S, 'Reflect', {
     }
   }
 });
-},{"./$.def":48,"./$.set-proto":89}],178:[function(require,module,exports){
+},{"./$.def":50,"./$.set-proto":93}],182:[function(require,module,exports){
 // 26.1.13 Reflect.set(target, propertyKey, V [, receiver])
 var $          = require('./$')
   , has        = require('./$.has')
@@ -67068,57 +67751,53 @@ function set(target, propertyKey, V/*, receiver*/){
 }
 
 $def($def.S, 'Reflect', {set: set});
-},{"./$":74,"./$.an-object":36,"./$.def":48,"./$.has":59,"./$.is-object":66,"./$.property-desc":85}],179:[function(require,module,exports){
-var $       = require('./$')
-  , global  = require('./$.global')
-  , cof     = require('./$.cof')
-  , $flags  = require('./$.flags')
-  , $RegExp = global.RegExp
-  , Base    = $RegExp
-  , proto   = $RegExp.prototype
-  , re      = /a/g
-  // "new" creates a new object
-  , CORRECT_NEW = new $RegExp(re) !== re
-  // RegExp allows a regex with flags as the pattern
-  , ALLOWS_RE_WITH_FLAGS = function(){
-    try {
-      return $RegExp(re, 'i') == '/a/i';
-    } catch(e){ /* empty */ }
-  }();
+},{"./$":78,"./$.an-object":36,"./$.def":50,"./$.has":62,"./$.is-object":70,"./$.property-desc":89}],183:[function(require,module,exports){
+var $        = require('./$')
+  , global   = require('./$.global')
+  , isRegExp = require('./$.is-regexp')
+  , $flags   = require('./$.flags')
+  , $RegExp  = global.RegExp
+  , Base     = $RegExp
+  , proto    = $RegExp.prototype
+  , re1      = /a/g
+  , re2      = /a/g
+  // "new" creates a new object, old webkit buggy here
+  , CORRECT_NEW = new $RegExp(re1) !== re1;
 
-if(require('./$.support-desc')){
-  if(!CORRECT_NEW || !ALLOWS_RE_WITH_FLAGS){
-    $RegExp = function RegExp(pattern, flags){
-      var patternIsRegExp  = cof(pattern) == 'RegExp'
-        , flagsIsUndefined = flags === undefined;
-      if(!(this instanceof $RegExp) && patternIsRegExp && flagsIsUndefined)return pattern;
-      return CORRECT_NEW
-        ? new Base(patternIsRegExp && !flagsIsUndefined ? pattern.source : pattern, flags)
-        : new Base(patternIsRegExp ? pattern.source : pattern
-          , patternIsRegExp && flagsIsUndefined ? $flags.call(pattern) : flags);
-    };
-    $.each.call($.getNames(Base), function(key){
-      key in $RegExp || $.setDesc($RegExp, key, {
-        configurable: true,
-        get: function(){ return Base[key]; },
-        set: function(it){ Base[key] = it; }
-      });
+if(require('./$.support-desc') && (!CORRECT_NEW || require('./$.fails')(function(){
+  re2[require('./$.wks')('match')] = false;
+  // RegExp constructor can alter flags and IsRegExp works correct with @@match
+  return $RegExp(re1) != re1 || $RegExp(re2) == re2 || $RegExp(re1, 'i') != '/a/i';
+}))){
+  $RegExp = function RegExp(p, f){
+    var piRE = isRegExp(p)
+      , fiU  = f === undefined;
+    return !(this instanceof $RegExp) && piRE && p.constructor === $RegExp && fiU ? p
+      : CORRECT_NEW
+        ? new Base(piRE && !fiU ? p.source : p, f)
+        : Base((piRE = p instanceof $RegExp) ? p.source : p, piRE && fiU ? $flags.call(p) : f);
+  };
+  $.each.call($.getNames(Base), function(key){
+    key in $RegExp || $.setDesc($RegExp, key, {
+      configurable: true,
+      get: function(){ return Base[key]; },
+      set: function(it){ Base[key] = it; }
     });
-    proto.constructor = $RegExp;
-    $RegExp.prototype = proto;
-    require('./$.redef')(global, 'RegExp', $RegExp);
-  }
+  });
+  proto.constructor = $RegExp;
+  $RegExp.prototype = proto;
+  require('./$.redef')(global, 'RegExp', $RegExp);
 }
 
 require('./$.species')($RegExp);
-},{"./$":74,"./$.cof":41,"./$.flags":55,"./$.global":58,"./$.redef":86,"./$.species":92,"./$.support-desc":99}],180:[function(require,module,exports){
+},{"./$":78,"./$.fails":56,"./$.flags":58,"./$.global":61,"./$.is-regexp":71,"./$.redef":90,"./$.species":96,"./$.support-desc":103,"./$.wks":113}],184:[function(require,module,exports){
 // 21.2.5.3 get RegExp.prototype.flags()
 var $ = require('./$');
 if(require('./$.support-desc') && /./g.flags != 'g')$.setDesc(RegExp.prototype, 'flags', {
   configurable: true,
   get: require('./$.flags')
 });
-},{"./$":74,"./$.flags":55,"./$.support-desc":99}],181:[function(require,module,exports){
+},{"./$":78,"./$.flags":58,"./$.support-desc":103}],185:[function(require,module,exports){
 // @@match logic
 require('./$.fix-re-wks')('match', 1, function(defined, MATCH){
   // 21.1.3.11 String.prototype.match(regexp)
@@ -67129,7 +67808,7 @@ require('./$.fix-re-wks')('match', 1, function(defined, MATCH){
     return fn !== undefined ? fn.call(regexp, O) : new RegExp(regexp)[MATCH](String(O));
   };
 });
-},{"./$.fix-re-wks":54}],182:[function(require,module,exports){
+},{"./$.fix-re-wks":57}],186:[function(require,module,exports){
 // @@replace logic
 require('./$.fix-re-wks')('replace', 2, function(defined, REPLACE, $replace){
   // 21.1.3.14 String.prototype.replace(searchValue, replaceValue)
@@ -67142,7 +67821,7 @@ require('./$.fix-re-wks')('replace', 2, function(defined, REPLACE, $replace){
       : $replace.call(String(O), searchValue, replaceValue);
   };
 });
-},{"./$.fix-re-wks":54}],183:[function(require,module,exports){
+},{"./$.fix-re-wks":57}],187:[function(require,module,exports){
 // @@search logic
 require('./$.fix-re-wks')('search', 1, function(defined, SEARCH){
   // 21.1.3.15 String.prototype.search(regexp)
@@ -67153,7 +67832,7 @@ require('./$.fix-re-wks')('search', 1, function(defined, SEARCH){
     return fn !== undefined ? fn.call(regexp, O) : new RegExp(regexp)[SEARCH](String(O));
   };
 });
-},{"./$.fix-re-wks":54}],184:[function(require,module,exports){
+},{"./$.fix-re-wks":57}],188:[function(require,module,exports){
 // @@split logic
 require('./$.fix-re-wks')('split', 2, function(defined, SPLIT, $split){
   // 21.1.3.17 String.prototype.split(separator, limit)
@@ -67166,7 +67845,7 @@ require('./$.fix-re-wks')('split', 2, function(defined, SPLIT, $split){
       : $split.call(String(O), separator, limit);
   };
 });
-},{"./$.fix-re-wks":54}],185:[function(require,module,exports){
+},{"./$.fix-re-wks":57}],189:[function(require,module,exports){
 'use strict';
 var strong = require('./$.collection-strong');
 
@@ -67179,7 +67858,7 @@ require('./$.collection')('Set', function(get){
     return strong.def(this, value = value === 0 ? 0 : value, value);
   }
 }, strong);
-},{"./$.collection":45,"./$.collection-strong":42}],186:[function(require,module,exports){
+},{"./$.collection":47,"./$.collection-strong":44}],190:[function(require,module,exports){
 'use strict';
 var $def = require('./$.def')
   , $at  = require('./$.string-at')(false);
@@ -67189,25 +67868,28 @@ $def($def.P, 'String', {
     return $at(this, pos);
   }
 });
-},{"./$.def":48,"./$.string-at":94}],187:[function(require,module,exports){
+},{"./$.def":50,"./$.string-at":98}],191:[function(require,module,exports){
+// 21.1.3.6 String.prototype.endsWith(searchString [, endPosition])
 'use strict';
-var $def     = require('./$.def')
-  , toLength = require('./$.to-length')
-  , context  = require('./$.string-context');
+var $def      = require('./$.def')
+  , toLength  = require('./$.to-length')
+  , context   = require('./$.string-context')
+  , ENDS_WITH = 'endsWith'
+  , $endsWith = ''[ENDS_WITH];
 
-// should throw error on regex
-$def($def.P + $def.F * !require('./$.fails')(function(){ 'q'.endsWith(/./); }), 'String', {
-  // 21.1.3.6 String.prototype.endsWith(searchString [, endPosition])
+$def($def.P + $def.F * require('./$.fails-is-regexp')(ENDS_WITH), 'String', {
   endsWith: function endsWith(searchString /*, endPosition = @length */){
-    var that = context(this, searchString, 'endsWith')
+    var that = context(this, searchString, ENDS_WITH)
       , endPosition = arguments[1]
       , len    = toLength(that.length)
       , end    = endPosition === undefined ? len : Math.min(toLength(endPosition), len)
       , search = String(searchString);
-    return that.slice(end - search.length, end) === search;
+    return $endsWith
+      ? $endsWith.call(that, search, end)
+      : that.slice(end - search.length, end) === search;
   }
 });
-},{"./$.def":48,"./$.fails":53,"./$.string-context":95,"./$.to-length":105}],188:[function(require,module,exports){
+},{"./$.def":50,"./$.fails-is-regexp":55,"./$.string-context":99,"./$.to-length":109}],192:[function(require,module,exports){
 var $def    = require('./$.def')
   , toIndex = require('./$.to-index')
   , fromCharCode = String.fromCharCode
@@ -67231,18 +67913,19 @@ $def($def.S + $def.F * (!!$fromCodePoint && $fromCodePoint.length != 1), 'String
     } return res.join('');
   }
 });
-},{"./$.def":48,"./$.to-index":102}],189:[function(require,module,exports){
+},{"./$.def":50,"./$.to-index":106}],193:[function(require,module,exports){
+// 21.1.3.7 String.prototype.includes(searchString, position = 0)
 'use strict';
-var $def    = require('./$.def')
-  , context = require('./$.string-context');
+var $def     = require('./$.def')
+  , context  = require('./$.string-context')
+  , INCLUDES = 'includes';
 
-$def($def.P, 'String', {
-  // 21.1.3.7 String.prototype.includes(searchString, position = 0)
+$def($def.P + $def.F * require('./$.fails-is-regexp')(INCLUDES), 'String', {
   includes: function includes(searchString /*, position = 0 */){
-    return !!~context(this, searchString, 'includes').indexOf(searchString, arguments[1]);
+    return !!~context(this, searchString, INCLUDES).indexOf(searchString, arguments[1]);
   }
 });
-},{"./$.def":48,"./$.string-context":95}],190:[function(require,module,exports){
+},{"./$.def":50,"./$.fails-is-regexp":55,"./$.string-context":99}],194:[function(require,module,exports){
 'use strict';
 var $at  = require('./$.string-at')(true);
 
@@ -67260,7 +67943,7 @@ require('./$.iter-define')(String, 'String', function(iterated){
   this._i += point.length;
   return {value: point, done: false};
 });
-},{"./$.iter-define":70,"./$.string-at":94}],191:[function(require,module,exports){
+},{"./$.iter-define":74,"./$.string-at":98}],195:[function(require,module,exports){
 var $def      = require('./$.def')
   , toIObject = require('./$.to-iobject')
   , toLength  = require('./$.to-length');
@@ -67279,30 +67962,33 @@ $def($def.S, 'String', {
     } return res.join('');
   }
 });
-},{"./$.def":48,"./$.to-iobject":104,"./$.to-length":105}],192:[function(require,module,exports){
+},{"./$.def":50,"./$.to-iobject":108,"./$.to-length":109}],196:[function(require,module,exports){
 var $def = require('./$.def');
 
 $def($def.P, 'String', {
   // 21.1.3.13 String.prototype.repeat(count)
   repeat: require('./$.string-repeat')
 });
-},{"./$.def":48,"./$.string-repeat":97}],193:[function(require,module,exports){
+},{"./$.def":50,"./$.string-repeat":101}],197:[function(require,module,exports){
+// 21.1.3.18 String.prototype.startsWith(searchString [, position ])
 'use strict';
-var $def     = require('./$.def')
-  , toLength = require('./$.to-length')
-  , context  = require('./$.string-context');
+var $def        = require('./$.def')
+  , toLength    = require('./$.to-length')
+  , context     = require('./$.string-context')
+  , STARTS_WITH = 'startsWith'
+  , $startsWith = ''[STARTS_WITH];
 
-// should throw error on regex
-$def($def.P + $def.F * !require('./$.fails')(function(){ 'q'.startsWith(/./); }), 'String', {
-  // 21.1.3.18 String.prototype.startsWith(searchString [, position ])
+$def($def.P + $def.F * require('./$.fails-is-regexp')(STARTS_WITH), 'String', {
   startsWith: function startsWith(searchString /*, position = 0 */){
-    var that   = context(this, searchString, 'startsWith')
+    var that   = context(this, searchString, STARTS_WITH)
       , index  = toLength(Math.min(arguments[1], that.length))
       , search = String(searchString);
-    return that.slice(index, index + search.length) === search;
+    return $startsWith
+      ? $startsWith.call(that, search, index)
+      : that.slice(index, index + search.length) === search;
   }
 });
-},{"./$.def":48,"./$.fails":53,"./$.string-context":95,"./$.to-length":105}],194:[function(require,module,exports){
+},{"./$.def":50,"./$.fails-is-regexp":55,"./$.string-context":99,"./$.to-length":109}],198:[function(require,module,exports){
 'use strict';
 // 21.1.3.25 String.prototype.trim()
 require('./$.string-trim')('trim', function($trim){
@@ -67310,7 +67996,7 @@ require('./$.string-trim')('trim', function($trim){
     return $trim(this, 3);
   };
 });
-},{"./$.string-trim":98}],195:[function(require,module,exports){
+},{"./$.string-trim":102}],199:[function(require,module,exports){
 'use strict';
 // ECMAScript 6 symbols shim
 var $              = require('./$')
@@ -67319,6 +68005,7 @@ var $              = require('./$')
   , SUPPORT_DESC   = require('./$.support-desc')
   , $def           = require('./$.def')
   , $redef         = require('./$.redef')
+  , $fails         = require('./$.fails')
   , shared         = require('./$.shared')
   , setTag         = require('./$.tag')
   , uid            = require('./$.uid')
@@ -67326,6 +68013,7 @@ var $              = require('./$')
   , keyOf          = require('./$.keyof')
   , $names         = require('./$.get-names')
   , enumKeys       = require('./$.enum-keys')
+  , isObject       = require('./$.is-object')
   , anObject       = require('./$.an-object')
   , toIObject      = require('./$.to-iobject')
   , createDesc     = require('./$.property-desc')
@@ -67342,22 +68030,17 @@ var $              = require('./$')
   , useNative      = typeof $Symbol == 'function'
   , ObjectProto    = Object.prototype;
 
-var setSymbolDesc = SUPPORT_DESC ? function(){ // fallback for old Android
-  try {
-    return _create(setDesc({}, HIDDEN, {
-      get: function(){
-        return setDesc(this, HIDDEN, {value: false})[HIDDEN];
-      }
-    }))[HIDDEN] || setDesc;
-  } catch(e){
-    return function(it, key, D){
-      var protoDesc = getDesc(ObjectProto, key);
-      if(protoDesc)delete ObjectProto[key];
-      setDesc(it, key, D);
-      if(protoDesc && it !== ObjectProto)setDesc(ObjectProto, key, protoDesc);
-    };
-  }
-}() : setDesc;
+// fallback for old Android, https://code.google.com/p/v8/issues/detail?id=687
+var setSymbolDesc = SUPPORT_DESC && $fails(function(){
+  return _create(setDesc({}, 'a', {
+    get: function(){ return setDesc(this, 'a', {value: 7}).a; }
+  })).a != 7;
+}) ? function(it, key, D){
+  var protoDesc = getDesc(ObjectProto, key);
+  if(protoDesc)delete ObjectProto[key];
+  setDesc(it, key, D);
+  if(protoDesc && it !== ObjectProto)setDesc(ObjectProto, key, protoDesc);
+} : setDesc;
 
 var wrap = function(tag){
   var sym = AllSymbols[tag] = _create($Symbol.prototype);
@@ -67445,10 +68128,12 @@ if(!useNative){
   }
 }
 
-// MS Edge converts symbols to JSON as '{}'
-if(!useNative || require('./$.fails')(function(){
+// MS Edge converts symbol values to JSON as {}
+if(!useNative || $fails(function(){
   return JSON.stringify([$Symbol()]) != '[null]';
-}))$redef($Symbol.prototype, 'toJSON', function toJSON(){ /* return undefined */ });
+}))$redef($Symbol.prototype, 'toJSON', function toJSON(){
+  if(useNative && isObject(this))return this;
+});
 
 var symbolStatics = {
   // 19.4.2.1 Symbol.for(key)
@@ -67511,7 +68196,7 @@ setTag($Symbol, 'Symbol');
 setTag(Math, 'Math', true);
 // 24.3.3 JSON[@@toStringTag]
 setTag(global.JSON, 'JSON', true);
-},{"./$":74,"./$.an-object":36,"./$.def":48,"./$.enum-keys":51,"./$.fails":53,"./$.get-names":57,"./$.global":58,"./$.has":59,"./$.keyof":75,"./$.library":76,"./$.property-desc":85,"./$.redef":86,"./$.shared":90,"./$.support-desc":99,"./$.tag":100,"./$.to-iobject":104,"./$.uid":107,"./$.wks":109}],196:[function(require,module,exports){
+},{"./$":78,"./$.an-object":36,"./$.def":50,"./$.enum-keys":53,"./$.fails":56,"./$.get-names":60,"./$.global":61,"./$.has":62,"./$.is-object":70,"./$.keyof":79,"./$.library":80,"./$.property-desc":89,"./$.redef":90,"./$.shared":94,"./$.support-desc":103,"./$.tag":104,"./$.to-iobject":108,"./$.uid":111,"./$.wks":113}],200:[function(require,module,exports){
 'use strict';
 var $            = require('./$')
   , weak         = require('./$.collection-weak')
@@ -67554,7 +68239,7 @@ if(new $WeakMap().set((Object.freeze || Object)(tmp), 7).get(tmp) != 7){
     });
   });
 }
-},{"./$":74,"./$.collection":45,"./$.collection-weak":44,"./$.has":59,"./$.is-object":66,"./$.redef":86}],197:[function(require,module,exports){
+},{"./$":78,"./$.collection":47,"./$.collection-weak":46,"./$.has":62,"./$.is-object":70,"./$.redef":90}],201:[function(require,module,exports){
 'use strict';
 var weak = require('./$.collection-weak');
 
@@ -67567,7 +68252,7 @@ require('./$.collection')('WeakSet', function(get){
     return weak.def(this, value, true);
   }
 }, weak, false, true);
-},{"./$.collection":45,"./$.collection-weak":44}],198:[function(require,module,exports){
+},{"./$.collection":47,"./$.collection-weak":46}],202:[function(require,module,exports){
 'use strict';
 var $def      = require('./$.def')
   , $includes = require('./$.array-includes')(true);
@@ -67578,12 +68263,12 @@ $def($def.P, 'Array', {
   }
 });
 require('./$.unscope')('includes');
-},{"./$.array-includes":37,"./$.def":48,"./$.unscope":108}],199:[function(require,module,exports){
+},{"./$.array-includes":39,"./$.def":50,"./$.unscope":112}],203:[function(require,module,exports){
 // https://github.com/DavidBruant/Map-Set.prototype.toJSON
 var $def  = require('./$.def');
 
 $def($def.P, 'Map', {toJSON: require('./$.collection-to-json')('Map')});
-},{"./$.collection-to-json":43,"./$.def":48}],200:[function(require,module,exports){
+},{"./$.collection-to-json":45,"./$.def":50}],204:[function(require,module,exports){
 // http://goo.gl/XkBrjD
 var $def     = require('./$.def')
   , $entries = require('./$.object-to-array')(true);
@@ -67593,7 +68278,7 @@ $def($def.S, 'Object', {
     return $entries(it);
   }
 });
-},{"./$.def":48,"./$.object-to-array":81}],201:[function(require,module,exports){
+},{"./$.def":50,"./$.object-to-array":85}],205:[function(require,module,exports){
 // https://gist.github.com/WebReflection/9353781
 var $          = require('./$')
   , $def       = require('./$.def')
@@ -67617,7 +68302,7 @@ $def($def.S, 'Object', {
     } return result;
   }
 });
-},{"./$":74,"./$.def":48,"./$.own-keys":82,"./$.property-desc":85,"./$.to-iobject":104}],202:[function(require,module,exports){
+},{"./$":78,"./$.def":50,"./$.own-keys":86,"./$.property-desc":89,"./$.to-iobject":108}],206:[function(require,module,exports){
 // http://goo.gl/XkBrjD
 var $def    = require('./$.def')
   , $values = require('./$.object-to-array')(false);
@@ -67627,18 +68312,18 @@ $def($def.S, 'Object', {
     return $values(it);
   }
 });
-},{"./$.def":48,"./$.object-to-array":81}],203:[function(require,module,exports){
+},{"./$.def":50,"./$.object-to-array":85}],207:[function(require,module,exports){
 // https://github.com/benjamingr/RexExp.escape
 var $def = require('./$.def')
   , $re  = require('./$.replacer')(/[\\^$*+?.()|[\]{}]/g, '\\$&');
 $def($def.S, 'RegExp', {escape: function escape(it){ return $re(it); }});
 
-},{"./$.def":48,"./$.replacer":87}],204:[function(require,module,exports){
+},{"./$.def":50,"./$.replacer":91}],208:[function(require,module,exports){
 // https://github.com/DavidBruant/Map-Set.prototype.toJSON
 var $def  = require('./$.def');
 
 $def($def.P, 'Set', {toJSON: require('./$.collection-to-json')('Set')});
-},{"./$.collection-to-json":43,"./$.def":48}],205:[function(require,module,exports){
+},{"./$.collection-to-json":45,"./$.def":50}],209:[function(require,module,exports){
 // https://github.com/mathiasbynens/String.prototype.at
 'use strict';
 var $def = require('./$.def')
@@ -67648,7 +68333,7 @@ $def($def.P, 'String', {
     return $at(this, pos);
   }
 });
-},{"./$.def":48,"./$.string-at":94}],206:[function(require,module,exports){
+},{"./$.def":50,"./$.string-at":98}],210:[function(require,module,exports){
 'use strict';
 var $def = require('./$.def')
   , $pad = require('./$.string-pad');
@@ -67657,7 +68342,7 @@ $def($def.P, 'String', {
     return $pad(this, maxLength, arguments[1], true);
   }
 });
-},{"./$.def":48,"./$.string-pad":96}],207:[function(require,module,exports){
+},{"./$.def":50,"./$.string-pad":100}],211:[function(require,module,exports){
 'use strict';
 var $def = require('./$.def')
   , $pad = require('./$.string-pad');
@@ -67666,7 +68351,7 @@ $def($def.P, 'String', {
     return $pad(this, maxLength, arguments[1], false);
   }
 });
-},{"./$.def":48,"./$.string-pad":96}],208:[function(require,module,exports){
+},{"./$.def":50,"./$.string-pad":100}],212:[function(require,module,exports){
 'use strict';
 // https://github.com/sebmarkbage/ecmascript-string-left-right-trim
 require('./$.string-trim')('trimLeft', function($trim){
@@ -67674,7 +68359,7 @@ require('./$.string-trim')('trimLeft', function($trim){
     return $trim(this, 1);
   };
 });
-},{"./$.string-trim":98}],209:[function(require,module,exports){
+},{"./$.string-trim":102}],213:[function(require,module,exports){
 'use strict';
 // https://github.com/sebmarkbage/ecmascript-string-left-right-trim
 require('./$.string-trim')('trimRight', function($trim){
@@ -67682,7 +68367,7 @@ require('./$.string-trim')('trimRight', function($trim){
     return $trim(this, 2);
   };
 });
-},{"./$.string-trim":98}],210:[function(require,module,exports){
+},{"./$.string-trim":102}],214:[function(require,module,exports){
 // JavaScript 1.6 / Strawman array statics shim
 var $       = require('./$')
   , $def    = require('./$.def')
@@ -67699,7 +68384,7 @@ setStatics('indexOf,every,some,forEach,map,filter,find,findIndex,includes', 3);
 setStatics('join,slice,concat,push,splice,unshift,sort,lastIndexOf,' +
            'reduce,reduceRight,copyWithin,fill');
 $def($def.S, 'Array', statics);
-},{"./$":74,"./$.core":46,"./$.ctx":47,"./$.def":48}],211:[function(require,module,exports){
+},{"./$":78,"./$.core":48,"./$.ctx":49,"./$.def":50}],215:[function(require,module,exports){
 require('./es6.array.iterator');
 var global      = require('./$.global')
   , hide        = require('./$.hide')
@@ -67712,14 +68397,14 @@ var global      = require('./$.global')
   , ArrayValues = Iterators.NodeList = Iterators.HTMLCollection = Iterators.Array;
 if(NL && !(ITERATOR in NLProto))hide(NLProto, ITERATOR, ArrayValues);
 if(HTC && !(ITERATOR in HTCProto))hide(HTCProto, ITERATOR, ArrayValues);
-},{"./$.global":58,"./$.hide":60,"./$.iterators":73,"./$.wks":109,"./es6.array.iterator":117}],212:[function(require,module,exports){
+},{"./$.global":61,"./$.hide":63,"./$.iterators":77,"./$.wks":113,"./es6.array.iterator":121}],216:[function(require,module,exports){
 var $def  = require('./$.def')
   , $task = require('./$.task');
 $def($def.G + $def.B, {
   setImmediate:   $task.set,
   clearImmediate: $task.clear
 });
-},{"./$.def":48,"./$.task":101}],213:[function(require,module,exports){
+},{"./$.def":50,"./$.task":105}],217:[function(require,module,exports){
 // ie9- setTimeout & setInterval additional parameters fix
 var global     = require('./$.global')
   , $def       = require('./$.def')
@@ -67740,7 +68425,7 @@ $def($def.G + $def.B + $def.F * MSIE, {
   setTimeout:  wrap(global.setTimeout),
   setInterval: wrap(global.setInterval)
 });
-},{"./$.def":48,"./$.global":58,"./$.invoke":62,"./$.partial":83}],214:[function(require,module,exports){
+},{"./$.def":50,"./$.global":61,"./$.invoke":65,"./$.partial":87}],218:[function(require,module,exports){
 require('./modules/es5');
 require('./modules/es6.symbol');
 require('./modules/es6.object.assign');
@@ -67845,7 +68530,7 @@ require('./modules/web.timers');
 require('./modules/web.immediate');
 require('./modules/web.dom.iterable');
 module.exports = require('./modules/$.core');
-},{"./modules/$.core":46,"./modules/es5":111,"./modules/es6.array.copy-within":112,"./modules/es6.array.fill":113,"./modules/es6.array.find":115,"./modules/es6.array.find-index":114,"./modules/es6.array.from":116,"./modules/es6.array.iterator":117,"./modules/es6.array.of":118,"./modules/es6.array.species":119,"./modules/es6.function.has-instance":120,"./modules/es6.function.name":121,"./modules/es6.map":122,"./modules/es6.math.acosh":123,"./modules/es6.math.asinh":124,"./modules/es6.math.atanh":125,"./modules/es6.math.cbrt":126,"./modules/es6.math.clz32":127,"./modules/es6.math.cosh":128,"./modules/es6.math.expm1":129,"./modules/es6.math.fround":130,"./modules/es6.math.hypot":131,"./modules/es6.math.imul":132,"./modules/es6.math.log10":133,"./modules/es6.math.log1p":134,"./modules/es6.math.log2":135,"./modules/es6.math.sign":136,"./modules/es6.math.sinh":137,"./modules/es6.math.tanh":138,"./modules/es6.math.trunc":139,"./modules/es6.number.constructor":140,"./modules/es6.number.epsilon":141,"./modules/es6.number.is-finite":142,"./modules/es6.number.is-integer":143,"./modules/es6.number.is-nan":144,"./modules/es6.number.is-safe-integer":145,"./modules/es6.number.max-safe-integer":146,"./modules/es6.number.min-safe-integer":147,"./modules/es6.number.parse-float":148,"./modules/es6.number.parse-int":149,"./modules/es6.object.assign":150,"./modules/es6.object.freeze":151,"./modules/es6.object.get-own-property-descriptor":152,"./modules/es6.object.get-own-property-names":153,"./modules/es6.object.get-prototype-of":154,"./modules/es6.object.is":158,"./modules/es6.object.is-extensible":155,"./modules/es6.object.is-frozen":156,"./modules/es6.object.is-sealed":157,"./modules/es6.object.keys":159,"./modules/es6.object.prevent-extensions":160,"./modules/es6.object.seal":161,"./modules/es6.object.set-prototype-of":162,"./modules/es6.object.to-string":163,"./modules/es6.promise":164,"./modules/es6.reflect.apply":165,"./modules/es6.reflect.construct":166,"./modules/es6.reflect.define-property":167,"./modules/es6.reflect.delete-property":168,"./modules/es6.reflect.enumerate":169,"./modules/es6.reflect.get":172,"./modules/es6.reflect.get-own-property-descriptor":170,"./modules/es6.reflect.get-prototype-of":171,"./modules/es6.reflect.has":173,"./modules/es6.reflect.is-extensible":174,"./modules/es6.reflect.own-keys":175,"./modules/es6.reflect.prevent-extensions":176,"./modules/es6.reflect.set":178,"./modules/es6.reflect.set-prototype-of":177,"./modules/es6.regexp.constructor":179,"./modules/es6.regexp.flags":180,"./modules/es6.regexp.match":181,"./modules/es6.regexp.replace":182,"./modules/es6.regexp.search":183,"./modules/es6.regexp.split":184,"./modules/es6.set":185,"./modules/es6.string.code-point-at":186,"./modules/es6.string.ends-with":187,"./modules/es6.string.from-code-point":188,"./modules/es6.string.includes":189,"./modules/es6.string.iterator":190,"./modules/es6.string.raw":191,"./modules/es6.string.repeat":192,"./modules/es6.string.starts-with":193,"./modules/es6.string.trim":194,"./modules/es6.symbol":195,"./modules/es6.weak-map":196,"./modules/es6.weak-set":197,"./modules/es7.array.includes":198,"./modules/es7.map.to-json":199,"./modules/es7.object.entries":200,"./modules/es7.object.get-own-property-descriptors":201,"./modules/es7.object.values":202,"./modules/es7.regexp.escape":203,"./modules/es7.set.to-json":204,"./modules/es7.string.at":205,"./modules/es7.string.pad-left":206,"./modules/es7.string.pad-right":207,"./modules/es7.string.trim-left":208,"./modules/es7.string.trim-right":209,"./modules/js.array.statics":210,"./modules/web.dom.iterable":211,"./modules/web.immediate":212,"./modules/web.timers":213}],215:[function(require,module,exports){
+},{"./modules/$.core":48,"./modules/es5":115,"./modules/es6.array.copy-within":116,"./modules/es6.array.fill":117,"./modules/es6.array.find":119,"./modules/es6.array.find-index":118,"./modules/es6.array.from":120,"./modules/es6.array.iterator":121,"./modules/es6.array.of":122,"./modules/es6.array.species":123,"./modules/es6.function.has-instance":124,"./modules/es6.function.name":125,"./modules/es6.map":126,"./modules/es6.math.acosh":127,"./modules/es6.math.asinh":128,"./modules/es6.math.atanh":129,"./modules/es6.math.cbrt":130,"./modules/es6.math.clz32":131,"./modules/es6.math.cosh":132,"./modules/es6.math.expm1":133,"./modules/es6.math.fround":134,"./modules/es6.math.hypot":135,"./modules/es6.math.imul":136,"./modules/es6.math.log10":137,"./modules/es6.math.log1p":138,"./modules/es6.math.log2":139,"./modules/es6.math.sign":140,"./modules/es6.math.sinh":141,"./modules/es6.math.tanh":142,"./modules/es6.math.trunc":143,"./modules/es6.number.constructor":144,"./modules/es6.number.epsilon":145,"./modules/es6.number.is-finite":146,"./modules/es6.number.is-integer":147,"./modules/es6.number.is-nan":148,"./modules/es6.number.is-safe-integer":149,"./modules/es6.number.max-safe-integer":150,"./modules/es6.number.min-safe-integer":151,"./modules/es6.number.parse-float":152,"./modules/es6.number.parse-int":153,"./modules/es6.object.assign":154,"./modules/es6.object.freeze":155,"./modules/es6.object.get-own-property-descriptor":156,"./modules/es6.object.get-own-property-names":157,"./modules/es6.object.get-prototype-of":158,"./modules/es6.object.is":162,"./modules/es6.object.is-extensible":159,"./modules/es6.object.is-frozen":160,"./modules/es6.object.is-sealed":161,"./modules/es6.object.keys":163,"./modules/es6.object.prevent-extensions":164,"./modules/es6.object.seal":165,"./modules/es6.object.set-prototype-of":166,"./modules/es6.object.to-string":167,"./modules/es6.promise":168,"./modules/es6.reflect.apply":169,"./modules/es6.reflect.construct":170,"./modules/es6.reflect.define-property":171,"./modules/es6.reflect.delete-property":172,"./modules/es6.reflect.enumerate":173,"./modules/es6.reflect.get":176,"./modules/es6.reflect.get-own-property-descriptor":174,"./modules/es6.reflect.get-prototype-of":175,"./modules/es6.reflect.has":177,"./modules/es6.reflect.is-extensible":178,"./modules/es6.reflect.own-keys":179,"./modules/es6.reflect.prevent-extensions":180,"./modules/es6.reflect.set":182,"./modules/es6.reflect.set-prototype-of":181,"./modules/es6.regexp.constructor":183,"./modules/es6.regexp.flags":184,"./modules/es6.regexp.match":185,"./modules/es6.regexp.replace":186,"./modules/es6.regexp.search":187,"./modules/es6.regexp.split":188,"./modules/es6.set":189,"./modules/es6.string.code-point-at":190,"./modules/es6.string.ends-with":191,"./modules/es6.string.from-code-point":192,"./modules/es6.string.includes":193,"./modules/es6.string.iterator":194,"./modules/es6.string.raw":195,"./modules/es6.string.repeat":196,"./modules/es6.string.starts-with":197,"./modules/es6.string.trim":198,"./modules/es6.symbol":199,"./modules/es6.weak-map":200,"./modules/es6.weak-set":201,"./modules/es7.array.includes":202,"./modules/es7.map.to-json":203,"./modules/es7.object.entries":204,"./modules/es7.object.get-own-property-descriptors":205,"./modules/es7.object.values":206,"./modules/es7.regexp.escape":207,"./modules/es7.set.to-json":208,"./modules/es7.string.at":209,"./modules/es7.string.pad-left":210,"./modules/es7.string.pad-right":211,"./modules/es7.string.trim-left":212,"./modules/es7.string.trim-right":213,"./modules/js.array.statics":214,"./modules/web.dom.iterable":215,"./modules/web.immediate":216,"./modules/web.timers":217}],219:[function(require,module,exports){
 (function (process,global){
 /**
  * Copyright (c) 2014, Facebook, Inc.
@@ -68501,13 +69186,13 @@ module.exports = require('./modules/$.core');
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"_process":219}],216:[function(require,module,exports){
+},{"_process":223}],220:[function(require,module,exports){
 module.exports = require("./lib/polyfill");
 
-},{"./lib/polyfill":34}],217:[function(require,module,exports){
+},{"./lib/polyfill":34}],221:[function(require,module,exports){
 module.exports = require("babel-core/polyfill");
 
-},{"babel-core/polyfill":216}],218:[function(require,module,exports){
+},{"babel-core/polyfill":220}],222:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -68810,7 +69495,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],219:[function(require,module,exports){
+},{}],223:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -68903,7 +69588,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],220:[function(require,module,exports){
+},{}],224:[function(require,module,exports){
 var angular = require("angular");var tv4 = require("tv4");module.exports = /**
  * formula.js
  * Generic JSON Schema form builder
@@ -70068,7 +70753,7 @@ angular.module('formula')
 					if(this.type == "object") {
 						for(i in this.fields) {
 							if(model[this.id][this.fields[i].id]) {
-								this.fields[i].value = model[this.id][this.fields[i].id];
+								this.fields[i].valueFromModel(model[this.id]);
 							}
 						}
 					} else if(this.type == "array:fieldset") {
@@ -71038,9 +71723,9 @@ angular.module('formula')
 		};
 	});
 
-angular.module("formula").run(["$templateCache", function($templateCache) {$templateCache.put("formula/bootstrap3.html","<form class=\"form-horizontal\" ng-if=\"form.fieldsets\"><header ng-if=\"form.title\" class=\"page-header\" style=\"margin-top: -10px\"><h2>{{ form.title }}</h2></header><ul class=\"nav nav-tabs\"><li ng-repeat=\"fieldset in form.fieldsets\" ng-if=\"form.fieldsets.length > 1\" ng-class=\"{ active: fieldset.active }\"><a href=\"\" ng-click=\"form.activate(fieldset)\">{{ fieldset.title }}</a></li></ul><fieldset ng-repeat=\"fieldset in form.fieldsets\" ng-if=\"fieldset.active\" style=\"border: 1px solid #ddd; border-radius: 0 0 5px 5px; border-top: 0; padding: 15px; padding-bottom: 0;\"><div ng-repeat=\"field in fieldset.fields\" ng-show=\"field.visible\" formula:field-definition=\"\"><div ng-if=\"field.typeOf(\'input\')\" title=\"{{ field.description }}\" class=\"form-group has-feedback\"><label for=\"{{ field.uid }}\" class=\"col-sm-3 control-label\">{{ field.title }}</label><div class=\"col-sm-9\" ng-class=\"{ \'has-error\': field.error, \'has-success\': field.valid, \'has-warning\': (field.required && field.value === null) }\"><div ng-if=\"!field.typeOf(\'select\')\"><input class=\"form-control input-md\" formula:field=\"field\"><div ng-if=\"!field.typeOf(\'checkbox\') && (field.error || field.valid)\"><span ng-if=\"field.valid\" class=\"glyphicon glyphicon-ok form-control-feedback\"></span> <span ng-if=\"field.error\" class=\"glyphicon glyphicon-remove form-control-feedback\"></span></div></div><select ng-if=\"field.typeOf(\'select\')\" class=\"form-control input-md\" formula:field=\"field\"><option ng-repeat=\"value in field.values\" value=\"{{ value.id }}\">{{ value.label }}</option></select><span class=\"help-block\">{{ field.error || field.description }}</span></div></div><div ng-if=\"field.typeOf(\'object\')\"><div class=\"panel\" ng-class=\"{ \'panel-danger\': field.error, \'panel-success\': field.valid }\" formula:field=\"field\"><div class=\"panel-heading\">{{ field.title }}</div><div class=\"panel-body\"><div ng-repeat=\"field in field.fields\" ng-show=\"field.visible\"><formula:field-instance field=\"field\"></formula:field-instance></div></div></div></div><div ng-if=\"field.typeOf(\'array\')\"><div formula:field=\"field\"><div ng-if=\"field.typeOf(\'fieldset\')\" class=\"panel\" ng-class=\"{ \'panel-danger\': field.error, \'panel-success\': field.valid }\"><div class=\"panel-heading\">{{ field.title }} ({{ field.values.length || 0 }})</div><ul class=\"list-group\"><li class=\"list-group-item\" ng-repeat=\"value in field.values\"><fieldset><legend style=\"border: none; margin-bottom: 10px; text-align: right;\"><span ng-class=\"{ \'text-danger\': !value.valid, \'text-success\': value.valid }\" class=\"pull-left\" ng-if=\"!value.visible\">{{ value.fields | formulaInlineValues }}</span> <button style=\"font-family: monospace;\" class=\"btn btn-sm btn-info\" ng-click=\"field.itemToggle($index)\" type=\"button\" title=\"{{ value.visible ? form.i18n.minimize[1] : form.i18n.maximize[1] }}\">{{ value.visible ? \'_\' : \'‾\' }}</button> <button class=\"btn btn-sm btn-danger\" ng-click=\"field.itemRemove($index)\" type=\"button\" title=\"{{ form.i18n.remove[1] }}\">X</button></legend><div ng-repeat=\"subfield in field.fields\" ng-show=\"value.visible\"><formula:field-instance field=\"value.fields[$index]\" ng-show=\"subfield.visible\"></formula:field-instance></div></fieldset></li></ul><div class=\"panel-footer clearfix has-feedback\" ng-class=\"{ \'has-error\': field.error, \'has-success\': field.valid }\"><span class=\"help-block\"><span>{{ field.error || field.description }}</span> <button class=\"btn btn-sm btn-primary pull-right\" ng-click=\"field.itemAdd()\" type=\"button\" title=\"{{ form.i18n.add[1] }}\">{{ form.i18n.add[0] }}</button></span></div></div><div ng-if=\"field.typeOf(\'field\')\" class=\"panel\" ng-class=\"{ \'panel-danger\': field.error, \'panel-success\': field.valid }\"><div class=\"panel-heading\">{{ field.title }}</div><ul class=\"list-group\"><li class=\"list-group-item\" ng-repeat=\"value in field.values\"><div class=\"input-group\"><input formula:field=\"value\" class=\"form-control input-md\"> <span class=\"input-group-btn\"><button class=\"btn btn-danger\" ng-click=\"field.itemRemove($index)\" type=\"button\" title=\"{{ form.i18n.remove[1] }}\">X</button></span></div></li></ul><div class=\"panel-footer clearfix has-feedback\" ng-class=\"{ \'has-error\': field.error, \'has-success\': field.valid }\"><span class=\"help-block\"><span>{{ field.error || field.description }}</span> <button class=\"btn btn-sm btn-primary pull-right\" ng-click=\"field.itemAdd()\" type=\"button\" title=\"{{ form.i18n.add[1] }}\">{{ form.i18n.add[0] }}</button></span></div></div></div></div></div></fieldset><div class=\"has-feedback\" ng-class=\"{ \'has-error\': !form.valid, \'has-success\': form.valid }\" style=\"margin-top: 10px;\"><span class=\"help-block\"><span ng-if=\"form.errors\" title=\"{{ form.errors.join(\'\\n\') }}\">{{ form.i18n.invalid | formulaReplace : { count: form.errors.length } }}</span><div class=\"btn-group pull-right\"><button ng-if=\"!form.uiValidateHidden\" type=\"button\" class=\"btn btn-info\" ng-click=\"form.validate()\" title=\"{{ form.i18n.validate[1] }}\">{{ form.i18n.validate[0] }}</button> <button ng-if=\"!form.uiSaveHidden\" type=\"button\" class=\"btn btn-success\" ng-class=\"{ disabled: !form.valid }\" ng-click=\"form.save()\" title=\"{{ form.i18n.save[1] }}\">{{ form.i18n.save[0] }}</button></div></span></div></form><div ng-if=\"!form.fieldsets\" class=\"alert alert-info\" style=\"text-align: center; overflow: hidden;\"><span>Loading schema...</span></div>");
+angular.module("formula").run(["$templateCache", function($templateCache) {$templateCache.put("formula/bootstrap3.html","<form class=\"form-horizontal\" ng-if=\"form.fieldsets\"><header ng-if=\"form.title\" class=\"page-header\" style=\"margin-top: -10px\"><h2>{{ form.title }}</h2></header><ul class=\"nav nav-tabs\"><li ng-repeat=\"fieldset in form.fieldsets\" ng-if=\"form.fieldsets.length > 1\" ng-class=\"{ active: fieldset.active }\"><a href=\"\" ng-click=\"form.activate(fieldset)\">{{ fieldset.title }}</a></li></ul><fieldset ng-repeat=\"fieldset in form.fieldsets\" ng-if=\"fieldset.active\" style=\"border: 1px solid #ddd; border-radius: 0 0 5px 5px; border-top: 0; padding: 15px; padding-bottom: 0;\"><div ng-repeat=\"field in fieldset.fields\" ng-show=\"field.visible\" formula:field-definition=\"\"><div ng-if=\"field.typeOf(\'input\')\" title=\"{{ field.description }}\" class=\"form-group has-feedback\"><label for=\"{{ field.uid }}\" class=\"col-sm-3 control-label\">{{ field.title }}</label><div class=\"col-sm-9\" ng-class=\"{ \'has-error\': field.error, \'has-success\': field.valid, \'has-warning\': (field.required && field.value === null) }\"><div ng-if=\"!field.typeOf(\'select\')\"><input class=\"form-control input-md\" formula:field=\"field\"><div ng-if=\"!field.typeOf(\'checkbox\') && (field.error || field.valid)\"><span ng-if=\"field.valid\" class=\"glyphicon glyphicon-ok form-control-feedback\"></span> <span ng-if=\"field.error\" class=\"glyphicon glyphicon-remove form-control-feedback\"></span></div></div><select ng-if=\"field.typeOf(\'select\')\" class=\"form-control input-md\" formula:field=\"field\"><option ng-repeat=\"value in field.values\" value=\"{{ value.id }}\">{{ value.label }}</option></select><span class=\"help-block\">{{ field.error || field.description }}</span></div></div><div ng-if=\"field.typeOf(\'object\')\"><div class=\"panel\" ng-class=\"{ \'panel-danger\': field.error, \'panel-success\': field.valid }\" formula:field=\"field\"><div class=\"panel-heading\">{{ field.title }}</div><div class=\"panel-body\"><div ng-repeat=\"field in field.fields\" ng-show=\"field.visible\"><formula:field-instance field=\"field\"></formula:field-instance></div></div></div></div><div ng-if=\"field.typeOf(\'array\')\"><div formula:field=\"field\"><div ng-if=\"field.typeOf(\'fieldset\')\" class=\"panel\" ng-class=\"{ \'panel-danger\': field.error, \'panel-success\': field.valid }\"><div class=\"panel-heading\">{{ field.title }} ({{ field.values.length || 0 }})</div><ul class=\"list-group\"><li class=\"list-group-item\" ng-repeat=\"value in field.values\"><fieldset><legend style=\"border: none; margin-bottom: 10px; text-align: right;\"><span ng-class=\"{ \'text-danger\': !value.valid, \'text-success\': value.valid }\" class=\"pull-left\" ng-if=\"!value.visible\" style=\"white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 80%; text-align: left;\">{{ value.fields | formulaInlineValues }}</span> <button style=\"font-family: monospace;\" class=\"btn btn-sm btn-info\" ng-click=\"field.itemToggle($index)\" type=\"button\" title=\"{{ value.visible ? form.i18n.minimize[1] : form.i18n.maximize[1] }}\">{{ value.visible ? \'_\' : \'‾\' }}</button> <button class=\"btn btn-sm btn-danger\" ng-click=\"field.itemRemove($index)\" type=\"button\" title=\"{{ form.i18n.remove[1] }}\">X</button></legend><div ng-repeat=\"subfield in field.fields\" ng-show=\"value.visible\"><formula:field-instance field=\"value.fields[$index]\" ng-show=\"subfield.visible\"></formula:field-instance></div></fieldset></li></ul><div class=\"panel-footer clearfix has-feedback\" ng-class=\"{ \'has-error\': field.error, \'has-success\': field.valid }\"><span class=\"help-block\"><span>{{ field.error || field.description }}</span> <button class=\"btn btn-sm btn-primary pull-right\" ng-click=\"field.itemAdd()\" type=\"button\" title=\"{{ form.i18n.add[1] }}\">{{ form.i18n.add[0] }}</button></span></div></div><div ng-if=\"field.typeOf(\'field\')\" class=\"panel\" ng-class=\"{ \'panel-danger\': field.error, \'panel-success\': field.valid }\"><div class=\"panel-heading\">{{ field.title }}</div><ul class=\"list-group\"><li class=\"list-group-item\" ng-repeat=\"value in field.values\"><div class=\"input-group\"><input formula:field=\"value\" class=\"form-control input-md\"> <span class=\"input-group-btn\"><button class=\"btn btn-danger\" ng-click=\"field.itemRemove($index)\" type=\"button\" title=\"{{ form.i18n.remove[1] }}\">X</button></span></div></li></ul><div class=\"panel-footer clearfix has-feedback\" ng-class=\"{ \'has-error\': field.error, \'has-success\': field.valid }\"><span class=\"help-block\"><span>{{ field.error || field.description }}</span> <button class=\"btn btn-sm btn-primary pull-right\" ng-click=\"field.itemAdd()\" type=\"button\" title=\"{{ form.i18n.add[1] }}\">{{ form.i18n.add[0] }}</button></span></div></div></div></div></div></fieldset><div class=\"has-feedback\" ng-class=\"{ \'has-error\': !form.valid, \'has-success\': form.valid }\" style=\"margin-top: 10px;\"><span class=\"help-block\"><span ng-if=\"form.errors\" title=\"{{ form.errors.join(\'\\n\') }}\">{{ form.i18n.invalid | formulaReplace : { count: form.errors.length } }}</span><div class=\"btn-group pull-right\"><button ng-if=\"!form.uiValidateHidden\" type=\"button\" class=\"btn btn-info\" ng-click=\"form.validate()\" title=\"{{ form.i18n.validate[1] }}\">{{ form.i18n.validate[0] }}</button> <button ng-if=\"!form.uiSaveHidden\" type=\"button\" class=\"btn btn-success\" ng-class=\"{ disabled: !form.valid }\" ng-click=\"form.save()\" title=\"{{ form.i18n.save[1] }}\">{{ form.i18n.save[0] }}</button></div></span></div></form><div ng-if=\"!form.fieldsets\" class=\"alert alert-info\" style=\"text-align: center; overflow: hidden;\"><span>Loading schema...</span></div>");
 $templateCache.put("formula/default.html","<form class=\"formula\" ng-if=\"form.fieldsets\"><header ng-if=\"form.title\">{{ form.title }}</header><nav ng-if=\"form.fieldsets.length > 1\"><a ng-repeat=\"fieldset in form.fieldsets\" ng-class=\"{ active: fieldset.active }\" href=\"\" ng-click=\"form.activate(fieldset)\">{{ fieldset.title }}</a></nav><fieldset ng-repeat=\"fieldset in form.fieldsets\" ng-if=\"fieldset.active\"><legend ng-if=\"fieldset.title\">{{ fieldset.title }}</legend><div ng-repeat=\"field in fieldset.fields\" ng-show=\"field.visible\" formula:field-definition=\"\"><div ng-if=\"field.typeOf(\'input\')\" title=\"{{ field.description }}\" ng-class=\"{ valid: field.valid, error: field.error, required: (field.required && field.value === null) }\"><label for=\"{{ field.uid }}\">{{ field.title }}</label> <input formula:field=\"field\"> <span>{{ field.error || field.description }}</span></div><div ng-if=\"field.typeOf(\'object\')\"><fieldset formula:field=\"field\"><legend ng-if=\"field.title\">{{ field.title }}</legend><div ng-repeat=\"field in field.fields\" ng-show=\"field.visible\"><formula:field-instance field=\"field\"></formula:field-instance></div></fieldset></div><div ng-if=\"field.typeOf(\'array\')\"><div formula:field=\"field\"><fieldset ng-class=\"{ valid: field.valid, error: field.error }\"><legend>{{ field.title }} ({{ field.values.length || 0 }})</legend><ul ng-if=\"field.typeOf(\'fieldset\')\"><li ng-repeat=\"value in field.values\"><fieldset ng-class=\"{ valid: value.valid }\"><legend><span ng-if=\"!value.visible\">{{ value.fields | formulaInlineValues }}</span> <a href=\"\" class=\"toggle\" ng-click=\"field.itemToggle($index)\" title=\"{{ value.visible ? form.i18n.minimize[1] : form.i18n.maximize[1] }}\">{{ value.visible ? \'_\' : \'‾\' }}</a> <a href=\"\" class=\"remove\" ng-click=\"field.itemRemove($index)\" title=\"{{ form.i18n.remove[1] }}\">X</a></legend><div ng-repeat=\"subfield in field.fields\" ng-show=\"value.visible\"><formula:field-instance field=\"value.fields[$index]\" ng-show=\"subfield.visible\"></formula:field-instance></div></fieldset></li><li><span>{{ field.error || field.description }}</span> <button class=\"add\" ng-click=\"field.itemAdd()\" type=\"button\" title=\"{{ form.i18n.add[1] }}\"><strong>+</strong> {{ form.i18n.add[0] }}</button></li></ul><ul ng-if=\"field.typeOf(\'field\')\"><li ng-repeat=\"value in field.values\" ng-class=\"{ valid: value.valid, error: value.error }\"><input formula:field=\"value\"> <a href=\"\" class=\"remove\" ng-click=\"field.itemRemove($index)\" title=\"{{ form.i18n.remove[1] }}\">X</a> <span ng-if=\"value.error\">{{ value.error }}</span></li><li><span>{{ field.error || field.description }}</span> <button class=\"add\" ng-click=\"field.itemAdd()\" type=\"button\" title=\"{{ form.i18n.add[1] }}\"><strong>+</strong> {{ form.i18n.add[0] }}</button></li></ul></fieldset></div></div></div></fieldset><footer><span ng-if=\"form.errors\" title=\"{{ form.errors.join(\'\\n\') }}\">{{ form.i18n.invalid | formulaReplace : { count: form.errors.length } }}</span> <button ng-if=\"!form.uiValidateHidden\" ng-click=\"form.validate()\" title=\"{{ form.i18n.validate[1] }}\"><strong>&#10003;</strong> {{ form.i18n.validate[0] }}</button> <button ng-if=\"!form.uiSaveHidden\" ng-disabled=\"!form.valid\" ng-click=\"form.save()\" title=\"{{ form.i18n.save[1] }}\"><strong>&#9921;</strong> {{ form.i18n.save[0] }}</button></footer></form><div class=\"formula\" ng-if=\"!form.fieldsets\"><div class=\"loading\"><div class=\"spinner\"></div><span>Loading...</span></div></div>");}]);;
-},{"angular":33,"tv4":221}],221:[function(require,module,exports){
+},{"angular":33,"tv4":225}],225:[function(require,module,exports){
 /*
 Author: Geraint Luff and others
 Year: 2013
@@ -72718,7 +73403,1343 @@ tv4.tv4 = tv4;
 return tv4; // used by _header.js to globalise.
 
 }));
-},{}],222:[function(require,module,exports){
+},{}],226:[function(require,module,exports){
+/**
+ * Angular JS slider directive
+ *
+ * (c) Rafal Zajac <rzajac@gmail.com>
+ * http://github.com/rzajac/angularjs-slider
+ *
+ * Version: v0.1.32
+ *
+ * Licensed under the MIT license
+ */
+
+/*jslint unparam: true */
+/*global angular: false, console: false, define, module */
+(function (root, factory) {
+  'use strict';
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(['angular'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    // Node. Does not work with strict CommonJS, but
+    // only CommonJS-like environments that support module.exports,
+    // like Node.
+    // to support bundler like browserify
+    module.exports = factory(require('angular'));
+  } else {
+    // Browser globals (root is window)
+    factory(root.angular);
+  }
+
+}(this, function (angular) {
+  'use strict';
+var module = angular.module('rzModule', [])
+
+.value('throttle',
+  /**
+   * throttle
+   *
+   * Taken from underscore project
+   *
+   * @param {Function} func
+   * @param {number} wait
+   * @param {ThrottleOptions} options
+   * @returns {Function}
+   */
+function throttle(func, wait, options) {
+  'use strict';
+  var getTime = (Date.now || function() {
+    return new Date().getTime();
+  });
+  var context, args, result;
+  var timeout = null;
+  var previous = 0;
+  options = options || {};
+  var later = function() {
+    previous = options.leading === false ? 0 : getTime();
+    timeout = null;
+    result = func.apply(context, args);
+    context = args = null;
+  };
+  return function() {
+    var now = getTime();
+    if (!previous && options.leading === false) { previous = now; }
+    var remaining = wait - (now - previous);
+    context = this;
+    args = arguments;
+    if (remaining <= 0) {
+      clearTimeout(timeout);
+      timeout = null;
+      previous = now;
+      result = func.apply(context, args);
+      context = args = null;
+    } else if (!timeout && options.trailing !== false) {
+      timeout = setTimeout(later, remaining);
+    }
+    return result;
+  };
+})
+
+.factory('RzSlider', ['$timeout', '$document', '$window', 'throttle', function($timeout, $document, $window, throttle)
+{
+  'use strict';
+
+  /**
+   * Slider
+   *
+   * @param {ngScope} scope            The AngularJS scope
+   * @param {Element} sliderElem The slider directive element wrapped in jqLite
+   * @param {*} attributes       The slider directive attributes
+   * @constructor
+   */
+  var Slider = function(scope, sliderElem, attributes)
+  {
+    /**
+     * The slider's scope
+     *
+     * @type {ngScope}
+     */
+    this.scope = scope;
+
+    /**
+     * The slider attributes
+     *
+     * @type {Object}
+     */
+    this.attributes = attributes;
+
+    /**
+     * Slider element wrapped in jqLite
+     *
+     * @type {jqLite}
+     */
+    this.sliderElem = sliderElem;
+
+    /**
+     * Slider type
+     *
+     * @type {boolean} Set to true for range slider
+     */
+    this.range = attributes.rzSliderHigh !== undefined && attributes.rzSliderModel !== undefined;
+
+    /**
+     * Whether to allow draggable range
+     *
+     * @type {boolean} Set to true for draggable range slider
+     */
+    this.dragRange = this.range && attributes.rzSliderDraggableRange === 'true';
+
+    /**
+     * Values recorded when first dragging the bar
+     *
+     * @type {Object}
+     */
+    this.dragging = {
+      active: false,
+      value: 0,
+      difference: 0,
+      offset: 0,
+      lowDist: 0,
+      highDist: 0
+    };
+
+    /**
+     * Half of the width of the slider handles
+     *
+     * @type {number}
+     */
+    this.handleHalfWidth = 0;
+
+    /**
+     * Always show selection bar
+     *
+     * @type {boolean}
+     */
+    this.alwaysShowBar = !!attributes.rzSliderAlwaysShowBar;
+
+    /**
+     * Maximum left the slider handle can have
+     *
+     * @type {number}
+     */
+    this.maxLeft = 0;
+
+    /**
+     * Precision
+     *
+     * @type {number}
+     */
+    this.precision = 0;
+
+    /**
+     * Step
+     *
+     * @type {number}
+     */
+    this.step = 0;
+
+    /**
+     * The name of the handle we are currently tracking
+     *
+     * @type {string}
+     */
+    this.tracking = '';
+
+    /**
+     * Minimum value (floor) of the model
+     *
+     * @type {number}
+     */
+    this.minValue = 0;
+
+    /**
+     * Maximum value (ceiling) of the model
+     *
+     * @type {number}
+     */
+    this.maxValue = 0;
+
+    /**
+     * Hide limit labels
+     *
+     * @type {boolean}
+     */
+    this.hideLimitLabels = !!attributes.rzSliderHideLimitLabels;
+
+    /**
+     * Only present model values
+     *
+     * Do not allow to change values
+     *
+     * @type {boolean}
+     */
+    this.presentOnly = attributes.rzSliderPresentOnly === 'true';
+
+    /**
+     * The delta between min and max value
+     *
+     * @type {number}
+     */
+    this.valueRange = 0;
+
+    /**
+     * Set to true if init method already executed
+     *
+     * @type {boolean}
+     */
+    this.initHasRun = false;
+
+    /**
+     * Custom translate function
+     *
+     * @type {function}
+     */
+    this.customTrFn = this.scope.rzSliderTranslate() || function(value) { return String(value); };
+
+    /**
+     * Array of de-registration functions to call on $destroy
+     *
+     * @type {Array.<Function>}
+     */
+    this.deRegFuncs = [];
+
+    // Slider DOM elements wrapped in jqLite
+    this.fullBar = null;  // The whole slider bar
+    this.selBar = null;   // Highlight between two handles
+    this.minH = null;     // Left slider handle
+    this.maxH = null;     // Right slider handle
+    this.flrLab = null;   // Floor label
+    this.ceilLab = null;  // Ceiling label
+    this.minLab =  null;  // Label above the low value
+    this.maxLab = null;   // Label above the high value
+    this.cmbLab = null;   // Combined label
+
+    // Initialize slider
+    this.init();
+  };
+
+  // Add instance methods
+  Slider.prototype = {
+
+    /**
+     * Initialize slider
+     *
+     * @returns {undefined}
+     */
+    init: function()
+    {
+      var thrLow, thrHigh, unRegFn,
+        calcDimFn = angular.bind(this, this.calcViewDimensions),
+        self = this;
+
+      this.initElemHandles();
+      this.calcViewDimensions();
+      this.setMinAndMax();
+
+      this.precision = this.scope.rzSliderPrecision === undefined ? 0 : +this.scope.rzSliderPrecision;
+      this.step = this.scope.rzSliderStep === undefined ? 1 : +this.scope.rzSliderStep;
+
+      $timeout(function()
+      {
+        self.updateCeilLab();
+        self.updateFloorLab();
+        self.initHandles();
+        if (!self.presentOnly) { self.bindEvents(); }
+      });
+
+      // Recalculate slider view dimensions
+      unRegFn = this.scope.$on('reCalcViewDimensions', calcDimFn);
+      this.deRegFuncs.push(unRegFn);
+
+      // Recalculate stuff if view port dimensions have changed
+      angular.element($window).on('resize', calcDimFn);
+
+      this.initHasRun = true;
+
+      // Watch for changes to the model
+
+      thrLow = throttle(function()
+      {
+        self.setMinAndMax();
+        self.updateLowHandle(self.valueToOffset(self.scope.rzSliderModel));
+        self.updateSelectionBar();
+
+        if(self.range)
+        {
+          self.updateCmbLabel();
+        }
+
+      }, 350, { leading: false });
+
+      thrHigh = throttle(function()
+      {
+        self.setMinAndMax();
+        self.updateHighHandle(self.valueToOffset(self.scope.rzSliderHigh));
+        self.updateSelectionBar();
+        self.updateCmbLabel();
+      }, 350, { leading: false });
+
+      this.scope.$on('rzSliderForceRender', function()
+      {
+        self.resetLabelsValue();
+        thrLow();
+        if(self.range) { thrHigh(); }
+        self.resetSlider();
+      });
+
+      // Watchers
+
+      unRegFn = this.scope.$watch('rzSliderModel', function(newValue, oldValue)
+      {
+        if(newValue === oldValue) { return; }
+        thrLow();
+      });
+      this.deRegFuncs.push(unRegFn);
+
+      unRegFn = this.scope.$watch('rzSliderHigh', function(newValue, oldValue)
+      {
+        if(newValue === oldValue) { return; }
+        thrHigh();
+      });
+      this.deRegFuncs.push(unRegFn);
+
+      this.scope.$watch('rzSliderFloor', function(newValue, oldValue)
+      {
+        if(newValue === oldValue) { return; }
+        self.resetSlider();
+      });
+      this.deRegFuncs.push(unRegFn);
+
+      unRegFn = this.scope.$watch('rzSliderCeil', function(newValue, oldValue)
+      {
+        if(newValue === oldValue) { return; }
+        self.resetSlider();
+      });
+      this.deRegFuncs.push(unRegFn);
+
+      this.scope.$on('$destroy', function()
+      {
+        self.minH.off();
+        self.maxH.off();
+        self.fullBar.off();
+        self.selBar.off();
+        angular.element($window).off('resize', calcDimFn);
+        self.deRegFuncs.map(function(unbind) { unbind(); });
+      });
+    },
+
+    /**
+     * Resets slider
+     *
+     * @returns {undefined}
+     */
+    resetSlider: function()
+    {
+      this.setMinAndMax();
+      this.updateCeilLab();
+      this.updateFloorLab();
+      this.calcViewDimensions();
+    },
+
+    /**
+     * Reset label values
+     *
+     * @return {undefined}
+     */
+    resetLabelsValue: function()
+    {
+      this.minLab.rzsv = undefined;
+      this.maxLab.rzsv = undefined;
+    },
+
+    /**
+     * Initialize slider handles positions and labels
+     *
+     * Run only once during initialization and every time view port changes size
+     *
+     * @returns {undefined}
+     */
+    initHandles: function()
+    {
+      this.updateLowHandle(this.valueToOffset(this.scope.rzSliderModel));
+
+      if(this.range)
+      {
+        this.updateHighHandle(this.valueToOffset(this.scope.rzSliderHigh));
+        this.updateCmbLabel();
+      }
+
+      this.updateSelectionBar();
+    },
+
+    /**
+     * Translate value to human readable format
+     *
+     * @param {number|string} value
+     * @param {jqLite} label
+     * @param {boolean} [useCustomTr]
+     * @returns {undefined}
+     */
+    translateFn: function(value, label, useCustomTr)
+    {
+      useCustomTr = useCustomTr === undefined ? true : useCustomTr;
+
+      var valStr = (useCustomTr ? this.customTrFn(value) : value).toString(),
+          getWidth = false;
+
+      if(label.rzsv === undefined || label.rzsv.length !== valStr.length || (label.rzsv.length > 0 && label.rzsw === 0))
+      {
+        getWidth = true;
+        label.rzsv = valStr;
+      }
+
+      label.text(valStr);
+
+      // Update width only when length of the label have changed
+      if(getWidth) { this.getWidth(label); }
+    },
+
+    /**
+     * Set maximum and minimum values for the slider
+     *
+     * @returns {undefined}
+     */
+    setMinAndMax: function()
+    {
+      if(this.scope.rzSliderFloor)
+      {
+        this.minValue = +this.scope.rzSliderFloor;
+      }
+      else
+      {
+        this.minValue = this.scope.rzSliderFloor = 0;
+      }
+
+      if(this.scope.rzSliderCeil)
+      {
+        this.maxValue = +this.scope.rzSliderCeil;
+      }
+      else
+      {
+        this.maxValue = this.scope.rzSliderCeil = this.range ? this.scope.rzSliderHigh : this.scope.rzSliderModel;
+      }
+
+      if(this.scope.rzSliderStep)
+      {
+        this.step = +this.scope.rzSliderStep;
+      }
+
+      this.valueRange = this.maxValue - this.minValue;
+    },
+
+    /**
+     * Set the slider children to variables for easy access
+     *
+     * Run only once during initialization
+     *
+     * @returns {undefined}
+     */
+    initElemHandles: function()
+    {
+      // Assign all slider elements to object properties for easy access
+      angular.forEach(this.sliderElem.children(), function(elem, index)
+      {
+        var jElem = angular.element(elem);
+
+        switch(index)
+        {
+          case 0: this.fullBar = jElem; break;
+          case 1: this.selBar = jElem; break;
+          case 2: this.minH = jElem; break;
+          case 3: this.maxH = jElem; break;
+          case 4: this.flrLab = jElem; break;
+          case 5: this.ceilLab = jElem; break;
+          case 6: this.minLab = jElem; break;
+          case 7: this.maxLab = jElem; break;
+          case 8: this.cmbLab = jElem; break;
+        }
+
+      }, this);
+
+      // Initialize offset cache properties
+      this.selBar.rzsl = 0;
+      this.minH.rzsl = 0;
+      this.maxH.rzsl = 0;
+      this.flrLab.rzsl = 0;
+      this.ceilLab.rzsl = 0;
+      this.minLab.rzsl = 0;
+      this.maxLab.rzsl = 0;
+      this.cmbLab.rzsl = 0;
+
+      // Hide limit labels
+      if(this.hideLimitLabels)
+      {
+        this.flrLab.rzAlwaysHide = true;
+        this.ceilLab.rzAlwaysHide = true;
+        this.hideEl(this.flrLab);
+        this.hideEl(this.ceilLab);
+      }
+
+      // Remove stuff not needed in single slider
+      if(this.range === false)
+      {
+        this.cmbLab.remove();
+        this.maxLab.remove();
+
+        // Hide max handle
+        this.maxH.rzAlwaysHide = true;
+        this.maxH[0].style.zIndex = '-1000';
+        this.hideEl(this.maxH);
+      }
+
+      // Show selection bar for single slider or not
+      if(this.range === false && this.alwaysShowBar === false)
+      {
+        this.maxH.remove();
+        this.selBar.remove();
+      }
+
+      // If using draggable range, use appropriate cursor for this.selBar.
+      if (this.dragRange)
+      {
+        this.selBar.css('cursor', 'move');
+        this.selBar.addClass('rz-draggable');
+      }
+    },
+
+    /**
+     * Calculate dimensions that are dependent on view port size
+     *
+     * Run once during initialization and every time view port changes size.
+     *
+     * @returns {undefined}
+     */
+    calcViewDimensions: function ()
+    {
+      var handleWidth = this.getWidth(this.minH);
+
+      this.handleHalfWidth = handleWidth / 2;
+      this.barWidth = this.getWidth(this.fullBar);
+
+      this.maxLeft = this.barWidth - handleWidth;
+
+      this.getWidth(this.sliderElem);
+      this.sliderElem.rzsl = this.sliderElem[0].getBoundingClientRect().left;
+
+      if(this.initHasRun)
+      {
+        this.updateCeilLab();
+        this.initHandles();
+      }
+    },
+
+    /**
+     * Update position of the ceiling label
+     *
+     * @returns {undefined}
+     */
+    updateCeilLab: function()
+    {
+      this.translateFn(this.scope.rzSliderCeil, this.ceilLab);
+      this.setLeft(this.ceilLab, this.barWidth - this.ceilLab.rzsw);
+      this.getWidth(this.ceilLab);
+    },
+
+    /**
+     * Update position of the floor label
+     *
+     * @returns {undefined}
+     */
+    updateFloorLab: function()
+    {
+      this.translateFn(this.scope.rzSliderFloor, this.flrLab);
+      this.getWidth(this.flrLab);
+    },
+
+    /**
+     * Call the onStart callback if defined
+     *
+     * @returns {undefined}
+     */
+    callOnStart: function() {
+      if(this.scope.rzSliderOnStart) {
+        var self = this;
+        $timeout(function() {
+            self.scope.rzSliderOnStart();
+        });
+      }
+    },
+
+    /**
+     * Call the onChange callback if defined
+     *
+     * @returns {undefined}
+     */
+    callOnChange: function() {
+      if(this.scope.rzSliderOnChange) {
+        var self = this;
+        $timeout(function() {
+            self.scope.rzSliderOnChange();
+        });
+      }
+    },
+
+    /**
+     * Call the onEnd callback if defined
+     *
+     * @returns {undefined}
+     */
+    callOnEnd: function() {
+      if(this.scope.rzSliderOnEnd) {
+        var self = this;
+        $timeout(function() {
+            self.scope.rzSliderOnEnd();
+        });
+      }
+    },
+
+    /**
+     * Update slider handles and label positions
+     *
+     * @param {string} which
+     * @param {number} newOffset
+     */
+    updateHandles: function(which, newOffset)
+    {
+      if(which === 'rzSliderModel')
+      {
+        this.updateLowHandle(newOffset);
+        this.updateSelectionBar();
+
+        if(this.range)
+        {
+          this.updateCmbLabel();
+        }
+        return;
+      }
+
+      if(which === 'rzSliderHigh')
+      {
+        this.updateHighHandle(newOffset);
+        this.updateSelectionBar();
+
+        if(this.range)
+        {
+          this.updateCmbLabel();
+        }
+        return;
+      }
+
+      // Update both
+      this.updateLowHandle(newOffset);
+      this.updateHighHandle(newOffset);
+      this.updateSelectionBar();
+      this.updateCmbLabel();
+    },
+
+    /**
+     * Update low slider handle position and label
+     *
+     * @param {number} newOffset
+     * @returns {undefined}
+     */
+    updateLowHandle: function(newOffset)
+    {
+      var delta = Math.abs(this.minH.rzsl - newOffset);
+
+      if(this.minLab.rzsv && delta < 1) { return; }
+
+      this.setLeft(this.minH, newOffset);
+      this.translateFn(this.scope.rzSliderModel, this.minLab);
+      this.setLeft(this.minLab, newOffset - this.minLab.rzsw / 2 + this.handleHalfWidth);
+
+      this.shFloorCeil();
+    },
+
+    /**
+     * Update high slider handle position and label
+     *
+     * @param {number} newOffset
+     * @returns {undefined}
+     */
+    updateHighHandle: function(newOffset)
+    {
+      this.setLeft(this.maxH, newOffset);
+      this.translateFn(this.scope.rzSliderHigh, this.maxLab);
+      this.setLeft(this.maxLab, newOffset - this.maxLab.rzsw / 2 + this.handleHalfWidth);
+
+      this.shFloorCeil();
+    },
+
+    /**
+     * Show / hide floor / ceiling label
+     *
+     * @returns {undefined}
+     */
+    shFloorCeil: function()
+    {
+      var flHidden = false, clHidden = false;
+
+      if(this.minLab.rzsl <= this.flrLab.rzsl + this.flrLab.rzsw + 5)
+      {
+        flHidden = true;
+        this.hideEl(this.flrLab);
+      }
+      else
+      {
+        flHidden = false;
+        this.showEl(this.flrLab);
+      }
+
+      if(this.minLab.rzsl + this.minLab.rzsw >= this.ceilLab.rzsl - this.handleHalfWidth - 10)
+      {
+        clHidden = true;
+        this.hideEl(this.ceilLab);
+      }
+      else
+      {
+        clHidden = false;
+        this.showEl(this.ceilLab);
+      }
+
+      if(this.range)
+      {
+        if(this.maxLab.rzsl + this.maxLab.rzsw >= this.ceilLab.rzsl - 10)
+        {
+          this.hideEl(this.ceilLab);
+        }
+        else if( ! clHidden)
+        {
+          this.showEl(this.ceilLab);
+        }
+
+        // Hide or show floor label
+        if(this.maxLab.rzsl <= this.flrLab.rzsl + this.flrLab.rzsw + this.handleHalfWidth)
+        {
+          this.hideEl(this.flrLab);
+        }
+        else if( ! flHidden)
+        {
+          this.showEl(this.flrLab);
+        }
+      }
+    },
+
+    /**
+     * Update slider selection bar, combined label and range label
+     *
+     * @returns {undefined}
+     */
+    updateSelectionBar: function()
+    {
+      this.setWidth(this.selBar, Math.abs(this.maxH.rzsl - this.minH.rzsl));
+      this.setLeft(this.selBar, this.range ? this.minH.rzsl + this.handleHalfWidth : 0);
+    },
+
+    /**
+     * Update combined label position and value
+     *
+     * @returns {undefined}
+     */
+    updateCmbLabel: function()
+    {
+      var lowTr, highTr;
+
+      if(this.minLab.rzsl + this.minLab.rzsw + 10 >= this.maxLab.rzsl)
+      {
+        if(this.customTrFn)
+        {
+          lowTr = this.customTrFn(this.scope.rzSliderModel);
+          highTr = this.customTrFn(this.scope.rzSliderHigh);
+        }
+        else
+        {
+          lowTr = this.scope.rzSliderModel;
+          highTr = this.scope.rzSliderHigh;
+        }
+
+        this.translateFn(lowTr + ' - ' + highTr, this.cmbLab, false);
+        this.setLeft(this.cmbLab, this.selBar.rzsl + this.selBar.rzsw / 2 - this.cmbLab.rzsw / 2);
+        this.hideEl(this.minLab);
+        this.hideEl(this.maxLab);
+        this.showEl(this.cmbLab);
+      }
+      else
+      {
+        this.showEl(this.maxLab);
+        this.showEl(this.minLab);
+        this.hideEl(this.cmbLab);
+      }
+    },
+
+    /**
+     * Round value to step and precision
+     *
+     * @param {number} value
+     * @returns {number}
+     */
+    roundStep: function(value)
+    {
+      var step = this.step,
+          remainder = +((value - this.minValue) % step).toFixed(3),
+          steppedValue = remainder > (step / 2) ? value + step - remainder : value - remainder;
+
+      steppedValue = steppedValue.toFixed(this.precision);
+      return +steppedValue;
+    },
+
+    /**
+     * Hide element
+     *
+     * @param element
+     * @returns {jqLite} The jqLite wrapped DOM element
+     */
+    hideEl: function (element)
+    {
+      return element.css({opacity: 0});
+    },
+
+    /**
+     * Show element
+     *
+     * @param element The jqLite wrapped DOM element
+     * @returns {jqLite} The jqLite
+     */
+    showEl: function (element)
+    {
+      if(!!element.rzAlwaysHide) { return element; }
+
+      return element.css({opacity: 1});
+    },
+
+    /**
+     * Set element left offset
+     *
+     * @param {jqLite} elem The jqLite wrapped DOM element
+     * @param {number} left
+     * @returns {number}
+     */
+    setLeft: function (elem, left)
+    {
+      elem.rzsl = left;
+      elem.css({left: left + 'px'});
+      return left;
+    },
+
+    /**
+     * Get element width
+     *
+     * @param {jqLite} elem The jqLite wrapped DOM element
+     * @returns {number}
+     */
+    getWidth: function(elem)
+    {
+      var val = elem[0].getBoundingClientRect();
+      elem.rzsw = val.right - val.left;
+      return elem.rzsw;
+    },
+
+    /**
+     * Set element width
+     *
+     * @param {jqLite} elem  The jqLite wrapped DOM element
+     * @param {number} width
+     * @returns {number}
+     */
+    setWidth: function(elem, width)
+    {
+      elem.rzsw = width;
+      elem.css({width: width + 'px'});
+      return width;
+    },
+
+    /**
+     * Translate value to pixel offset
+     *
+     * @param {number} val
+     * @returns {number}
+     */
+    valueToOffset: function(val)
+    {
+      return (val - this.minValue) * this.maxLeft / this.valueRange || 0;
+    },
+
+    /**
+     * Translate offset to model value
+     *
+     * @param {number} offset
+     * @returns {number}
+     */
+    offsetToValue: function(offset)
+    {
+      return (offset / this.maxLeft) * this.valueRange + this.minValue;
+    },
+
+    // Events
+
+    /**
+     * Get the X-coordinate of an event
+     *
+     * @param {Object} event  The event
+     * @returns {number}
+     */
+    getEventX: function(event)
+    {
+      /* http://stackoverflow.com/a/12336075/282882 */
+      //noinspection JSLint
+      if('clientX' in event)
+      {
+        return event.clientX;
+      }
+
+      return event.originalEvent === undefined ?
+          event.touches[0].clientX
+          : event.originalEvent.touches[0].clientX;
+    },
+
+    /**
+     * Get the handle closest to an event.
+     *
+     * @param event {Event} The event
+     * @returns {jqLite} The handle closest to the event.
+     */
+    getNearestHandle: function(event)
+    {
+      if (!this.range) { return this.minH; }
+      var offset = this.getEventX(event) - this.sliderElem.rzsl - this.handleHalfWidth;
+      return Math.abs(offset - this.minH.rzsl) < Math.abs(offset - this.maxH.rzsl) ? this.minH : this.maxH;
+    },
+
+    /**
+     * Bind mouse and touch events to slider handles
+     *
+     * @returns {undefined}
+     */
+    bindEvents: function()
+    {
+      var barTracking, barStart, barMove;
+
+      if (this.dragRange)
+      {
+        barTracking = 'rzSliderDrag';
+        barStart = this.onDragStart;
+        barMove = this.onDragMove;
+      }
+      else
+      {
+        barTracking = 'rzSliderModel';
+        barStart = this.onStart;
+        barMove = this.onMove;
+      }
+
+      this.minH.on('mousedown', angular.bind(this, this.onStart, this.minH, 'rzSliderModel'));
+      if(this.range) { this.maxH.on('mousedown', angular.bind(this, this.onStart, this.maxH, 'rzSliderHigh')); }
+      this.fullBar.on('mousedown', angular.bind(this, this.onStart, null, null));
+      this.fullBar.on('mousedown', angular.bind(this, this.onMove, this.fullBar));
+      this.selBar.on('mousedown', angular.bind(this, barStart, null, barTracking));
+      this.selBar.on('mousedown', angular.bind(this, barMove, this.selBar));
+
+      this.minH.on('touchstart', angular.bind(this, this.onStart, this.minH, 'rzSliderModel'));
+      if(this.range) { this.maxH.on('touchstart', angular.bind(this, this.onStart, this.maxH, 'rzSliderHigh')); }
+      this.fullBar.on('touchstart', angular.bind(this, this.onStart, null, null));
+      this.fullBar.on('touchstart', angular.bind(this, this.onMove, this.fullBar));
+      this.selBar.on('touchstart', angular.bind(this, barStart, null, barTracking));
+      this.selBar.on('touchstart', angular.bind(this, barMove, this.selBar));
+    },
+
+    /**
+     * onStart event handler
+     *
+     * @param {?Object} pointer The jqLite wrapped DOM element; if null, the closest handle is used
+     * @param {?string} ref     The name of the handle being changed; if null, the closest handle's value is modified
+     * @param {Event}   event   The event
+     * @returns {undefined}
+     */
+    onStart: function (pointer, ref, event)
+    {
+      var ehMove, ehEnd,
+          eventNames = this.getEventNames(event);
+
+      event.stopPropagation();
+      event.preventDefault();
+
+      if(this.tracking !== '') { return; }
+
+      // We have to do this in case the HTML where the sliders are on
+      // have been animated into view.
+      this.calcViewDimensions();
+
+      if(pointer)
+      {
+        this.tracking = ref;
+      }
+      else
+      {
+        pointer = this.getNearestHandle(event);
+        this.tracking = pointer === this.minH ? 'rzSliderModel' : 'rzSliderHigh';
+      }
+
+      pointer.addClass('rz-active');
+
+      ehMove = angular.bind(this, this.dragging.active ? this.onDragMove : this.onMove, pointer);
+      ehEnd = angular.bind(this, this.onEnd, ehMove);
+
+      $document.on(eventNames.moveEvent, ehMove);
+      $document.one(eventNames.endEvent, ehEnd);
+      this.callOnStart();
+    },
+
+    /**
+     * onMove event handler
+     *
+     * @param {jqLite} pointer
+     * @param {Event}  event The event
+     * @returns {undefined}
+     */
+    onMove: function (pointer, event)
+    {
+      var eventX = this.getEventX(event),
+          sliderLO, newOffset, newValue;
+
+      sliderLO = this.sliderElem.rzsl;
+      newOffset = eventX - sliderLO - this.handleHalfWidth;
+
+      if(newOffset <= 0)
+      {
+        if(pointer.rzsl === 0)
+          return;
+        newValue = this.minValue;
+        newOffset = 0;
+      }
+      else if(newOffset >= this.maxLeft)
+      {
+        if(pointer.rzsl === this.maxLeft)
+          return;
+        newValue = this.maxValue;
+        newOffset = this.maxLeft;
+      }
+      else {
+        newValue = this.offsetToValue(newOffset);
+        newValue = this.roundStep(newValue);
+        newOffset = this.valueToOffset(newValue);
+      }
+      this.positionTrackingHandle(newValue, newOffset);
+    },
+
+    /**
+     * onDragStart event handler
+     *
+     * Handles dragging of the middle bar.
+     *
+     * @param {Object} pointer The jqLite wrapped DOM element
+     * @param {string} ref     One of the refLow, refHigh values
+     * @param {Event}  event   The event
+     * @returns {undefined}
+     */
+    onDragStart: function(pointer, ref, event)
+    {
+      var offset = this.getEventX(event) - this.sliderElem.rzsl - this.handleHalfWidth;
+      this.dragging = {
+        active: true,
+        value: this.offsetToValue(offset),
+        difference: this.scope.rzSliderHigh - this.scope.rzSliderModel,
+        offset: offset,
+        lowDist: offset - this.minH.rzsl,
+        highDist: this.maxH.rzsl - offset
+      };
+      this.minH.addClass('rz-active');
+      this.maxH.addClass('rz-active');
+
+      this.onStart(pointer, ref, event);
+    },
+
+    /**
+     * onDragMove event handler
+     *
+     * Handles dragging of the middle bar.
+     *
+     * @param {jqLite} pointer
+     * @param {Event}  event The event
+     * @returns {undefined}
+     */
+    onDragMove: function(pointer, event)
+    {
+      var newOffset = this.getEventX(event) - this.sliderElem.rzsl - this.handleHalfWidth,
+          newMinOffset, newMaxOffset,
+          newMinValue, newMaxValue;
+
+      if (newOffset <= this.dragging.lowDist)
+      {
+        if (pointer.rzsl === this.dragging.lowDist) { return; }
+        newMinValue = this.minValue;
+        newMinOffset = 0;
+        newMaxValue = this.dragging.difference;
+        newMaxOffset = this.valueToOffset(newMaxValue);
+      }
+      else if (newOffset >= this.maxLeft - this.dragging.highDist)
+      {
+        if (pointer.rzsl === this.dragging.highDist) { return; }
+        newMaxValue = this.maxValue;
+        newMaxOffset = this.maxLeft;
+        newMinValue = this.maxValue - this.dragging.difference;
+        newMinOffset = this.valueToOffset(newMinValue);
+      }
+      else
+      {
+        newMinValue = this.offsetToValue(newOffset - this.dragging.lowDist);
+        newMinValue = this.roundStep(newMinValue);
+        newMinOffset = this.valueToOffset(newMinValue);
+        newMaxValue = newMinValue + this.dragging.difference;
+        newMaxOffset = this.valueToOffset(newMaxValue);
+      }
+
+      this.positionTrackingBar(newMinValue, newMaxValue, newMinOffset, newMaxOffset);
+    },
+
+    /**
+     * Set the new value and offset for the entire bar
+     *
+     * @param {number} newMinValue   the new minimum value
+     * @param {number} newMaxValue   the new maximum value
+     * @param {number} newMinOffset  the new minimum offset
+     * @param {number} newMaxOffset  the new maximum offset
+     */
+    positionTrackingBar: function(newMinValue, newMaxValue, newMinOffset, newMaxOffset)
+    {
+      this.scope.rzSliderModel = newMinValue;
+      this.scope.rzSliderHigh = newMaxValue;
+      this.updateHandles('rzSliderModel', newMinOffset);
+      this.updateHandles('rzSliderHigh', newMaxOffset);
+      this.scope.$apply();
+      this.callOnChange();
+    },
+
+    /**
+     * Set the new value and offset to the current tracking handle
+     *
+     * @param {number} newValue new model value
+     * @param {number} newOffset new offset value
+     */
+    positionTrackingHandle: function(newValue, newOffset)
+    {
+      if(this.range)
+      {
+        /* This is to check if we need to switch the min and max handles*/
+        if (this.tracking === 'rzSliderModel' && newValue >= this.scope.rzSliderHigh)
+        {
+          this.scope[this.tracking] = this.scope.rzSliderHigh;
+          this.updateHandles(this.tracking, this.maxH.rzsl);
+          this.tracking = 'rzSliderHigh';
+          this.minH.removeClass('rz-active');
+          this.maxH.addClass('rz-active');
+           /* We need to apply here because we are not sure that we will enter the next block */
+          this.scope.$apply();
+          this.callOnChange();
+        }
+        else if(this.tracking === 'rzSliderHigh' && newValue <= this.scope.rzSliderModel)
+        {
+          this.scope[this.tracking] = this.scope.rzSliderModel;
+          this.updateHandles(this.tracking, this.minH.rzsl);
+          this.tracking = 'rzSliderModel';
+          this.maxH.removeClass('rz-active');
+          this.minH.addClass('rz-active');
+           /* We need to apply here because we are not sure that we will enter the next block */
+          this.scope.$apply();
+          this.callOnChange();
+        }
+      }
+
+      if(this.scope[this.tracking] !== newValue)
+      {
+        this.scope[this.tracking] = newValue;
+        this.updateHandles(this.tracking, newOffset);
+        this.scope.$apply();
+        this.callOnChange();
+      }
+    },
+
+    /**
+     * onEnd event handler
+     *
+     * @param {Event}    event    The event
+     * @param {Function} ehMove   The the bound move event handler
+     * @returns {undefined}
+     */
+    onEnd: function(ehMove, event)
+    {
+      var moveEventName = this.getEventNames(event).moveEvent;
+
+      this.minH.removeClass('rz-active');
+      this.maxH.removeClass('rz-active');
+
+      $document.off(moveEventName, ehMove);
+
+      this.scope.$emit('slideEnded');
+      this.tracking = '';
+
+      this.dragging.active = false;
+      this.callOnEnd();
+    },
+
+    /**
+     * Get event names for move and event end
+     *
+     * @param {Event}    event    The event
+     *
+     * @return {{moveEvent: string, endEvent: string}}
+     */
+    getEventNames: function(event)
+    {
+      var eventNames = {moveEvent: '', endEvent: ''};
+
+      if(event.touches || (event.originalEvent !== undefined && event.originalEvent.touches))
+      {
+        eventNames.moveEvent = 'touchmove';
+        eventNames.endEvent = 'touchend';
+      }
+      else
+      {
+        eventNames.moveEvent = 'mousemove';
+        eventNames.endEvent = 'mouseup';
+      }
+
+      return eventNames;
+    }
+  };
+
+  return Slider;
+}])
+
+.directive('rzslider', ['RzSlider', function(RzSlider)
+{
+  'use strict';
+
+  return {
+    restrict: 'E',
+    scope: {
+      rzSliderFloor: '=?',
+      rzSliderCeil: '=?',
+      rzSliderStep: '@',
+      rzSliderPrecision: '@',
+      rzSliderModel: '=?',
+      rzSliderHigh: '=?',
+      rzSliderDraggable: '@',
+      rzSliderTranslate: '&',
+      rzSliderHideLimitLabels: '=?',
+      rzSliderAlwaysShowBar: '=?',
+      rzSliderPresentOnly: '@',
+      rzSliderOnStart: '&',
+      rzSliderOnChange: '&',
+      rzSliderOnEnd: '&'
+    },
+
+    /**
+     * Return template URL
+     *
+     * @param {jqLite} elem
+     * @param {Object} attrs
+     * @return {string}
+     */
+    templateUrl: function(elem, attrs) {
+      //noinspection JSUnresolvedVariable
+      return attrs.rzSliderTplUrl || 'rzSliderTpl.html';
+    },
+
+    link: function(scope, elem, attr)
+    {
+      return new RzSlider(scope, elem, attr);
+    }
+  };
+}]);
+
+// IDE assist
+
+/**
+ * @name ngScope
+ *
+ * @property {number} rzSliderModel
+ * @property {number} rzSliderHigh
+ * @property {number} rzSliderCeil
+ */
+
+/**
+ * @name jqLite
+ *
+ * @property {number|undefined} rzsl rzslider label left offset
+ * @property {number|undefined} rzsw rzslider element width
+ * @property {string|undefined} rzsv rzslider label value/text
+ * @property {Function} css
+ * @property {Function} text
+ */
+
+/**
+ * @name Event
+ * @property {Array} touches
+ * @property {Event} originalEvent
+ */
+
+/**
+ * @name ThrottleOptions
+ *
+ * @property {boolean} leading
+ * @property {boolean} trailing
+ */
+
+  module.run(['$templateCache', function($templateCache) {
+  'use strict';
+
+  $templateCache.put('rzSliderTpl.html',
+    "<span class=rz-bar-wrapper><span class=rz-bar></span></span> <span class=rz-bar-wrapper><span class=\"rz-bar rz-selection\"></span></span> <span class=rz-pointer></span> <span class=rz-pointer></span> <span class=\"rz-bubble rz-limit\"></span> <span class=\"rz-bubble rz-limit\"></span> <span class=rz-bubble></span> <span class=rz-bubble></span> <span class=rz-bubble></span>"
+  );
+
+}]);
+
+  return module
+}));
+
+},{"angular":33}],227:[function(require,module,exports){
 module.exports={
   "_id": "025b82e5-4a5a-558f-b021-17c1a60f0922",
   "_rev": "35-bb826db14d27ff5a3ac70b9b1c7e9210",
@@ -72946,9 +74967,9 @@ module.exports={
   "updated_by": "conrad@npolar.no"
 }
 
-},{}],223:[function(require,module,exports){
+},{}],228:[function(require,module,exports){
 module.exports = '<!DOCTYPE html>\n<script type="text/ng-template" id="any.html">\n  <div ng-if="isArray(value)" layout="row" class="np-document-array">\n    <div class="np-document-title md-title" flex>{{ key }}</div>\n    <ul flex="85">\n      <li ng-repeat="(key, value) in value">\n        <ng-include src="\'any.html\'"></ng-include>\n      </li>\n    </ul>\n  </div>\n  <div ng-if="isObject(value)" layout="row" class="np-document-object">\n    <div class="np-document-title md-title" flex>{{ key }}</div>\n    <ul flex="85">\n      <li ng-repeat="(key, value) in value">\n        <ng-include src="\'any.html\'"></ng-include>\n      </li>\n    </ul>\n  </div>\n  <div ng-if="isItem(value)" layout="row" class="np-document-item">\n    <div class="np-document-title md-title" flex>{{ key }}</div>\n    <div class="np-document-value" flex="85">{{ value }}</div>\n  </div>\n</script>\n\n<div class="np-document">\n  <div class="np-document-ctrls" layout="row">\n    <div class="np-document-ctrls-title" flex>Fancy: </div><md-switch flex ng-model="fancy" aria-label="Render mode"></md-switch>\n  </div>\n  <ul ng-if="fancy">\n    <li ng-repeat="(key, value) in value">\n      <ng-include src="\'any.html\'"></ng-include>\n    </li>\n  </ul>\n  <pre ng-if="!fancy">\n    {{ value | json }}\n  </pre>\n</div>\n';
-},{}],224:[function(require,module,exports){
+},{}],229:[function(require,module,exports){
 "use strict";
 
 var angular = require('angular');
@@ -72979,7 +75000,7 @@ var npdcDocument = function npdcDocument() {
 
 module.exports = npdcDocument;
 
-},{"./document.html":223,"angular":33}],225:[function(require,module,exports){
+},{"./document.html":228,"angular":33}],230:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -72989,9 +75010,9 @@ angular.module('document', ['npdcMaterial']).controller('DocumentCtrl', ["$scope
   $scope.document = require('./demo/doc.json');
 }]);
 
-},{"../../":241,"./demo/doc.json":222,"angular":33}],226:[function(require,module,exports){
+},{"../../":253,"./demo/doc.json":227,"angular":33}],231:[function(require,module,exports){
 module.exports = '<!DOCTYPE html>\n<form class="np-expand-search" action="." method="get" ng-submit="this.form.submit()">\n  <input type="search" incremental="" results="10" name="q" value="{{q}}" >\n</form>\n';
-},{}],227:[function(require,module,exports){
+},{}],232:[function(require,module,exports){
 "use strict";
 
 // @ngInject
@@ -73004,7 +75025,7 @@ var expandSearch = function expandSearch() {
 
 module.exports = expandSearch;
 
-},{"./expandSearch.html":226}],228:[function(require,module,exports){
+},{"./expandSearch.html":231}],233:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73012,7 +75033,1447 @@ var angular = require('angular');
 
 angular.module('expandSearch', ['npdcMaterial']);
 
-},{"../../":241,"angular":33}],229:[function(require,module,exports){
+},{"../../":253,"angular":33}],234:[function(require,module,exports){
+"use strict";
+
+var FilterCollection = require('./FilterCollection');
+var QueryBuilder = require('./QueryBuilder');
+
+// @ngInject
+var FacetingCtrl = function FacetingCtrl($scope) {
+  var filters = new FilterCollection();
+  var queryBuilder = new QueryBuilder();
+
+  var uiType = function uiType(facet) {
+    var _type = 'autocomplete';
+    if ($scope.data.options && $scope.data.options[facet.key]) {
+      _type = $scope.data.options[facet.key].type;
+    }
+    return _type;
+  };
+
+  var termToInt = function termToInt(term) {
+    return parseInt(term.replace(/-/g, ''));
+  };
+
+  var initRangeFacet = function initRangeFacet(facet) {
+    var floor = undefined,
+        ceil = undefined;
+    if (facet[facet.key].length === 1) {
+      floor = ceil = termToInt(facet[facet.key][0].term);
+    } else {
+      floor = facet[facet.key].reduce(function (prev, term) {
+        return Math.min(prev.term ? termToInt(prev.term) : prev, termToInt(term.term));
+      });
+      ceil = facet[facet.key].reduce(function (prev, term) {
+        return Math.max(prev.term ? termToInt(prev.term) : prev, termToInt(term.term));
+      });
+    }
+
+    facet.slider = {
+      floor: floor,
+      ceil: ceil,
+      min: floor,
+      max: ceil
+    };
+
+    return facet;
+  };
+
+  // Init data model
+  $scope.data.facets = $scope.data.facets.map(function (facet) {
+    facet.key = Object.keys(facet)[0];
+    facet.type = uiType(facet);
+    facet[facet.key] = facet[facet.key].map(function (term) {
+      term.facet = facet.key;
+      return term;
+    });
+
+    if (facet.type === 'range') {
+      facet = initRangeFacet(facet);
+    }
+    return facet;
+  });
+
+  // Search
+  $scope.showAdvanced = false;
+  $scope.toggleAdvanced = function () {
+    $scope.showAdvanced = !$scope.showAdvanced;
+  };
+
+  filters.on('change', function (filters) {
+    var q = queryBuilder.build($scope.q, filters);
+    $scope.$emit('search-change', q);
+  });
+
+  // Chips
+  $scope.selectedChip = -1;
+  $scope.selectChip = function (index) {
+    if ($scope.selectedChip === index) {
+      $scope.selectedChip = -1;
+    } else {
+      $scope.selectedChip = index;
+    }
+  };
+
+  // Filters
+  $scope.filters = filters.array;
+  $scope.activeFilters = function () {
+    return $scope.filters.length > 0;
+  };
+
+  $scope.removeFilter = function (filter) {
+    var facet = $scope.data.facets.find(function (facet) {
+      return facet.key === filter.facet;
+    });
+    $scope.selectedChip = -1;
+    filters.remove(filter);
+    if (facet && facet.slider) {
+      facet.slider.min = facet.slider.floor;
+      facet.slider.max = facet.slider.ceil;
+    }
+  };
+
+  // Autocomplete
+  $scope.selectedItemChange = function (item) {
+    if (item) {
+      filters.add(item);
+    }
+  };
+
+  $scope.querySearch = function (facet) {
+    return facet[facet.key].filter(function (item) {
+      return item.term.toLowerCase().indexOf(facet.searchText.toLowerCase()) === 0;
+    });
+  };
+
+  // Checkbox
+  $scope.toggleSelect = function (item) {
+    if (item.selected) {
+      filters.add(item);
+    } else {
+      filters.remove(item);
+    }
+  };
+
+  // Range
+  $scope.onSliderChange = function (facet) {
+    if (facet.slider.min === facet.slider.floor && facet.slider.max === facet.slider.ceil) {
+      filters.removeRangeFilter(facet);
+    } else {
+      filters.addRangeFilter(facet);
+    }
+  };
+};
+FacetingCtrl.$inject = ["$scope"];
+
+module.exports = FacetingCtrl;
+
+},{"./FilterCollection":235,"./QueryBuilder":236}],235:[function(require,module,exports){
+'use strict';
+
+var EventEmitter = require('events');
+
+var FilterCollection = function FilterCollection() {
+  var filters = [];
+  var emitter = new EventEmitter();
+
+  var equals = function equals(itemA, itemB) {
+    return itemA.term === itemB.term && itemA.facet === itemB.facet;
+  };
+
+  var add = function add(filter) {
+    if (!filters.some(function (item) {
+      return equals(filter, item);
+    })) {
+      filters.push(filter);
+      emitter.emit('change', filters);
+    }
+  };
+
+  var remove = function remove(filter) {
+    var index = filters.findIndex(function (item) {
+      return equals(filter, item);
+    });
+    if (index !== -1) {
+      filters.splice(index, 1)[0].selected = false;
+      emitter.emit('change', filters);
+    }
+  };
+
+  var removeRangeFilter = function removeRangeFilter(facet) {
+    var index = filters.findIndex(function (item) {
+      return item.facet === facet.key;
+    });
+    if (index !== -1) {
+      filters.splice(index, 1);
+      emitter.emit('change', filters);
+    }
+  };
+
+  var isInRange = function isInRange(item, min, max) {
+    var value = parseInt(item.term);
+    return value >= min && value <= max;
+  };
+
+  var addRangeFilter = function addRangeFilter(facet) {
+    var filter = undefined,
+        existingFilter = undefined;
+    var terms = facet[facet.key].filter(function (item) {
+      return isInRange(item, facet.slider.min, facet.slider.max);
+    });
+
+    filter = {
+      count: terms.reduce(function (memo, item) {
+        return memo + item.count;
+      }, 0),
+      term: facet.slider.min + ".." + facet.slider.max,
+      facet: facet.key
+    };
+    existingFilter = filters.find(function (item) {
+      return filter.facet === item.facet;
+    });
+    if (!existingFilter) {
+      filters.push(filter);
+    } else {
+      existingFilter.term = filter.term;
+      existingFilter.count = filter.count;
+    }
+    emitter.emit('change', filters);
+  };
+
+  var clear = function clear() {
+    filters.splice(0, filters.length);
+  };
+
+  return {
+    add: add,
+    addRangeFilter: addRangeFilter,
+    remove: remove,
+    removeRangeFilter: removeRangeFilter,
+    clear: clear,
+    array: filters,
+    on: function on() {
+      EventEmitter.prototype.on.apply(emitter, arguments);
+    }
+  };
+};
+
+module.exports = FilterCollection;
+
+},{"events":222}],236:[function(require,module,exports){
+'use strict';
+
+var QueryBuilder = function QueryBuilder() {
+  var build = function build(q, filters) {
+    var query = {
+      q: q || ''
+    };
+
+    filters.array.forEach(function (filter) {
+      var val = query['filter-' + filter.facet] ? query['filter-' + filter.facet] + ',' : '';
+      query['filter-' + filter.facet] = val + filter.term;
+    });
+
+    return query;
+  };
+
+  return {
+    build: build
+  };
+};
+
+module.exports = QueryBuilder;
+
+},{}],237:[function(require,module,exports){
+module.exports={
+  "facets": [{
+        "progress": [{
+          "term": "complete",
+          "count": 140,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-progress=complete"
+        }, {
+          "term": "ongoing",
+          "count": 82,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-progress=ongoing"
+        }, {
+          "term": "planned",
+          "count": 5,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-progress=planned"
+        }]
+      }, {
+        "draft": [{
+          "term": "no",
+          "count": 196,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-draft=no"
+        }, {
+          "term": "yes",
+          "count": 31,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-draft=yes"
+        }]
+      }, {
+        "topics": [{
+          "term": "biology",
+          "count": 95,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-topics=biology"
+        }, {
+          "term": "maps",
+          "count": 36,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-topics=maps"
+        }, {
+          "term": "glaciology",
+          "count": 27,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-topics=glaciology"
+        }, {
+          "term": "other",
+          "count": 26,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-topics=other"
+        }, {
+          "term": "topography",
+          "count": 19,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-topics=topography"
+        }, {
+          "term": "ecology",
+          "count": 18,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-topics=ecology"
+        }, {
+          "term": "seaice",
+          "count": 16,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-topics=seaice"
+        }, {
+          "term": "vegetation",
+          "count": 13,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-topics=vegetation"
+        }, {
+          "term": "atmosphere",
+          "count": 12,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-topics=atmosphere"
+        }, {
+          "term": "ecotoxicology",
+          "count": 11,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-topics=ecotoxicology"
+        }, {
+          "term": "oceanography",
+          "count": 11,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-topics=oceanography"
+        }, {
+          "term": "geology",
+          "count": 9,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-topics=geology"
+        }, {
+          "term": "marine",
+          "count": 8,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-topics=marine"
+        }, {
+          "term": "remote-sensing",
+          "count": 5,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-topics=remote-sensing"
+        }, {
+          "term": "climate",
+          "count": 3,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-topics=climate"
+        }, {
+          "term": "terrestrial",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-topics=terrestrial"
+        }]
+      }, {
+        "year-released": [{
+          "term": "1998",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-released=1998-01-01T00:00:00Z..1999-01-01T00:00:00Z"
+        }, {
+          "term": "2007",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-released=2007-01-01T00:00:00Z..2008-01-01T00:00:00Z"
+        }, {
+          "term": "2008",
+          "count": 10,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-released=2008-01-01T00:00:00Z..2009-01-01T00:00:00Z"
+        }, {
+          "term": "2009",
+          "count": 10,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-released=2009-01-01T00:00:00Z..2010-01-01T00:00:00Z"
+        }, {
+          "term": "2010",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-released=2010-01-01T00:00:00Z..2011-01-01T00:00:00Z"
+        }, {
+          "term": "2011",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-released=2011-01-01T00:00:00Z..2012-01-01T00:00:00Z"
+        }, {
+          "term": "2012",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-released=2012-01-01T00:00:00Z..2013-01-01T00:00:00Z"
+        }, {
+          "term": "2013",
+          "count": 11,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-released=2013-01-01T00:00:00Z..2014-01-01T00:00:00Z"
+        }, {
+          "term": "2014",
+          "count": 24,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-released=2014-01-01T00:00:00Z..2015-01-01T00:00:00Z"
+        }, {
+          "term": "2015",
+          "count": 4,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-released=2015-01-01T00:00:00Z..2016-01-01T00:00:00Z"
+        }, {
+          "term": "2017",
+          "count": 4,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-released=2017-01-01T00:00:00Z..2018-01-01T00:00:00Z"
+        }]
+      },
+      {
+        "licences": [{
+          "term": "http://creativecommons.org/licenses/by/3.0/no/",
+          "count": 222,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-licences=http://creativecommons.org/licenses/by/3.0/no/"
+        }, {
+          "term": "http://data.norge.no/nlod/no/1.0",
+          "count": 195,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-licences=http://data.norge.no/nlod/no/1.0"
+        }, {
+          "term": "http://lovdata.no/dokument/NL/lov/1961-05-12-2",
+          "count": 3,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-licences=http://lovdata.no/dokument/NL/lov/1961-05-12-2"
+        }]
+      }, {
+        "sets": [{
+          "term": "arctic",
+          "count": 182,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-sets=arctic"
+        }, {
+          "term": "gcmd.nasa.gov",
+          "count": 26,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-sets=gcmd.nasa.gov"
+        }, {
+          "term": "antarctic",
+          "count": 20,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-sets=antarctic"
+        }, {
+          "term": "ipy.org",
+          "count": 13,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-sets=ipy.org"
+        }, {
+          "term": "glaciology",
+          "count": 12,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-sets=glaciology"
+        }, {
+          "term": "cryoclim.net",
+          "count": 6,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-sets=cryoclim.net"
+        }, {
+          "term": "marine",
+          "count": 4,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-sets=marine"
+        }]
+      }, {
+        "people.email": [{
+          "term": "Lydersen@npolar.no",
+          "count": 44,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=Lydersen@npolar.no"
+        }, {
+          "term": "kit.kovacs@npolar.no",
+          "count": 38,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=kit.kovacs@npolar.no"
+        }, {
+          "term": "anders.skoglund@npolar.no",
+          "count": 28,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=anders.skoglund@npolar.no"
+        }, {
+          "term": "yngve.melvar@npolar.no",
+          "count": 24,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=yngve.melvar@npolar.no"
+        }, {
+          "term": "hans.wolkers@npolar.no",
+          "count": 13,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=hans.wolkers@npolar.no"
+        }, {
+          "term": "oystein.wiig@nhm.uio.no",
+          "count": 10,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=oystein.wiig@nhm.uio.no"
+        }, {
+          "term": "kenichi.matsuoka@npolar.no",
+          "count": 9,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=kenichi.matsuoka@npolar.no"
+        }, {
+          "term": "max.koenig@npolar.no",
+          "count": 8,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=max.koenig@npolar.no"
+        }, {
+          "term": "conrad.helgeland@npolar.no",
+          "count": 7,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=conrad.helgeland@npolar.no"
+        }, {
+          "term": "eva.fuglei@npolar.no",
+          "count": 7,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=eva.fuglei@npolar.no"
+        }, {
+          "term": "jon.aars@npolar.no",
+          "count": 7,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=jon.aars@npolar.no"
+        }, {
+          "term": "ermias.beyene.tesfamariam@npolar.no",
+          "count": 6,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=ermias.beyene.tesfamariam@npolar.no"
+        }, {
+          "term": "harald.faste.aas@npolar.no",
+          "count": 6,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=harald.faste.aas@npolar.no"
+        }, {
+          "term": "magnus.andersen@npolar.no",
+          "count": 6,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=magnus.andersen@npolar.no"
+        }, {
+          "term": "sbr@sysselmannen.no",
+          "count": 6,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=sbr@sysselmannen.no"
+        }, {
+          "term": "geir@npolar.no",
+          "count": 5,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=geir@npolar.no"
+        }, {
+          "term": "jack@npolar.no",
+          "count": 5,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=jack@npolar.no"
+        }, {
+          "term": "oddveig.oien.orvoll@npolar.no",
+          "count": 5,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=oddveig.oien.orvoll@npolar.no"
+        }, {
+          "term": "stephen.hudson@npolar.no",
+          "count": 5,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=stephen.hudson@npolar.no"
+        }, {
+          "term": "elisabeth.isaksson@npolar.no",
+          "count": 4,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=elisabeth.isaksson@npolar.no"
+        }, {
+          "term": "jack.kohler@npolar.no",
+          "count": 4,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=jack.kohler@npolar.no"
+        }, {
+          "term": "mats.granskog@npolar.no",
+          "count": 4,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=mats.granskog@npolar.no"
+        }, {
+          "term": "ashild.pedersen@npolar.no",
+          "count": 3,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=ashild.pedersen@npolar.no"
+        }, {
+          "term": "geir.moholdt@npolar.no",
+          "count": 3,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=geir.moholdt@npolar.no"
+        }, {
+          "term": "gunnar.spreen@npolar.no",
+          "count": 3,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=gunnar.spreen@npolar.no"
+        }, {
+          "term": "haakon.hop@npolar.no",
+          "count": 3,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=haakon.hop@npolar.no"
+        }, {
+          "term": "morten.tryland@nvh.no",
+          "count": 3,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=morten.tryland@nvh.no"
+        }, {
+          "term": "rolf.ims@ib.uit.no",
+          "count": 3,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=rolf.ims@ib.uit.no"
+        }, {
+          "term": "sofievp@nfh.uit.no",
+          "count": 3,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=sofievp@nfh.uit.no"
+        }, {
+          "term": "stig@npolar.no",
+          "count": 3,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=stig@npolar.no"
+        }, {
+          "term": "Haakon.Hop@npolar.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=Haakon.Hop@npolar.no"
+        }, {
+          "term": "ae@akvaplan.niva.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=ae@akvaplan.niva.no"
+        }, {
+          "term": "anders.ruus@niva.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=anders.ruus@niva.no"
+        }, {
+          "term": "audun.stien@nina.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=audun.stien@nina.no"
+        }, {
+          "term": "bjorn.munro.jenssen@bio.ntnu.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=bjorn.munro.jenssen@bio.ntnu.no"
+        }, {
+          "term": "boele@npolar.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=boele@npolar.no"
+        }, {
+          "term": "cesar.deschamps.berger@npolar.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=cesar.deschamps.berger@npolar.no"
+        }, {
+          "term": "christiaane@npolar.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=christiaane@npolar.no"
+        }, {
+          "term": "christina.pedersen@npolar.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=christina.pedersen@npolar.no"
+        }, {
+          "term": "dag.vongraven@npolar.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=dag.vongraven@npolar.no"
+        }, {
+          "term": "dmitry.divine@npolar.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=dmitry.divine@npolar.no"
+        }, {
+          "term": "dorothee.ehrich@ib.uit.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=dorothee.ehrich@ib.uit.no"
+        }, {
+          "term": "hallvard.strom@npolar.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=hallvard.strom@npolar.no"
+        }, {
+          "term": "hans.tommervik@nina.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=hans.tommervik@nina.no"
+        }, {
+          "term": "ingeborg.g.hallanger@uit.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=ingeborg.g.hallanger@uit.no"
+        }, {
+          "term": "joel.brown@npolar.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=joel.brown@npolar.no"
+        }, {
+          "term": "kjetil.sagerup@npolar.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=kjetil.sagerup@npolar.no"
+        }, {
+          "term": "malin.daase@npolar.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=malin.daase@npolar.no"
+        }, {
+          "term": "nicolas.lecomte@ib.uit.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=nicolas.lecomte@ib.uit.no"
+        }, {
+          "term": "nigel.yoccoz@uit.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=nigel.yoccoz@uit.no"
+        }, {
+          "term": "ole@npolar.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=ole@npolar.no"
+        }, {
+          "term": "sebastian.gerland@npolar.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=sebastian.gerland@npolar.no"
+        }, {
+          "term": "stein.istre.thoresen@veths.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=stein.istre.thoresen@veths.no"
+        }, {
+          "term": "tor.ivan.karlsen@npolar.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=tor.ivan.karlsen@npolar.no"
+        }, {
+          "term": "vikram.goel@npolar.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=vikram.goel@npolar.no"
+        }, {
+          "term": "winfried.dallmann@npolar.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=winfried.dallmann@npolar.no"
+        }, {
+          "term": "A.M.Osborn@sheffield.ac.uk",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=A.M.Osborn@sheffield.ac.uk"
+        }, {
+          "term": "Egil.Solvberg@kartverket.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=Egil.Solvberg@kartverket.no"
+        }, {
+          "term": "Justin.Irvine@hutton.ac.uk",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=Justin.Irvine@hutton.ac.uk"
+        }, {
+          "term": "Michael.Kriews@awi.de",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=Michael.Kriews@awi.de"
+        }, {
+          "term": "Otto.Grahl-Nielsen@kj.uib.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=Otto.Grahl-Nielsen@kj.uib.no"
+        }, {
+          "term": "Vigdis.Tverberg@npolar.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=Vigdis.Tverberg@npolar.no"
+        }, {
+          "term": "Walter.Arnold@vu-wien.ac.at",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=Walter.Arnold@vu-wien.ac.at"
+        }, {
+          "term": "a.j.hodson@sheffield.ac.uk",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=a.j.hodson@sheffield.ac.uk"
+        }, {
+          "term": "aanes@npolar.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=aanes@npolar.no"
+        }, {
+          "term": "agneta.fransson@npolar.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=agneta.fransson@npolar.no"
+        }, {
+          "term": "anette.wold@npolar.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=anette.wold@npolar.no"
+        }, {
+          "term": "anettefe@stud.ntnu.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=anettefe@stud.ntnu.no"
+        }, {
+          "term": "angela.wulff@marecol.gu.se",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=angela.wulff@marecol.gu.se"
+        }, {
+          "term": "angelika.renner@npolar.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=angelika.renner@npolar.no"
+        }, {
+          "term": "angie.remontoir@gmail.com",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=angie.remontoir@gmail.com"
+        }, {
+          "term": "anne.hormes@unis.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=anne.hormes@unis.no"
+        }, {
+          "term": "anne.kirstine@imr.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=anne.kirstine@imr.no"
+        }, {
+          "term": "anne.urset@npolar.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=anne.urset@npolar.no"
+        }, {
+          "term": "annika.hofgaard@nina.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=annika.hofgaard@nina.no"
+        }, {
+          "term": "are.bjordal@npolar.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=are.bjordal@npolar.no"
+        }, {
+          "term": "are@npolar.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=are@npolar.no"
+        }, {
+          "term": "arild.sundfjord@npolar.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=arild.sundfjord@npolar.no"
+        }, {
+          "term": "arto.miettinen@npolar.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=arto.miettinen@npolar.no"
+        }, {
+          "term": "audun.stien@npolar.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=audun.stien@npolar.no"
+        }, {
+          "term": "b.petkov@isac.cnr.it",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=b.petkov@isac.cnr.it"
+        }, {
+          "term": "bernt.johansen@norut.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=bernt.johansen@norut.no"
+        }, {
+          "term": "birgit.sattler@uibk.ac.at",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=birgit.sattler@uibk.ac.at"
+        }, {
+          "term": "bjorn.hjelle@npolar.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=bjorn.hjelle@npolar.no"
+        }, {
+          "term": "blomeier@npolar.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=blomeier@npolar.no"
+        }, {
+          "term": "borge.moe@nina.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=borge.moe@nina.no"
+        }, {
+          "term": "brage.hansen@bio.ntnu.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=brage.hansen@bio.ntnu.no"
+        }, {
+          "term": "carl.egede.boggild@unis.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=carl.egede.boggild@unis.no"
+        }, {
+          "term": "cev@ceh.ac.uk",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=cev@ceh.ac.uk"
+        }, {
+          "term": "chad.dick@npolar.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=chad.dick@npolar.no"
+        }, {
+          "term": "christopher.nuth@geo.uio.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=christopher.nuth@geo.uio.no"
+        }, {
+          "term": "conrad@npolar.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=conrad@npolar.no"
+        }, {
+          "term": "d.o.hessen@bio.uio.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=d.o.hessen@bio.uio.no"
+        }, {
+          "term": "dallmann@npolar.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=dallmann@npolar.no"
+        }, {
+          "term": "derocher@ualberta.ca",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=derocher@ualberta.ca"
+        }, {
+          "term": "dorthe.kristensen@npolar.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=dorthe.kristensen@npolar.no"
+        }, {
+          "term": "ecro@ceh.ac.uk",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=ecro@ceh.ac.uk"
+        }, {
+          "term": "elvevold@npolar.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=elvevold@npolar.no"
+        }, {
+          "term": "erik.ropstad@nmbu.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=erik.ropstad@nmbu.no"
+        }, {
+          "term": "erlend.lorentzen@npolar.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-people.email=erlend.lorentzen@npolar.no"
+        }]
+      }, {
+        "organisations.id": [{
+          "term": "npolar.no",
+          "count": 209,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=npolar.no"
+        }, {
+          "term": "sysselmannen.no",
+          "count": 7,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=sysselmannen.no"
+        }, {
+          "term": "nsidc.org",
+          "count": 5,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=nsidc.org"
+        }, {
+          "term": "uit.no",
+          "count": 5,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=uit.no"
+        }, {
+          "term": "unis.no",
+          "count": 4,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=unis.no"
+        }, {
+          "term": "akvaplan.niva.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=akvaplan.niva.no"
+        }, {
+          "term": "awi.de",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=awi.de"
+        }, {
+          "term": "geo.mn.uio.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=geo.mn.uio.no"
+        }, {
+          "term": "kartverket.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=kartverket.no"
+        }, {
+          "term": "nina.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=nina.no"
+        }, {
+          "term": "niva.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=niva.no"
+        }, {
+          "term": "nmbu.no",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=nmbu.no"
+        }, {
+          "term": "pangaea.de",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=pangaea.de"
+        }, {
+          "term": "bgs.ac.uk",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=bgs.ac.uk"
+        }, {
+          "term": "bio.uio.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=bio.uio.no"
+        }, {
+          "term": "ceh.ac.uk",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=ceh.ac.uk"
+        }, {
+          "term": "dirmin.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=dirmin.no"
+        }, {
+          "term": "geo.su.se",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=geo.su.se"
+        }, {
+          "term": "geo.uu.se",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=geo.uu.se"
+        }, {
+          "term": "igf.edu.pl",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=igf.edu.pl"
+        }, {
+          "term": "isac.cnr.it",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=isac.cnr.it"
+        }, {
+          "term": "ksat.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=ksat.no"
+        }, {
+          "term": "loff.biz",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=loff.biz"
+        }, {
+          "term": "marecol.gu.se",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=marecol.gu.se"
+        }, {
+          "term": "miljodirektoratet.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=miljodirektoratet.no"
+        }, {
+          "term": "museumstavanger.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=museumstavanger.no"
+        }, {
+          "term": "nilu.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=nilu.no"
+        }, {
+          "term": "ntnu.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=ntnu.no"
+        }, {
+          "term": "nve.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=nve.no"
+        }, {
+          "term": "oru.se",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=oru.se"
+        }, {
+          "term": "sams.ac.uk",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=sams.ac.uk"
+        }, {
+          "term": "shef.ac.uk",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=shef.ac.uk"
+        }, {
+          "term": "smru.st-andrews.ac.uk",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=smru.st-andrews.ac.uk"
+        }, {
+          "term": "spacecentre.no",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=spacecentre.no"
+        }, {
+          "term": "uef.fi",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=uef.fi"
+        }, {
+          "term": "uibk.ac.at",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=uibk.ac.at"
+        }, {
+          "term": "ustc.edu.cn",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-organisations.id=ustc.edu.cn"
+        }]
+      }, {
+        "placenames.placename": [{
+          "term": "Svalbard",
+          "count": 72,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Svalbard"
+        }, {
+          "term": "Kongsfjorden",
+          "count": 20,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Kongsfjorden"
+        }, {
+          "term": "Ny-Ålesund",
+          "count": 14,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Ny-Ålesund"
+        }, {
+          "term": "Adventdalen",
+          "count": 9,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Adventdalen"
+        }, {
+          "term": "Spitsbergen",
+          "count": 8,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Spitsbergen"
+        }, {
+          "term": "Brøggerhalvøya",
+          "count": 6,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Brøggerhalvøya"
+        }, {
+          "term": "Dyrevika",
+          "count": 6,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Dyrevika"
+        }, {
+          "term": "Prins Karls Forland",
+          "count": 6,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Prins+Karls+Forland"
+        }, {
+          "term": "Stuphallet",
+          "count": 6,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Stuphallet"
+        }, {
+          "term": "Arctic Ocean",
+          "count": 5,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Arctic+Ocean"
+        }, {
+          "term": "Sassendalen",
+          "count": 5,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Sassendalen"
+        }, {
+          "term": "Barentshavet",
+          "count": 4,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Barentshavet"
+        }, {
+          "term": "Dronning Maud Land",
+          "count": 4,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Dronning+Maud+Land"
+        }, {
+          "term": "Kara Sea",
+          "count": 4,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Kara+Sea"
+        }, {
+          "term": "Barents Sea",
+          "count": 3,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Barents+Sea"
+        }, {
+          "term": "Bouvetøya",
+          "count": 3,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Bouvetøya"
+        }, {
+          "term": "Isfjorden",
+          "count": 3,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Isfjorden"
+        }, {
+          "term": "Jan Mayen",
+          "count": 3,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Jan+Mayen"
+        }, {
+          "term": "Reindalen",
+          "count": 3,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Reindalen"
+        }, {
+          "term": "Van Keulenfjorden",
+          "count": 3,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Van+Keulenfjorden"
+        }, {
+          "term": "Arctic",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Arctic"
+        }, {
+          "term": "Billefjorden",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Billefjorden"
+        }, {
+          "term": "Framstretet",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Framstretet"
+        }, {
+          "term": "Franz Josef Land",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Franz+Josef+Land"
+        }, {
+          "term": "Norway",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Norway"
+        }, {
+          "term": "Poluostrov Yamal",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Poluostrov+Yamal"
+        }, {
+          "term": "Storfjorden",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Storfjorden"
+        }, {
+          "term": "Wichebukta",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Wichebukta"
+        }, {
+          "term": "Wijdefjorden",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Wijdefjorden"
+        }, {
+          "term": "Zeppelinfjellet",
+          "count": 2,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Zeppelinfjellet"
+        }, {
+          "term": "Akseløya",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Akseløya"
+        }, {
+          "term": "Alaska",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Alaska"
+        }, {
+          "term": "Antarctica",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Antarctica"
+        }, {
+          "term": "Austfjordnes",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Austfjordnes"
+        }, {
+          "term": "Austfonna",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Austfonna"
+        }, {
+          "term": "Barrow",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Barrow"
+        }, {
+          "term": "Bjørndalen",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Bjørndalen"
+        }, {
+          "term": "Bjørnøya",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Bjørnøya"
+        }, {
+          "term": "Blomstrandhalvøya",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Blomstrandhalvøya"
+        }, {
+          "term": "Bohemanflya",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Bohemanflya"
+        }, {
+          "term": "Brøggerbreane",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Brøggerbreane"
+        }, {
+          "term": "Canada",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Canada"
+        }, {
+          "term": "Dickson Land",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Dickson+Land"
+        }, {
+          "term": "Erdmannflya",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Erdmannflya"
+        }, {
+          "term": "Farmhamna",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Farmhamna"
+        }, {
+          "term": "Fimbul Ice Shelf",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Fimbul+Ice+Shelf"
+        }, {
+          "term": "Finnmark Fylke",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Finnmark+Fylke"
+        }, {
+          "term": "Finsterwalderbreen",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Finsterwalderbreen"
+        }, {
+          "term": "Forlandsundet",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Forlandsundet"
+        }, {
+          "term": "Fram Strait",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Fram+Strait"
+        }, {
+          "term": "Greenland",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Greenland"
+        }, {
+          "term": "Greenland Sea",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Greenland+Sea"
+        }, {
+          "term": "Hopen",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Hopen"
+        }, {
+          "term": "Ice Rise D (Blåskimen)",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Ice+Rise+D+(Blåskimen)"
+        }, {
+          "term": "Kapp Thordsen",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Kapp+Thordsen"
+        }, {
+          "term": "Kapp Wijk",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Kapp+Wijk"
+        }, {
+          "term": "Kola Peninsula",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Kola+Peninsula"
+        }, {
+          "term": "Kongressvatnet",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Kongressvatnet"
+        }, {
+          "term": "Kongsfjord",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Kongsfjord"
+        }, {
+          "term": "Kongsfjorddjupet",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Kongsfjorddjupet"
+        }, {
+          "term": "Kongsfjorden fuglereservat",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Kongsfjorden+fuglereservat"
+        }, {
+          "term": "Kongsfjordrenna",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Kongsfjordrenna"
+        }, {
+          "term": "Krossfjorden",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Krossfjorden"
+        }, {
+          "term": "Kvitøya",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Kvitøya"
+        }, {
+          "term": "Lake Vostok",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Lake+Vostok"
+        }, {
+          "term": "Murman coast",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Murman+coast"
+        }, {
+          "term": "Mushamna",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Mushamna"
+        }, {
+          "term": "Nenetskiy Avtonomnyy Okrug",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Nenetskiy+Avtonomnyy+Okrug"
+        }, {
+          "term": "Nordenskiöld Land",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Nordenskiöld+Land"
+        }, {
+          "term": "Norwegian Sea",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Norwegian+Sea"
+        }, {
+          "term": "Novaya Zemlya",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Novaya+Zemlya"
+        }, {
+          "term": "Recherchefjorden",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Recherchefjorden"
+        }, {
+          "term": "Rijpfjorden",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Rijpfjorden"
+        }, {
+          "term": "Rjipfjorden",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Rjipfjorden"
+        }, {
+          "term": "Sofiadjupet",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Sofiadjupet"
+        }, {
+          "term": "South Atlantic Ocean",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=South+Atlantic+Ocean"
+        }, {
+          "term": "Southern Ocean",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Southern+Ocean"
+        }, {
+          "term": "St. Jonsfjorden",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=St.+Jonsfjorden"
+        }, {
+          "term": "Svalbard Waters",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Svalbard+Waters"
+        }, {
+          "term": "Sørkappøya",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Sørkappøya"
+        }, {
+          "term": "Troms Fylke",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Troms+Fylke"
+        }, {
+          "term": "Tusenøyane",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Tusenøyane"
+        }, {
+          "term": "Van Mijenfjorden",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Van+Mijenfjorden"
+        }, {
+          "term": "Vårsolbukta",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Vårsolbukta"
+        }, {
+          "term": "Wahlenbergfjorden",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Wahlenbergfjorden"
+        }, {
+          "term": "Western Dronning Maud Land",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=Western+Dronning+Maud+Land"
+        }, {
+          "term": "White Sea",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-placenames.placename=White+Sea"
+        }]
+      }, {
+        "links.rel": [{
+          "term": "alternate",
+          "count": 226,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-links.rel=alternate"
+        }, {
+          "term": "edit",
+          "count": 226,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-links.rel=edit"
+        }, {
+          "term": "via",
+          "count": 152,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-links.rel=via"
+        }, {
+          "term": "data",
+          "count": 51,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-links.rel=data"
+        }, {
+          "term": "related",
+          "count": 46,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-links.rel=related"
+        }, {
+          "term": "service",
+          "count": 20,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-links.rel=service"
+        }, {
+          "term": "internal",
+          "count": 17,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-links.rel=internal"
+        }, {
+          "term": "project",
+          "count": 16,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-links.rel=project"
+        }, {
+          "term": "publication",
+          "count": 9,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-links.rel=publication"
+        }, {
+          "term": "parent",
+          "count": 8,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-links.rel=parent"
+        }, {
+          "term": "datacentre",
+          "count": 7,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-links.rel=datacentre"
+        }, {
+          "term": "doi",
+          "count": 7,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-links.rel=doi"
+        }, {
+          "term": "metadata",
+          "count": 6,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-links.rel=metadata"
+        }, {
+          "term": "attachment",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-links.rel=attachment"
+        }, {
+          "term": "reference",
+          "count": 1,
+          "uri": "http://api.npolar.no/dataset/?q=&format=json&filter-links.rel=reference"
+        }]
+      }]
+    }
+
+},{}],238:[function(require,module,exports){
+module.exports = '<!DOCTYPE html>\n<div class="np-faceting">\n  <md-whiteframe class="md-whiteframe-z1 np-faceting-search" layout="column" layout-padding>\n    <div class="np-faceting-top">\n      <div flex layout layout-align="center end">\n        <md-input-container flex>\n          <label>Search</label>\n          <input ng-model="q">\n        </md-input-container>\n        <div class="np-faceting-advanced">\n          <a href="" ng-click="toggleAdvanced()">Filter search<md-icon>{{ showAdvanced ? \'expand_less\' : \'expand_more\' }}</md-icon></a>\n        </div>\n      </div>\n      <div flex layout ng-show="activeFilters() || showAdvanced">\n        <div class="np-faceting-active-filters np-center-content">Active filters: </div>\n        <div flex class="md-chips">\n          <div ng-repeat="filter in filters" ng-class="{\'md-focused\': selectedChip === $index}" class="md-chip md-default-theme">\n            <div class="md-chip-content" tabindex="-1" aria-hidden="true" ng-click="selectChip($index)">\n              <strong>{{ filter.facet }}: {{ filter.term }}</strong>\n              <em>({{ filter.count }})</em>\n            </div>\n            <div class="md-chip-remove-container">\n              <button class="md-chip-remove" ng-click="removeFilter(filter)" type="button" aria-hidden="true">\n                <md-icon>close</md-icon>\n              </button>\n            </div>\n          </div>\n        </div>\n      </div>\n    </div>\n    <div class="np-faceting-facets" ng-class="{show : showAdvanced}">\n      <div ng-repeat="facet in data.facets">\n\n        <!-- autocomplete -->\n        <md-autocomplete\n          ng-if="facet.type === \'autocomplete\'"\n          md-selected-item="facet.selectedItem"\n          md-search-text="facet.searchText"\n          md-selected-item-change="selectedItemChange(item)"\n          md-items="item in querySearch(facet)"\n          md-item-text="item.term"\n          md-min-length="0"\n          md-floating-label="Filter {{facet.key}}">\n          <md-item-template>\n            <span md-highlight-text="facet.searchText" md-highlight-flags="^i">{{item.term}} ({{item.count}})</span>\n          </md-item-template>\n          <md-not-found>\n            No matches found for "{{facet.searchText}}".\n          </md-not-found>\n        </md-autocomplete>\n\n        <!-- checkbox -->\n        <div ng-if="facet.type === \'checkbox\'" class="np-custom-facet">\n          <label>Filter {{facet.key}}</label>\n          <ul>\n            <li ng-repeat="item in facet[facet.key]">\n              <md-checkbox ng-model="item.selected" ng-change="toggleSelect(item)">\n                {{item.term}} ({{item.count}})\n              </md-checkbox>\n            </li>\n          </ul>\n        </div>\n\n        <!-- range -->\n        <div ng-if="facet.type === \'range\'" class="np-custom-facet np-range-facet">\n          <label>Filter {{facet.key}}</label>\n          <rzslider\n            rz-slider-floor="facet.slider.floor"\n            rz-slider-ceil="facet.slider.ceil"\n            rz-slider-model="facet.slider.min"\n            rz-slider-high="facet.slider.max"\n            rz-slider-on-change="onSliderChange(facet)"></rzslider>\n        </div>\n\n      </div>\n    </div>\n  </md-whiteframe>\n\n</div>\n';
+},{}],239:[function(require,module,exports){
+'use strict';
+
+require('../../');
+var angular = require('angular');
+require('angular-route');
+
+angular.module('faceting', ['npdcMaterial']).controller('FacetingCtrl', ["$scope", function ($scope) {
+  $scope.facets = require('./demo/facets.json');
+  $scope.facets.options = {
+    'draft': {
+      type: 'checkbox'
+    },
+    'year-released': {
+      type: 'range'
+    }
+  };
+}]);
+
+},{"../../":253,"./demo/facets.json":237,"angular":33,"angular-route":31}],240:[function(require,module,exports){
+"use strict";
+
+// @ngInject
+var sidenav = function sidenav() {
+    return {
+        restrict: 'E',
+        template: require('./faceting.html'),
+        scope: {
+            data: '=facets'
+        },
+        controller: 'NpdcMdFacetingCtrl'
+    };
+};
+
+module.exports = sidenav;
+
+},{"./faceting.html":238}],241:[function(require,module,exports){
 "use strict";
 
 var angular = require('angular');
@@ -73020,14 +76481,16 @@ var npdcMaterial = angular.module('npdcMaterial');
 
 npdcMaterial.controller('NpdcMdSidenavCtrl', require('./sidenav/SidenavCtrl'));
 npdcMaterial.controller('NpdcMdToolbarCtrl', require('./toolbar/ToolbarCtrl'));
+npdcMaterial.controller('NpdcMdFacetingCtrl', require('./faceting/FacetingCtrl'));
 
 npdcMaterial.directive('npdcMdDocument', require('./document/document'));
-npdcMaterial.directive('npdcMdToolbar', require('./toolbar/toolbar'));
 npdcMaterial.directive('npdcMdSidenav', require('./sidenav/sidenav'));
+npdcMaterial.directive('npdcMdToolbar', require('./toolbar/toolbar'));
+npdcMaterial.directive('npdcMdFaceting', require('./faceting/facetingDirective'));
 npdcMaterial.directive('npdcMdUserMenu', require('./user-menu/userMenu'));
 npdcMaterial.directive('npdcMdExpandSearch', require('./expandable-search/expandSearch'));
 
-},{"./document/document":224,"./expandable-search/expandSearch":227,"./sidenav/SidenavCtrl":230,"./sidenav/sidenav":232,"./toolbar/ToolbarCtrl":234,"./toolbar/toolbar":236,"./user-menu/userMenu":239,"angular":33}],230:[function(require,module,exports){
+},{"./document/document":229,"./expandable-search/expandSearch":232,"./faceting/FacetingCtrl":234,"./faceting/facetingDirective":240,"./sidenav/SidenavCtrl":242,"./sidenav/sidenav":244,"./toolbar/ToolbarCtrl":246,"./toolbar/toolbar":248,"./user-menu/userMenu":251,"angular":33}],242:[function(require,module,exports){
 "use strict";
 
 // @ngInject
@@ -73040,9 +76503,9 @@ SidenavCtrl.$inject = ["$scope", "$mdSidenav"];
 
 module.exports = SidenavCtrl;
 
-},{}],231:[function(require,module,exports){
+},{}],243:[function(require,module,exports){
 module.exports = '<!DOCTYPE html>\n<md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia(\'gt-md\')">\n  <div class="np-sidenav-img md-whiteframe-z1">\n    <img alt="Norsk Polarinstutt [logo]" src="http://www.npolar.no/npcms/export/sites/np/images/logos/norsk-polarinstitutt-logo-norsk-hvit.png">\n    <h1 class="md-title" style="color: white; text-align: center; font-weight: bold;">Norwegian Polar Data Centre</h1>\n  </div>\n  <div class="np-sidenav-title md-whiteframe-z1" layout-padding>\n    <span class="md-title">{{sidenav.title}}</span>\n  </div>\n  <md-content>\n    <ul class="np-sidenav-menu">\n      <li ng-repeat="item in sidenav.menu" layout>\n        <md-button flex ng-href="{{item.link}}">{{item.title}}</md-button>\n      </li>\n    </ul>\n  </md-content>\n</md-sidenav>\n';
-},{}],232:[function(require,module,exports){
+},{}],244:[function(require,module,exports){
 "use strict";
 
 // @ngInject
@@ -73059,7 +76522,7 @@ var sidenav = function sidenav() {
 
 module.exports = sidenav;
 
-},{"./sidenav.html":231}],233:[function(require,module,exports){
+},{"./sidenav.html":243}],245:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73092,7 +76555,7 @@ angular.module('sidenav', ['ngRoute', 'npdcMaterial']).controller('SidenavCtrl',
   });
 }]);
 
-},{"../../":241,"angular":33,"angular-route":31}],234:[function(require,module,exports){
+},{"../../":253,"angular":33,"angular-route":31}],246:[function(require,module,exports){
 "use strict";
 
 // @ngInject
@@ -73109,9 +76572,9 @@ ToolbarCtrl.$inject = ["$scope", "$mdSidenav"];
 
 module.exports = ToolbarCtrl;
 
-},{}],235:[function(require,module,exports){
+},{}],247:[function(require,module,exports){
 module.exports = '<!DOCTYPE html>\n<md-toolbar class="np-top-menu">\n  <div class="md-toolbar-tools">\n    <div hide-gt-md>\n      <md-button class="md-icon-button" aria-label="Open sidenav" ng-click="toggleLeft()" ng-if="sidenav">\n        <md-icon>menu</md-icon>\n      </md-button>\n      <span class="md-title">{{title}}</span>\n    </div>\n\n    <span flex></span>\n\n    <!-- Apps -->\n    <md-menu>\n      <md-button aria-label="Open application menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">\n        <md-icon md-menu-origin>\n          <md-tooltip>Data / Applications</md-tooltip>apps</md-icon>\n      </md-button>\n\n      <md-menu-content width="6">\n\n\n        <md-subheader class="md-sticky">⛁ Data</md-subheader>\n\n        <md-menu-item>\n          <md-button ng-href="/dataset">Datasets (metadata catalogue)</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="//api.npolar.no">Data services (\n            <abbr title="Application Programming Interface">API</abbr>s)</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="//geodata.npolar.no">Geographic services</md-button>\n        </md-menu-item>\n\n\n        <md-divider></md-divider>\n\n        <md-subheader class="md-no-sticky">Applications</md-subheader>\n\n        <md-menu-item>\n          <md-button ng-href="/expedition" title="Expeditions">Expeditions</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/vessel">Historic Vessels</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/indicator">Indicators (environmental monitoring)</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/map/archive">Map archive</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/people">People</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/placename">Placenames</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/project">Projects</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/publication">Publications</md-button>\n        </md-menu-item>\n\n      </md-menu-content>\n\n    </md-menu>\n\n    <md-menu ng-if="security.isAuthenticated()">\n      <md-button aria-label="Open application menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">\n        <md-icon md-menu-origin>\n          <md-tooltip>Internal applications</md-tooltip>settings</md-icon>\n      </md-button>\n\n      <md-menu-content width="4">\n\n        <md-subheader class="md-no-sticky">Internal applications</md-subheader>\n\n        <md-menu-item>\n          <md-button ng-href="/courses">Courses</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/marine/biology" title="Marine Biology Samples">Marine biology</md-button>\n        </md-menu-item>\n\n        <md-menu-item>\n          <md-button ng-href="/user">Users</md-button>\n        </md-menu-item>\n\n      </md-menu-content>\n    </md-menu>\n\n    <npdc-md:user-menu></npdc-md:user-menu>\n\n    <npdc-md:expand-search></npdc-md:expand-search>\n\n  </div>\n</md-toolbar>\n';
-},{}],236:[function(require,module,exports){
+},{}],248:[function(require,module,exports){
 "use strict";
 
 // @ngInject
@@ -73129,7 +76592,7 @@ toolbar.$inject = ["$mdSidenav"];
 
 module.exports = toolbar;
 
-},{"./toolbar.html":235}],237:[function(require,module,exports){
+},{"./toolbar.html":247}],249:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73142,9 +76605,9 @@ angular.module('toolbar', ['npdcMaterial']).controller('ToolbarCtrl', ["$scope",
   };
 }]);
 
-},{"../../":241,"angular":33}],238:[function(require,module,exports){
+},{"../../":253,"angular":33}],250:[function(require,module,exports){
 module.exports = '<!DOCTYPE html>\n<md-menu ng-if="!security.isAuthenticated()">\n  <md-button aria-label="Open user" class="md-icon-button" ng-click="$mdOpenMenu($event)">\n    <md-icon md-menu-origin>person<md-tooltip>Login</md-tooltip></md-icon>\n  </md-button>\n  <md-menu-content>\n    <form role="form" layout-padding class="np-login">\n      <div>\n        <md-input-container>\n          <label for="username" class="md-no-float">Username</label>\n          <input type="text" ng-model="user.username" id="username">\n        </md-input-container>\n        <md-input-container>\n          <label for="password" class="md-no-float">Password</label>\n          <input type="password" id="password" ng-model="user.password">\n        </md-input-container>\n      </div>\n      <div layout="row" layout-align="space-between center">\n        <a ng-href="/user/reset?username={{user.username}}">Forgot password?</a>\n        <a href="/user/register">Sign up</a>\n        <md-button type="submit" ng-click="login()" class="md-raised md-primary">Login</md-button>\n      </div>\n    </form>\n  </md-menu-content>\n</md-menu>\n\n<md-menu ng-if="security.isAuthenticated()">\n  <md-button aria-label="Open user" class="md-icon-button" ng-click="$mdOpenMenu($event)">\n    <md-icon md-menu-origin>person<md-tooltip>{{ security.getUser().name }}</md-tooltip></md-icon>\n  </md-button>\n  <md-menu-content>\n    <md-menu-item>\n      <md-button ng-href="/user/{{user.username}}" title="View profile for user {{user.username}}">\n        <md-icon md-menu-align-target>face</md-icon>\n        {{ user.name }}\n      </md-button>\n    </md-menu-item>\n    <md-menu-item>\n      <md-button ng-click="logout()">\n        <span>Logout</span> <small>(session expires {{ 1000*user.exp | date:\'HH:mm\' }})</small>\n      </md-button>\n    </md-menu-item>\n  </md-menu-content>\n</md-menu>\n';
-},{}],239:[function(require,module,exports){
+},{}],251:[function(require,module,exports){
 "use strict";
 
 // @ngInject
@@ -73163,7 +76626,7 @@ npdcUserMenu.$inject = ["NpolarApiSecurity"];
 
 module.exports = npdcUserMenu;
 
-},{"./userMenu.html":238}],240:[function(require,module,exports){
+},{"./userMenu.html":250}],252:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73171,7 +76634,7 @@ var angular = require('angular');
 
 angular.module('userMenu', ['npdcMaterial']);
 
-},{"../../":241,"angular":33}],241:[function(require,module,exports){
+},{"../../":253,"angular":33}],253:[function(require,module,exports){
 'use strict';
 /**
  * Angular bootstraping
@@ -73181,8 +76644,9 @@ require('angular-aria');
 require('angular-animate');
 require('angular-material');
 require('angular-npolar');
+require('jusas-angularjs-slider');
 
-var npdcMaterial = angular.module('npdcMaterial', ['ngMaterial', 'npolarApi', 'npolarUi']);
+var npdcMaterial = angular.module('npdcMaterial', ['ngMaterial', 'npolarApi', 'npolarUi', 'rzModule']);
 // Don't require demo code here!
 
 npdcMaterial.config(["$mdThemingProvider", function ($mdThemingProvider) {
@@ -73198,7 +76662,7 @@ require('./layouts');
 
 module.exports = npdcMaterial;
 
-},{"./components":229,"./layouts":247,"angular":33,"angular-animate":2,"angular-aria":4,"angular-material":6,"angular-npolar":24}],242:[function(require,module,exports){
+},{"./components":241,"./layouts":259,"angular":33,"angular-animate":2,"angular-aria":4,"angular-material":6,"angular-npolar":24,"jusas-angularjs-slider":226}],254:[function(require,module,exports){
 'use strict';
 
 // @ngInject
@@ -73245,7 +76709,7 @@ var applyMdType = function applyMdType() {
 
 module.exports = applyMdType;
 
-},{}],243:[function(require,module,exports){
+},{}],255:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73260,9 +76724,9 @@ angular.module('formulaDemo', ['npdcMaterial', 'formula']).controller('FormulaCt
   };
 }]);
 
-},{"../../":241,"angular":33,"formula":220}],244:[function(require,module,exports){
+},{"../../":253,"angular":33,"formula":224}],256:[function(require,module,exports){
 module.exports = '<!DOCTYPE html>\n<!-- field info -->\n<script type="text/ng-template" id="ft-field-info.html">\n  <md-icon>info_outline\n    <md-tooltip md-direction="left">{{ field.description }}</md-tooltip>\n  </md-icon>\n</script>\n\n<!-- validation message -->\n<script type="text/ng-template" id="ft-validation-message.html">\n  <div class="md-caption" role="alert" ng-show="{{ field.error !== null }}">\n    {{ field.error }}\n  </div>\n</script>\n\n<form name="formula" class="formula" ng-if="form.fieldsets">\n  <header ng-if="form.title">\n    {{ form.title }}\n  </header>\n\n  <md-tabs md-swipe-content md-dynamic-height md-border-bottom>\n    <md-tab label="{{fieldset.title}}" ng-disabled="fieldset.disabled" ng-repeat="fieldset in form.fieldsets">\n      <md-whiteframe class="md-whiteframe-z1">\n        <fieldset>\n          <div formula:field-definition ng-repeat="field in fieldset.fields" ng-show="field.visible">\n            <!-- input field-->\n            <div ng-if="field.typeOf(\'input\')" apply-md-type="field">\n\n              <!-- boolean -->\n              <div ng-if="field.mdType === \'boolean\'" class="np-formula-boolean">\n                <div ng-include="\'ft-field-info.html\'" class="np-field-info" ng-if="field.description"></div>\n                <md-checkbox ng-attr-id="field.uid" ng-model="field.value" aria-label="{{ field.title }}">\n                  <label for="{{field.uid}}">{{ field.title }}</label>\n                </md-checkbox>\n                <div ng-include="\'ft-validation-message.html\'" class="np-validation-message"></div>\n              </div>\n\n              <!-- range -->\n              <div ng-if="field.mdType === \'range\'" class="np-formula-range">\n                <label for="{{field.uid}}">{{ field.title }}: <span>{{field.value}}</span></label>\n                <div ng-include="\'ft-field-info.html\'" class="np-field-info" ng-if="field.description"></div>\n                <md-slider flex min="{{field.minimum}}" max="{{field.maximum}}" step="{{field.step}}" md-discrete ng-model="field.value" aria-label="{{field.title}}" ng-attr-id="field.uid">\n                </md-slider>\n                <div ng-include="\'ft-validation-message.html\'" class="np-validation-message"></div>\n              </div>\n\n              <!-- select -->\n              <md-input-container ng-if="field.mdType === \'select\'" class="np-formula-select">\n                <label for="{{field.uid}}">{{ (field.required ? field.title + \' (required)\' : field.title) }}</label>\n                <div ng-include="\'ft-field-info.html\'" class="np-field-info" ng-if="field.description"></div>\n                <md-select ng-model="field.value">\n                  <md-option ng-repeat="val in field.enum" value="{{val}}">{{val}}</md-option>\n                </md-select>\n                <div ng-include="\'ft-validation-message.html\'" class="np-validation-message"></div>\n              </md-input-container>\n\n              <!-- input -->\n              <md-input-container ng-if="field.mdType === \'input\'" class="np-formula-input">\n                <label for="{{field.uid}}">{{ (field.required ? field.title + \' (required)\' : field.title) }}</label>\n                <div ng-include="\'ft-field-info.html\'" class="np-field-info" ng-if="field.description"></div>\n                <div formula:field="field"></div>\n                <div ng-include="\'ft-validation-message.html\'" class="np-validation-message"></div>\n              </md-input-container>\n            </div>\n\n            <!-- object -->\n            <div ng-if="field.typeOf(\'object\')" class="np-formula-object">\n              <md-whiteframe class="md-whiteframe-z1">\n                <fieldset formula:field="field">\n                  <legend>{{ field.title }}</legend>\n\n                  <div ng-repeat="field in field.fields" ng-show="field.visible">\n                    <formula:field-instance field="field"></formula:field-instance>\n                  </div>\n                </fieldset>\n              </md-whiteframe>\n            </div>\n\n            <!-- array -->\n            <div ng-if="field.typeOf(\'array\')" class="np-formula-array">\n              <div formula:field="field">\n                <md-whiteframe class="md-whiteframe-z1">\n                  <fieldset ng-class="{ valid: field.valid, error: field.error }">\n                    <div ng-include="\'ft-field-info.html\'" class="np-field-info" ng-if="field.description"></div>\n                    <legend>{{ field.title }} ({{ field.values.length || 0 }})</legend>\n                    <div ng-if="field.typeOf(\'fieldset\')">\n                      <ul>\n                        <li ng-repeat="value in field.values">\n                          <md-whiteframe class="md-whiteframe-z1">\n                            <fieldset ng-class="{ valid: value.valid }">\n                              <legend>\n                                <span ng-if="!value.visible">{{ value.fields | formulaInlineValues }}</span>\n                              </legend>\n                              <div class="np-formula-object-ctrls">\n                                <a class="toggle" href="" ng-click="field.itemToggle($index)" title="{{ value.visible ? form.i18n.minimize[1] : form.i18n.maximize[1] }}">\n                                  <md-icon>{{ value.visible ? \'expand_less\' : \'expand_more\' }}</md-icon>\n                                </a>\n                                <a class="remove" href="" ng-click="field.itemRemove($index)" title="{{ form.i18n.remove[1] }}">\n                                  <md-icon>close</md-icon>\n                                </a>\n                              </div>\n\n                              <div class="np-formula-subarray" ng-repeat="subfield in field.fields" ng-show="value.visible">\n                                <formula:field-instance field="value.fields[$index]" ng-show="subfield.visible"></formula:field-instance>\n                              </div>\n                            </fieldset>\n                          </md-whiteframe>\n                        </li>\n                      </ul>\n                      <div class="np-formula-array-add">\n                        <md-button ng-click="field.itemAdd()" class="md-fab md-mini md-primary md-hue-1" aria-label="{{ form.i18n.add[1] }}">\n                          <md-icon>add</md-icon>\n                        </md-button>\n                      </div>\n                    </div>\n\n                    <div ng-if="field.typeOf(\'field\')">\n                      <ul class="np-formula-array">\n                        <li ng-class="{ valid: value.valid, error: value.error }" ng-repeat="value in field.values" layout="row">\n                          <formula:field-instance field="value" flex></formula:field-instance>\n                          <a class="np-formula-input-ctrls remove" href="" ng-click="field.itemRemove($index)" title="{{ form.i18n.remove[1] }}">\n                            <md-icon>close</md-icon>\n                          </a>\n                        </li>\n                      </ul>\n                      <div class="np-formula-array-add">\n                        <md-button ng-click="field.itemAdd()" class="md-fab md-mini md-primary md-hue-1" aria-label="{{ form.i18n.add[1] }}">\n                          <md-icon>add</md-icon>\n                        </md-button>\n                      </div>\n                    </div>\n\n                  </fieldset>\n                </md-whiteframe>\n              </div>\n            </div>\n          </div>\n        </fieldset>\n      </md-whiteframe>\n\n    </md-tab>\n  </md-tabs>\n\n  <footer layout="row" layout-align="space-between center" ng-if="!(form.uiValidateHidden && form.uiSaveHidden)">\n    <span ng-if="form.errors" title="{{ form.errors.join(\'\n\') }}">{{ form.i18n.invalid | formulaReplace : { count: form.errors.length } }}</span>\n\n    <div>\n      <md-button class="md-raised" ng-click="form.validate()" ng-if="!form.uiValidateHidden" title="{{ form.i18n.validate[1] }}">\n        <md-icon>check</md-icon> {{ form.i18n.validate[0] }}</md-button>\n      <md-button class="md-raised md-primary" ng-click="form.save()" ng-disabled="!form.valid" ng-if="!form.uiSaveHidden" title="{{ form.i18n.save[1] }}">\n        <md-icon>save</md-icon> {{ form.i18n.save[0] }}</md-button>\n\n    </div>\n\n  </footer>\n</form>\n\n<div class="formula" ng-if="!form.fieldsets">\n  <div layout="row" layout-sm="column" layout-align="space-around">\n    <md-progress-circular md-mode="indeterminate"></md-progress-circular>\n  </div>\n</div>\n';
-},{}],245:[function(require,module,exports){
+},{}],257:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73270,7 +76734,7 @@ var angular = require('angular');
 
 angular.module('grid', ['npdcMaterial']);
 
-},{"../../":241,"angular":33}],246:[function(require,module,exports){
+},{"../../":253,"angular":33}],258:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73278,7 +76742,7 @@ var angular = require('angular');
 
 angular.module('home', ['npdcMaterial']);
 
-},{"../../":241,"angular":33}],247:[function(require,module,exports){
+},{"../../":253,"angular":33}],259:[function(require,module,exports){
 "use strict";
 
 var angular = require('angular');
@@ -73291,7 +76755,7 @@ npdcMaterial.run(["$templateCache", function ($templateCache) {
   $templateCache.put('formula/material.html', require('./formula/template.html'));
 }]);
 
-},{"./formula/applyMdType":242,"./formula/template.html":244,"angular":33}],248:[function(require,module,exports){
+},{"./formula/applyMdType":254,"./formula/template.html":256,"angular":33}],260:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73299,7 +76763,7 @@ var angular = require('angular');
 
 angular.module('list', ['npdcMaterial']);
 
-},{"../../":241,"angular":33}],249:[function(require,module,exports){
+},{"../../":253,"angular":33}],261:[function(require,module,exports){
 'use strict';
 
 require('../../');
@@ -73327,17 +76791,17 @@ angular.module('main', ['npdcMaterial']).controller('MainCtrl', ["$scope", funct
   };
 }]);
 
-},{"../../":241,"angular":33}],250:[function(require,module,exports){
+},{"../../":253,"angular":33}],262:[function(require,module,exports){
 'use strict'; module.exports = angular.module("npdcMaterial").run(["$templateCache", function($templateCache) {$templateCache.put("angular-npolar/src/ui/auth/_user.html","<div class=\"login-logout\">\n  <div ng-show=\"security.isAuthenticated()\">\n    \n    <button ng-click=\"logout()\">Logout</button> <b>{{ user.name }}</b> (<a title=\"View profile for user {{user.username}}\" ng-href=\"/user/{{user.username}}\">{{ user.username }} </a>)\n    \n    <p>Login session expires {{ 1000*user.exp | date:\'HH:mm\' }}</p>\n    \n    <!--<section>\n    <h2>Recent edits</h2>\n    <dl ng-repeat=\"edit in edits\">\n      <dt>{{ edit.request.time }}</dt>\n      <dd><a href=\"{{ edit.response.header.Location }}\">{{ edit.response.header.Location }}</a></dd>\n    </dl>\n    </section>-->\n    \n    <section>\n      <h2>Permissions</h2>\n      <dl ng-repeat=\"system in user.systems\">\n        <dt>{{ system.uri }}</dt>\n        <dd>{{ system.rights }}</dd>\n      </dl>\n    </section>\n  </div>\n  \n  <div ng-show=\"security.notAuthenticated()\">\n    <h1>Login</h1>\n    <form role=\"form\">\n      <section ng-show=\"true\" ng-init=\"loginClicked = false;\">\n      <div>\n        <label for=\"username\">Username</label>\n        <input type=\"text\" ng-model=\"user.username\" id=\"username\" placeholder=\"Username (email)\">\n      </div>\n      <div>\n        <label for=\"password\">Password</label>\n        <input type=\"password\" id=\"password\" ng-model=\"user.password\" placeholder=\"Password\">\n      </div>\n      <button id=\"login2\" type=\"submit\" ng-click=\"login()\">Login</button> \n      </section>\n      <a ng-href=\"/user/reset?username={{user.username}}\">Forgot password?</a> <a href=\"/user/register\">Sign up</a></section>\n    </form>\n  </div>\n</div>");
-$templateCache.put("angular-npolar/src/ui/message/_message.html","<div ng-if=\"info\" class=\"info\">[info]{{ info | json }}</div>\n<div ng-if=\"error\" class=\"error\">[error] {{ error | json }}</div>");
-$templateCache.put("angular-npolar/src/ui/message/_message_toast.html","<md-toast>\n  <span flex> <b>{{explanation}}</b></span>\n  <md-button ng-click=\"closeToast()\">OK</md-button>\n</md-toast>");
 $templateCache.put("angular-npolar/src/ui/template/_delete.html","<div class=\"npolar-confirm-delete\">\n  <h3>Really DELETE?</h3>\n\n  <button type=\"button\" ng-click=\"deleteClicked=false && back()\" class=\"btn btn-default\">no</button>\n  <button type=\"button\" ng-click=\"delete()\" class=\"btn btn-danger\">yes</button>\n</div>\n");
 $templateCache.put("angular-npolar/src/ui/template/_error.html","<h2 ng-if=\"error\" class=\"alert alert-danger\" role=\"alert\"><strong>{{error.status}} {{error.statusText}}</strong> {{error.data}}</h2>");
 $templateCache.put("angular-npolar/src/ui/template/_foot.html","");
 $templateCache.put("angular-npolar/src/ui/template/_head.html","<div ng-if=\"error\" ng-include=\"\'angular-npolar/src/ui/template/_error.html\'\"></div>\n<div ng-if=\"info\" ng-include=\"\'angular-npolar/src/ui/template/_info.html\'\"></div>\n");
 $templateCache.put("angular-npolar/src/ui/template/_info.html","<h2 ng-if=\"info\" class=\"alert alert-success\"><strong>{{info.header}}</strong> {{info.message }}</h2>");
-$templateCache.put("angular-npolar/src/ui/template/_search.html","<div>\n  <span ng-if=\"!feed.entries\">Fetching data from {{base}}</span>\n  <span ng-if=\"feed.opensearch.totalResults > 0\">{{feed.opensearch.totalResults}} results from {{ base }}</span>\n  <span ng-if=\"feed.opensearch.totalResults == 0\">No results</span>\n</div>\n\n<h3><span ng-if=\"filters.length\">Filters: {{filters | json}}</span><span ng-if=\"filters.length\"><a ng-href=\"/vessel\">Remove filters</a></span></h3>\n\n<h2><a ng-if=\"user.name\" href=\"__new/edit\"><button type=\"button\" class=\"pure-button\">New</button></a></h2>\n\n<p>Filter: <input ng-model=\"entryfilter\"></p>\n\n<div ng-repeat=\"e in feed.entries | filter:entryfilter\">\n  <h4 class=\"\"><a ng-href=\"{{e.id}}\">{{ e.title || e.name || e.id }}</a> {{e.updated }}</h4>\n</div>\n");}]);
-},{}]},{},[217,225,228,233,237,240,243,245,246,248,249,250])
+$templateCache.put("angular-npolar/src/ui/template/_search.html","<div>\n  <span ng-if=\"!feed.entries\">Fetching data from {{base}}</span>\n  <span ng-if=\"feed.opensearch.totalResults > 0\">{{feed.opensearch.totalResults}} results from {{ base }}</span>\n  <span ng-if=\"feed.opensearch.totalResults == 0\">No results</span>\n</div>\n\n<h3><span ng-if=\"filters.length\">Filters: {{filters | json}}</span><span ng-if=\"filters.length\"><a ng-href=\"/vessel\">Remove filters</a></span></h3>\n\n<h2><a ng-if=\"user.name\" href=\"__new/edit\"><button type=\"button\" class=\"pure-button\">New</button></a></h2>\n\n<p>Filter: <input ng-model=\"entryfilter\"></p>\n\n<div ng-repeat=\"e in feed.entries | filter:entryfilter\">\n  <h4 class=\"\"><a ng-href=\"{{e.id}}\">{{ e.title || e.name || e.id }}</a> {{e.updated }}</h4>\n</div>\n");
+$templateCache.put("angular-npolar/src/ui/message/_message.html","<div ng-if=\"info\" class=\"info\">[info]{{ info | json }}</div>\n<div ng-if=\"error\" class=\"error\">[error] {{ error | json }}</div>");
+$templateCache.put("angular-npolar/src/ui/message/_message_toast.html","<md-toast>\n  <span flex> <b>{{explanation}}</b></span>\n  <md-button ng-click=\"closeToast()\">OK</md-button>\n</md-toast>");}]);
+},{}]},{},[221,230,233,239,245,249,252,255,257,258,260,261,262])
 
 
 //# sourceMappingURL=demos.js.map

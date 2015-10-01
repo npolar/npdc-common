@@ -7,8 +7,9 @@ require('angular-aria');
 require('angular-animate');
 require('angular-material');
 require('angular-npolar');
+require('jusas-angularjs-slider');
 
-var npdcMaterial = angular.module('npdcMaterial', ['ngMaterial', 'npolarApi', 'npolarUi']);
+var npdcMaterial = angular.module('npdcMaterial', ['ngMaterial', 'npolarApi', 'npolarUi', 'rzModule']);
 // Don't require demo code here!
 
 npdcMaterial.config(function($mdThemingProvider) {

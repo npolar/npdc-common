@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<div class="np-faceting">
+  <md-whiteframe class="md-whiteframe-z1 np-faceting-search" layout="column" layout-padding>
+    <div class="np-faceting-top">
+      <div flex layout layout-align="center end">
+        <md-input-container flex>
+          <label>Search</label>
+          <input ng-model="q">
+        </md-input-container>
+        <div class="np-faceting-advanced">
+          <a href="" ng-click="toggleAdvanced()">Filter search<md-icon>{{ showAdvanced ? 'expand_less' : 'expand_more' }}</md-icon></a>
+        </div>
+      </div>
+      <div flex layout ng-show="activeFilters() || showAdvanced">
+        <div class="np-faceting-active-filters np-center-content">Active filters: </div>
+        <div flex class="md-chips">
+          <div ng-repeat="filter in filters" ng-class="{'md-focused': selectedChip === $index}" class="md-chip md-default-theme">
+            <div class="md-chip-content" tabindex="-1" aria-hidden="true" ng-click="selectChip($index)">
+              <strong>{{ filter.facet }}: {{ filter.term }}</strong>
+              <em>({{ filter.count }})</em>
+            </div>
+            <div class="md-chip-remove-container">
+              <button class="md-chip-remove" ng-click="removeFilter(filter)" type="button" aria-hidden="true">
+                <md-icon>close</md-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="np-faceting-facets" ng-class="{show : showAdvanced}">
+      <div ng-repeat="facet in data.facets">
+
+        <!-- autocomplete -->
+        <md-autocomplete
+          ng-if="facet.type === 'autocomplete'"
+          md-selected-item="facet.selectedItem"
+          md-search-text="facet.searchText"
+          md-selected-item-change="selectedItemChange(item)"
+          md-items="item in querySearch(facet)"
+          md-item-text="item.term"
+          md-min-length="0"
+          md-floating-label="Filter {{facet.key}}">
+          <md-item-template>
+            <span md-highlight-text="facet.searchText" md-highlight-flags="^i">{{item.term}} ({{item.count}})</span>
+          </md-item-template>
+          <md-not-found>
+            No matches found for "{{facet.searchText}}".
+          </md-not-found>
+        </md-autocomplete>
+
+        <!-- checkbox -->
+        <div ng-if="facet.type === 'checkbox'" class="np-custom-facet">
+          <label>Filter {{facet.key}}</label>
+          <ul>
+            <li ng-repeat="item in facet[facet.key]">
+              <md-checkbox ng-model="item.selected" ng-change="toggleSelect(item)">
+                {{item.term}} ({{item.count}})
+              </md-checkbox>
+            </li>
+          </ul>
+        </div>
+
+        <!-- range -->
+        <div ng-if="facet.type === 'range'" class="np-custom-facet np-range-facet">
+          <label>Filter {{facet.key}}</label>
+          <rzslider
+            rz-slider-floor="facet.slider.floor"
+            rz-slider-ceil="facet.slider.ceil"
+            rz-slider-model="facet.slider.min"
+            rz-slider-high="facet.slider.max"
+            rz-slider-on-change="onSliderChange(facet)"></rzslider>
+        </div>
+
+      </div>
+    </div>
+  </md-whiteframe>
+
+</div>
