@@ -3,7 +3,7 @@
 let Entities = require('special-entities');
 
 // @ngInject
-var AutocompleteController = function($filter, $http, $location, $log, $q, $resource, $scope, $window, NpolarApiResource, NpdcAutocompleteConfig) {
+var AutocompleteController = function($filter, $http, $location, $log, $q, $resource, $route, $scope, $window, NpolarApiResource, NpdcAutocompleteConfig) {
   
   $scope.config = NpdcAutocompleteConfig;
   
@@ -131,6 +131,14 @@ var AutocompleteController = function($filter, $http, $location, $log, $q, $reso
       $log.debug("Redirecting to: ", path)
       $window.location = path;
       
+    };
+    
+    
+    this.redirectToSearch = function(q) {
+      $log.debug("redirectToSearch", q);
+      // Arg setting new location search like below crashes the app :( 
+      // $location.search({q});
+      $window.location = `archive/?q=${q}`;
     };
     
 };
