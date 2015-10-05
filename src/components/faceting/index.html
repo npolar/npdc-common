@@ -6,8 +6,11 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <meta name="viewport" content="initial-scale=1" />
   </head>
-  <body ng-controller="FacetingCtrl">
-    <npdc-md:faceting facets="facets"></npdc-md:faceting>
+  <body ng-controller="FacetingDemoCtrl">
+    <npdc-md:faceting ng-if="feed" data="feed.facets" options="facetOptions"></npdc-md:faceting>
+    <ul>
+      <li ng-repeat="item in feed.entries">{{ item.title }}</li>
+    </ul>
     <script src="/demos.js"></script>
   </body>
 </html>

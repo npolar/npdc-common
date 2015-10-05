@@ -10,8 +10,8 @@ const FacetingCtrl = function($scope) {
 
   let uiType = function(facet) {
     let _type = 'autocomplete';
-    if ($scope.data.options && $scope.data.options[facet.key]) {
-      _type = $scope.data.options[facet.key].type;
+    if ($scope.options && $scope.options[facet.key]) {
+      _type = $scope.options[facet.key].type;
     }
     return _type;
   };
@@ -41,21 +41,24 @@ const FacetingCtrl = function($scope) {
     return facet;
   };
 
-  // Init data model
-  $scope.data.facets = $scope.data.facets.map(facet => {
-    facet.key = Object.keys(facet)[0];
-    facet.type = uiType(facet);
-    facet[facet.key] = facet[facet.key].map(term => {
-      term.facet = facet.key;
-      return term;
+  let initDataModel = function () {
+    $scope.data = $scope.data.map(facet => {
+      facet.key = Object.keys(facet)[0];
+      facet.type = uiType(facet);
+      facet[facet.key] = facet[facet.key].map(term => {
+        term.facet = facet.key;
+        return term;
+      });
+
+      if (facet.type === 'range') {
+        facet = initRangeFacet(facet);
+      }
+      return facet;
     });
+  };
 
-    if (facet.type === 'range') {
-      facet = initRangeFacet(facet);
-    }
-    return facet;
-  });
-
+  // Init data model
+  initDataModel();
 
   // Search
   $scope.showAdvanced = false;
@@ -87,7 +90,7 @@ const FacetingCtrl = function($scope) {
   };
 
   $scope.removeFilter = function(filter) {
-    let facet = $scope.data.facets.find(facet => facet.key === filter.facet);
+    let facet = $scope.data.find(facet => facet.key === filter.facet);
     $scope.selectedChip = -1;
     filters.remove(filter);
     if (facet && facet.slider) {
