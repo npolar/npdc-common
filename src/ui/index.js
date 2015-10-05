@@ -19,7 +19,9 @@ ui.controller('NpdcSearchController', require('./search/SearchController'));
 ui.directive('npdcBottom', require('./bottom/bottom'));
 ui.controller('NpdcBottomController', require('./bottom/BottomController'));
 
-//ui.controller('NpdcAutocompleteController', require('./search/AutocompleteController'));
+ui.controller('NpdcAutocompleteController', require('./search/autocomplete/AutocompleteController'));
+ui.service('NpdcAutocompleteConfig', require('./search/autocomplete/autocompleteConfigService'));
+ui.directive('npdcAutocomplete', require('./search/autocomplete/autocompleteDirective'));
 
 ui.directive('npdcCreateButton', require('./button/CreateButton'));
 ui.directive('npdcEditButton', require('./button/EditButton'));
