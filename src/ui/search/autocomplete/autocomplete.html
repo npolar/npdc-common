@@ -1,0 +1,51 @@
+<span ng-controller="NpdcAutocompleteController as ctrl" layout="column">
+  <md-content class="md-padding">
+    <!--<form ng-submit="$event.preventDefault()">-->
+    <form ng-submit="ctrl.redirectToSearch(ctrl.searchText)">
+ <md-autocomplete md-autofocus="true"
+  md-no-cache="true"
+  md-selected-item="ctrl.selectedItem"
+  md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
+  md-search-text="ctrl.searchText"
+  md-selected-item-change="ctrl.selectedItemChange(item)"
+  md-items="item in ctrl.querySearch(ctrl.searchText)"
+  md-item-text="ctrl.title(item)"
+  md-min-length="1"
+  placeholder="{{ctrl.placeholder()}}">
+        
+        
+        
+        
+       <md-item-template>
+          <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">[{{item.collection}}] {{ item.title || item.code }}</span>
+        </md-item-template>
+        
+<!--         <md-item-template>
+          
+          <span class="item-title">
+            <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{
+              ctrl.title(item)  }} </span>
+          </span>
+          <span class="item-metadata">
+            <span class="item-metastat">
+              <span ng-if="item.collection != 'publication'"> [{{ ctrl.label(item) }}]</span>
+              <span ng-if="item.collection == 'publication'">. <i>{{item.journal.name }}</i> ({{ item.published_sort | json }}) [publication/{{ item.publication_type }}]</span>
+            </span>
+            
+        <md-not-found>
+          No matches found for "{{ctrl.searchText}}".
+        </md-not-found>
+
+          </span>
+        </md-item-template>-->
+        
+        
+      
+      </md-autocomplete>
+      <br/>
+
+      <md-checkbox ng-if="config.showCollections == true" ng-repeat="collection in ctrl.collections" ng-model="ctrl.collectionSelected[collection]" ng-change="ctrl.querySearch(ctrl.searchText)">{{ collection }}</md-checkbox>
+
+    </form>
+  </md-content>
+</span>
