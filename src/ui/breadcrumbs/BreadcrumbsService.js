@@ -12,10 +12,10 @@ var NpdcBreadcrumbs = function($location, $log, $rootScope, $window) {
   
   this.path = "";
     
-  var home = { href: "/", title: "Home [Norwegian Polar Data Centre]", text: "Home" };
+  var home = { href: "/", title: "Home [Norwegian Polar Data Centre]", text: "home" };
     
-  var capitalize = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+  let translate = (string) => {
+    return string; // .charAt(0).toUpperCase() + string.slice(1);
   };
   
   var link = (crumb, i) => {
@@ -35,7 +35,7 @@ var NpdcBreadcrumbs = function($location, $log, $rootScope, $window) {
     //if ((/^[?|&]q=/).test(crumb)) {
     //  crumb = `"${ $location.search().q }"`;
     //}
-    return { href: self.path, title: capitalize(crumb), text: capitalize(decodeURIComponent(crumb)) };
+    return { href: self.path, title: translate(crumb), text: decodeURIComponent(translate(crumb)) };
   };
         
   $rootScope.$on("$locationChangeSuccess", function(event, uri) {
