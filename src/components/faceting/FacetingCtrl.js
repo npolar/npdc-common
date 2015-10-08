@@ -17,48 +17,63 @@ const FacetingCtrl = function($scope) {
   };
 
   let termToInt = function(term) {
-    return parseInt(term.replace(/-/g, ''));
+    return typeof term === 'string' ? parseInt(term.replace(/-/g, '')) : term;
   };
 
-  let initRangeFacet = function (facet) {
-    let floor, ceil;
+  let initRangeFacet = function (facet, oldFacet) {
+    let floor, ceil, min, max;
     if (facet[facet.key].length === 1) {
-      floor = ceil = termToInt(facet[facet.key][0].term);
+      floor = ceil = min = max = termToInt(facet[facet.key][0].term);
     } else {
-      floor = facet[facet.key].reduce((prev, term) =>
+      floor = min = facet[facet.key].reduce((prev, term) =>
         Math.min(prev.term ? termToInt(prev.term) : prev, termToInt(term.term)));
-      ceil = facet[facet.key].reduce((prev, term) =>
+      ceil = max = facet[facet.key].reduce((prev, term) =>
         Math.max(prev.term ? termToInt(prev.term) : prev, termToInt(term.term)));
     }
 
-    facet.slider = {
-      floor,
-      ceil,
-      min: floor,
-      max: ceil
-    };
+    if (oldFacet && oldFacet.slider) {
+      facet.slider = oldFacet.slider;
+    } else {
+      facet.slider = {
+        floor,
+        ceil,
+        min: floor,
+        max: ceil
+      };
+    }
 
     return facet;
   };
 
   let initDataModel = function () {
-    $scope.data = $scope.data.map(facet => {
+    $scope.model = $scope.data.map(facet => {
+      let oldFacet;
       facet.key = Object.keys(facet)[0];
+      oldFacet = $scope.model ? $scope.model.find(item => item.key === facet.key) : null;
       facet.type = uiType(facet);
       facet[facet.key] = facet[facet.key].map(term => {
+        let oldTerm;
         term.facet = facet.key;
+        oldTerm = oldFacet ? oldFacet[facet.key].find(ot => ot.term === term.term) : null;
+        if (oldTerm && oldTerm.selected) {
+          term.selected = true;
+        }
         return term;
       });
 
       if (facet.type === 'range') {
-        facet = initRangeFacet(facet);
+        facet = initRangeFacet(facet, oldFacet);
       }
+
       return facet;
     });
   };
 
   // Init data model
   initDataModel();
+  $scope.$watch('data', (newVal, oldVal) => {
+    initDataModel();
+  });
 
   // Search
   $scope.showAdvanced = false;
@@ -90,7 +105,7 @@ const FacetingCtrl = function($scope) {
   };
 
   $scope.removeFilter = function(filter) {
-    let facet = $scope.data.find(facet => facet.key === filter.facet);
+    let facet = $scope.model.find(facet => facet.key === filter.facet);
     $scope.selectedChip = -1;
     filters.remove(filter);
     if (facet && facet.slider) {
@@ -124,7 +139,7 @@ const FacetingCtrl = function($scope) {
 
 
   // Range
-  $scope.onSliderChange = function(facet) {
+  $scope.onSliderEnd = function(facet) {
     if (facet.slider.min === facet.slider.floor &&
       facet.slider.max === facet.slider.ceil) {
       filters.removeRangeFilter(facet);

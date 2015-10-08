@@ -8708,13 +8708,6 @@ md-tooltip {
     background: #106cc8;
     color: rgba(255, 255, 255, 0.87); }
 
-.np-faceting .np-faceting-facets {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.8s; }
-  .np-faceting .np-faceting-facets.show {
-    max-height: 100vh; }
-
 .np-faceting .np-custom-facet {
   box-sizing: border-box;
   margin-left: 4px;

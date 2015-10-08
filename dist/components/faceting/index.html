@@ -7,6 +7,10 @@
     <meta name="viewport" content="initial-scale=1" />
   </head>
   <body ng-controller="FacetingDemoCtrl">
+    <md-input-container flex>
+      <label>Search</label>
+      <input ng-model="q">
+    </md-input-container>
     <npdc-md:faceting ng-if="feed" data="feed.facets" options="facetOptions"></npdc-md:faceting>
     <ul>
       <li ng-repeat="item in feed.entries">{{ item.title }}</li>
