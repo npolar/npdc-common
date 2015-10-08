@@ -5,7 +5,7 @@
 var SaveButton = function () {
   return {
     controller: "NpdcButtonComponent",
-    templateUrl: 'npdc-common/src/ui/button/save-button.html'
+    templateUrl: 'npdc-common/src/components/button/save-button.html'
   };
 };
 

@@ -5,7 +5,7 @@
  */
 var show = function () {
   return {
-    templateUrl: 'npdc-common/src/ui/formula/show.html'
+    templateUrl: 'npdc-common/src/components/formula/show.html'
   };
 };
 

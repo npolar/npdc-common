@@ -5,7 +5,7 @@
 let CreateButton = function () {
   return {
     controller: "NpdcButtonComponent",
-    templateUrl: 'npdc-common/src/ui/button/create-button.html'
+    templateUrl: 'npdc-common/src/components/button/create-button.html'
   };
 };
 module.exports = CreateButton;

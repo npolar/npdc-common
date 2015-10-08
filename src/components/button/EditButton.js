@@ -5,7 +5,7 @@
 var EditButton = function () {
   return {
     controller: "NpdcButtonComponent",
-    templateUrl: 'npdc-common/src/ui/button/edit-button.html'
+    templateUrl: 'npdc-common/src/components/button/edit-button.html'
   };
 };
 

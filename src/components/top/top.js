@@ -7,7 +7,7 @@ let Top = function () {
       top: '='
     },
     controller: 'NpdcTopController',
-    templateUrl: 'npdc-common/src/ui/top/npdc-top.html'
+    templateUrl: 'npdc-common/src/components/top/npdc-top.html'
   };
 };
 
