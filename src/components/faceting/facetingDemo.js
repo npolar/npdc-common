@@ -29,7 +29,7 @@ demo.controller('FacetingDemoCtrl', function ($scope, $location, $controller, Da
 
   $scope.query = function(params) {
 
-    let defaults = { limit: "all", sort: "-updated", fields: 'title,id,updated' };
+    let defaults = { limit: "all", sort: "-updated", fields: 'title,id,updated', facets: 'coverage.south,people.email,progress,topics' };
     let invariants = $scope.security.isAuthenticated() ? {} : { "not-draft": "yes" } ;
 
     return angular.extend(defaults, $location.search(), invariants, params);
@@ -42,6 +42,9 @@ demo.controller('FacetingDemoCtrl', function ($scope, $location, $controller, Da
       type: 'checkbox'
     },
     'year-released': {
+      type: 'range'
+    },
+    'coverage.south': {
       type: 'range'
     }
   };

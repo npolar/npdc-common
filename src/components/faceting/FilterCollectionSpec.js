@@ -61,4 +61,40 @@ describe('FilterCollection', function() {
     });
   });
 
+  describe('#addRangeFilter', function () {
+    it('should set type to date for year, month and day facets', function () {
+      let facet = {
+        key: 'year-released',
+        'year-released': [{
+          term: '2001',
+          facet: 'year-released',
+        }],
+        slider: {
+          min: 2001,
+          max: 2001
+        }
+      };
+
+      filters.addRangeFilter(facet);
+      filters.array[0].type.should.eql('date');
+    });
+
+    it('should set number for non date range filters', function () {
+      let facet = {
+        key: 'temperature',
+        'temperature': [{
+          term: 90,
+          facet: 'temperature',
+        }],
+        slider: {
+          min: 90,
+          max: 90
+        }
+      };
+
+      filters.addRangeFilter(facet);
+      filters.array[0].type.should.eql('number');
+    });
+  });
+
 });

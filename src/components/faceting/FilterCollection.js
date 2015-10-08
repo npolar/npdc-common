@@ -45,7 +45,8 @@ let FilterCollection = function() {
     filter = {
       count: terms.reduce((memo, item) => memo + item.count, 0),
       term: facet.slider.min + ".." + facet.slider.max,
-      facet: facet.key
+      facet: facet.key,
+      type: /^(year|month|day)-.*$/.test(facet.key) ? 'date' : 'number'
     };
     existingFilter = filters.find(item => filter.facet === item.facet);
     if (!existingFilter) {

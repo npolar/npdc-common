@@ -38,17 +38,6 @@
     }
   }
 
-  .np-faceting-facets {
-    max-height: 0;
-    overflow: hidden;
-
-    transition: max-height .8s;
-
-    &.show {
-      max-height: 100vh;
-    }
-  }
-
   .np-custom-facet {
     box-sizing: border-box;
     margin-left: 4px;
