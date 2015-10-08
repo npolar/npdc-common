@@ -3,7 +3,7 @@
 require('../../');
 let angular = require('angular');
 
-angular.module('main', ['npdcMaterial']).controller('MainCtrl', function ($scope) {
+angular.module('main', ['npdcUi']).controller('MainCtrl', function ($scope) {
   let appName = 'Appname';
 
   $scope.mySidenav = {

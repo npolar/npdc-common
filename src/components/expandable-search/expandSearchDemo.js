@@ -3,4 +3,4 @@
 require('../../');
 let angular = require('angular');
 
-angular.module('expandSearch', ['npdcMaterial']);
+angular.module('expandSearch', ['npdcUi']);

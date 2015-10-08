@@ -4,7 +4,7 @@ require('../../');
 let angular = require('angular');
 require('angular-npolar');
 
-let demo = angular.module('faceting', ['npdcMaterial', 'npolarApi']);
+let demo = angular.module('faceting', ['npdcUi', 'npolarApi']);
 
 // Bootstrap ngResource models using NpolarApiResource
 var resource = {'path': '/dataset', 'resource': 'Dataset' };

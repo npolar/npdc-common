@@ -4,7 +4,7 @@ require('../../');
 let angular = require('angular');
 require('angular-route');
 
-angular.module('sidenav', ['ngRoute', 'npdcMaterial']).controller('SidenavCtrl', function ($scope, $route) {
+angular.module('sidenav', ['ngRoute', 'npdcUi']).controller('SidenavCtrl', function ($scope, $route) {
   $scope.mySidenav = {
     title: 'Appname',
     menu: [{

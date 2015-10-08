@@ -3,4 +3,4 @@
 require('../../');
 let angular = require('angular');
 
-angular.module('home', ['npdcMaterial']);
+angular.module('home', ['npdcUi']);
