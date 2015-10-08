@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<md-toolbar class="np-top-menu">
+  <div class="md-toolbar-tools">
+    <div hide-gt-md>
+      <md-button class="md-icon-button" aria-label="Open sidenav" ng-click="toggleLeft()" ng-if="sidenav">
+        <md-icon>menu</md-icon>
+      </md-button>
+      <span class="md-title">{{title}}</span>
+    </div>
+
+    <span flex></span>
+
+    <!-- Apps -->
+    <md-menu>
+      <md-button aria-label="Open application menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+        <md-icon md-menu-origin>
+          <md-tooltip>Data / Applications</md-tooltip>apps</md-icon>
+      </md-button>
+
+      <md-menu-content width="6">
+
+
+        <md-subheader class="md-sticky">⛁ Data</md-subheader>
+
+        <md-menu-item>
+          <md-button ng-href="/dataset">Datasets (metadata catalogue)</md-button>
+        </md-menu-item>
+
+        <md-menu-item>
+          <md-button ng-href="//api.npolar.no">Data services (
+            <abbr title="Application Programming Interface">API</abbr>s)</md-button>
+        </md-menu-item>
+
+        <md-menu-item>
+          <md-button ng-href="//geodata.npolar.no">Geographic services</md-button>
+        </md-menu-item>
+
+
+        <md-divider></md-divider>
+
+        <md-subheader class="md-no-sticky">Applications</md-subheader>
+
+        <md-menu-item>
+          <md-button ng-href="/expedition" title="Expeditions">Expeditions</md-button>
+        </md-menu-item>
+
+        <md-menu-item>
+          <md-button ng-href="/vessel">Historic Vessels</md-button>
+        </md-menu-item>
+
+        <md-menu-item>
+          <md-button ng-href="/indicator">Indicators (environmental monitoring)</md-button>
+        </md-menu-item>
+
+        <md-menu-item>
+          <md-button ng-href="/map/archive">Map archive</md-button>
+        </md-menu-item>
+
+        <md-menu-item>
+          <md-button ng-href="/people">People</md-button>
+        </md-menu-item>
+
+        <md-menu-item>
+          <md-button ng-href="/placename">Placenames</md-button>
+        </md-menu-item>
+
+        <md-menu-item>
+          <md-button ng-href="/project">Projects</md-button>
+        </md-menu-item>
+
+        <md-menu-item>
+          <md-button ng-href="/publication">Publications</md-button>
+        </md-menu-item>
+
+      </md-menu-content>
+
+    </md-menu>
+
+    <md-menu ng-if="security.isAuthenticated()">
+      <md-button aria-label="Open application menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+        <md-icon md-menu-origin>
+          <md-tooltip>Internal applications</md-tooltip>settings</md-icon>
+      </md-button>
+
+      <md-menu-content width="4">
+
+        <md-subheader class="md-no-sticky">Internal applications</md-subheader>
+
+        <md-menu-item>
+          <md-button ng-href="/courses">Courses</md-button>
+        </md-menu-item>
+
+        <md-menu-item>
+          <md-button ng-href="/marine/biology" title="Marine Biology Samples">Marine biology</md-button>
+        </md-menu-item>
+
+        <md-menu-item>
+          <md-button ng-href="/user">Users</md-button>
+        </md-menu-item>
+
+      </md-menu-content>
+    </md-menu>
+
+    <npdc-md:user-menu></npdc-md:user-menu>
+
+    <npdc-md:expand-search></npdc-md:expand-search>
+
+  </div>
+</md-toolbar>

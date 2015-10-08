@@ -1,0 +1,226 @@
+{
+  "_id": "025b82e5-4a5a-558f-b021-17c1a60f0922",
+  "_rev": "35-bb826db14d27ff5a3ac70b9b1c7e9210",
+  "title": "Marine mammals exploring the oceans pole to pole (MEOP) CTD data",
+  "summary": "Within the Marine Mammals Exploring the Oceans Pole to Pole (MEOP) program, several international teams agreed to share their CTD-SRDL data sets to produce a single, uniformly calibrated, homogeneous database of hydrographic profiles. Here we present the MEOP-CTD database, a quality-controlled collection of most seal-derived hydrographic data obtained in the period 2004–2010.\r\n\r\nThe MEOP-CTD database includes 349 CTD-SRDLs, representing 165,000 TS profiles.\r\n\r\nThe majority of loggers were deployed on elephant seals, with a lesser number on Weddell and crabeater seals.\r\n\r\nOn average, profiles are 500 m deep, although some seals occasionally reach 2000 m or more.\r\n\r\nThe MEOP-CTD collection of profiles produces near circumpolar coverage, although some regions such as the Weddell and Ross Seas remain poorly sampled.\r\n\r\nMore than 60% of TS profiles were obtained south of the southern limit of the ACC, where few Argo data exist. The migration distance of seals depends highly on the deployment location and time of the year, ranging from 100 km to more than 5000 km, while the life span of a CTD-SRDL varies from 1 to 10 months (5 months on average). The bulk of measurements were made in the austral autumn and winter, when other in situ data are scarce, yielding hydrographic sections with high spatial and temporal resolution (2.5 profiles per day on average).",
+  "progress": "ongoing",
+  "draft": "no",
+  "links": [{
+    "rel": "data",
+    "href": "http://people.su.se/~froqu/MEOP-CTD_data.nc",
+    "title": "MEOP-CTD_data.nc",
+    "type": "application/netcdf"
+  }, {
+    "href": "http://people.su.se/~froqu/the-meop-ctd-database.html",
+    "title": "The MEOP-CTD database",
+    "rel": "related",
+    "type": "text/html"
+  }, {
+    "href": "http://onlinelibrary.wiley.com/enhanced/doi/10.1002/2013GL058304/",
+    "title": "Roquet et al. (2013): Estimates of the Southern Ocean general circulation improved by animal-borne instruments",
+    "rel": "publication",
+    "type": "text/html"
+  }, {
+    "href": "http://www.meop.info/en/",
+    "title": "meop.info",
+    "rel": "project",
+    "type": "text/html"
+  }, {
+    "href": "http://risapi.data.npolar.no/oai?verb=GetRecord&metadataPrefix=dif&identifier=oai:ris.npolar.no:org.polarresearch-598",
+    "rel": "via",
+    "type": "application/json"
+  }, {
+    "rel": "edit",
+    "href": "https://api.npolar.no/dataset/025b82e5-4a5a-558f-b021-17c1a60f0922",
+    "title": "Edit URI",
+    "type": "application/json"
+  }, {
+    "rel": "alternate",
+    "href": "http://api.npolar.no/dataset/025b82e5-4a5a-558f-b021-17c1a60f0922.xml",
+    "title": "DIF XML",
+    "type": "application/xml"
+  }, {
+    "rel": "alternate",
+    "href": "http://api.npolar.no/dataset/025b82e5-4a5a-558f-b021-17c1a60f0922.iso",
+    "title": "ISO 19139 XML",
+    "type": "application/vnd.iso.19139+xml"
+  }, {
+    "rel": "alternate",
+    "href": "http://api.npolar.no/dataset/025b82e5-4a5a-558f-b021-17c1a60f0922.atom",
+    "title": "Atom entry XML",
+    "type": "application/atom+xml"
+  }, {
+    "rel": "alternate",
+    "href": "http://data.npolar.no/dataset/025b82e5-4a5a-558f-b021-17c1a60f0922",
+    "title": "HTML",
+    "type": "text/html"
+  }],
+  "released": "2009-04-01T12:00:00Z",
+  "licences": ["http://creativecommons.org/licenses/by/3.0/no/", "http://data.norge.no/nlod/no/1.0"],
+  "rights": "Open data: Free to reuse if attributed to the Norwegian Polar Institute",
+  "topics": ["biology", "marine", "oceanography"],
+  "iso_topics": ["biota", "climatologyMeteorologyAtmosphere", "environment", "oceans"],
+  "sets": ["arctic", "antarctic", "gcmd.nasa.gov", "ipy.org"],
+  "tags": ["MEOP", "IPY"],
+  "coverage": [{
+    "north": -42.0,
+    "east": 52.0,
+    "south": -74.0,
+    "west": -37.0
+  }, {
+    "north": 88.5,
+    "east": 22.0,
+    "south": 58.0,
+    "west": -43.0
+  }, {
+    "north": 88.5,
+    "east": 22.0,
+    "south": 58.0,
+    "west": -43.0
+  }],
+  "placenames": [{
+    "placename": "Southern Ocean"
+  }, {
+    "placename": "South Atlantic Ocean"
+  }, {
+    "placename": "Fram Strait",
+    "country": "NO"
+  }, {
+    "placename": "Bouvetøya",
+    "area": "Bouvetøya",
+    "country": "NO"
+  }, {
+    "placename": "Greenland Sea"
+  }],
+  "activity": [{
+    "start": "2004-01-01T12:00:00Z",
+    "stop": "2010-12-31T12:00:00Z"
+  }],
+  "people": [{
+    "id": null,
+    "first_name": "Kit M.",
+    "last_name": "Kovacs",
+    "roles": ["principalInvestigator", "author"],
+    "email": "kit.kovacs@npolar.no",
+    "organisation": "npolar.no"
+  }, {
+    "id": null,
+    "first_name": "Micheal",
+    "last_name": "Fedak",
+    "roles": ["principalInvestigator", "author"],
+    "email": "maf3@st-andrews.ac.uk",
+    "organisation": "st-andrews.ac.uk"
+  }, {
+    "id": null,
+    "first_name": "Christian",
+    "last_name": "Lydersen",
+    "roles": ["principalInvestigator", "author"],
+    "email": "Lydersen@npolar.no",
+    "organisation": "npolar.no"
+  }, {
+    "id": null,
+    "first_name": "Ole Anders",
+    "last_name": "Nøst",
+    "roles": ["principalInvestigator", "author"],
+    "email": null,
+    "organisation": "npolar.no"
+  }, {
+    "id": null,
+    "first_name": "Martin",
+    "last_name": "Biuw",
+    "roles": ["principalInvestigator", "author"],
+    "email": "martin.biuw@npolar.no",
+    "organisation": "npolar.no"
+  }, {
+    "id": null,
+    "first_name": "Fabien",
+    "last_name": "Roquet",
+    "roles": ["processor"],
+    "email": "fabien.roquet@gmail.com",
+    "organisation": "su.se"
+  }],
+  "organisations": [{
+    "name": "Stockholm University",
+    "id": "geo.su.se",
+    "gcmd_short_name": "SU/GEOL",
+    "homepage": "http://www.geo.su.se/",
+    "roles": ["resourceProvider"]
+  }, {
+    "name": "Norwegian Polar Institute",
+    "id": "npolar.no",
+    "gcmd_short_name": "NO/NPI",
+    "homepage": "http://npolar.no",
+    "roles": ["publisher", "owner", "pointOfContact"]
+  }, {
+    "name": "University of St. Andrews, Sea Mammal Research Unit, Scotland",
+    "id": "smru.st-andrews.ac.uk",
+    "gcmd_short_name": "SMRU",
+    "homepage": "http://www.smru.st-andrews.ac.uk/",
+    "roles": ["owner"]
+  }],
+  "gcmd": {
+    "sciencekeywords": [{
+      "Category": "EARTH SCIENCE",
+      "Topic": "OCEANS",
+      "Term": "SALINITY/DENSITY"
+    }, {
+      "Category": "EARTH SCIENCE",
+      "Topic": "BIOLOGICAL CLASSIFICATION",
+      "Term": "ANIMALS/VERTEBRATES",
+      "Variable_Level_1": "MAMMALS",
+      "Variable_Level_2": "CARNIVORES",
+      "Variable_Level_3": "SEALS/SEA LIONS/WALRUSES"
+    }, {
+      "Category": "EARTH SCIENCE",
+      "Topic": "OCEANS",
+      "Term": "OCEAN CIRCULATION",
+      "Variable_Level_1": "ADVECTION"
+    }, {
+      "Category": "EARTH SCIENCE",
+      "Topic": "OCEANS",
+      "Term": "OCEAN CIRCULATION",
+      "Variable_Level_1": "FRESH WATER FLUX"
+    }, {
+      "Category": "EARTH SCIENCE",
+      "Topic": "OCEANS",
+      "Term": "OCEAN CIRCULATION",
+      "Variable_Level_1": "WATER MASSES"
+    }, {
+      "Category": "EARTH SCIENCE",
+      "Topic": "OCEANS",
+      "Term": "OCEAN TEMPERATURE",
+      "Variable_Level_1": "WATER TEMPERATURE"
+    }]
+  },
+  "comment": "http://www.meop.info/en/partners/",
+  "changes": [{
+    "datetime": "2009-04-01T12:00:00Z",
+    "name": "Christian Lydersen",
+    "email": "Lydersen@npolar.no",
+    "comment": "created"
+  }, {
+    "datetime": "2013-12-17T15:22:02Z",
+    "name": "Conrad Helgeland",
+    "email": "conrad@npolar.no",
+    "comment": "edited"
+  }, {
+    "datetime": "2014-05-05T18:53:54Z",
+    "name": "Conrad Helgeland",
+    "email": "conrad@npolar.no",
+    "comment": "edited"
+  }, {
+    "datetime": "2014-05-14T12:32:27Z",
+    "name": "Conrad Helgeland",
+    "email": "conrad@npolar.no",
+    "comment": "Replaced project summary with dataset summary from http://onlinelibrary.wiley.com/enhanced/doi/10.1002/2013GL058304/",
+    "rev": "20-1446aaf9eb7c7c85a65d94d6700d393e"
+  }],
+  "id": "025b82e5-4a5a-558f-b021-17c1a60f0922",
+  "created": "2009-04-01T12:00:00Z",
+  "created_by": "conrad@npolar.no",
+  "schema": "http://api.npolar.no/schema/dataset-1-0.0.pre",
+  "lang": "en",
+  "collection": "dataset",
+  "updated": "2014-12-18T11:36:45Z",
+  "updated_by": "conrad@npolar.no"
+}

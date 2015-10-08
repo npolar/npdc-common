@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html ng-app="home">
+
+<head>
+  <title>NPDC Home layout</title>
+  <link href="/npdc-material.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <meta name="viewport" content="initial-scale=1" />
+</head>
+<body>
+  <div class="np-page-container">
+    <npdc-md:toolbar class="np-header"></npdc-md:toolbar>
+    <md-content layout="row" class="np-content md-padding np-layout-home">
+      <div flex></div>
+      <md-card flex="75">
+        <md-card-content>
+          <div class="np-center-box">
+            <h1 class="md-headline">Portal for scientific data at the Norwegian Polar Institute</h1>
+            <p>Search, browse, download and vizualize scientific data about the polar regions. We gather data about climate, marine biology, wildlife, ice, expeditions, ships, cruises and much more. Everything polar.</p>
+          </div>
+          <md-grid-list md-cols-sm="1" md-cols-md="2" md-cols-gt-md="3" md-row-height-gt-md="1:1" md-row-height="4:3" md-gutter="8px" md-gutter-gt-sm="4px">
+            <md-grid-tile md-colspan-gt-sm="1" md-rowspan-gt-sm="1">
+              <div>20 000</div>
+              <md-grid-tile-footer><h3>Datsets</h3></md-grid-tile-footer>
+            </md-grid-tile>
+            <md-grid-tile md-colspan-gt-sm="1" md-rowspan-gt-sm="1">
+              <div>8 000 000</div>
+              <md-grid-tile-footer><h3>Oceanographic data points</h3></md-grid-tile-footer>
+            </md-grid-tile>
+            <md-grid-tile md-colspan-gt-sm="1" md-rowspan-gt-sm="1">
+              <div>400 000</div>
+              <md-grid-tile-footer><h3>Marine biology samples</h3></md-grid-tile-footer>
+            </md-grid-tile>
+            <md-grid-tile md-colspan-gt-sm="1" md-rowspan-gt-sm="1">
+              <div>20 000</div>
+              <md-grid-tile-footer><h3>Datsets</h3></md-grid-tile-footer>
+            </md-grid-tile>
+            <md-grid-tile md-colspan-gt-sm="1" md-rowspan-gt-sm="1">
+              <div>8 000 000</div>
+              <md-grid-tile-footer><h3>Oceanographic data points</h3></md-grid-tile-footer>
+            </md-grid-tile>
+            <md-grid-tile md-colspan-gt-sm="1" md-rowspan-gt-sm="1">
+              <div>400 000</div>
+              <md-grid-tile-footer><h3>Marine biology samples</h3></md-grid-tile-footer>
+            </md-grid-tile>
+          </md-grid-list>
+        </md-card-content>
+      </md-card>
+      <div flex></div>
+    </md-content>
+  </div>
+
+  <script src="/demos.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,129 @@
+.formula {
+
+  a {
+    text-decoration: none;
+	display: inline-block;
+	height: 1em;
+  }
+
+  legend {
+    display: table;
+    padding: 0;
+  }
+
+  fieldset {
+    border: 0;
+    margin: 0;
+    min-width: 0;
+    padding: 0;
+    position: relative;
+  }
+
+  // Firefox needs this...
+  input[type="number"] {
+    width: 100%;
+  }
+
+  body:not(:-moz-handler-blocked) fieldset {
+    display: table-cell;
+  }
+
+  md-tabs {
+    height: 100%;
+  }
+
+  md-slider {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  md-whiteframe {
+    display: block;
+    margin: 16px;
+    padding: 16px;
+  }
+
+  .np-formula-array {
+    ul {
+      list-style-type: none;
+      padding: 0;
+      position: relative;
+
+      legend {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 90%;
+      }
+    }
+  }
+
+  .np-formula-subarray {
+    margin-top: 28px;
+  }
+
+  .np-formula-object-ctrls {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 99;
+  }
+
+  .np-formula-input-ctrls {
+    // noop
+  }
+
+  .np-validation-message {
+    @include order(99);
+    margin-top: 8px;
+
+    .md-caption {
+      color: $color-secondary-1-3;
+    }
+  }
+
+  .np-formula-array-add {
+    float: right;
+  }
+
+  .np-field-info {
+    cursor: help;
+    position: absolute;
+    right: 5px;
+    top: 0;
+    z-index: 999;
+
+    md-icon {
+      color: rgba(0, 0, 0, .26);
+    }
+  }
+
+  .np-field-info + md-select,
+  .np-field-info + input[type="number"],
+  .np-field-info + md-slider,
+  .np-field-info + md-checkbox {
+    width: calc(100% - 33px);
+  }
+
+  .np-formula-range,
+  .np-formula-boolean {
+    position: relative;
+
+    label {
+      color: rgba(0, 0, 0, .54);
+
+      span {
+        color: $color-text-dark;
+      }
+    }
+  }
+
+  .np-formula-input,
+  .np-formula-select,
+  .np-formula-range {
+    .np-field-info {
+      top: 20px;
+    }
+  }
+
+}

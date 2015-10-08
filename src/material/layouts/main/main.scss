@@ -1,0 +1,13 @@
+.np-body {
+  max-height: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.np-footer {
+  background-color: $color-bg-dark;
+  bottom: 0;
+  color: $color-text-light;
+  height: 230px;
+  width: 100%;
+}

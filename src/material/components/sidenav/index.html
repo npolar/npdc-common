@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html ng-app="sidenav">
+  <head>
+    <title>NPDC Sidenav component</title>
+    <link href="/npdc-material.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="initial-scale=1" />
+    <base href="/components/sidenav/">
+  </head>
+  <body>
+    <div ng-controller="SidenavCtrl">
+      <npdc-md:sidenav sidenav="mySidenav"></npdc-md:sidenav>
+    </div>
+    <div>Route: <span ng-view></span></div>
+    <script src="/demos.js"></script>
+  </body>
+</html>

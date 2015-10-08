@@ -1,0 +1,39 @@
+// scss-lint:disable VendorPrefix
+@mixin order($order) {
+  -webkit-order: $order;
+  -moz-order: $order;
+  -ms-order: $order;
+  order: $order;
+}
+
+@mixin border-radius($radius) {
+  border-radius: $radius;
+  -moz-border-radius: $radius;
+  -ms-border-radius: $radius;
+  -webkit-border-radius: $radius;
+}
+
+@mixin transition($transition) {
+  transition: $transition;
+  -moz-transition: $transition;
+  -ms-transition: $transition;
+  -webkit-transition: $transition;
+}
+
+@mixin box-shadow($shadow) {
+  box-shadow: $shadow;
+  -moz-box-shadow: $shadow;
+  -ms-box-shadow: $shadow;
+  -webkit-box-shadow: $shadow;
+}
+
+@mixin flex($direction) {
+  display: flex;
+  display: -moz-flex;
+  display: -ms-flex;
+  display: -webkit-flex;
+  flex-direction: $direction;
+  -moz-flex-direction: $direction;
+  -ms-flex-direction: $direction;
+  -webkit-flex-direction: $direction;
+}
