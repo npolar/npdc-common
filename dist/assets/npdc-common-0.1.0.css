@@ -8769,6 +8769,15 @@ md-tooltip {
   .np-top-menu .md-toolbar-tools > md-menu {
     padding: 0; }
 
+.np-environment-warning {
+  color: red;
+  position: absolute;
+  z-index: 9999;
+  font-weight: bold;
+  text-shadow: 1px 1px #000;
+  top: 20px;
+  left: 30%; }
+
 .np-login {
   max-width: 90vw;
   width: 400px; }
