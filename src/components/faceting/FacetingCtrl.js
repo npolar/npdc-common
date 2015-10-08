@@ -7,11 +7,13 @@ const QueryBuilder = require('./QueryBuilder');
 const FacetingCtrl = function($scope) {
   let filters = new FilterCollection();
   let queryBuilder = new QueryBuilder();
+  const UI_TYPES = ['autocomplete', 'checkbox', 'range'];
 
   let uiType = function(facet) {
     let _type = 'autocomplete';
     if ($scope.options && $scope.options[facet.key]) {
-      _type = $scope.options[facet.key].type;
+      let optType = $scope.options[facet.key].type;
+      _type = UI_TYPES.some(type => type === optType) ? optType : _type;
     }
     return _type;
   };

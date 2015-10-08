@@ -30,7 +30,7 @@
   </md-button>
   <md-menu-content>
     <md-menu-item>
-      <md-button ng-href="/user/{{user.username}}" title="View profile for user {{user.username}}">
+      <md-button ng-href="/user/{{security.getUser().email }}" title="View profile for user {{user.username}}">
         <md-icon md-menu-align-target>face</md-icon>
         {{ user.name }}
       </md-button>
