@@ -17,7 +17,7 @@
         
         
        <md-item-template>
-          <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">[{{item.collection}}] {{ item.title || item.code }}</span>
+          <span ng-if="item" md-highlight-text="ctrl.searchText" md-highlight-flags="^i">[{{item.collection}}] {{ item.name || item.title || item.code || item.titles[0].title || item.id }}</span>
         </md-item-template>
         
 <!--         <md-item-template>
