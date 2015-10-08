@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <article ng-show="document">
-  <h3><a ng-href="{{document.id}}">{{ document.title || document.id.slice(0,8)}}</a></h3>
+  <h3><a ng-show="document._rev" ng-href="{{ resource.href(document.id) }}">{{ document.title || document.id.slice(0,8)}}</a></h3>
+  <h3 ng-if="document && !document._rev">New document, not yet saved</h3>
   <div formula="formula"></div>
   <div>
-    <npdc:delete-button></npdc:delete-button>
+    <!--<npdc:delete-button></npdc:delete-button>-->
     <npdc:save-button></npdc:save-button>
   </div>
 </article>
-<div class="formula" ng-if="!document">
+<div ng-if="!document" class="formula" >
   <div layout="row" layout-sm="column" layout-align="space-around">
     <md-progress-circular md-mode="indeterminate"></md-progress-circular>
   </div>
 </div>
+<npdc:delete-button></npdc:delete-button>
