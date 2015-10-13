@@ -8827,6 +8827,8 @@ rzslider span.rz-bubble.rz-limit {
     top: 35px;
     -webkit-transition: opacity 1s;
     transition: opacity 1s;
+    -webkit-transition-delay: .5s;
+    transition-delay: .5s;
     z-index: 22; }
   .np-expand-search.open {
     width: 100%; }

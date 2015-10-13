@@ -111,6 +111,8 @@
     top: 35px;
     -webkit-transition: opacity 1s;
     transition: opacity 1s;
+    -webkit-transition-delay: .5s;
+    transition-delay: .5s;
     z-index: 22;
   }
 
