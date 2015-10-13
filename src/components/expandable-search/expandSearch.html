@@ -5,8 +5,8 @@
 <div class="np-expand-search" ng-keyup="close($event);"
   ng-class="{ open: isOpen, sm: $mdMedia('sm'), md: $mdMedia('md'), lg: $mdMedia('lg')}">
   <md-fab-toolbar md-open="isOpen" md-direction="left">
-    <md-fab-trigger ng-click="open($event);">
-      <md-button aria-label="search" class="md-fab" ng-focus-out="blockEvent($event);">
+    <md-fab-trigger>
+      <md-button aria-label="search" class="md-fab" ng-focus-out="blockEvent($event);" ng-click="open($event);">
         <md-icon ng-if="filterIcon" class="np-toolbar-filter-icon">{{filterIcon}}</md-icon>
         <md-icon>search</md-icon>
       </md-button>

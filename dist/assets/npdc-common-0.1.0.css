@@ -8819,7 +8819,7 @@ rzslider span.rz-bubble.rz-limit {
     padding-bottom: 2px;
     width: 100%; }
   .np-expand-search .np-toolbar-filter-icon {
-    color: rgba(0, 0, 0, 0.54);
+    color: rgba(0, 0, 0, 0.54) !important;
     font-size: 18px;
     opacity: 1;
     position: absolute;

@@ -17,11 +17,19 @@ let expandSearch = function() {
       };
 
       $scope.open = function() {
+        console.log('firefox!');
         document.querySelector('.np-es-input input').focus();
-        $scope.isOpen = true;
+
+        // Firefox workaround
+        setTimeout(() => {
+          $scope.isOpen = true;
+        }, 1);
+
+        // Wait for transition
         setTimeout(() => {
           $scope.$broadcast('reCalcViewDimensions');
-        }, 500);
+        }, 501);
+        return false;
       };
 
       $scope.close = function($event, force) {
