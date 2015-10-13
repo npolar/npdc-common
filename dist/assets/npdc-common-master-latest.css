@@ -8480,6 +8480,115 @@ md-tooltip {
     border: 1px solid #fff; } }
 
 /**
+ * Angular JS slider directive
+ *
+ * (c) Rafal Zajac <rzajac@gmail.com>
+ * http://github.com/rzajac/angularjs-slider
+ *
+ * Licensed under the MIT license
+ */
+
+/* Slider colors */
+
+/* Slider size parameters */
+
+rzslider {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 4px;
+  margin: 30px 0 15px 0;
+  vertical-align: middle;
+}
+
+rzslider span {
+  position: absolute;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+rzslider span.rz-base {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+}
+
+rzslider span.rz-bar-wrapper {
+  left: 0;
+  width: 100%;
+  height: 32px;
+  padding-top: 16px;
+  margin-top: -16px;
+  box-sizing: border-box;
+}
+
+rzslider span.rz-bar {
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  height: 4px;
+  background: #d8e0f3;
+  -webkit-border-radius: 2px;
+     -moz-border-radius: 2px;
+          border-radius: 2px;
+}
+
+rzslider span.rz-bar.rz-selection {
+  z-index: 1;
+  background: #0db9f0;
+  -webkit-border-radius: 2px;
+     -moz-border-radius: 2px;
+          border-radius: 2px;
+}
+
+rzslider span.rz-pointer {
+  top: -14px;
+  z-index: 2;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  background-color: #0db9f0;
+  -webkit-border-radius: 16px;
+     -moz-border-radius: 16px;
+          border-radius: 16px;
+}
+
+rzslider span.rz-pointer:after {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 8px;
+  height: 8px;
+  background: #ffffff;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+  content: '';
+}
+
+rzslider span.rz-pointer:hover:after {
+  background-color: #ffffff;
+}
+
+rzslider span.rz-pointer.rz-active:after {
+  background-color: #451aff;
+}
+
+rzslider span.rz-bubble {
+  top: -32px;
+  padding: 1px 3px;
+  color: #55637d;
+  cursor: default;
+}
+
+rzslider span.rz-bubble.rz-selection {
+  top: 16px;
+}
+
+rzslider span.rz-bubble.rz-limit {
+  color: #55637d;
+}
+/**
  * Retrieves a color value from the $material-colors Sass map
  * Inspired by https://github.com/nilskaspersson/Google-Material-UI-Color-Palette/
  *
@@ -8641,53 +8750,108 @@ md-tooltip {
     margin-right: 15px;
     margin-top: 19px; }
 
-.np-expand-search input[type="search"]::-webkit-search-decoration,
-.np-expand-search input[type="search"]::-webkit-search-cancel-button,
-.np-expand-search input[type="search"]::-webkit-search-results-button,
-.np-expand-search input[type="search"]::-webkit-search-results-decoration {
-  display: none; }
+.np-expand-search {
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 16px;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 65px;
+  z-index: 10; }
+  .np-expand-search.sm .md-fab-toolbar-wrapper {
+    height: 56px; }
+  .np-expand-search.sm .np-es-input {
+    margin-top: 12px; }
+  .np-expand-search:not(.open) {
+    -webkit-transition: width 0.5s;
+    transition: width 0.5s;
+    -webkit-transition-delay: .5s;
+    transition-delay: .5s; }
+    .np-expand-search:not(.open) .md-fab-toolbar-background {
+      -webkit-transition-delay: .5s !important;
+      transition-delay: .5s !important; }
+  .np-expand-search md-fab-trigger {
+    margin-top: 3px; }
+  .np-expand-search md-fab-toolbar md-toolbar {
+    z-index: 0; }
+  .np-expand-search ::-webkit-input-placeholder {
+    color: #fff; }
+  .np-expand-search :-moz-placeholder {
+    color: #fff;
+    opacity: 1; }
+  .np-expand-search ::-moz-placeholder {
+    color: #fff;
+    opacity: 1; }
+  .np-expand-search :-ms-input-placeholder {
+    color: #fff; }
+  .np-expand-search .md-fab-action-item {
+    height: 100%;
+    line-height: 100%;
+    position: relative;
+    vertical-align: middle;
+    width: 100%; }
+  .np-expand-search .np-es-filter {
+    background-color: #fff;
+    box-shadow: 0 1px 7px #474747 inset;
+    box-sizing: border-box;
+    height: 300px;
+    max-height: 0;
+    overflow-y: scroll;
+    padding: 15px;
+    position: absolute;
+    -webkit-transition: all 0.5s;
+    transition: all 0.5s;
+    -webkit-transition-delay: 0;
+    transition-delay: 0;
+    visibility: hidden;
+    width: 100%; }
+    .np-expand-search .np-es-filter.open {
+      max-height: 50vh;
+      -webkit-transition: all 1s;
+      transition: all 1s;
+      -webkit-transition-delay: .5s;
+      transition-delay: .5s;
+      visibility: visible;
+      z-index: 10; }
+  .np-expand-search .np-es-input {
+    color: #fff;
+    margin-top: 20px;
+    padding-bottom: 2px;
+    width: 100%; }
+  .np-expand-search .np-toolbar-filter-icon {
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 18px;
+    opacity: 1;
+    position: absolute;
+    right: 34px;
+    top: 35px;
+    -webkit-transition: opacity 1s;
+    transition: opacity 1s;
+    z-index: 22; }
+  .np-expand-search.open {
+    width: 100%; }
+    .np-expand-search.open md-fab-toolbar md-toolbar {
+      z-index: 21; }
+    .np-expand-search.open .np-toolbar-filter-icon {
+      opacity: 0;
+      z-index: 0; }
 
-.np-expand-search input[type=search] {
-  border-radius: 10em;
-  -moz-border-radius: 10em;
-  -ms-border-radius: 10em;
-  -webkit-border-radius: 10em;
-  transition: all 0.5s;
-  -moz-transition: all 0.5s;
-  -ms-transition: all 0.5s;
-  -webkit-transition: all 0.5s;
-  -webkit-appearance: textfield;
-  background: #fff url("img/material-icons/ic_search_black_24dp_1x.png") no-repeat 7px center;
-  border: 0;
-  -webkit-box-sizing: content-box;
-  font-family: inherit;
-  font-size: 100%;
-  outline: none;
-  padding: 6px 4px 6px 32px;
-  width: 0; }
-
-.np-expand-search input[type=search]:focus {
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-  -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-  -ms-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-  background-color: #fff;
-  width: 160px; }
-
-.np-expand-search input:-moz-placeholder {
-  color: #fff; }
-
-.np-expand-search input::-webkit-input-placeholder {
-  color: #fff; }
+#np-es-click-area {
+  bottom: 0;
+  display: none;
+  height: 100vh;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100vw;
+  z-index: 5; }
+  #np-es-click-area.open {
+    display: block; }
 
 .np-faceting ul {
   list-style-type: none;
   padding: 0; }
-
-.np-faceting .np-faceting-search {
-  margin: 15px; }
-  .np-faceting .np-faceting-search md-input-container {
-    padding-bottom: 2px; }
 
 .np-faceting .np-faceting-top {
   position: relative; }
@@ -8702,7 +8866,8 @@ md-tooltip {
   background: #e0e0e0;
   color: #424242; }
   .np-faceting .md-chips .md-chip .md-chip-remove md-icon {
-    font-size: 18px; }
+    font-size: 18px;
+    color: #424242; }
   .np-faceting .md-chips .md-chip.md-focused,
   .np-faceting .md-chips .md-chip.md-focused .md-chip-remove md-icon {
     background: #106cc8;
@@ -8766,8 +8931,12 @@ md-tooltip {
   .np-top-menu a:hover,
   .np-top-menu a:visited {
     color: #fff; }
-  .np-top-menu .md-toolbar-tools > md-menu {
-    padding: 0; }
+  .np-top-menu npdc\:expand-search {
+    max-height: 100%; }
+  .np-top-menu .md-toolbar-tools {
+    padding-right: 80px; }
+    .np-top-menu .md-toolbar-tools > md-menu {
+      padding: 0; }
 
 .np-environment-warning {
   color: red;
@@ -8825,113 +8994,3 @@ div[tabindex] {
   max-width: 100%;
   background: #e0e0e0;
   color: #424242; }
-
-/**
- * Angular JS slider directive
- *
- * (c) Rafal Zajac <rzajac@gmail.com>
- * http://github.com/rzajac/angularjs-slider
- *
- * Licensed under the MIT license
- */
-
-/* Slider colors */
-
-/* Slider size parameters */
-
-rzslider {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-  height: 4px;
-  margin: 30px 0 15px 0;
-  vertical-align: middle;
-}
-
-rzslider span {
-  position: absolute;
-  display: inline-block;
-  white-space: nowrap;
-}
-
-rzslider span.rz-base {
-  width: 100%;
-  height: 100%;
-  padding: 0;
-}
-
-rzslider span.rz-bar-wrapper {
-  left: 0;
-  width: 100%;
-  height: 32px;
-  padding-top: 16px;
-  margin-top: -16px;
-  box-sizing: border-box;
-}
-
-rzslider span.rz-bar {
-  left: 0;
-  z-index: 0;
-  width: 100%;
-  height: 4px;
-  background: #d8e0f3;
-  -webkit-border-radius: 2px;
-     -moz-border-radius: 2px;
-          border-radius: 2px;
-}
-
-rzslider span.rz-bar.rz-selection {
-  z-index: 1;
-  background: #0db9f0;
-  -webkit-border-radius: 2px;
-     -moz-border-radius: 2px;
-          border-radius: 2px;
-}
-
-rzslider span.rz-pointer {
-  top: -14px;
-  z-index: 2;
-  width: 32px;
-  height: 32px;
-  cursor: pointer;
-  background-color: #0db9f0;
-  -webkit-border-radius: 16px;
-     -moz-border-radius: 16px;
-          border-radius: 16px;
-}
-
-rzslider span.rz-pointer:after {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  width: 8px;
-  height: 8px;
-  background: #ffffff;
-  -webkit-border-radius: 4px;
-     -moz-border-radius: 4px;
-          border-radius: 4px;
-  content: '';
-}
-
-rzslider span.rz-pointer:hover:after {
-  background-color: #ffffff;
-}
-
-rzslider span.rz-pointer.rz-active:after {
-  background-color: #451aff;
-}
-
-rzslider span.rz-bubble {
-  top: -32px;
-  padding: 1px 3px;
-  color: #55637d;
-  cursor: default;
-}
-
-rzslider span.rz-bubble.rz-selection {
-  top: 16px;
-}
-
-rzslider span.rz-bubble.rz-limit {
-  color: #55637d;
-}

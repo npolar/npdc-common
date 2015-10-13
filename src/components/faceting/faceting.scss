@@ -4,14 +4,6 @@
     padding: 0;
   }
 
-  .np-faceting-search {
-    margin: 15px;
-
-    md-input-container {
-      padding-bottom: 2px;
-    }
-  }
-
   .np-faceting-top {
     position: relative;
   }
@@ -29,6 +21,7 @@
 
     .md-chip-remove md-icon {
       font-size: 18px;
+      color: rgb(66, 66, 66);
     }
 
     &.md-focused,
@@ -51,6 +44,7 @@
   }
 
   .np-range-facet {
+
     rzslider {
       margin: 40px 0 15px;
     }

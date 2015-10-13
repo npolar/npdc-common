@@ -1,4 +1,28 @@
 <!DOCTYPE html>
-<form class="np-expand-search" action="." method="get" ng-submit="this.form.submit()">
-  <input type="search" incremental="" results="10" name="q" value="{{q}}" >
-</form>
+<!-- <form class="np-expand-search" action="." method="get" ng-submit="this.form.submit()">
+  <input type="search" incremental="" results="10" name="q" value="{{q}}">
+</form> -->
+<div class="np-expand-search" ng-keyup="close($event);"
+  ng-class="{ open: isOpen, sm: $mdMedia('sm'), md: $mdMedia('md'), lg: $mdMedia('lg')}">
+  <md-fab-toolbar md-open="isOpen" md-direction="left">
+    <md-fab-trigger ng-click="open($event);">
+      <md-button aria-label="search" class="md-fab" ng-focus-out="blockEvent($event);">
+        <md-icon ng-if="filterIcon" class="np-toolbar-filter-icon">{{filterIcon}}</md-icon>
+        <md-icon>search</md-icon>
+      </md-button>
+    </md-fab-trigger>
+    <md-toolbar ng-focus-out="blockEvent($event);" ng-click="blockEvent($event);">
+      <md-fab-actions class="md-toolbar-tools">
+        <md-input-container md-no-float class="np-es-input">
+          <md-icon>search</md-icon>
+          <input type="text" ng-model="q" placeholder="Search">
+        </md-input-container>
+      </md-fab-actions>
+    </md-toolbar>
+  </md-fab-toolbar>
+  <div class="np-es-filter" ng-class="{ open: isOpen }">
+    <npdc:faceting ng-if="facets" data="facets" options="filterOptions"></npdc:faceting>
+  </div>
+</div>
+
+<div id="np-es-click-area" ng-class="{ open: isOpen }" ng-click="close($event, true);"></div>

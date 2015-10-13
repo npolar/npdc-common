@@ -19,7 +19,16 @@
     color: $color-text-light;
   }
 
-  .md-toolbar-tools > md-menu {
-    padding: 0;
+  npdc\:expand-search {
+    max-height: 100%;
   }
+
+  .md-toolbar-tools {
+    padding-right: 80px;
+
+    > md-menu {
+      padding: 0;
+    }
+  }
+
 }

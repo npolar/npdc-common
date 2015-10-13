@@ -35,7 +35,8 @@ var config = {
     html: [baseConfig.src.root+'/**/index.html'],
     config: []
   },
-  dirListings: true
+  dirListings: true,
+  templateRoot: 'npdc-common/src'
 };
 npdcGulp.loadModuleTasks(gulp, config);
 

@@ -3,16 +3,22 @@
 var angular = require('angular');
 var ui = angular.module('npdcUi');
 
+ui.directive('ngFocusOut', require('./focusOutDirective'));
+
+/**
+ * @TODO npdcMd- names should be refactored to npdc- /anders
+ */
 ui.controller('NpdcMdSidenavCtrl', require('./sidenav/SidenavCtrl'));
 ui.controller('NpdcMdToolbarCtrl', require('./toolbar/ToolbarCtrl'));
-ui.controller('NpdcMdFacetingCtrl', require('./faceting/FacetingCtrl'));
+ui.service('NpdcFacetingService', require('./faceting/facetingService'));
+ui.controller('NpdcFacetingCtrl', require('./faceting/FacetingCtrl'));
 
 ui.directive('npdcMdDocument', require('./document/document'));
 ui.directive('npdcMdSidenav', require('./sidenav/sidenav'));
 ui.directive('npdcMdToolbar', require('./toolbar/toolbar'));
-ui.directive('npdcMdFaceting', require('./faceting/facetingDirective'));
+ui.directive('npdcFaceting', require('./faceting/facetingDirective'));
 ui.directive('npdcMdUserMenu', require('./user-menu/userMenu'));
-ui.directive('npdcMdExpandSearch', require('./expandable-search/expandSearch'));
+ui.directive('npdcExpandSearch', require('./expandable-search/expandSearch'));
 
 ui.service('NpdcBreadcrumbs', require('./breadcrumbs/BreadcrumbsService'));
 ui.controller('NpdcBreadcrumbsController', require('./breadcrumbs/BreadcrumbsController'));

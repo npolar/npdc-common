@@ -7,7 +7,7 @@ require('angular-material');
 require('angular-npolar');
 require('jusas-angularjs-slider');
 
-var ui = angular.module('npdcUi', ['npolarUi', 'npolarApi', 'ngMaterial', 'rzModule']);
+var ui = angular.module('npdcUi', ['npolarUi', 'npolarApi', 'ngMaterial', 'ngAnimate', 'rzModule']);
 
 ui.config(function($mdThemingProvider) {
   var npdcBlue = $mdThemingProvider.extendPalette('blue', {

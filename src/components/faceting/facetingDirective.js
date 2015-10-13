@@ -9,7 +9,7 @@ let sidenav = function () {
             data: '=',
             options: '='
         },
-        controller: 'NpdcMdFacetingCtrl'
+        controller: 'NpdcFacetingCtrl'
     };
 };
 

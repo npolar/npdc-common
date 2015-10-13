@@ -1,21 +1,18 @@
 <!DOCTYPE html>
-<div class="np-faceting">
-  <md-whiteframe class="md-whiteframe-z1 np-faceting-search" layout="column" layout-padding>
+<div class="np-faceting" layout="column">
     <div class="np-faceting-top">
-      <div ng-show="activeFilters()">
-        <div flex layout>
-          <div class="np-faceting-active-filters np-center-content">Active filters: </div>
-          <div flex class="md-chips">
-            <div ng-repeat="filter in filters" ng-class="{'md-focused': selectedChip === $index}" class="md-chip md-default-theme">
-              <div class="md-chip-content" tabindex="-1" aria-hidden="true" ng-click="selectChip($index)">
-                <strong>{{ filter.facet }}: {{ filter.term }}</strong>
-                <em>({{ filter.count }})</em>
-              </div>
-              <div class="md-chip-remove-container">
-                <button class="md-chip-remove" ng-click="removeFilter(filter)" type="button" aria-hidden="true">
-                  <md-icon>close</md-icon>
-                </button>
-              </div>
+      <div flex layout>
+        <div class="np-faceting-active-filters np-center-content">Active filters: </div>
+        <div flex class="md-chips">
+          <div ng-repeat="filter in filters" ng-class="{'md-focused': selectedChip === $index}" class="md-chip md-default-theme">
+            <div class="md-chip-content" tabindex="-1" aria-hidden="true" ng-click="selectChip($index)">
+              <strong>{{ filter.facet }}: {{ filter.term }}</strong>
+              <em>({{ filter.count }})</em>
+            </div>
+            <div class="md-chip-remove-container">
+              <button class="md-chip-remove" ng-click="removeFilter(filter)" type="button" aria-hidden="true">
+                <md-icon>close</md-icon>
+              </button>
             </div>
           </div>
         </div>
@@ -59,6 +56,5 @@
 
       </div>
     </div>
-  </md-whiteframe>
 
 </div>
