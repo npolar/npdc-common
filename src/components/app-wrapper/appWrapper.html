@@ -12,9 +12,9 @@
   <md-toolbar class="np-content-title">
     <h3>{{wrapper.cardTitle}}</h3>
   </md-toolbar>
-  <md-content class="np-content" layout layout-padding>
-    <npdc:crumbs></npdc:crumbs>
-    <div ng-view></div>
+  <md-content class="np-content" layout="column" layout-padding>
+    <npdc:crumbs flex></npdc:crumbs>
+    <div flex ng-view></div>
   </md-content>
 </md-card>
 
