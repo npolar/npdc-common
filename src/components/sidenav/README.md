@@ -1,6 +1,6 @@
 # Usage
 
-    <npdc-md:sidenav sidenav="options"></npdc-md:sidenav>
+    <npdc:sidenav sidenav="options"></npdc:sidenav>
 
 Where "options" is a object with the following properties.
 

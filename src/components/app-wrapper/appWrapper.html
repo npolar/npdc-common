@@ -1,71 +1,22 @@
 <!DOCTYPE html>
-<md-toolbar class="np-toolbar">
-  <div class="md-toolbar-tools np-toolbar-content">
-    <a ng-href="{{wrapper.toolbar_logo_link}}">
-      <img src="{{wrapper.toolbar_logo}}" width="50px" height="50px" />
-    </a>
-
-    <span class="np-toolbar-title">{{wrapper.toolbar_title}}</span>
-    <span class="flex">
-      <!-- This span is used to push the other content to the right -->
-    </span>
-
-    <!-- Application menu -->
-
-    <md-menu>
-      <md-button class="md-icon-button" ng-click="$mdOpenMenu($event)">
-        <md-icon md-menu-origin>apps</md-icon>
-      </md-button>
-      <md-menu-content width="6">
-        <div ng-repeat="group in wrapper.toolbar_menu_groups">
-          <md-subheader class="md-sticky">{{group.name}}</md-subheader>
-          <div ng-repeat="app in group.apps">
-            <md-menu-item>
-              <md-button ng-href="{{app.link}}">{{app.name}}</md-button>
-            </md-menu-item>
-            <div ng-if="$last">
-              <md-divider></md-divider>
-            </div>
-          </div>
-        </div>
-      </md-menu-content>
-    </md-menu>
-
-    <!-- Internal App Menu -->
-
-    <md-menu ng-if="security.isAuthenticated()">
-      <md-button class="md-icon-button">
-        <md-icon>verrified_user</md-icon>
-      </md-button>
-      <md-menu-content>
-        <md-subheader class="md-no-sticky">Internal applications</md-subheader>
-        <div ng-repeat="app in wrapper.toolbar_internal_apps">
-          <md-menu-item>
-            <md-button ng-href="{{app.link}}">{{app.name}}</md-button>
-          </md-menu-item>
-        </div>
-      </md-menu-content>
-    </md-menu>
-
-    <!-- Login + Search controls -->
-
-    <npdc-md:user-menu></npdc-md:user-menu>
-    <npdc-md:expand-search></npdc-md:expand-search>
-  </div>
-</md-toolbar>
+<npdc:toolbar></npdc:toolbar>
+<div ng-if="warning" class="np-environment-warning">!! Environment: Production !!</div>
 
 <!-- Subheader bar -->
 
 <div class="np-sub-toolbar"></div>
-<div class="np-primary-control" ng-include src="wrapper.primary_control"></div>
+<div class="np-primary-control" ng-include src="wrapper.primaryControl"></div>
 
 <!-- Content wrapper -->
 
 <md-card class="np-content-wrapper">
   <md-toolbar class="np-content-title">
-    <h3>{{wrapper.card_title}}</h3>
+    <h3>{{wrapper.cardTitle}}</h3>
   </md-toolbar>
-  <md-content class="np-content">
-    <div ng-include src="wrapper.app_content"></div>
+  <md-content class="np-content" layout layout-padding>
+    <npdc:crumbs></npdc:crumbs>
+    <div ng-view></div>
   </md-content>
 </md-card>
+
+<div npolar-api-message></div>

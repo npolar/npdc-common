@@ -1,22 +1,17 @@
-.np-top-menu {
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14),
-    0 3px 1px -2px rgba(0, 0, 0, .2),
-    0 1px 5px 0 rgba(0, 0, 0, .12);
+.np-toolbar {
+  box-shadow: $bar-shadow;
+  height: 64px;
+  position: fixed;
+  top: 0;
+  z-index: 5;
 
-  &.white-theme {
-    background-color: $color-bg-light;
-    color: $color-text-dark;
-
-    md-icon {
-      color: $color-text-dark;
-    }
+  .np-toolbar-content {
+    height: 64px;
+    max-height: 64px;
   }
 
-  a,
-  a:active,
-  a:hover,
-  a:visited {
-    color: $color-text-light;
+  .np-toolbar-title {
+    margin-left: 15px;
   }
 
   npdc\:expand-search {
@@ -25,10 +20,21 @@
 
   .md-toolbar-tools {
     padding-right: 80px;
-
-    > md-menu {
-      padding: 0;
-    }
   }
+}
 
+.np-sub-toolbar {
+  background-color: $color-primary-4;
+  box-shadow: $bar-shadow;
+  height: 192px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 0;
+}
+
+@media(max-width: 900px) {
+  .np-toolbar-title {
+    display: none;
+  }
 }

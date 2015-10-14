@@ -4,20 +4,18 @@ var angular = require('angular');
 var ui = angular.module('npdcUi');
 
 ui.directive('ngFocusOut', require('./focusOutDirective'));
+ui.value('npdcAppConfig', require('./app-wrapper/npdcAppConfig'));
 
-/**
- * @TODO npdcMd- names should be refactored to npdc- /anders
- */
-ui.controller('NpdcMdSidenavCtrl', require('./sidenav/SidenavCtrl'));
-ui.controller('NpdcMdToolbarCtrl', require('./toolbar/ToolbarCtrl'));
+ui.controller('NpdcSidenavCtrl', require('./sidenav/SidenavCtrl'));
+ui.controller('NpdcToolbarCtrl', require('./toolbar/ToolbarCtrl'));
 ui.service('NpdcFacetingService', require('./faceting/facetingService'));
 ui.controller('NpdcFacetingCtrl', require('./faceting/FacetingCtrl'));
 
-ui.directive('npdcMdDocument', require('./document/document'));
-ui.directive('npdcMdSidenav', require('./sidenav/sidenav'));
-ui.directive('npdcMdToolbar', require('./toolbar/toolbar'));
+ui.directive('npdcDocument', require('./document/document'));
+ui.directive('npdcSidenav', require('./sidenav/sidenav'));
+ui.directive('npdcToolbar', require('./toolbar/toolbar'));
 ui.directive('npdcFaceting', require('./faceting/facetingDirective'));
-ui.directive('npdcMdUserMenu', require('./user-menu/userMenu'));
+ui.directive('npdcUserMenu', require('./user-menu/userMenu'));
 ui.directive('npdcExpandSearch', require('./expandable-search/expandSearch'));
 
 ui.service('NpdcBreadcrumbs', require('./breadcrumbs/BreadcrumbsService'));
@@ -46,5 +44,5 @@ ui.controller('NpdcButtonComponent', require('./button/ButtonComponent'));
 ui.directive('npdcFormula', require('./formula/formula.js'));
 ui.directive('npdcShow', require('./formula/show.js'));
 
-ui.controller('NpdcMdAppWrapperCtrl', require('./app-wrapper/AppWrapperCtrl'));
-ui.directive('npdcMdAppWrapper', require('./app-wrapper/appWrapper'));
+ui.controller('NpdcAppWrapperCtrl', require('./app-wrapper/AppWrapperCtrl'));
+ui.directive('npdcApp', require('./app-wrapper/appWrapper'));

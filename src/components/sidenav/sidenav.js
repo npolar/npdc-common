@@ -8,7 +8,7 @@ let sidenav = function () {
       scope: {
         sidenav: '='
       },
-      controller: 'NpdcMdSidenavCtrl'
+      controller: 'NpdcSidenavCtrl'
     };
   };
 
