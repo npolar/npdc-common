@@ -11,15 +11,14 @@ let expandSearch = function() {
       $scope.$mdMedia = $mdMedia;
       $scope.isOpen = false;
       $scope.blockEvent = function($event) {
-        console.log('block', $event);
         $event.stopImmediatePropagation();
         return false;
       };
 
       $scope.open = function() {
-        console.log('firefox!');
         document.querySelector('.np-es-input input').focus();
-
+        
+        $scope.isOpen = true;
         // Firefox workaround
         setTimeout(() => {
           $scope.isOpen = true;
@@ -33,7 +32,6 @@ let expandSearch = function() {
       };
 
       $scope.close = function($event, force) {
-        console.log('close', $event);
         if ($event.keyCode === 27 || force) {
           $scope.isOpen = false;
         }

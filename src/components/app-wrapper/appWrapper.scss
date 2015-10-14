@@ -26,16 +26,6 @@
   top: 164px;
   width: 56px;
   z-index: 10;
-
-  button,
-  a.md-button {
-    background-color: $color-accent-0 !important;
-    margin: 0 !important;
-
-    md-icon {
-      color: $color-text-light !important;
-    }
-  }
 }
 
 // Responsive rules

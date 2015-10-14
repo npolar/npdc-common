@@ -1,9 +1,9 @@
 .formula {
 
   a {
+    display: inline-block;
+    height: 1em;
     text-decoration: none;
-	display: inline-block;
-	height: 1em;
   }
 
   legend {
@@ -49,6 +49,10 @@
       padding: 0;
       position: relative;
 
+      li {
+        position: relative;
+      }
+
       legend {
         overflow: hidden;
         text-overflow: ellipsis;
@@ -62,15 +66,12 @@
     margin-top: 28px;
   }
 
-  .np-formula-object-ctrls {
+  .np-formula-object-ctrls,
+  .np-formula-input-ctrls {
     position: absolute;
     right: 0;
     top: 0;
     z-index: 99;
-  }
-
-  .np-formula-input-ctrls {
-    // noop
   }
 
   .np-validation-message {

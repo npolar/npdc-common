@@ -36,8 +36,8 @@ ui.directive('npdcSaveButton', require('./button/SaveButton'));
 ui.directive('npdcDeleteButton', require('./button/DeleteButton'));
 ui.controller('NpdcButtonComponent', require('./button/ButtonComponent'));
 
-ui.directive('npdcFormula', require('./formula/formula.js'));
-ui.directive('npdcShow', require('./formula/show.js'));
+ui.directive('npdcFormula', require('./formula/formula'));
+ui.directive('npdcShow', require('./document/document'));
 
 ui.controller('NpdcAppWrapperCtrl', require('./app-wrapper/AppWrapperCtrl'));
 ui.directive('npdcApp', require('./app-wrapper/appWrapper'));

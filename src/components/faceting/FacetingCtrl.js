@@ -67,6 +67,10 @@ const FacetingCtrl = function($scope, NpdcFacetingService) {
         facet = initRangeFacet(facet, oldFacet);
       }
 
+      if (facet.type === 'autocomplete') {
+        facet.searchText = "";
+      }
+
       return facet;
     });
   };

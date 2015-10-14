@@ -8480,6 +8480,115 @@ md-tooltip {
     border: 1px solid #fff; } }
 
 /**
+ * Angular JS slider directive
+ *
+ * (c) Rafal Zajac <rzajac@gmail.com>
+ * http://github.com/rzajac/angularjs-slider
+ *
+ * Licensed under the MIT license
+ */
+
+/* Slider colors */
+
+/* Slider size parameters */
+
+rzslider {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 4px;
+  margin: 30px 0 15px 0;
+  vertical-align: middle;
+}
+
+rzslider span {
+  position: absolute;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+rzslider span.rz-base {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+}
+
+rzslider span.rz-bar-wrapper {
+  left: 0;
+  width: 100%;
+  height: 32px;
+  padding-top: 16px;
+  margin-top: -16px;
+  box-sizing: border-box;
+}
+
+rzslider span.rz-bar {
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  height: 4px;
+  background: #d8e0f3;
+  -webkit-border-radius: 2px;
+     -moz-border-radius: 2px;
+          border-radius: 2px;
+}
+
+rzslider span.rz-bar.rz-selection {
+  z-index: 1;
+  background: #0db9f0;
+  -webkit-border-radius: 2px;
+     -moz-border-radius: 2px;
+          border-radius: 2px;
+}
+
+rzslider span.rz-pointer {
+  top: -14px;
+  z-index: 2;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  background-color: #0db9f0;
+  -webkit-border-radius: 16px;
+     -moz-border-radius: 16px;
+          border-radius: 16px;
+}
+
+rzslider span.rz-pointer:after {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 8px;
+  height: 8px;
+  background: #ffffff;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+  content: '';
+}
+
+rzslider span.rz-pointer:hover:after {
+  background-color: #ffffff;
+}
+
+rzslider span.rz-pointer.rz-active:after {
+  background-color: #451aff;
+}
+
+rzslider span.rz-bubble {
+  top: -32px;
+  padding: 1px 3px;
+  color: #55637d;
+  cursor: default;
+}
+
+rzslider span.rz-bubble.rz-selection {
+  top: 16px;
+}
+
+rzslider span.rz-bubble.rz-limit {
+  color: #55637d;
+}
+/**
  * Retrieves a color value from the $material-colors Sass map
  * Inspired by https://github.com/nilskaspersson/Google-Material-UI-Color-Palette/
  *
@@ -8490,9 +8599,9 @@ md-tooltip {
  *                                          '200', 'a100')
  */
 .formula a {
-  text-decoration: none;
   display: inline-block;
-  height: 1em; }
+  height: 1em;
+  text-decoration: none; }
 
 .formula legend {
   display: table;
@@ -8527,6 +8636,8 @@ md-tooltip {
   list-style-type: none;
   padding: 0;
   position: relative; }
+  .formula .np-formula-array ul li {
+    position: relative; }
   .formula .np-formula-array ul legend {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -8536,7 +8647,8 @@ md-tooltip {
 .formula .np-formula-subarray {
   margin-top: 28px; }
 
-.formula .np-formula-object-ctrls {
+.formula .np-formula-object-ctrls,
+.formula .np-formula-input-ctrls {
   position: absolute;
   right: 0;
   top: 0;
@@ -8636,13 +8748,6 @@ md-tooltip {
   top: 164px;
   width: 56px;
   z-index: 10; }
-  .np-primary-control button,
-  .np-primary-control a.md-button {
-    background-color: #ff6e40 !important;
-    margin: 0 !important; }
-    .np-primary-control button md-icon,
-    .np-primary-control a.md-button md-icon {
-      color: #fff !important; }
 
 @media (max-width: 900px) {
   .np-content-wrapper {
@@ -8906,113 +9011,3 @@ div[tabindex] {
   max-width: 100%;
   background: #e0e0e0;
   color: #424242; }
-
-/**
- * Angular JS slider directive
- *
- * (c) Rafal Zajac <rzajac@gmail.com>
- * http://github.com/rzajac/angularjs-slider
- *
- * Licensed under the MIT license
- */
-
-/* Slider colors */
-
-/* Slider size parameters */
-
-rzslider {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-  height: 4px;
-  margin: 30px 0 15px 0;
-  vertical-align: middle;
-}
-
-rzslider span {
-  position: absolute;
-  display: inline-block;
-  white-space: nowrap;
-}
-
-rzslider span.rz-base {
-  width: 100%;
-  height: 100%;
-  padding: 0;
-}
-
-rzslider span.rz-bar-wrapper {
-  left: 0;
-  width: 100%;
-  height: 32px;
-  padding-top: 16px;
-  margin-top: -16px;
-  box-sizing: border-box;
-}
-
-rzslider span.rz-bar {
-  left: 0;
-  z-index: 0;
-  width: 100%;
-  height: 4px;
-  background: #d8e0f3;
-  -webkit-border-radius: 2px;
-     -moz-border-radius: 2px;
-          border-radius: 2px;
-}
-
-rzslider span.rz-bar.rz-selection {
-  z-index: 1;
-  background: #0db9f0;
-  -webkit-border-radius: 2px;
-     -moz-border-radius: 2px;
-          border-radius: 2px;
-}
-
-rzslider span.rz-pointer {
-  top: -14px;
-  z-index: 2;
-  width: 32px;
-  height: 32px;
-  cursor: pointer;
-  background-color: #0db9f0;
-  -webkit-border-radius: 16px;
-     -moz-border-radius: 16px;
-          border-radius: 16px;
-}
-
-rzslider span.rz-pointer:after {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  width: 8px;
-  height: 8px;
-  background: #ffffff;
-  -webkit-border-radius: 4px;
-     -moz-border-radius: 4px;
-          border-radius: 4px;
-  content: '';
-}
-
-rzslider span.rz-pointer:hover:after {
-  background-color: #ffffff;
-}
-
-rzslider span.rz-pointer.rz-active:after {
-  background-color: #451aff;
-}
-
-rzslider span.rz-bubble {
-  top: -32px;
-  padding: 1px 3px;
-  color: #55637d;
-  cursor: default;
-}
-
-rzslider span.rz-bubble.rz-selection {
-  top: 16px;
-}
-
-rzslider span.rz-bubble.rz-limit {
-  color: #55637d;
-}
