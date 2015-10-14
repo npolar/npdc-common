@@ -6,13 +6,11 @@ var ui = angular.module('npdcUi');
 ui.directive('ngFocusOut', require('./focusOutDirective'));
 ui.value('npdcAppConfig', require('./app-wrapper/npdcAppConfig'));
 
-ui.controller('NpdcSidenavCtrl', require('./sidenav/SidenavCtrl'));
 ui.controller('NpdcToolbarCtrl', require('./toolbar/ToolbarCtrl'));
 ui.service('NpdcFacetingService', require('./faceting/facetingService'));
 ui.controller('NpdcFacetingCtrl', require('./faceting/FacetingCtrl'));
 
 ui.directive('npdcDocument', require('./document/document'));
-ui.directive('npdcSidenav', require('./sidenav/sidenav'));
 ui.directive('npdcToolbar', require('./toolbar/toolbar'));
 ui.directive('npdcFaceting', require('./faceting/facetingDirective'));
 ui.directive('npdcUserMenu', require('./user-menu/userMenu'));
@@ -21,9 +19,6 @@ ui.directive('npdcExpandSearch', require('./expandable-search/expandSearch'));
 ui.service('NpdcBreadcrumbs', require('./breadcrumbs/BreadcrumbsService'));
 ui.controller('NpdcBreadcrumbsController', require('./breadcrumbs/BreadcrumbsController'));
 ui.directive('npdcCrumbs', require('./breadcrumbs/breadcrumbsDirective'));
-
-ui.directive('npdcTop', require('./top/top'));
-ui.controller('NpdcTopController', require('./top/TopController'));
 
 ui.directive('npdcSearch', require('./search/search'));
 ui.controller('NpdcSearchController', require('./search/SearchController'));
