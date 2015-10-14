@@ -34,15 +34,20 @@
     <!-- Internal App Menu -->
 
     <md-menu ng-if="security.isAuthenticated()">
-      <md-button class="md-icon-button">
-        <md-icon>verified_user</md-icon>
+      <md-button class="md-icon-button" ng-click="$mdOpenMenu($event)">
+        <md-icon md-menu-origin>verified_user</md-icon>
       </md-button>
-      <md-menu-content>
-        <md-subheader class="md-no-sticky">Internal applications</md-subheader>
-        <div ng-repeat="app in wrapper.toolbarInternalApps">
-          <md-menu-item>
-            <md-button ng-href="{{app.link}}">{{app.name}}</md-button>
-          </md-menu-item>
+      <md-menu-content width="6">
+        <div ng-repeat="group in wrapper.toolbarInternalApps">
+          <md-subheader class="md-sticky">{{group.name}}</md-subheader>
+          <div ng-repeat="app in group.apps">
+            <md-menu-item>
+              <md-button ng-href="{{app.link}}">{{app.name}}</md-button>
+            </md-menu-item>
+            <div ng-if="$last">
+              <md-divider></md-divider>
+            </div>
+          </div>
         </div>
       </md-menu-content>
     </md-menu>
