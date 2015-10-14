@@ -3,8 +3,6 @@
 // @ngInject
 let AppWrapperCtrl = function($location, $scope, npolarApiConfig, npdcAppConfig, NpolarApiSecurity) {
   $scope.wrapper = npdcAppConfig;
-  $scope.facets = $scope.wrapper.search.facets;
-  $scope.filterOptions = $scope.wrapper.search.filterOptions;
 
   $scope.security = NpolarApiSecurity;
   $scope.q = $location.search().q;

@@ -1,5 +1,6 @@
 'use strict';
 
+//@ngInject
 let facetingServiceFactory = function ($rootScope) {
   let serviceInstance = {
     emit(event, data) {
