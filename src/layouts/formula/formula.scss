@@ -32,6 +32,11 @@
     height: 100%;
   }
 
+  // Fix narrow tab issue
+  md-tab-item {
+    max-width: none !important;
+  }
+
   md-slider {
     padding-left: 15px;
     padding-right: 15px;
