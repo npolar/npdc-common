@@ -45,3 +45,6 @@ ui.controller('NpdcButtonComponent', require('./button/ButtonComponent'));
 
 ui.directive('npdcFormula', require('./formula/formula.js'));
 ui.directive('npdcShow', require('./formula/show.js'));
+
+ui.controller('NpdcMdAppWrapperCtrl', require('./app-wrapper/AppWrapperCtrl'));
+ui.directive('npdcMdAppWrapper', require('./app-wrapper/appWrapper'));
