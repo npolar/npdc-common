@@ -9557,7 +9557,12 @@ rzslider span.rz-bubble.rz-limit {
 .formula .np-formula-subarray {
   margin-top: 28px; }
 
-.formula .np-formula-object-ctrls,
+.formula .np-formula-object-ctrls {
+  position: absolute;
+  right: -26px;
+  top: -17px;
+  z-index: 99; }
+
 .formula .np-formula-input-ctrls {
   position: absolute;
   right: 0;

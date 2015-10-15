@@ -105,9 +105,18 @@
                                 <a class="toggle" href="" ng-click="field.itemToggle($index)" title="{{ value.visible ? form.i18n.minimize[1] : form.i18n.maximize[1] }}">
                                   <md-icon>{{ value.visible ? 'expand_less' : 'expand_more' }}</md-icon>
                                 </a>
-                                <a class="remove" href="" ng-click="field.itemRemove($index)" title="{{ form.i18n.remove[1] }}">
-                                  <md-icon>close</md-icon>
-                                </a>
+                                <md-menu>
+                                  <md-button aria-label="More" class="md-icon-button remove" ng-click="$mdOpenMenu($event)">
+                                    <md-icon md-menu-origin>more_vert</md-icon>
+                                  </md-button>
+                                  <md-menu-content>
+                                    <md-menu-item>
+                                      <md-button ng-click="field.itemRemove($index)" title="{{ form.i18n.remove[1] }}">
+                                        <md-icon md-menu-align-target>close</md-icon> Remove item
+                                      </md-button>
+                                    </md-menu-item>
+                                  </md-menu-content>
+                                </md-menu>
                               </div>
 
                               <div class="np-formula-subarray" ng-repeat="subfield in field.fields" ng-show="value.visible">
