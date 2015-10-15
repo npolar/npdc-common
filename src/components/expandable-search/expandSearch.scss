@@ -34,24 +34,24 @@
 
   //WebKit, Blink, Edge
   ::-webkit-input-placeholder {
-    color: $color-text-light;
+    color: $color-text-grey;
   }
 
   //Mozilla Firefox 4 to 18
   :-moz-placeholder {
-    color: $color-text-light;
+    color: $color-text-grey;
     opacity: 1;
   }
 
   //Mozilla Firefox 19+
   ::-moz-placeholder {
-    color: $color-text-light;
+    color: $color-text-grey;
     opacity: 1;
   }
 
   //Internet Explorer 10-11
   :-ms-input-placeholder {
-    color: $color-text-light;
+    color: $color-text-grey;
   }
 
   .md-fab-action-item {
@@ -124,6 +124,10 @@
 
     md-fab-toolbar md-toolbar {
       z-index: 21;
+    }
+
+    md-toolbar.md-white-theme md-input-container:not(.md-input-focused) md-icon {
+      color: $color-text-grey;
     }
 
     .np-toolbar-filter-icon {

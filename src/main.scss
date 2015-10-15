@@ -8,6 +8,10 @@ html {
   overflow-y: scroll;
 }
 
+body {
+  background-color: #b0bec5;
+}
+
 a,
 a:visited,
 md-menu-item a.md-button,
@@ -37,16 +41,16 @@ div[tabindex] {
 }
 
 .np-chip {
+  background: rgb(224, 224, 224);
   border-radius: 16px;
+  box-sizing: border-box;
+  color: rgb(66, 66, 66);
+  display: inline-block;
+  font-size: 16px;
   height: 32px;
   line-height: 32px;
-  vertical-align: middle;
-  padding: 0 12px 0 12px;
-  box-sizing: border-box;
   margin-left: 8px;
-  font-size: 16px;
-  display: inline-block;
   max-width: 100%;
-  background: rgb(224,224,224);
-  color: rgb(66,66,66);
+  padding: 0 12px;
+  vertical-align: middle;
 }

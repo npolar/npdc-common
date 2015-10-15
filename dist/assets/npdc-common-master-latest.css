@@ -9651,11 +9651,11 @@ rzslider span.rz-bubble.rz-limit {
   top: 74px;
   width: 80%; }
   .np-content-wrapper .np-content-title {
-    background-color: #ff6e40;
+    background-color: #C8FDEA;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     text-align: center; }
     .np-content-wrapper .np-content-title h3 {
-      color: #fff; }
+      color: #000; }
   .np-content-wrapper .np-content {
     min-height: 480px; }
 
@@ -9665,7 +9665,7 @@ rzslider span.rz-bubble.rz-limit {
   right: calc((10% / 2) - 28px);
   top: 164px;
   width: 56px;
-  z-index: 10; }
+  z-index: 4; }
 
 @media (max-width: 900px) {
   .np-content-wrapper {
@@ -9736,15 +9736,15 @@ rzslider span.rz-bubble.rz-limit {
   .np-expand-search md-fab-toolbar md-toolbar {
     z-index: 0; }
   .np-expand-search ::-webkit-input-placeholder {
-    color: #fff; }
+    color: rgba(0, 0, 0, 0.54); }
   .np-expand-search :-moz-placeholder {
-    color: #fff;
+    color: rgba(0, 0, 0, 0.54);
     opacity: 1; }
   .np-expand-search ::-moz-placeholder {
-    color: #fff;
+    color: rgba(0, 0, 0, 0.54);
     opacity: 1; }
   .np-expand-search :-ms-input-placeholder {
-    color: #fff; }
+    color: rgba(0, 0, 0, 0.54); }
   .np-expand-search .md-fab-action-item {
     height: 100%;
     line-height: 100%;
@@ -9801,6 +9801,8 @@ rzslider span.rz-bubble.rz-limit {
     width: 100%; }
     .np-expand-search.open md-fab-toolbar md-toolbar {
       z-index: 21; }
+    .np-expand-search.open md-toolbar.md-white-theme md-input-container:not(.md-input-focused) md-icon {
+      color: rgba(0, 0, 0, 0.54); }
     .np-expand-search.open .np-toolbar-filter-icon {
       opacity: 0;
       z-index: 0; }
@@ -9890,6 +9892,9 @@ html {
   overflow-y: -moz-scrollbars-vertical;
   overflow-y: scroll; }
 
+body {
+  background-color: #b0bec5; }
+
 a,
 a:visited,
 md-menu-item a.md-button,
@@ -9914,15 +9919,15 @@ div[tabindex] {
   background-color: #1570b1; }
 
 .np-chip {
+  background: #e0e0e0;
   border-radius: 16px;
+  box-sizing: border-box;
+  color: #424242;
+  display: inline-block;
+  font-size: 16px;
   height: 32px;
   line-height: 32px;
-  vertical-align: middle;
-  padding: 0 12px 0 12px;
-  box-sizing: border-box;
   margin-left: 8px;
-  font-size: 16px;
-  display: inline-block;
   max-width: 100%;
-  background: #e0e0e0;
-  color: #424242; }
+  padding: 0 12px;
+  vertical-align: middle; }

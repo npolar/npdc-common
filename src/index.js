@@ -10,11 +10,18 @@ require('jusas-angularjs-slider');
 var ui = angular.module('npdcUi', ['npolarUi', 'npolarApi', 'ngMaterial', 'ngAnimate', 'rzModule']);
 
 ui.config(function($mdThemingProvider) {
-  var npdcBlue = $mdThemingProvider.extendPalette('blue', {
+  var npdcPrimary = $mdThemingProvider.extendPalette('blue', {
     '500': '1570b1'
   });
-  $mdThemingProvider.definePalette('npdcBlue', npdcBlue);
-  $mdThemingProvider.theme('default').primaryPalette('npdcBlue').accentPalette('deep-orange');
+  var npdcAccent = $mdThemingProvider.extendPalette('teal', {
+    'A200': '#C8FDEA'
+  });
+  $mdThemingProvider.definePalette('npdcPrimary', npdcPrimary);
+  $mdThemingProvider.definePalette('npdcAccent', npdcAccent);
+  $mdThemingProvider.theme('default').primaryPalette('npdcPrimary').accentPalette('npdcAccent', {
+    'default': 'A200'
+  });
+  $mdThemingProvider.theme('white').primaryPalette('npdcPrimary').accentPalette('grey');
 });
 
 require('./components');

@@ -4,7 +4,7 @@
 </form> -->
 <div class="np-expand-search" ng-keyup="close($event);"
   ng-class="{ open: isOpen, sm: $mdMedia('sm'), md: $mdMedia('md'), lg: $mdMedia('lg')}">
-  <md-fab-toolbar md-open="isOpen" md-direction="left">
+  <md-fab-toolbar md-theme="white" md-open="isOpen" md-direction="left">
     <md-fab-trigger>
       <md-button aria-label="search" class="md-fab md-mini" ng-focus-out="blockEvent($event);" ng-click="open($event);">
         <span ng-if="filterCount > 0" class="np-toolbar-filter-icon">{{filterCount}}</span>
