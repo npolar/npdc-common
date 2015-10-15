@@ -7,7 +7,7 @@ let expandSearch = function() {
     restrict: 'E',
     template: require('./expandSearch.html'),
     // @ngInject
-    controller: function($scope, $element, $mdMedia) {
+    controller: function($scope, $element, $mdMedia, $timeout) {
       $scope.$mdMedia = $mdMedia;
       $scope.isOpen = false;
       $scope.blockEvent = function($event) {
@@ -17,15 +17,15 @@ let expandSearch = function() {
 
       $scope.open = function() {
         document.querySelector('.np-es-input input').focus();
-        
-        $scope.isOpen = true;
+
+        //$scope.isOpen = true;
         // Firefox workaround
-        setTimeout(() => {
+        $timeout(() => {
           $scope.isOpen = true;
         }, 1);
 
         // Wait for transition
-        setTimeout(() => {
+        $timeout(() => {
           $scope.$broadcast('reCalcViewDimensions');
         }, 501);
         return false;

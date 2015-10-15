@@ -7,8 +7,11 @@
   }
 
   legend {
-    display: table;
+    display: block;
+    line-height: 24px;
     padding: 0;
+    position: relative;
+    width: 100%;
   }
 
   fieldset {
@@ -39,7 +42,7 @@
 
   md-whiteframe {
     display: block;
-    margin: 16px;
+    margin: 8px;
     padding: 16px;
   }
 
@@ -53,11 +56,11 @@
         position: relative;
       }
 
-      legend {
+      legend span {
+        max-width: 90%;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        width: 90%;
       }
     }
   }
@@ -96,9 +99,9 @@
   .np-field-info {
     cursor: help;
     position: absolute;
-    right: 5px;
+    right: 0;
     top: 0;
-    z-index: 999;
+    z-index: 15;
 
     md-icon {
       color: rgba(0, 0, 0, .26);

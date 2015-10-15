@@ -9514,8 +9514,11 @@ rzslider span.rz-bubble.rz-limit {
   text-decoration: none; }
 
 .formula legend {
-  display: table;
-  padding: 0; }
+  display: block;
+  line-height: 24px;
+  padding: 0;
+  position: relative;
+  width: 100%; }
 
 .formula fieldset {
   border: 0;
@@ -9539,7 +9542,7 @@ rzslider span.rz-bubble.rz-limit {
 
 .formula md-whiteframe {
   display: block;
-  margin: 16px;
+  margin: 8px;
   padding: 16px; }
 
 .formula .np-formula-array ul {
@@ -9548,11 +9551,11 @@ rzslider span.rz-bubble.rz-limit {
   position: relative; }
   .formula .np-formula-array ul li {
     position: relative; }
-  .formula .np-formula-array ul legend {
+  .formula .np-formula-array ul legend span {
+    max-width: 90%;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 90%; }
+    white-space: nowrap; }
 
 .formula .np-formula-subarray {
   margin-top: 28px; }
@@ -9584,9 +9587,9 @@ rzslider span.rz-bubble.rz-limit {
 .formula .np-field-info {
   cursor: help;
   position: absolute;
-  right: 5px;
+  right: 0;
   top: 0;
-  z-index: 999; }
+  z-index: 15; }
   .formula .np-field-info md-icon {
     color: rgba(0, 0, 0, 0.26); }
 
@@ -9753,9 +9756,8 @@ rzslider span.rz-bubble.rz-limit {
     background-color: #fff;
     box-shadow: 0 1px 7px #474747 inset;
     box-sizing: border-box;
-    height: 300px;
     max-height: 0;
-    overflow-y: scroll;
+    overflow-y: hidden;
     padding: 15px;
     position: absolute;
     -webkit-transition: all 0.5s;
@@ -9766,6 +9768,7 @@ rzslider span.rz-bubble.rz-limit {
     width: 100%; }
     .np-expand-search .np-es-filter.open {
       max-height: 50vh;
+      overflow-y: auto;
       -webkit-transition: all 1s;
       transition: all 1s;
       -webkit-transition-delay: .5s;

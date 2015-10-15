@@ -68,13 +68,14 @@
     width: 100%;
   }
 
+  // @TODO fix transitions so that scroll is not visible during transition.
+  // Might need js and transitionEnd event.
   .np-es-filter {
     background-color: $color-bg-light;
     box-shadow: 0 1px 7px rgb(71, 71, 71) inset;
     box-sizing: border-box;
-    height: 300px;
     max-height: 0;
-    overflow-y: scroll;
+    overflow-y: hidden;
     padding: 15px;
     position: absolute;
     -webkit-transition: all .5s;
@@ -86,6 +87,7 @@
 
     &.open {
       max-height: 50vh;
+      overflow-y: auto;
       -webkit-transition: all 1s;
       transition: all 1s;
       -webkit-transition-delay: .5s;

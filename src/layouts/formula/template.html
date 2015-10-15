@@ -20,7 +20,7 @@
 
   <md-tabs md-dynamic-height md-border-bottom>
     <md-tab label="{{fieldset.title}}" ng-disabled="fieldset.disabled" ng-repeat="fieldset in form.fieldsets">
-      <md-whiteframe class="md-whiteframe-z1">
+      <md-whiteframe class="md-whiteframe-z2">
         <fieldset>
           <div formula:field-definition ng-repeat="field in fieldset.fields" ng-show="field.visible">
             <!-- input field-->
@@ -73,7 +73,7 @@
 
             <!-- object -->
             <div ng-if="field.typeOf('object')" class="np-formula-object">
-              <md-whiteframe class="md-whiteframe-z1">
+              <md-whiteframe class="md-whiteframe-z2">
                 <fieldset formula:field="field">
                   <legend>{{ field.title }}</legend>
 
@@ -87,37 +87,39 @@
             <!-- array -->
             <div ng-if="field.typeOf('array')" class="np-formula-array">
               <div formula:field="field">
-                <md-whiteframe class="md-whiteframe-z1">
+                <md-whiteframe class="md-whiteframe-z2">
                   <fieldset ng-class="{ valid: field.valid, error: field.error }">
-                    <div ng-include="'ft-field-info.html'" class="np-field-info" ng-if="field.description"></div>
-                    <legend>{{ field.title }} ({{ field.values.length || 0 }})</legend>
+
+                    <legend>{{ field.title }} ({{ field.values.length || 0 }})
+                      <div ng-include="'ft-field-info.html'" class="np-field-info" ng-if="field.description"></div>
+                    </legend>
 
 					<!-- fieldset -->
                     <div ng-if="field.typeOf('fieldset')">
                       <ul>
                         <li ng-repeat="value in field.values">
-                          <md-whiteframe class="md-whiteframe-z1">
+                          <md-whiteframe class="md-whiteframe-z2">
                             <fieldset ng-class="{ valid: value.valid }">
                               <legend>
                                 <span ng-if="!value.visible">{{ value.fields | formulaInlineValues }}</span>
+                                <div class="np-formula-object-ctrls">
+                                  <a class="toggle" href="" ng-click="field.itemToggle($index)" title="{{ value.visible ? form.i18n.minimize[1] : form.i18n.maximize[1] }}">
+                                    <md-icon>{{ value.visible ? 'expand_less' : 'expand_more' }}</md-icon>
+                                  </a>
+                                  <md-menu>
+                                    <md-button aria-label="More" class="md-icon-button remove" ng-click="$mdOpenMenu($event)">
+                                      <md-icon md-menu-origin>more_vert</md-icon>
+                                    </md-button>
+                                    <md-menu-content>
+                                      <md-menu-item>
+                                        <md-button ng-click="field.itemRemove($index)" title="{{ form.i18n.remove[1] }}">
+                                          <md-icon md-menu-align-target>close</md-icon> Remove item
+                                        </md-button>
+                                      </md-menu-item>
+                                    </md-menu-content>
+                                  </md-menu>
+                                </div>
                               </legend>
-                              <div class="np-formula-object-ctrls">
-                                <a class="toggle" href="" ng-click="field.itemToggle($index)" title="{{ value.visible ? form.i18n.minimize[1] : form.i18n.maximize[1] }}">
-                                  <md-icon>{{ value.visible ? 'expand_less' : 'expand_more' }}</md-icon>
-                                </a>
-                                <md-menu>
-                                  <md-button aria-label="More" class="md-icon-button remove" ng-click="$mdOpenMenu($event)">
-                                    <md-icon md-menu-origin>more_vert</md-icon>
-                                  </md-button>
-                                  <md-menu-content>
-                                    <md-menu-item>
-                                      <md-button ng-click="field.itemRemove($index)" title="{{ form.i18n.remove[1] }}">
-                                        <md-icon md-menu-align-target>close</md-icon> Remove item
-                                      </md-button>
-                                    </md-menu-item>
-                                  </md-menu-content>
-                                </md-menu>
-                              </div>
 
                               <div class="np-formula-subarray" ng-repeat="subfield in field.fields" ng-show="value.visible">
                                 <formula:field-instance field="value.fields[$index]" ng-show="subfield.visible"></formula:field-instance>

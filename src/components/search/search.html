@@ -31,7 +31,7 @@
       </md-chips>
     </div>
 
-    <npdc:create-button></npdc:create-button>
+    <npdc:create-button class="np-primary-control"></npdc:create-button>
     <div ng-if="!feed.entries">
       <md-progress-circular md-mode="indeterminate"></md-progress-circular>
     </div>
@@ -75,10 +75,10 @@
 
     <md-subheader class="md-primary">
       <span ng-if="feed.opensearch.totalResults > 0">{{feed.opensearch.totalResults}}
-        results, displaying {{ feed.entries.length}} 
+        results, displaying {{ feed.entries.length}}
 
         <button ng-if="showNext()" ng-click="next()">More</button></span>
-        
+
       <span ng-if="feed.opensearch.totalResults == 0">No results when searching for "{{q}}"</span>
     </md-subheader>
   </section>
