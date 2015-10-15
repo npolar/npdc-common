@@ -9564,13 +9564,13 @@ rzslider span.rz-bubble.rz-limit {
   position: absolute;
   right: -26px;
   top: -17px;
-  z-index: 99; }
+  z-index: 15; }
 
 .formula .np-formula-input-ctrls {
   position: absolute;
-  right: 0;
-  top: 0;
-  z-index: 99; }
+  right: -18px;
+  top: -16px;
+  z-index: 15; }
 
 .formula .np-validation-message {
   -webkit-order: 99;
@@ -9754,7 +9754,7 @@ rzslider span.rz-bubble.rz-limit {
     width: 100%; }
   .np-expand-search .np-es-filter {
     background-color: #fff;
-    box-shadow: 0 1px 7px #474747 inset;
+    box-shadow: 0 2px 7px -2px #474747 inset, 0 2px 7px -3px #474747;
     box-sizing: border-box;
     max-height: 0;
     overflow-y: hidden;
