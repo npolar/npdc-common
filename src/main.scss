@@ -3,7 +3,15 @@
 @import 'layouts/**/*';
 @import 'components/**/*';
 
-a {
+html {
+  overflow-y: -moz-scrollbars-vertical;
+  overflow-y: scroll;
+}
+
+a,
+a:visited,
+md-menu-item a.md-button,
+md-menu-item a.md-button:visited {
   color: $color-primary-0;
 }
 
@@ -12,15 +20,8 @@ a:active {
   color: $color-primary-1;
 }
 
-a:visited {
-  color: $color-primary-0;
-}
-
 a:focus,
-button:focus {
-  outline: none;
-}
-
+button:focus,
 div[tabindex] {
   outline: none;
 }

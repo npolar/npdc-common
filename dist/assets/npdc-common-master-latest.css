@@ -9878,20 +9878,22 @@ rzslider span.rz-bubble.rz-limit {
   max-width: 90vw;
   width: 400px; }
 
-a {
+html {
+  overflow-y: -moz-scrollbars-vertical;
+  overflow-y: scroll; }
+
+a,
+a:visited,
+md-menu-item a.md-button,
+md-menu-item a.md-button:visited {
   color: #1570b1; }
 
 a:hover,
 a:active {
   color: #7ea2bb; }
 
-a:visited {
-  color: #1570b1; }
-
 a:focus,
-button:focus {
-  outline: none; }
-
+button:focus,
 div[tabindex] {
   outline: none; }
 
