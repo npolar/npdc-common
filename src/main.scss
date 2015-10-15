@@ -3,13 +3,11 @@
 @import 'layouts/**/*';
 @import 'components/**/*';
 
-html {
-  overflow-y: -moz-scrollbars-vertical;
-  overflow-y: scroll;
-}
-
+html,
 body {
   background-color: #b0bec5;
+  overflow-y: -moz-scrollbars-vertical;
+  overflow-y: scroll;
 }
 
 a,

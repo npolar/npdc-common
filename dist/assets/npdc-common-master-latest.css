@@ -9536,6 +9536,9 @@ rzslider span.rz-bubble.rz-limit {
 .formula md-tabs {
   height: 100%; }
 
+.formula md-tab-item {
+  max-width: none !important; }
+
 .formula md-slider {
   padding-left: 15px;
   padding-right: 15px; }
@@ -9888,12 +9891,11 @@ rzslider span.rz-bubble.rz-limit {
   max-width: 90vw;
   width: 400px; }
 
-html {
+html,
+body {
+  background-color: #b0bec5;
   overflow-y: -moz-scrollbars-vertical;
   overflow-y: scroll; }
-
-body {
-  background-color: #b0bec5; }
 
 a,
 a:visited,
