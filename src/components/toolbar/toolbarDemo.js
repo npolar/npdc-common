@@ -3,11 +3,10 @@
 require('../../');
 let angular = require('angular');
 
-angular.module('toolbar', ['npdcUi']).controller('ToolbarCtrl', function ($scope) {
-  $scope.feed = require('../faceting/demo/facets.json');
-  $scope.myToolbar = {
-    title: 'Appname',
-    sidenav: true,
+angular.module('toolbar', ['npdcUi']).controller('ToolbarCtrl', function($scope, npdcAppConfig) {
+  $scope.wrapper = npdcAppConfig;
+  $scope.wrapper.search = {
+    facets: require('../faceting/demo/facets.json').facets,
     filterOptions: {
       'draft': {
         type: 'checkbox'
@@ -18,7 +17,6 @@ angular.module('toolbar', ['npdcUi']).controller('ToolbarCtrl', function ($scope
       'coverage.south': {
         type: 'range'
       }
-    },
-    facets: $scope.feed.facets
+    }
   };
 });

@@ -4,24 +4,13 @@
     padding: 0;
   }
 
-  .np-faceting-top {
-    position: relative;
-  }
-
-  .np-faceting-advanced {
-    bottom: 0;
-    padding: 5px;
-    position: absolute;
-    right: 0;
-  }
-
   .md-chips .md-chip {
     background: rgb(224, 224, 224);
     color: rgb(66, 66, 66);
 
     .md-chip-remove md-icon {
-      font-size: 18px;
       color: rgb(66, 66, 66);
+      font-size: 18px;
     }
 
     &.md-focused,
@@ -52,5 +41,13 @@
 
   .np-faceting-active-filters {
     min-height: 48px;
+
+    > * {
+      float: left;
+    }
+
+    > span {
+      margin-top: 15px;
+    }
   }
 }

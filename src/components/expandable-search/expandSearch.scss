@@ -7,17 +7,6 @@
   width: 65px;
   z-index: 10;
 
-  &.sm {
-    .md-fab-toolbar-wrapper {
-      height: 56px;
-    }
-
-    .np-es-input {
-      margin-top: 12px;
-    }
-
-  }
-
   &:not(.open) {
     -webkit-transition: width .5s;
     transition: width .5s;
@@ -31,7 +20,12 @@
   }
 
   md-fab-trigger {
-    margin-top: 3px;
+    top: 47%;
+    transform: translateY(-50%);
+
+    .md-button {
+      margin-right: 15px;
+    }
   }
 
   md-fab-toolbar md-toolbar {
@@ -106,16 +100,22 @@
   }
 
   .np-toolbar-filter-icon {
-    color: $color-text-grey !important;
-    font-size: 18px;
+    background-color: red;
+    border-radius: 7.5px;
+    box-shadow: 1px 1px 5px -1px;
+    color: $color-text-grey;
+    font-size: 10px;
+    height: 15px;
+    line-height: 15px;
     opacity: 1;
     position: absolute;
-    right: 34px;
-    top: 35px;
+    right: 31px;
+    top: 0;
     -webkit-transition: opacity 1s;
     transition: opacity 1s;
     -webkit-transition-delay: .5s;
     transition-delay: .5s;
+    width: 15px;
     z-index: 22;
   }
 
@@ -132,6 +132,8 @@
     }
   }
 }
+
+
 
 #np-es-click-area {
   bottom: 0;

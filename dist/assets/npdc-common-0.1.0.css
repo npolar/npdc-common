@@ -9720,10 +9720,6 @@ rzslider span.rz-bubble.rz-limit {
   top: 0;
   width: 65px;
   z-index: 10; }
-  .np-expand-search.sm .md-fab-toolbar-wrapper {
-    height: 56px; }
-  .np-expand-search.sm .np-es-input {
-    margin-top: 12px; }
   .np-expand-search:not(.open) {
     -webkit-transition: width 0.5s;
     transition: width 0.5s;
@@ -9733,7 +9729,10 @@ rzslider span.rz-bubble.rz-limit {
       -webkit-transition-delay: .5s !important;
       transition-delay: .5s !important; }
   .np-expand-search md-fab-trigger {
-    margin-top: 3px; }
+    top: 47%;
+    transform: translateY(-50%); }
+    .np-expand-search md-fab-trigger .md-button {
+      margin-right: 15px; }
   .np-expand-search md-fab-toolbar md-toolbar {
     z-index: 0; }
   .np-expand-search ::-webkit-input-placeholder {
@@ -9781,16 +9780,22 @@ rzslider span.rz-bubble.rz-limit {
     padding-bottom: 2px;
     width: 100%; }
   .np-expand-search .np-toolbar-filter-icon {
-    color: rgba(0, 0, 0, 0.54) !important;
-    font-size: 18px;
+    background-color: red;
+    border-radius: 7.5px;
+    box-shadow: 1px 1px 5px -1px;
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 10px;
+    height: 15px;
+    line-height: 15px;
     opacity: 1;
     position: absolute;
-    right: 34px;
-    top: 35px;
+    right: 31px;
+    top: 0;
     -webkit-transition: opacity 1s;
     transition: opacity 1s;
     -webkit-transition-delay: .5s;
     transition-delay: .5s;
+    width: 15px;
     z-index: 22; }
   .np-expand-search.open {
     width: 100%; }
@@ -9817,21 +9822,12 @@ rzslider span.rz-bubble.rz-limit {
   list-style-type: none;
   padding: 0; }
 
-.np-faceting .np-faceting-top {
-  position: relative; }
-
-.np-faceting .np-faceting-advanced {
-  bottom: 0;
-  padding: 5px;
-  position: absolute;
-  right: 0; }
-
 .np-faceting .md-chips .md-chip {
   background: #e0e0e0;
   color: #424242; }
   .np-faceting .md-chips .md-chip .md-chip-remove md-icon {
-    font-size: 18px;
-    color: #424242; }
+    color: #424242;
+    font-size: 18px; }
   .np-faceting .md-chips .md-chip.md-focused,
   .np-faceting .md-chips .md-chip.md-focused .md-chip-remove md-icon {
     background: #106cc8;
@@ -9852,6 +9848,10 @@ rzslider span.rz-bubble.rz-limit {
 
 .np-faceting .np-faceting-active-filters {
   min-height: 48px; }
+  .np-faceting .np-faceting-active-filters > * {
+    float: left; }
+  .np-faceting .np-faceting-active-filters > span {
+    margin-top: 15px; }
 
 .np-toolbar {
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
@@ -9867,7 +9867,7 @@ rzslider span.rz-bubble.rz-limit {
   .np-toolbar npdc\:expand-search {
     max-height: 100%; }
   .np-toolbar .md-toolbar-tools {
-    padding-right: 80px; }
+    padding-right: 72px; }
 
 .np-sub-toolbar {
   background-color: #034c80;
@@ -9909,11 +9909,6 @@ div[tabindex] {
   margin: 0 auto;
   text-align: center;
   width: 60%; }
-
-.np-center-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center; }
 
 .bg-primary {
   background-color: #1570b1; }

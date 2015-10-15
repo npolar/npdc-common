@@ -7,7 +7,7 @@ let expandSearch = function() {
     restrict: 'E',
     template: require('./expandSearch.html'),
     // @ngInject
-    controller: function($scope, $element, $mdMedia, $timeout) {
+    controller: function($scope, $element, $mdMedia, $timeout, NpdcFacetingService) {
       $scope.$mdMedia = $mdMedia;
       $scope.isOpen = false;
       $scope.blockEvent = function($event) {
@@ -36,6 +36,12 @@ let expandSearch = function() {
           $scope.isOpen = false;
         }
       };
+
+      $scope.filterCount = null;
+
+      NpdcFacetingService.on('search-change', function (event, data) {
+        $scope.filterCount = data.count || 0;
+      });
 
     }
   };
