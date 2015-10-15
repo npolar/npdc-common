@@ -9893,7 +9893,9 @@ rzslider span.rz-bubble.rz-limit {
 
 html,
 body {
-  background-color: #b0bec5;
+  background-color: #b0bec5; }
+
+body {
   overflow-y: -moz-scrollbars-vertical;
   overflow-y: scroll; }
 
