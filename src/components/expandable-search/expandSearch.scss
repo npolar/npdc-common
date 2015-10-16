@@ -1,37 +1,156 @@
 .np-expand-search {
+  color: $color-text-grey;
+  font-size: 16px;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 65px;
+  z-index: 10;
 
-  input[type="search"]::-webkit-search-decoration,
-  input[type="search"]::-webkit-search-cancel-button,
-  input[type="search"]::-webkit-search-results-button,
-  input[type="search"]::-webkit-search-results-decoration {
-    display: none;
+  &:not(.open) {
+    -webkit-transition: width .5s;
+    transition: width .5s;
+    -webkit-transition-delay: .5s;
+    transition-delay: .5s;
+
+    .md-fab-toolbar-background {
+      -webkit-transition-delay: .5s !important;
+      transition-delay: .5s !important;
+    }
   }
 
-  input[type=search] {
-    @include border-radius(10em);
-    @include transition(all .5s);
-    -webkit-appearance: textfield;
-    background: $color-bg-light url('img/material-icons/ic_search_black_24dp_1x.png') no-repeat 7px center;
-    border: 0;
-    -webkit-box-sizing: content-box;
-    font-family: inherit;
-    font-size: 100%;
-    outline: none;
-    padding: 6px 4px 6px 32px;
-    width: 0;
+  md-fab-trigger {
+    top: 47%;
+    transform: translateY(-50%);
+
+    .md-button {
+      margin-right: 15px;
+    }
   }
 
-  input[type=search]:focus {
-    @include box-shadow(0 0 5px rgba(0, 0, 0, .5));
+  md-fab-toolbar md-toolbar {
+    z-index: 0;
+  }
+
+  //WebKit, Blink, Edge
+  ::-webkit-input-placeholder {
+    color: $color-text-grey;
+  }
+
+  //Mozilla Firefox 4 to 18
+  :-moz-placeholder {
+    color: $color-text-grey;
+    opacity: 1;
+  }
+
+  //Mozilla Firefox 19+
+  ::-moz-placeholder {
+    color: $color-text-grey;
+    opacity: 1;
+  }
+
+  //Internet Explorer 10-11
+  :-ms-input-placeholder {
+    color: $color-text-grey;
+  }
+
+  .md-fab-action-item {
+    height: 100%;
+    line-height: 100%;
+    position: relative;
+    vertical-align: middle;
+    width: 100%;
+  }
+
+  // @TODO fix transitions so that scroll is not visible during transition.
+  // Might need js and transitionEnd event.
+  .np-es-filter {
     background-color: $color-bg-light;
-    width: 160px;
+    box-shadow: 0 2px 7px -2px rgb(71, 71, 71) inset,
+      0 2px 7px -3px rgb(71, 71, 71);
+    box-sizing: border-box;
+    max-height: 0;
+    overflow-y: hidden;
+    padding: 15px;
+    position: absolute;
+    -webkit-transition: all .5s;
+    transition: all .5s;
+    -webkit-transition-delay: 0;
+    transition-delay: 0;
+    visibility: hidden;
+    width: 100%;
+
+    &.open {
+      max-height: 50vh;
+      overflow-y: auto;
+      -webkit-transition: all 1s;
+      transition: all 1s;
+      -webkit-transition-delay: .5s;
+      transition-delay: .5s;
+      visibility: visible;
+      z-index: 10;
+    }
   }
 
-  input:-moz-placeholder {
-    color: $color-bg-light;
+  .np-es-input {
+    color: $color-text-light;
+    margin-top: 20px;
+    padding-bottom: 2px;
+    width: 100%;
   }
 
-  input::-webkit-input-placeholder {
-    color: $color-bg-light;
+  .np-toolbar-filter-icon {
+    background-color: red;
+    border-radius: 7.5px;
+    box-shadow: 1px 1px 5px -1px;
+    color: $color-text-grey;
+    font-size: 10px;
+    height: 15px;
+    line-height: 15px;
+    opacity: 1;
+    position: absolute;
+    right: 31px;
+    top: 0;
+    -webkit-transition: opacity 1s;
+    transition: opacity 1s;
+    -webkit-transition-delay: .5s;
+    transition-delay: .5s;
+    width: 15px;
+    z-index: 22;
+  }
+
+  &.open {
+    width: 100%;
+
+    md-fab-toolbar md-toolbar {
+      z-index: 21;
+    }
+
+    md-toolbar.md-white-theme md-input-container:not(.md-input-focused) md-icon {
+      color: $color-text-grey;
+    }
+
+    .np-toolbar-filter-icon {
+      opacity: 0;
+      z-index: 0;
+    }
+  }
+}
+
+
+
+#np-es-click-area {
+  bottom: 0;
+  display: none;
+  height: 100vh;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100vw;
+  z-index: 5;
+
+  &.open {
+    display: block;
   }
 }

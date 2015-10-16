@@ -4,23 +4,27 @@
     <md-icon md-menu-origin>person<md-tooltip>Login</md-tooltip></md-icon>
   </md-button>
   <md-menu-content>
-    <form role="form" layout-padding class="np-login">
+        
+    <form ng-if="true" role="form" layout-padding class="np-login">
       <div>
         <md-input-container>
           <label for="username" class="md-no-float">Username</label>
-          <input type="text" ng-model="user.username" id="username">
+          <input type="text" ng-model="email" id="username">
         </md-input-container>
         <md-input-container>
           <label for="password" class="md-no-float">Password</label>
-          <input type="password" id="password" ng-model="user.password">
+          <input type="password" id="password" ng-model="password">
         </md-input-container>
       </div>
       <div layout="row" layout-align="space-between center">
         <a ng-href="/user/reset?username={{user.username}}">Forgot password?</a>
         <a href="/user/register">Sign up</a>
-        <md-button type="submit" ng-click="login()" class="md-raised md-primary">Login</md-button>
+<!--        <md-button type="submit" ng-click="gouncer.onetime(email)" class="md-raised md-primary">1-time password</md-button>
+-->        <md-button type="submit" ng-click="login(email,password)" class="md-raised md-primary">Login</md-button>
       </div>
     </form>
+    
+    
   </md-menu-content>
 </md-menu>
 
@@ -37,7 +41,7 @@
     </md-menu-item>
     <md-menu-item>
       <md-button ng-click="logout()">
-        <span>Logout</span> <small>(session expires {{ 1000*user.exp | date:'HH:mm' }})</small>
+        <span>Logout</span> <small>(session expires {{ security.getUser().expires.split('T')[1] }})</small> <!--@todo-->
       </md-button>
     </md-menu-item>
   </md-menu-content>

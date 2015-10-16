@@ -6,9 +6,6 @@ let angular = require('angular');
 let npdcDocument = function() {
   return {
     restrict: 'E',
-    scope: {
-      value: '='
-    },
     template: require('./document.html'),
     link(scope) {
       scope.fancy = true;

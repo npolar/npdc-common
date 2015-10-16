@@ -1,6 +1,6 @@
 # Usage
 
-    <npdc-md:toolbar toolbar="options"></npdc-md:toolbar>
+    <npdc:toolbar toolbar="options"></npdc:toolbar>
 
 Where options is a object with the following properties:
 

@@ -1,10 +1,16 @@
 "use strict";
 
 // @ngInject
+let AppWrapperCtrl = function($location, $scope, npolarApiConfig, npdcAppConfig, NpolarApiSecurity) {
+  $scope.wrapper = npdcAppConfig;
 
-let AppWrapperCtrl = function($scope) {
-  if ($scope.wrapped !== undefined) {
-    $scope.wrapper = $scope.wrapped;
+  $scope.security = NpolarApiSecurity;
+  $scope.q = $location.search().q;
+
+  if ("production" === npolarApiConfig.environment) {
+    if ("data.npolar.no" !== window.location.hostname) {
+      $scope.warning = true;
+    }
   }
 };
 

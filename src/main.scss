@@ -3,7 +3,20 @@
 @import 'layouts/**/*';
 @import 'components/**/*';
 
-a {
+html,
+body {
+  background-color: #b0bec5;
+}
+
+body {
+  overflow-y: -moz-scrollbars-vertical;
+  overflow-y: scroll;
+}
+
+a,
+a:visited,
+md-menu-item a.md-button,
+md-menu-item a.md-button:visited {
   color: $color-primary-0;
 }
 
@@ -12,15 +25,8 @@ a:active {
   color: $color-primary-1;
 }
 
-a:visited {
-  color: $color-primary-0;
-}
-
 a:focus,
-button:focus {
-  outline: none;
-}
-
+button:focus,
 div[tabindex] {
   outline: none;
 }
@@ -31,27 +37,21 @@ div[tabindex] {
   width: 60%;
 }
 
-.np-center-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
 .bg-primary {
   background-color: $color-primary-0;
 }
 
 .np-chip {
+  background: rgb(224, 224, 224);
   border-radius: 16px;
+  box-sizing: border-box;
+  color: rgb(66, 66, 66);
+  display: inline-block;
+  font-size: 16px;
   height: 32px;
   line-height: 32px;
-  vertical-align: middle;
-  padding: 0 12px 0 12px;
-  box-sizing: border-box;
   margin-left: 8px;
-  font-size: 16px;
-  display: inline-block;
   max-width: 100%;
-  background: rgb(224,224,224);
-  color: rgb(66,66,66);
+  padding: 0 12px;
+  vertical-align: middle;
 }

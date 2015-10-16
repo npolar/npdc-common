@@ -4,30 +4,12 @@
     padding: 0;
   }
 
-  .np-faceting-search {
-    margin: 15px;
-
-    md-input-container {
-      padding-bottom: 2px;
-    }
-  }
-
-  .np-faceting-top {
-    position: relative;
-  }
-
-  .np-faceting-advanced {
-    bottom: 0;
-    padding: 5px;
-    position: absolute;
-    right: 0;
-  }
-
   .md-chips .md-chip {
     background: rgb(224, 224, 224);
     color: rgb(66, 66, 66);
 
     .md-chip-remove md-icon {
+      color: rgb(66, 66, 66);
       font-size: 18px;
     }
 
@@ -51,6 +33,7 @@
   }
 
   .np-range-facet {
+
     rzslider {
       margin: 40px 0 15px;
     }
@@ -58,5 +41,13 @@
 
   .np-faceting-active-filters {
     min-height: 48px;
+
+    > * {
+      float: left;
+    }
+
+    > span {
+      margin-top: 15px;
+    }
   }
 }

@@ -4,7 +4,7 @@ const FilterCollection = require('./FilterCollection');
 const QueryBuilder = require('./QueryBuilder');
 
 // @ngInject
-const FacetingCtrl = function($scope) {
+const FacetingCtrl = function($scope, NpdcFacetingService) {
   let filters = new FilterCollection();
   let queryBuilder = new QueryBuilder();
   const UI_TYPES = ['autocomplete', 'checkbox', 'range'];
@@ -67,6 +67,10 @@ const FacetingCtrl = function($scope) {
         facet = initRangeFacet(facet, oldFacet);
       }
 
+      if (facet.type === 'autocomplete') {
+        facet.searchText = "";
+      }
+
       return facet;
     });
   };
@@ -77,17 +81,10 @@ const FacetingCtrl = function($scope) {
     initDataModel();
   });
 
-  // Search
-  $scope.showAdvanced = false;
-  $scope.toggleAdvanced = function() {
-    $scope.showAdvanced = !$scope.showAdvanced;
-  };
-
   filters.on('change', function(filters) {
     let q = queryBuilder.build($scope.q, filters);
-    $scope.$emit('search-change', q);
+    NpdcFacetingService.emit('search-change', {q, count: filters.length});
   });
-
 
   // Chips
   $scope.selectedChip = -1;

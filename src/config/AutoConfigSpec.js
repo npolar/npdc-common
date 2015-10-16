@@ -23,6 +23,9 @@ var mockProd = function () {
   };
 };
 global.window = {};
+global.window.console = {
+  log: function () {}
+};
 
 describe('autoConfig', function () {
   describe('#autoConfig', function () {
