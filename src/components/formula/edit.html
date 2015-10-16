@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <article ng-show="document">
-  <h3><a ng-show="document._rev" ng-href="{{ resource.href(document.id) }}">{{ document.title || document.id.slice(0,8)}}</a></h3>
-  <h3 ng-if="document && !document._rev">New document, not yet saved</h3>
+  
+
+  
+  <h1>
+    <a ng-show="document._rev" ng-href="{{ resource.href(document.id) }}">{{ document.name || document.title || document.code || document.id }}</a>    
+  </h1>
+  
+  <p ng-if="document && !document._rev">New document, not yet saved</p>
+  <p ng-show="!isChanged() && document._rev">Document unchanged since last save {{ document.updated }}</p>
+  <p ng-show="isChanged() && document._rev">Autosaving in {{ 30 - i%30 }} seconds</p>
+  
   <div formula="formula"></div>
+  
   <div>
-    <!--<npdc:delete-button></npdc:delete-button>-->
+    <npdc:delete-button></npdc:delete-button>
     <npdc:save-button></npdc:save-button>
   </div>
+  
 </article>
 <div ng-if="!document" class="formula" >
   <div layout="row" layout-sm="column" layout-align="space-around">
-    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+   <md-progress-circular md-mode="indeterminate"></md-progress-circular>
   </div>
 </div>
-<npdc:delete-button></npdc:delete-button>
