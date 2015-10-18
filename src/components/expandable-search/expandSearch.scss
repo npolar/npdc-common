@@ -13,15 +13,8 @@
     -webkit-transition-delay: .5s;
     transition-delay: .5s;
 
-    .md-fab-toolbar-background {
-      -webkit-transition-delay: .5s !important;
-      transition-delay: .5s !important;
-    }
-
     .np-es-filter {
       opacity: 0;
-      -webkit-transition-delay: .5s;
-      transition-delay: .5s;
     }
   }
 
@@ -32,6 +25,11 @@
     .md-button {
       margin-right: 15px;
     }
+
+    .np-filter-icon {
+      -webkit-transition-delay: .5s;
+      transition-delay: .5s;
+    }
   }
 
   md-fab-toolbar md-toolbar {
@@ -39,18 +37,18 @@
   }
 
   //WebKit, Blink, Edge
-  ::-webkit-input-placeholder {
+   ::-webkit-input-placeholder {
     color: $color-text-grey;
   }
 
   //Mozilla Firefox 4 to 18
-  :-moz-placeholder {
+ :-moz-placeholder {
     color: $color-text-grey;
     opacity: 1;
   }
 
   //Mozilla Firefox 19+
-  ::-moz-placeholder {
+ ::-moz-placeholder {
     color: $color-text-grey;
     opacity: 1;
   }
@@ -70,10 +68,10 @@
 
   // @TODO fix transitions so that scroll is not visible during transition.
   // Might need js and transitionEnd event.
+
   .np-es-filter {
     background-color: $color-bg-light;
-    box-shadow: 0 2px 7px -2px rgb(71, 71, 71) inset,
-      0 2px 7px -3px rgb(71, 71, 71);
+    box-shadow: 0 2px 7px -2px rgb(71, 71, 71) inset, 0 2px 7px -3px rgb(71, 71, 71);
     box-sizing: border-box;
     max-height: 0;
     opacity: 0;
@@ -83,8 +81,6 @@
     position: absolute;
     -webkit-transition: all .5s;
     transition: all .5s;
-    -webkit-transition-delay: 0;
-    transition-delay: 0;
     visibility: hidden;
     width: 100%;
 
@@ -109,6 +105,18 @@
     md-icon {
       color: $color-primary-0 !important;
     }
+
+    &.open {
+      .np-filter-icon {
+        opacity: 0;
+        z-index: 0;
+      }
+    }
+
+    .np-filter-icon {
+      right: 4px;
+      top: 13px;
+    }
   }
 
   .np-filter-icon {
@@ -123,23 +131,11 @@
     position: absolute;
     right: 31px;
     top: 0;
-    -webkit-transition: opacity 1s;
-    transition: opacity 1s;
-    -webkit-transition-delay: .5s;
-    transition-delay: .5s;
+    -webkit-transition: opacity .5s;
+    transition: opacity .5s;
     width: 15px;
     z-index: 22;
   }
-
-  md-fab-trigger .np-filter-icon {
-
-  }
-
-  .np-es-input .np-filter-icon {
-
-  }
-
-
 
   &.open {
     width: 100%;
@@ -152,14 +148,12 @@
       color: $color-text-grey;
     }
 
-    .np-toolbar-filter-icon {
+    md-fab-trigger .np-filter-icon {
       opacity: 0;
       z-index: 0;
     }
   }
 }
-
-
 
 #np-es-click-area {
   bottom: 0;
