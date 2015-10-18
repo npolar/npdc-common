@@ -9682,7 +9682,7 @@ rzslider span.rz-bubble.rz-limit {
 
 .np-environment-warning {
   color: red;
-  position: absolute;
+  position: fixed;
   z-index: 9999;
   font-weight: bold;
   text-shadow: 1px 1px #000;
