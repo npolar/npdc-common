@@ -9,13 +9,13 @@ let FacetingCtrl = function($scope, NpdcFacetingService) {
   let queryBuilder = new QueryBuilder();
   const UI_TYPES = ['autocomplete', 'checkbox', 'range'];
 
-  let filters = $scope.data.filterCollection =
-    $scope.data.filterCollection || new FilterCollection();
+  let filters = $scope.options.filterCollection =
+    $scope.options.filterCollection || new FilterCollection();
 
   let uiType = function(facet) {
     let _type = 'autocomplete';
-    if ($scope.options && $scope.options[facet.key]) {
-      let optType = $scope.options[facet.key].type;
+    if ($scope.options.filterUi && $scope.options.filterUi[facet.key]) {
+      let optType = $scope.options.filterUi[facet.key].type;
       _type = UI_TYPES.some(type => type === optType) ? optType : _type;
     }
     return _type;
@@ -51,7 +51,7 @@ let FacetingCtrl = function($scope, NpdcFacetingService) {
   };
 
   let initDataModel = function () {
-    $scope.model = $scope.data.map(facet => {
+    $scope.model = $scope.options.facets.map(facet => {
       let oldFacet;
       facet.key = Object.keys(facet)[0];
       oldFacet = $scope.model ? $scope.model.find(item => item.key === facet.key) : null;
@@ -78,14 +78,14 @@ let FacetingCtrl = function($scope, NpdcFacetingService) {
 
   // Init data model
   initDataModel();
-  $scope.$watch('data', (newVal, oldVal) => {
+  $scope.$watch('options.facets', (newVal, oldVal) => {
     if (newVal !== oldVal) {
       initDataModel();
     }
   });
 
   filters.on('change', function(filters) {
-    let q = queryBuilder.build($scope.q, filters);
+    let q = queryBuilder.build(false, filters);
     NpdcFacetingService.emit('search-change', {q, count: filters.length});
   });
 

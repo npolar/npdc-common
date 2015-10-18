@@ -6,7 +6,6 @@ let sidenav = function () {
         restrict: 'E',
         template: require('./faceting.html'),
         scope: {
-            data: '=',
             options: '='
         },
         controller: 'NpdcFacetingCtrl'

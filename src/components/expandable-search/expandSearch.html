@@ -2,26 +2,34 @@
 <!-- <form class="np-expand-search" action="." method="get" ng-submit="this.form.submit()">
   <input type="search" incremental="" results="10" name="q" value="{{q}}">
 </form> -->
-<div class="np-expand-search" ng-keyup="close($event);"
-  ng-class="{ open: isOpen, sm: $mdMedia('sm'), md: $mdMedia('md'), lg: $mdMedia('lg')}">
+<div class="np-expand-search" ng-keyup="close($event);" ng-class="{ open: isOpen, sm: $mdMedia('sm'), md: $mdMedia('md'), lg: $mdMedia('lg')}">
   <md-fab-toolbar md-theme="white" md-open="isOpen" md-direction="left">
     <md-fab-trigger>
       <md-button aria-label="search" class="md-fab md-mini" ng-focus-out="blockEvent($event);" ng-click="open($event);">
-        <span ng-if="filterCount > 0" class="np-toolbar-filter-icon">{{filterCount}}</span>
+        <span ng-if="filterCount > 0" class="np-filter-icon">{{filterCount}}</span>
         <md-icon>search</md-icon>
       </md-button>
     </md-fab-trigger>
     <md-toolbar ng-focus-out="blockEvent($event);" ng-click="blockEvent($event);">
       <md-fab-actions class="md-toolbar-tools">
-        <md-input-container md-no-float class="np-es-input">
-          <md-icon>search</md-icon>
-          <input type="text" ng-model="q" placeholder="Search">
-        </md-input-container>
+        <div class="np-es-input" layout>
+          <md-input-container md-no-float flex>
+            <md-icon>search</md-icon>
+            <input type="text" ng-model="q" placeholder="Search">
+          </md-input-container>
+          <md-button ng-click="toggleFilters();">
+            <md-icon>{{isFiltersOpen ? 'expand_less' : 'expand_more'}}</md-icon> Filters
+            <span ng-if="filterCount > 0" class="np-filter-icon">{{filterCount}}</span>
+          </md-button>
+          <md-button ng-click="search(q);">
+            Search
+          </md-button>
+        </div>
       </md-fab-actions>
     </md-toolbar>
   </md-fab-toolbar>
-  <div class="np-es-filter" ng-class="{ open: isOpen }">
-    <npdc:faceting ng-if="wrapper.search.facets" data="wrapper.search.facets" options="wrapper.search.filterOptions"></npdc:faceting>
+  <div ng-show="isFiltersOpen && isOpen" class="np-es-filter" ng-class="{ open: isFiltersOpen && isOpen }">
+    <npdc:faceting ng-if="options.facets" options="options"></npdc:faceting>
   </div>
 </div>
 

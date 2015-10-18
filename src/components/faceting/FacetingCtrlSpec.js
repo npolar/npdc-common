@@ -8,13 +8,14 @@ describe('FacetingCtrl', function() {
   beforeEach(function() {
     facetingCtrl = undefined;
     scopeMock = {
+      options: {},
       $watch() {}
     };
   });
 
   it('should init day range facets', function() {
     let facet;
-    scopeMock.data = [{
+    scopeMock.options.facets = [{
       "day-measured": [{
         "term": "2015-01-01",
         "count": 0
@@ -23,14 +24,14 @@ describe('FacetingCtrl', function() {
         "count": 0
       }]
     }];
-    scopeMock.options = {
+    scopeMock.options.filterUi = {
       'day-measured': {
         type: 'range'
       }
     };
 
     facetingCtrl = new FacetingCtrl(scopeMock);
-    facet = scopeMock.data[0];
+    facet = scopeMock.options.facets[0];
 
     facet.slider.min.should.eql(20150101);
     facet.slider.max.should.eql(20150102);
@@ -38,52 +39,52 @@ describe('FacetingCtrl', function() {
 
   it('should init month range facets', function() {
     let facet;
-    scopeMock.data = [{
+    scopeMock.options.facets = [{
       "month-measured": [{
         "term": "2015-01",
         "count": 0
       }]
     }];
-    scopeMock.options = {
+    scopeMock.options.filterUi = {
       'month-measured': {
         type: 'range'
       }
     };
 
     facetingCtrl = new FacetingCtrl(scopeMock);
-    facet = scopeMock.data[0];
+    facet = scopeMock.options.facets[0];
 
     facet.slider.min.should.eql(201501);
   });
 
   it('should init year range facets', function() {
     let facet;
-    scopeMock.data = [{
+    scopeMock.options.facets = [{
       "month-measured": [{
         "term": "2015",
         "count": 0
       }]
     }];
-    scopeMock.options = {
+    scopeMock.options.filterUi = {
       'month-measured': {
         type: 'range'
       }
     };
 
     facetingCtrl = new FacetingCtrl(scopeMock);
-    facet = scopeMock.data[0];
+    facet = scopeMock.options.facets[0];
 
     facet.slider.min.should.eql(2015);
   });
 
   describe('#querySearch', function() {
     beforeEach(function() {
-      scopeMock.data = require('./demo/facets.json').facets;
+      scopeMock.options.facets = require('./demo/facets.json').facets;
       facetingCtrl = new FacetingCtrl(scopeMock);
     });
 
     it('should return all for empty search', function() {
-      let topics = scopeMock.data[2];
+      let topics = scopeMock.options.facets[2];
       let result;
 
       topics.searchText = '';
@@ -92,7 +93,7 @@ describe('FacetingCtrl', function() {
     });
 
     it('should filter results', function() {
-      let topics = scopeMock.data[2];
+      let topics = scopeMock.options.facets[2];
       let result;
 
       topics.searchText = 'a';

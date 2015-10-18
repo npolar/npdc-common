@@ -5,11 +5,17 @@ let expandSearch = function() {
 
   return {
     restrict: 'E',
+    scope: {
+      options: '='
+    },
     template: require('./expandSearch.html'),
     // @ngInject
     controller: function($scope, $element, $mdMedia, $timeout, NpdcFacetingService) {
       $scope.$mdMedia = $mdMedia;
       $scope.isOpen = false;
+      $scope.isFiltersOpen = false;
+      $scope.q = "";
+
       $scope.blockEvent = function($event) {
         $event.stopImmediatePropagation();
         return false;
@@ -35,6 +41,14 @@ let expandSearch = function() {
         if ($event.keyCode === 27 || force) {
           $scope.isOpen = false;
         }
+      };
+
+      $scope.search = function(q) {
+        $scope.options.onSearch.call(this, q);
+      };
+
+      $scope.toggleFilters = function () {
+        $scope.isFiltersOpen = !$scope.isFiltersOpen;
       };
 
       $scope.filterCount = null;

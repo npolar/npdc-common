@@ -17,6 +17,12 @@
       -webkit-transition-delay: .5s !important;
       transition-delay: .5s !important;
     }
+
+    .np-es-filter {
+      opacity: 0;
+      -webkit-transition-delay: .5s;
+      transition-delay: .5s;
+    }
   }
 
   md-fab-trigger {
@@ -70,6 +76,8 @@
       0 2px 7px -3px rgb(71, 71, 71);
     box-sizing: border-box;
     max-height: 0;
+    opacity: 0;
+    overflow-x: hidden;
     overflow-y: hidden;
     padding: 15px;
     position: absolute;
@@ -82,11 +90,8 @@
 
     &.open {
       max-height: 50vh;
+      opacity: 1;
       overflow-y: auto;
-      -webkit-transition: all 1s;
-      transition: all 1s;
-      -webkit-transition-delay: .5s;
-      transition-delay: .5s;
       visibility: visible;
       z-index: 10;
     }
@@ -94,12 +99,19 @@
 
   .np-es-input {
     color: $color-text-light;
-    margin-top: 20px;
     padding-bottom: 2px;
-    width: 100%;
+
+    md-input-container {
+      margin-top: 20px;
+    }
+
+    .md-button,
+    md-icon {
+      color: $color-primary-0 !important;
+    }
   }
 
-  .np-toolbar-filter-icon {
+  .np-filter-icon {
     background-color: red;
     border-radius: 7.5px;
     box-shadow: 1px 1px 5px -1px;
@@ -118,6 +130,16 @@
     width: 15px;
     z-index: 22;
   }
+
+  md-fab-trigger .np-filter-icon {
+
+  }
+
+  .np-es-input .np-filter-icon {
+
+  }
+
+
 
   &.open {
     width: 100%;

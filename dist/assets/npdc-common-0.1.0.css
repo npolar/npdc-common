@@ -9622,6 +9622,10 @@ md-tooltip {
     .np-expand-search:not(.open) .md-fab-toolbar-background {
       -webkit-transition-delay: .5s !important;
       transition-delay: .5s !important; }
+    .np-expand-search:not(.open) .np-es-filter {
+      opacity: 0;
+      -webkit-transition-delay: .5s;
+      transition-delay: .5s; }
   .np-expand-search md-fab-trigger {
     top: 47%;
     transform: translateY(-50%); }
@@ -9650,6 +9654,8 @@ md-tooltip {
     box-shadow: 0 2px 7px -2px #474747 inset, 0 2px 7px -3px #474747;
     box-sizing: border-box;
     max-height: 0;
+    opacity: 0;
+    overflow-x: hidden;
     overflow-y: hidden;
     padding: 15px;
     position: absolute;
@@ -9661,19 +9667,19 @@ md-tooltip {
     width: 100%; }
     .np-expand-search .np-es-filter.open {
       max-height: 50vh;
+      opacity: 1;
       overflow-y: auto;
-      -webkit-transition: all 1s;
-      transition: all 1s;
-      -webkit-transition-delay: .5s;
-      transition-delay: .5s;
       visibility: visible;
       z-index: 10; }
   .np-expand-search .np-es-input {
     color: #fff;
-    margin-top: 20px;
-    padding-bottom: 2px;
-    width: 100%; }
-  .np-expand-search .np-toolbar-filter-icon {
+    padding-bottom: 2px; }
+    .np-expand-search .np-es-input md-input-container {
+      margin-top: 20px; }
+    .np-expand-search .np-es-input .md-button,
+    .np-expand-search .np-es-input md-icon {
+      color: #1570b1 !important; }
+  .np-expand-search .np-filter-icon {
     background-color: red;
     border-radius: 7.5px;
     box-shadow: 1px 1px 5px -1px;

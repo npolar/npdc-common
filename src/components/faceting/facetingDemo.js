@@ -38,15 +38,18 @@ demo.controller('FacetingDemoCtrl', function ($scope, $location, $controller, Da
 
   $scope.search($scope.query());
 
-  $scope.facetOptions = {
-    'draft': {
-      type: 'checkbox'
-    },
-    'year-released': {
-      type: 'range'
-    },
-    'coverage.south': {
-      type: 'range'
+  $scope.options = {
+    facets: $scope.feed.facets,
+    filterUi: {
+      'draft': {
+        type: 'checkbox'
+      },
+      'year-released': {
+        type: 'range'
+      },
+      'coverage.south': {
+        type: 'range'
+      }
     }
   };
 
