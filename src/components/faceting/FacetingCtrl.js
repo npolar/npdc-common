@@ -1,13 +1,16 @@
 "use strict";
 
-const FilterCollection = require('./FilterCollection');
-const QueryBuilder = require('./QueryBuilder');
+let FilterCollection = require('./FilterCollection');
+let QueryBuilder = require('./QueryBuilder');
 
 // @ngInject
-const FacetingCtrl = function($scope, NpdcFacetingService) {
-  let filters;
+let FacetingCtrl = function($scope, NpdcFacetingService) {
+
   let queryBuilder = new QueryBuilder();
   const UI_TYPES = ['autocomplete', 'checkbox', 'range'];
+
+  let filters = $scope.data.filterCollection =
+    $scope.data.filterCollection || new FilterCollection();
 
   let uiType = function(facet) {
     let _type = 'autocomplete';
@@ -57,9 +60,7 @@ const FacetingCtrl = function($scope, NpdcFacetingService) {
         let oldTerm;
         term.facet = facet.key;
         oldTerm = oldFacet ? oldFacet[facet.key].find(ot => ot.term === term.term) : null;
-        if (oldTerm && oldTerm.selected) {
-          term.selected = true;
-        }
+        term.selected = oldTerm ? oldTerm.selected : undefined;
         return term;
       });
 
@@ -73,15 +74,14 @@ const FacetingCtrl = function($scope, NpdcFacetingService) {
 
       return facet;
     });
-
-    filters = $scope.data.filterCollection =
-      $scope.data.filterCollection || new FilterCollection();
   };
 
   // Init data model
   initDataModel();
   $scope.$watch('data', (newVal, oldVal) => {
-    initDataModel();
+    if (newVal !== oldVal) {
+      initDataModel();
+    }
   });
 
   filters.on('change', function(filters) {
@@ -103,7 +103,7 @@ const FacetingCtrl = function($scope, NpdcFacetingService) {
   // Filters
   $scope.filters = () => filters.array;
   $scope.activeFilters = function() {
-    return $scope.filters.length > 0;
+    return filters.array.length > 0;
   };
 
   $scope.removeFilter = function(filter) {

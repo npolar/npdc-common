@@ -23,11 +23,23 @@ var mockProd = function () {
   };
 };
 global.window = {};
-global.window.console = {
-  log: function () {}
-};
 
 describe('autoConfig', function () {
+  let logger = {};
+
+  // mute
+  before(function () {
+    logger.log = console.log;
+    logger.warn = console.warn;
+    console.log = console.warn = () => {};
+  });
+
+  // unmute
+  after(function () {
+    console.log = logger.log;
+    console.warn = logger.warn;
+  });
+
   describe('#autoConfig', function () {
     it('should detect development environment', function () {
       mockLocalhost();

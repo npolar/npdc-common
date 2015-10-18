@@ -20,7 +20,7 @@
     <div ng-repeat="facet in model" flex="33" flex-sm="100" flex-md="50">
 
       <!-- autocomplete -->
-      <md-autocomplete ng-if="facet.type === 'autocomplete'" md-selected-item="facet.selectedItem" md-search-text="facet.searchText" md-selected-item-change="selectedItemChange(item)" md-items="item in querySearch(facet)" md-item-text="item.term" md-min-length="0"
+      <md-autocomplete ng-if="facet.type === 'autocomplete'" md-selected-item="facet.selected" md-search-text="facet.searchText" md-selected-item-change="selectedItemChange(item)" md-items="item in querySearch(facet)" md-item-text="item.term" md-min-length="0"
       md-floating-label="Filter {{facet.key}}">
         <md-item-template>
           <span md-highlight-text="facet.searchText" md-highlight-flags="^i">{{item.term}} ({{item.count}})</span>

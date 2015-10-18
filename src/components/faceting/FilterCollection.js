@@ -58,16 +58,11 @@ let FilterCollection = function() {
     emitter.emit('change', filters);
   };
 
-  let clear = function() {
-    filters.splice(0, filters.length);
-  };
-
   return {
     add,
     addRangeFilter,
     remove,
     removeRangeFilter,
-    clear,
     array: filters,
     on() { EventEmitter.prototype.on.apply(emitter, arguments); }
   };

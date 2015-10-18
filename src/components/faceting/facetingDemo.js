@@ -51,7 +51,6 @@ demo.controller('FacetingDemoCtrl', function ($scope, $location, $controller, Da
   };
 
   NpdcFacetingService.on('search-change', (e, data) => {
-    console.log('ping');
     $scope.filterCount = data.count;
     $scope.search($scope.query(data.q));
   });

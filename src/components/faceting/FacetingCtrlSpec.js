@@ -76,7 +76,6 @@ describe('FacetingCtrl', function() {
     facet.slider.min.should.eql(2015);
   });
 
-
   describe('#querySearch', function() {
     beforeEach(function() {
       scopeMock.data = require('./demo/facets.json').facets;
