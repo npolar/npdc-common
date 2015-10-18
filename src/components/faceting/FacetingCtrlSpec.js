@@ -3,13 +3,17 @@ require('should');
 let FacetingCtrl = require('./FacetingCtrl');
 
 describe('FacetingCtrl', function() {
-  let scopeMock, facetingCtrl;
+  let scopeMock, facetingCtrl, locationMock;
 
   beforeEach(function() {
     facetingCtrl = undefined;
     scopeMock = {
       options: {},
-      $watch() {}
+      $watch() {},
+      $on() {}
+    };
+    locationMock = {
+      search() {}
     };
   });
 
@@ -30,7 +34,7 @@ describe('FacetingCtrl', function() {
       }
     };
 
-    facetingCtrl = new FacetingCtrl(scopeMock);
+    facetingCtrl = new FacetingCtrl(scopeMock, locationMock);
     facet = scopeMock.options.facets[0];
 
     facet.slider.min.should.eql(20150101);
@@ -51,7 +55,7 @@ describe('FacetingCtrl', function() {
       }
     };
 
-    facetingCtrl = new FacetingCtrl(scopeMock);
+    facetingCtrl = new FacetingCtrl(scopeMock, locationMock);
     facet = scopeMock.options.facets[0];
 
     facet.slider.min.should.eql(201501);
@@ -71,7 +75,7 @@ describe('FacetingCtrl', function() {
       }
     };
 
-    facetingCtrl = new FacetingCtrl(scopeMock);
+    facetingCtrl = new FacetingCtrl(scopeMock, locationMock);
     facet = scopeMock.options.facets[0];
 
     facet.slider.min.should.eql(2015);
@@ -80,7 +84,7 @@ describe('FacetingCtrl', function() {
   describe('#querySearch', function() {
     beforeEach(function() {
       scopeMock.options.facets = require('./demo/facets.json').facets;
-      facetingCtrl = new FacetingCtrl(scopeMock);
+      facetingCtrl = new FacetingCtrl(scopeMock, locationMock);
     });
 
     it('should return all for empty search', function() {

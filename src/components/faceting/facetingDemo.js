@@ -30,16 +30,17 @@ demo.controller('FacetingDemoCtrl', function ($scope, $location, $controller, Da
 
   $scope.query = function(params) {
 
-    let defaults = { limit: "all", sort: "-updated", fields: 'title,id,updated', facets: 'coverage.south,people.email,progress,topics' };
-    let invariants = $scope.security.isAuthenticated() ? {} : { "not-draft": "yes" } ;
+    let defaults = { limit: "all", sort: "-updated", fields: 'title,id,updated', facets: 'coverage.south,people.email,progress,topics,draft' };
+    let invariants = {};
 
     return angular.extend(defaults, $location.search(), invariants, params);
   };
 
-  $scope.search($scope.query());
+  $scope.search($scope.query()).$promise.then((data) => {
+    $scope.options.facets = data.feed.facets;
+  });
 
   $scope.options = {
-    facets: $scope.feed.facets,
     filterUi: {
       'draft': {
         type: 'checkbox'
@@ -54,7 +55,9 @@ demo.controller('FacetingDemoCtrl', function ($scope, $location, $controller, Da
   };
 
   NpdcFacetingService.on('search-change', (e, data) => {
+    let query = $scope.query(data.q);
+    $location.search(data.q);
     $scope.filterCount = data.count;
-    $scope.search($scope.query(data.q));
+    $scope.search(query);
   });
 });
