@@ -12,7 +12,11 @@
       <input ng-model="q">
     </md-input-container>
     Filter count: {{filterCount}}
-    <npdc:faceting ng-if="feed" data="feed.facets" options="facetOptions"></npdc:faceting>
+    <div layout>
+      <npdc:faceting ng-if="feed" data="feed.facets" options="facetOptions" flex="50"></npdc:faceting>
+      <npdc:faceting ng-if="feed" data="feed.facets" options="facetOptions" flex="50"></npdc:faceting>
+    </div>
+
     <ul>
       <li ng-repeat="item in feed.entries">{{ item.title }}</li>
     </ul>

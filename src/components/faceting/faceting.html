@@ -3,7 +3,7 @@
   <div class="np-faceting-active-filters np-center-content" flex>
     <span>Active filters: <i ng-show="!activeFilters()">None</i></span>
     <div class="md-chips">
-      <div ng-repeat="filter in filters" ng-class="{'md-focused': selectedChip === $index}" class="md-chip md-default-theme">
+      <div ng-repeat="filter in filters()" ng-class="{'md-focused': selectedChip === $index}" class="md-chip md-default-theme">
         <div class="md-chip-content" tabindex="-1" aria-hidden="true" ng-click="selectChip($index)">
           <strong>{{ filter.facet }}: {{ filter.term }}</strong>
           <em>({{ filter.count }})</em>

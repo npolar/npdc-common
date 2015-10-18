@@ -5,7 +5,7 @@ const QueryBuilder = require('./QueryBuilder');
 
 // @ngInject
 const FacetingCtrl = function($scope, NpdcFacetingService) {
-  let filters = new FilterCollection();
+  let filters;
   let queryBuilder = new QueryBuilder();
   const UI_TYPES = ['autocomplete', 'checkbox', 'range'];
 
@@ -73,6 +73,9 @@ const FacetingCtrl = function($scope, NpdcFacetingService) {
 
       return facet;
     });
+
+    filters = $scope.data.filterCollection =
+      $scope.data.filterCollection || new FilterCollection();
   };
 
   // Init data model
@@ -98,7 +101,7 @@ const FacetingCtrl = function($scope, NpdcFacetingService) {
 
 
   // Filters
-  $scope.filters = filters.array;
+  $scope.filters = () => filters.array;
   $scope.activeFilters = function() {
     return $scope.filters.length > 0;
   };
