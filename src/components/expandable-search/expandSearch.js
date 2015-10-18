@@ -30,10 +30,6 @@ let expandSearch = function() {
           $scope.isOpen = true;
         }, 1);
 
-        // Wait for transition
-        $timeout(() => {
-          $scope.$broadcast('reCalcViewDimensions');
-        }, 501);
         return false;
       };
 
@@ -49,6 +45,10 @@ let expandSearch = function() {
 
       $scope.toggleFilters = function () {
         $scope.isFiltersOpen = !$scope.isFiltersOpen;
+        // Wait for transition
+        $timeout(() => {
+          $scope.$broadcast('reCalcViewDimensions');
+        }, 550);
       };
 
       $scope.filterCount = null;
