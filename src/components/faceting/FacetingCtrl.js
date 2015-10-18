@@ -19,18 +19,22 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcFacetingService) {
           let matches = FILTER_PARAM_REQEX.exec(key);
           if (matches) {
             let facet = $scope.model.find((facet) => facet.key === matches[1]);
+            let terms = query[key].split(',');
+            let item = facet[facet.key].find(item => item.term === terms[0]);
             if (facet) {
               if (facet.type === 'range') {
-                facet.slider.ceil = facet.slider.max = query[key].split('..')[1];
-                facet.slider.floor = facet.slider.min = query[key].split('..')[0];
+                facet.slider.ceil = facet.slider.max = terms[0].split('..')[1];
+                facet.slider.floor = facet.slider.min = terms[0].split('..')[0];
                 filters.addRangeFilter(facet);
-              } else if (facet.type === 'checkbox') {
-                let item = facet[facet.key].find(item => item.term === query[key]);
+              } else if (facet.type === 'checkbox' && item) {
                 item.selected = true;
                 filters.add(item);
               } else {
-                let item = facet[facet.key].find(item => item.term === query[key]);
-                filters.add(item);
+                terms.forEach(term => {
+                  console.log(term, facet[facet.key]);
+                  let item = facet[facet.key].find(item => item.term === term);
+                  filters.add(item);
+                });
               }
             }
           }
@@ -155,8 +159,9 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcFacetingService) {
 
 
   // Autocomplete
-  $scope.selectedItemChange = function(item) {
+  $scope.selectedItemChange = function(item, facet) {
     if (item) {
+      //facet.searchText = "";
       filters.add(item);
     }
   };
