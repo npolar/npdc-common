@@ -77,7 +77,6 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcFacetingService) {
         max: ceil
       };
     }
-    console.log(facet);
     return facet;
   };
 
