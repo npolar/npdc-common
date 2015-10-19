@@ -1,7 +1,7 @@
 'use strict';
 
 // @ngInject
-var SearchController = function ($scope, $location, NpdcLang, NpolarApiSecurity) {
+var SearchController = function ($scope, $location, NpolarApiSecurity) {
 
   $scope.security = NpolarApiSecurity;
   $scope.q = $location.search().q;
@@ -46,13 +46,9 @@ var SearchController = function ($scope, $location, NpdcLang, NpolarApiSecurity)
     }
   };
 
-  $scope.title = (entry, key='title') => {
-    
-    let lang = NpdcLang.getLang();
-    
+  $scope.title = (entry) => {    
     if (entry.titles) {
-      
-      return JSON.stringify(entry.titles.find(e => { return true; } ));
+      entry.titles[0].title;
     }
     return entry.title || entry.name || entry.code || entry.id;
   };

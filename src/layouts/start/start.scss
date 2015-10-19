@@ -1,5 +1,9 @@
 $header-shadow: 0.05em 0.05em rgba(0, 0, 0, 0.5);
 
+.np-card-link {
+  text-decoration: none !important;
+}
+
 .start-header {
   position         : relative;
   top              : 64px;
