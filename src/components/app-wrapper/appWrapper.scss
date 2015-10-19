@@ -5,7 +5,7 @@
   width: 80%;
 
   .np-content-title {
-    background-color: $color-accent-0;
+    background-color: $color-primary-2;
     box-shadow: $bar-shadow;
     text-align: center;
 
@@ -17,6 +17,16 @@
   .np-content {
     min-height: 480px;
   }
+}
+
+.np-sub-toolbar {
+  background-color: $color-primary-1;
+  box-shadow: $bar-shadow;
+  height: 192px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 0;
 }
 
 .np-primary-control {
