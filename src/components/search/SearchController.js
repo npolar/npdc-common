@@ -46,13 +46,9 @@ var SearchController = function ($scope, $location, NpolarApiSecurity) {
     }
   };
 
-  $scope.title = (entry, key='title') => {
-    
-    let lang = 'en';
-    
+  $scope.title = (entry) => {    
     if (entry.titles) {
-      
-      return JSON.stringify(entry.titles.find(e => { return true; } ));
+      entry.titles[0].title;
     }
     return entry.title || entry.name || entry.code || entry.id;
   };
