@@ -4,8 +4,10 @@
 let toolbar = function ($mdSidenav) {
     return {
       restrict: 'E',
+      scope: {
+        options: '='
+      },
       template: require('./toolbar.html'),
-      controller: 'NpdcToolbarCtrl'
     };
   };
 

@@ -2,7 +2,7 @@
 
 // @ngInject
 let AppWrapperCtrl = function($location, $scope, npolarApiConfig, npdcAppConfig, NpolarApiSecurity) {
-  $scope.wrapper = npdcAppConfig;
+  $scope.options = npdcAppConfig;
 
   $scope.security = NpolarApiSecurity;
   $scope.q = $location.search().q;
