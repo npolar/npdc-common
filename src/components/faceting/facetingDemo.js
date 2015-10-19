@@ -33,7 +33,7 @@ demo.controller('FacetingDemoCtrl', function ($scope, $location, $controller, Da
     let defaults = { limit: "all", sort: "-updated", fields: 'title,id,updated', facets: 'coverage.south,people.email,progress,topics,draft' };
     let invariants = {};
 
-    return angular.extend(defaults, $location.search(), invariants, params);
+    return angular.extend(defaults, invariants, params);
   };
 
   $scope.search($scope.query()).$promise.then((data) => {
@@ -56,7 +56,6 @@ demo.controller('FacetingDemoCtrl', function ($scope, $location, $controller, Da
 
   NpdcFacetingService.on('search-change', (e, data) => {
     let query = $scope.query(data.q);
-    $location.search(data.q);
     $scope.filterCount = data.count;
     $scope.search(query);
   });

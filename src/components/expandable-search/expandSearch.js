@@ -10,7 +10,7 @@ let expandSearch = function() {
     },
     template: require('./expandSearch.html'),
     // @ngInject
-    controller: function($scope, $element, $mdMedia, $timeout, $location, NpdcFacetingService) {
+    controller: function($scope, $element, $mdMedia, $timeout, $location, NpdcFacetingService, npdcAppConfig) {
       $scope.$mdMedia = $mdMedia;
       $scope.isOpen = false;
       $scope.isFiltersOpen = false;
@@ -54,6 +54,12 @@ let expandSearch = function() {
       $scope.filterCount = null;
 
       NpdcFacetingService.on('search-change', function (event, data) {
+        let results = $scope.options.onSearch.call(this, data.q);
+        if (results && results.$promise) {
+          results.$promise.then(data => {
+            npdcAppConfig.search.facets = data.feed.facets;
+          });
+        }
         $scope.filterCount = data.count || 0;
       });
 

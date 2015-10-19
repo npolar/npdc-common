@@ -2,20 +2,21 @@
 <npdc:toolbar></npdc:toolbar>
 <div ng-if="warning" class="np-environment-warning">!! Environment: Production !!</div>
 
-<!-- Subheader bar -->
 
-<div class="np-sub-toolbar"></div>
 
 <!-- Content wrapper -->
-
-<md-card class="np-content-wrapper">
-  <md-toolbar class="np-content-title">
-    <h3>{{wrapper.cardTitle}}</h3>
-  </md-toolbar>
-  <md-content class="np-content" layout="column" layout-padding>
-    <npdc:crumbs></npdc:crumbs>
-    <div flex ng-view></div>
-  </md-content>
-</md-card>
+<md-content class="np-content-wrapper">
+  <!-- Subheader bar -->
+  <div class="np-sub-toolbar"></div>
+  <md-card>
+    <md-toolbar class="np-content-title">
+      <h3>{{wrapper.cardTitle}}</h3>
+    </md-toolbar>
+    <md-content class="np-content" layout="column" layout-padding>
+      <npdc:crumbs></npdc:crumbs>
+      <div flex ng-view></div>
+    </md-content>
+  </md-card>
+</md-content>
 
 <div npolar-api-message></div>

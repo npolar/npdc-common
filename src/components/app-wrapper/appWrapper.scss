@@ -1,6 +1,12 @@
 .np-content-wrapper {
-  margin: 74px 10% 0;
-  width: 80%;
+  background-color: $color-bg-dark;
+  min-height: 100%;
+
+  md-card {
+    margin: 0 10%;
+    padding-top: 74px;
+    width: 80%;
+  }
 
   .np-content-title {
     background-color: $color-primary-2;
