@@ -1,11 +1,16 @@
 'use strict';
 
-// @ngInclude
-
 require('../../');
 let angular = require('angular');
 
-let appDemo = angular.module('appWrapper', ['npdcUi']);
+let appDemo = angular.module('appWrapper', ['npdcUi', 'templates']);
+
+appDemo.controller('demoCtrl', ($scope, NpolarApiSecurity) => {
+  NpolarApiSecurity.isAuthorized = () => true;
+  $scope.resource = {
+    path: '/demo'
+  };
+});
 
 appDemo.run(npdcAppConfig => {
   npdcAppConfig.search.filterOptions = {

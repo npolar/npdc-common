@@ -14,6 +14,7 @@ var gulpif = require('gulp-if');
 var git = require('gulp-git');
 var rename = require('gulp-rename');
 var minifyCss = require('gulp-minify-css');
+var sourcemaps = require('gulp-sourcemaps');
 
 var baseConfig = npdcGulp.baseConfig;
 var config = {
@@ -47,11 +48,15 @@ gulp.task('sass', function (cb) {
     var vendorFiles = gulp.src(config.deps.css);
     var compiledFiles = gulp.src(config.src.sassMain)
       .pipe(cssGlobbing({extensions: ['.scss']}))
-      .pipe(sass().on('error', sass.logError));
+      .pipe(sourcemaps.init())
+      .pipe(sass().on('error', sass.logError))
+      .pipe(sourcemaps.write());
 
     es.concat(vendorFiles, compiledFiles)
+      .pipe(sourcemaps.init())
       .pipe(concat(baseConfig.pkgname + '-' + baseConfig.version() + '.css'))
       .pipe(gulpif(global.isProd, minifyCss()))
+      .pipe(sourcemaps.write())
       .pipe(gulp.dest(baseConfig.dist.assets)).pipe(rename(baseConfig.pkgname + '-' + ref + '-latest.css'))
       .pipe(gulp.dest(baseConfig.dist.assets))
       .on('error', notify.onError({message: '<%= error.message %>', title: 'Gulp sass'}));

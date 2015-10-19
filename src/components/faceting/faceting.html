@@ -3,7 +3,7 @@
   <div class="np-faceting-active-filters np-center-content" flex>
     <span>Active filters: <i ng-show="!activeFilters()">None</i></span>
     <div class="md-chips">
-      <div ng-repeat="filter in filters" ng-class="{'md-focused': selectedChip === $index}" class="md-chip md-default-theme">
+      <div ng-repeat="filter in filters()" ng-class="{'md-focused': selectedChip === $index}" class="md-chip md-default-theme">
         <div class="md-chip-content" tabindex="-1" aria-hidden="true" ng-click="selectChip($index)">
           <strong>{{ filter.facet }}: {{ filter.term }}</strong>
           <em>({{ filter.count }})</em>
@@ -20,7 +20,7 @@
     <div ng-repeat="facet in model" flex="33" flex-sm="100" flex-md="50">
 
       <!-- autocomplete -->
-      <md-autocomplete ng-if="facet.uiType === 'autocomplete'" md-selected-item="facet.selectedItem" md-search-text="facet.searchText" md-selected-item-change="selectedItemChange(item)" md-items="item in querySearch(facet)" md-item-text="item.term" md-min-length="0"
+      <md-autocomplete ng-if="facet.uiType === 'autocomplete'" md-selected-item="facet.selectedItem" md-search-text="facet.searchText" md-selected-item-change="selectedItemChange(item, facet)" md-items="item in querySearch(facet)" md-item-text="item.term" md-min-length="0"
       md-floating-label="Filter {{facet.key}}">
         <md-item-template>
           <span md-highlight-text="facet.searchText" md-highlight-flags="^i">{{item.term}} ({{item.count}})</span>

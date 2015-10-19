@@ -2,29 +2,12 @@
 // Use with `material-color('cyan', '400')`
 
 // Color palett
-$color-primary-0: #1570b1;
-$color-primary-1: #7ea2bb;
-$color-primary-2: #3e7ba7;
-$color-primary-3: #065c99;
-$color-primary-4: #034c80;
+$color-primary-0: #0c3642;
+$color-primary-1: #0f3f4c;
+$color-primary-2: #427296;
 
-$color-secondary-1-0: #ff500f;
-$color-secondary-1-1: #ffbfa7;
-$color-secondary-1-2: #ff8254;
-$color-secondary-1-3: #ef4100;
-$color-secondary-1-4: #c73600;
-
-$color-secondary-2-0: #0bbc6c;
-$color-secondary-2-1: #81c4a5;
-$color-secondary-2-2: #3bb37c;
-$color-secondary-2-3: #00a55a;
-$color-secondary-2-4: #008a4b;
-
-$color-complement-0: #ff970f;
-$color-complement-1: #ffd9a7;
-$color-complement-2: #ffb554;
-$color-complement-3: #ef8700;
-$color-complement-4: #c77100;
+$color-secondary-1: #36454f;
+$color-secondary-2: #6a1c10;
 
 // Typography
 $color-text-light: #fff;
@@ -32,12 +15,7 @@ $color-text-dark: #000;
 $color-text-grey: rgba(0, 0, 0, .54);
 
 $color-bg-light: #fff;
-$color-bg-dark: material-color('grey', '500');
-
-// Extra Accent
-$color-accent-0: #C8FDEA; //material-color('green', 'a200');
-$color-accent-1: #36454f;
-
+$color-bg-dark: #b0bec5;
 
 $bar-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14),
 0 3px 1px -2px rgba(0, 0, 0, .2),

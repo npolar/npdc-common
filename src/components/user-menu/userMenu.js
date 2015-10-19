@@ -1,7 +1,7 @@
 "use strict";
 
 // @ngInject
-let npdcUserMenu = function(NpolarApiSecurity, Gouncer) {
+let npdcUserMenu = function(NpolarApiSecurity) {
   return {
     scope: {},
     restrict: 'AE',
@@ -9,7 +9,7 @@ let npdcUserMenu = function(NpolarApiSecurity, Gouncer) {
     controller: 'NpolarLoginController',
     link: function(scope) {
       scope.user = NpolarApiSecurity.getUser();
-      scope.gouncer = Gouncer;
+      //scope.gouncer = Gouncer;
     }
   };
 };

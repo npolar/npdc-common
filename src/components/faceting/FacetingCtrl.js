@@ -1,18 +1,51 @@
 "use strict";
 
-const FilterCollection = require('./FilterCollection');
-const QueryBuilder = require('./QueryBuilder');
+let FilterCollection = require('./FilterCollection');
+let QueryBuilder = require('./QueryBuilder');
 
 // @ngInject
-const FacetingCtrl = function($scope, NpdcFacetingService) {
-  let filters = new FilterCollection();
+let FacetingCtrl = function($scope, $location, $timeout, NpdcFacetingService) {
+
   let queryBuilder = new QueryBuilder();
-  const UI_TYPES = ['autocomplete', 'checkbox', 'range'];
+  const UI_TYPES = ['autocomplete', 'checkbox', 'range', 'hidden'];
+  const FILTER_PARAM_REQEX = /^filter-(.*)/;
+
+  let filters = $scope.options.filterCollection =
+    $scope.options.filterCollection || new FilterCollection();
+
+    let parseUrl = function (query) {
+      if (query) {
+        Object.keys(query).forEach((key) => {
+          let matches = FILTER_PARAM_REQEX.exec(key);
+          if (matches) {
+            let facet = $scope.model.find((facet) => facet.key === matches[1]);
+            let terms = query[key].split(',');
+            let item = facet[facet.key].find(item => item.term === terms[0]);
+            if (facet) {
+              if (facet.uiType === 'range') {
+                facet.slider.ceil = facet.slider.max = terms[0].split('..')[1];
+                facet.slider.floor = facet.slider.min = terms[0].split('..')[0];
+                filters.addRangeFilter(facet);
+              } else if (facet.uiType === 'checkbox' && item) {
+                item.selected = true;
+                filters.add(item);
+              } else {
+                terms.forEach(term => {
+                  console.log(term, facet[facet.key]);
+                  let item = facet[facet.key].find(item => item.term === term);
+                  filters.add(item);
+                });
+              }
+            }
+          }
+        });
+      }
+    };
 
   let uiType = function(facet) {
     let _type = 'autocomplete';
-    if ($scope.options && $scope.options[facet.key]) {
-      let optType = $scope.options[facet.key].uiType;
+    if ($scope.options.filterUi && $scope.options.filterUi[facet.key]) {
+      let optType = $scope.options.filterUi[facet.key].type;
       _type = UI_TYPES.some(type => type === optType) ? optType : _type;
     }
     return _type;
@@ -24,15 +57,20 @@ const FacetingCtrl = function($scope, NpdcFacetingService) {
 
   let initRangeFacet = function (facet, oldFacet) {
     let floor, ceil, min, max;
-    if (facet[facet.key].length === 1) {
-      floor = ceil = min = max = termToInt(facet[facet.key][0].term);
-    } else {
-      floor = min = facet[facet.key].reduce((prev, term) =>
-        Math.min(prev.term ? termToInt(prev.term) : prev, termToInt(term.term)));
-      ceil = max = facet[facet.key].reduce((prev, term) =>
-        Math.max(prev.term ? termToInt(prev.term) : prev, termToInt(term.term)));
-    }
+    floor = ceil = min = max = termToInt(facet[facet.key][0].term);
 
+    facet[facet.key].forEach((term, index) => {
+      if (index === 0) {
+        return;
+      }
+      floor = min = Math.min(termToInt(term.term), termToInt(facet[facet.key][index-1].term));
+    });
+    facet[facet.key].forEach((term, index) => {
+      if (index === 0) {
+        return;
+      }
+      ceil = max = Math.max(termToInt(term.term), termToInt(facet[facet.key][index-1].term));
+    });
     if (oldFacet && oldFacet.slider) {
       facet.slider = oldFacet.slider;
     } else {
@@ -48,7 +86,7 @@ const FacetingCtrl = function($scope, NpdcFacetingService) {
   };
 
   let initDataModel = function () {
-    $scope.model = $scope.data.map(facet => {
+    $scope.model = $scope.options.facets.filter(facet => facet[Object.keys(facet)[0]].length > 0).map(facet => {
       let oldFacet;
       facet.key = Object.keys(facet)[0];
       oldFacet = $scope.model ? $scope.model.find(item => item.key === facet.key) : null;
@@ -57,9 +95,7 @@ const FacetingCtrl = function($scope, NpdcFacetingService) {
         let oldTerm;
         term.facet = facet.key;
         oldTerm = oldFacet ? oldFacet[facet.key].find(ot => ot.term === term.term) : null;
-        if (oldTerm && oldTerm.selected) {
-          term.selected = true;
-        }
+        term.selected = oldTerm ? oldTerm.selected : undefined;
         return term;
       });
 
@@ -73,17 +109,25 @@ const FacetingCtrl = function($scope, NpdcFacetingService) {
 
       return facet;
     });
+    parseUrl($location.search());
   };
 
   // Init data model
   initDataModel();
-  $scope.$watch('data', (newVal, oldVal) => {
-    initDataModel();
+  $scope.$watch('options.facets', (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      initDataModel();
+    }
   });
 
   filters.on('change', function(filters) {
-    let q = queryBuilder.build($scope.q, filters);
+    let q = queryBuilder.build(false, filters);
     NpdcFacetingService.emit('search-change', {q, count: filters.length});
+  });
+
+  // Respect the URL!
+  $scope.$on('$locationChangeSuccess', (event, data) => {
+    parseUrl(data);
   });
 
   // Chips
@@ -98,9 +142,9 @@ const FacetingCtrl = function($scope, NpdcFacetingService) {
 
 
   // Filters
-  $scope.filters = filters.array;
+  $scope.filters = () => filters.array;
   $scope.activeFilters = function() {
-    return $scope.filters.length > 0;
+    return filters.array.length > 0;
   };
 
   $scope.removeFilter = function(filter) {
@@ -115,7 +159,7 @@ const FacetingCtrl = function($scope, NpdcFacetingService) {
 
 
   // Autocomplete
-  $scope.selectedItemChange = function(item) {
+  $scope.selectedItemChange = function(item, facet) {
     if (item) {
       filters.add(item);
     }

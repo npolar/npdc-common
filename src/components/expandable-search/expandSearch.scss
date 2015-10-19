@@ -13,9 +13,8 @@
     -webkit-transition-delay: .5s;
     transition-delay: .5s;
 
-    .md-fab-toolbar-background {
-      -webkit-transition-delay: .5s !important;
-      transition-delay: .5s !important;
+    .np-es-filter {
+      opacity: 0;
     }
   }
 
@@ -26,6 +25,11 @@
     .md-button {
       margin-right: 15px;
     }
+
+    .np-filter-icon {
+      -webkit-transition-delay: .5s;
+      transition-delay: .5s;
+    }
   }
 
   md-fab-toolbar md-toolbar {
@@ -33,18 +37,18 @@
   }
 
   //WebKit, Blink, Edge
-  ::-webkit-input-placeholder {
+   ::-webkit-input-placeholder {
     color: $color-text-grey;
   }
 
   //Mozilla Firefox 4 to 18
-  :-moz-placeholder {
+ :-moz-placeholder {
     color: $color-text-grey;
     opacity: 1;
   }
 
   //Mozilla Firefox 19+
-  ::-moz-placeholder {
+ ::-moz-placeholder {
     color: $color-text-grey;
     opacity: 1;
   }
@@ -64,29 +68,26 @@
 
   // @TODO fix transitions so that scroll is not visible during transition.
   // Might need js and transitionEnd event.
+
   .np-es-filter {
     background-color: $color-bg-light;
-    box-shadow: 0 2px 7px -2px rgb(71, 71, 71) inset,
-      0 2px 7px -3px rgb(71, 71, 71);
+    box-shadow: 0 2px 7px -2px rgb(71, 71, 71) inset, 0 2px 7px -3px rgb(71, 71, 71);
     box-sizing: border-box;
     max-height: 0;
+    opacity: 0;
+    overflow-x: hidden;
     overflow-y: hidden;
     padding: 15px;
     position: absolute;
     -webkit-transition: all .5s;
     transition: all .5s;
-    -webkit-transition-delay: 0;
-    transition-delay: 0;
     visibility: hidden;
     width: 100%;
 
     &.open {
       max-height: 50vh;
+      opacity: 1;
       overflow-y: auto;
-      -webkit-transition: all 1s;
-      transition: all 1s;
-      -webkit-transition-delay: .5s;
-      transition-delay: .5s;
       visibility: visible;
       z-index: 10;
     }
@@ -94,12 +95,31 @@
 
   .np-es-input {
     color: $color-text-light;
-    margin-top: 20px;
     padding-bottom: 2px;
-    width: 100%;
+
+    md-input-container {
+      margin-top: 20px;
+    }
+
+    .md-button,
+    md-icon {
+      color: $color-primary-0 !important;
+    }
+
+    &.open {
+      .np-filter-icon {
+        opacity: 0;
+        z-index: 0;
+      }
+    }
+
+    .np-filter-icon {
+      right: 4px;
+      top: 13px;
+    }
   }
 
-  .np-toolbar-filter-icon {
+  .np-filter-icon {
     background-color: red;
     border-radius: 7.5px;
     box-shadow: 1px 1px 5px -1px;
@@ -111,10 +131,8 @@
     position: absolute;
     right: 31px;
     top: 0;
-    -webkit-transition: opacity 1s;
-    transition: opacity 1s;
-    -webkit-transition-delay: .5s;
-    transition-delay: .5s;
+    -webkit-transition: opacity .5s;
+    transition: opacity .5s;
     width: 15px;
     z-index: 22;
   }
@@ -130,14 +148,12 @@
       color: $color-text-grey;
     }
 
-    .np-toolbar-filter-icon {
+    md-fab-trigger .np-filter-icon {
       opacity: 0;
       z-index: 0;
     }
   }
 }
-
-
 
 #np-es-click-area {
   bottom: 0;

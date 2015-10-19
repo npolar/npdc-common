@@ -38,9 +38,9 @@ var NpdcBreadcrumbs = function($location, $log, $rootScope, $window) {
     return { href: self.path, title: translate(crumb), text: decodeURIComponent(translate(crumb)) };
   };
         
-  $rootScope.$on("$locationChangeSuccess", function(event, uri) {
+  $rootScope.$on(this.constructor +' $locationChangeSuccess', function(event, uri) {
     
-    $log.debug("$locationChangeSuccess <-", event, uri);
+    //$log.debug("$locationChangeSuccess <-", event, uri);
     
     // Get URI parts (split by /)
     let parts = uri.split("//")[1].split('?')[0].split("/").filter(p => { return !(/^$/).test(p); });

@@ -23,16 +23,6 @@
   }
 }
 
-.np-sub-toolbar {
-  background-color: $color-primary-4;
-  box-shadow: $bar-shadow;
-  height: 192px;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 0;
-}
-
 @media(max-width: 900px) {
   .np-toolbar-title {
     display: none;

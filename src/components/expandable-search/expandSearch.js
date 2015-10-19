@@ -5,11 +5,17 @@ let expandSearch = function() {
 
   return {
     restrict: 'E',
+    scope: {
+      options: '='
+    },
     template: require('./expandSearch.html'),
     // @ngInject
-    controller: function($scope, $element, $mdMedia, $timeout, NpdcFacetingService) {
+    controller: function($scope, $element, $mdMedia, $timeout, $location, NpdcFacetingService, npdcAppConfig) {
       $scope.$mdMedia = $mdMedia;
       $scope.isOpen = false;
+      $scope.isFiltersOpen = false;
+      $scope.q = $location.search().q;
+
       $scope.blockEvent = function($event) {
         $event.stopImmediatePropagation();
         return false;
@@ -24,10 +30,6 @@ let expandSearch = function() {
           $scope.isOpen = true;
         }, 1);
 
-        // Wait for transition
-        $timeout(() => {
-          $scope.$broadcast('reCalcViewDimensions');
-        }, 501);
         return false;
       };
 
@@ -37,9 +39,27 @@ let expandSearch = function() {
         }
       };
 
+      $scope.search = function(q) {
+        $scope.options.onSearch.call(this, q);
+      };
+
+      $scope.toggleFilters = function () {
+        $scope.isFiltersOpen = !$scope.isFiltersOpen;
+        // Wait for transition
+        $timeout(() => {
+          $scope.$broadcast('reCalcViewDimensions');
+        }, 550);
+      };
+
       $scope.filterCount = null;
 
       NpdcFacetingService.on('search-change', function (event, data) {
+        let results = $scope.options.onSearch.call(this, data.q);
+        if (results && results.$promise) {
+          results.$promise.then(data => {
+            npdcAppConfig.search.facets = data.feed.facets;
+          });
+        }
         $scope.filterCount = data.count || 0;
       });
 

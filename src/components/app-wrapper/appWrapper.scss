@@ -1,16 +1,21 @@
 .np-content-wrapper {
-  margin: 0 10%;
-  position: relative;
-  top: 74px;
-  width: 80%;
+  background-color: $color-bg-dark;
+  min-height: 100%;
+
+  md-card {
+    margin: 0 10%;
+    padding-top: 74px;
+    width: 80%;
+  }
 
   .np-content-title {
-    background-color: $color-accent-0;
+    background-color: $color-primary-2;
     box-shadow: $bar-shadow;
     text-align: center;
 
     h3 {
-      color: $color-text-dark;
+      color: $color-text-light;
+      text-shadow: 1px 1px 2px $color-text-dark;
     }
   }
 
@@ -19,11 +24,21 @@
   }
 }
 
+.np-sub-toolbar {
+  background-color: $color-primary-1;
+  box-shadow: $bar-shadow;
+  height: 192px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 0;
+}
+
 .np-primary-control {
   height: 56px;
   position: fixed;
   right: calc((10% / 2) - 28px);
-  top: 164px;
+  top: 156px;
   width: 56px;
   z-index: 4;
 }
@@ -48,11 +63,12 @@
 
 
 .np-environment-warning {
-  color: red;
-  position: absolute;
-  z-index: 9999;
+  $color: #f00;
+  bottom: 10px;
+  color: $color;
   font-weight: bold;
-  text-shadow: 1px 1px #000;
-  bottom: 20px;
-  right: 20px;
+  position: fixed;
+  right: calc(50% - 100px);
+  text-shadow: 1px 1px $color-text-dark;
+  z-index: 3;
 }

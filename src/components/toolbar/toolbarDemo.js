@@ -19,4 +19,7 @@ angular.module('toolbar', ['npdcUi']).controller('ToolbarCtrl', function($scope,
       }
     }
   };
+  $scope.wrapper.onSearch = function (a) {
+    console.log(a);
+  };
 });
