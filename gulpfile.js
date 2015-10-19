@@ -47,11 +47,13 @@ gulp.task('sass', function (cb) {
   }, function(err, ref) {
     var vendorFiles = gulp.src(config.deps.css);
     var compiledFiles = gulp.src(config.src.sassMain)
-      .pipe(sourcemaps.init())
       .pipe(cssGlobbing({extensions: ['.scss']}))
-      .pipe(sass().on('error', sass.logError));
+      .pipe(sourcemaps.init())
+      .pipe(sass().on('error', sass.logError))
+      .pipe(sourcemaps.write());
 
     es.concat(vendorFiles, compiledFiles)
+      .pipe(sourcemaps.init())
       .pipe(concat(baseConfig.pkgname + '-' + baseConfig.version() + '.css'))
       .pipe(gulpif(global.isProd, minifyCss()))
       .pipe(sourcemaps.write())
