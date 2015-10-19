@@ -1,7 +1,7 @@
 'use strict';
 
 // @ngInject
-var SearchController = function ($scope, $location, NpolarApiSecurity) {
+var SearchController = function($scope, $location, NpolarApiSecurity) {
 
   $scope.security = NpolarApiSecurity;
   $scope.q = $location.search().q;
@@ -23,7 +23,7 @@ var SearchController = function ($scope, $location, NpolarApiSecurity) {
 
   // Get search bit of API URI
   $scope.facetHref = function(uri) {
-    return "?"+ uri.split("?")[1];
+    return "?" + uri.split("?")[1];
   };
 
   $scope.facetKey = function(facet) {
@@ -35,20 +35,22 @@ var SearchController = function ($scope, $location, NpolarApiSecurity) {
       id += ".json";
     }
     // Get relative path of entry by removing hostname + appname from request URI
-    let segments = $location.absUrl().split("//")[1].split("?")[0].split("/").filter(s => { return s !== "";}).slice(2);
+    let segments = $location.absUrl().split("//")[1].split("?")[0].split("/").filter(s => {
+      return s !== "";
+    }).slice(2);
 
     if (segments.length === 0) {
       // For apps at /something, we just need to link to the id
       return id;
     } else {
       // For apps at /cat, but with show/edit at /cat/lynx we link to `lynx/${id}`
-      return segments.join("/")+'/'+id;
+      return segments.join("/") + '/' + id;
     }
   };
 
-  $scope.title = (entry) => {    
+  $scope.title = (entry) => {
     if (entry.titles) {
-      entry.titles[0].title;
+      return entry.titles[0].title;
     }
     return entry.title || entry.name || entry.code || entry.id;
   };
