@@ -11,7 +11,7 @@ var ui = angular.module('npdcUi', ['npolarUi', 'npolarApi', 'ngMaterial', 'ngAni
 
 ui.config(function($mdThemingProvider) {
   var npdcPrimary = $mdThemingProvider.extendPalette('blue', {
-    '500': '1570b1'
+    '500': '#0C3642'
   });
   var npdcAccent = $mdThemingProvider.extendPalette('teal', {
     'A200': '#C8FDEA'
