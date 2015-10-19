@@ -1,7 +1,5 @@
 .np-content-wrapper {
-  margin: 0 10%;
-  position: relative;
-  top: 74px;
+  margin: 74px 10% 0;
   width: 80%;
 
   .np-content-title {
@@ -34,7 +32,7 @@
   height: 56px;
   position: fixed;
   right: calc((10% / 2) - 28px);
-  top: 164px;
+  top: 156px;
   width: 56px;
   z-index: 4;
 }
@@ -59,11 +57,12 @@
 
 
 .np-environment-warning {
-  color: red;
-  position: fixed;
-  z-index: 9999;
+  $color: #f00;
+  bottom: 10px;
+  color: $color;
   font-weight: bold;
+  position: fixed;
+  right: calc(50% - 100px);
   text-shadow: 1px 1px $color-text-dark;
-  bottom: 20px;
-  right: 20px;
+  z-index: 3;
 }

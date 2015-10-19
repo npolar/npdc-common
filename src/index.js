@@ -18,9 +18,9 @@ ui.config(function($mdThemingProvider) {
     "contrastDefaultColor": "light",
     "contrastLightColors": ["300", "500", "800"],
   });
-  console.log(JSON.stringify(npdcPrimary));
-  var npdcAccent = $mdThemingProvider.extendPalette('teal', {});
-  console.log(JSON.stringify(npdcAccent));
+  var npdcAccent = $mdThemingProvider.extendPalette('green', {
+    'A200': '#00963D'
+  });
   $mdThemingProvider.definePalette('npdcPrimary', npdcPrimary);
   $mdThemingProvider.definePalette('npdcAccent', npdcAccent);
   $mdThemingProvider.theme('default').primaryPalette('npdcPrimary').accentPalette('npdcAccent');
