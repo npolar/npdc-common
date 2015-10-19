@@ -18,7 +18,6 @@ ui.config(function($mdThemingProvider) {
     'contrastDefaultColor': 'light',
     'contrastDarkColors': ['300', '500', '800', 'A100']
   });
-  console.log(npdcPrimary);
   var npdcAccent = $mdThemingProvider.extendPalette('teal', {
     'A200': 'C8FDEA'
   });
