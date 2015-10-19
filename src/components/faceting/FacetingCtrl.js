@@ -12,7 +12,7 @@ const FacetingCtrl = function($scope, NpdcFacetingService) {
   let uiType = function(facet) {
     let _type = 'autocomplete';
     if ($scope.options && $scope.options[facet.key]) {
-      let optType = $scope.options[facet.key].type;
+      let optType = $scope.options[facet.key].uiType;
       _type = UI_TYPES.some(type => type === optType) ? optType : _type;
     }
     return _type;
@@ -52,7 +52,7 @@ const FacetingCtrl = function($scope, NpdcFacetingService) {
       let oldFacet;
       facet.key = Object.keys(facet)[0];
       oldFacet = $scope.model ? $scope.model.find(item => item.key === facet.key) : null;
-      facet.type = uiType(facet);
+      facet.uiType = uiType(facet);
       facet[facet.key] = facet[facet.key].map(term => {
         let oldTerm;
         term.facet = facet.key;
@@ -63,11 +63,11 @@ const FacetingCtrl = function($scope, NpdcFacetingService) {
         return term;
       });
 
-      if (facet.type === 'range') {
+      if (facet.uiType === 'range') {
         facet = initRangeFacet(facet, oldFacet);
       }
 
-      if (facet.type === 'autocomplete') {
+      if (facet.uiType === 'autocomplete') {
         facet.searchText = "";
       }
 
