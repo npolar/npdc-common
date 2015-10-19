@@ -10,7 +10,8 @@
     text-align: center;
 
     h3 {
-      color: $color-text-dark;
+      color: $color-text-light;
+      text-shadow: 1px 1px 2px $color-text-dark;
     }
   }
 
@@ -62,7 +63,7 @@
   position: fixed;
   z-index: 9999;
   font-weight: bold;
-  text-shadow: 1px 1px #000;
+  text-shadow: 1px 1px $color-text-dark;
   bottom: 20px;
   right: 20px;
 }

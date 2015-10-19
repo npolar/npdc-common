@@ -11,21 +11,19 @@ var ui = angular.module('npdcUi', ['npolarUi', 'npolarApi', 'ngMaterial', 'ngAni
 
 ui.config(function($mdThemingProvider) {
   var npdcPrimary = $mdThemingProvider.extendPalette('light-blue', {
-    '500': '0c3642',
-    '300': '0f3f4c',
-    '800': '427296',
-    'A100': 'ffffff',
-    'contrastDefaultColor': 'light',
-    'contrastDarkColors': ['300', '500', '800', 'A100']
+    "300": "#0f3f4c",
+    "500": "#0c3642",
+    "800": "#427296",
+    "A100": "#ffffff",
+    "contrastDefaultColor": "light",
+    "contrastLightColors": ["300", "500", "800"],
   });
-  var npdcAccent = $mdThemingProvider.extendPalette('teal', {
-    'A200': 'C8FDEA'
-  });
+  console.log(JSON.stringify(npdcPrimary));
+  var npdcAccent = $mdThemingProvider.extendPalette('teal', {});
+  console.log(JSON.stringify(npdcAccent));
   $mdThemingProvider.definePalette('npdcPrimary', npdcPrimary);
   $mdThemingProvider.definePalette('npdcAccent', npdcAccent);
-  $mdThemingProvider.theme('default').primaryPalette('npdcPrimary').accentPalette('npdcAccent', {
-    'default': 'A200'
-  });
+  $mdThemingProvider.theme('default').primaryPalette('npdcPrimary').accentPalette('npdcAccent');
   $mdThemingProvider.theme('white').primaryPalette('npdcPrimary').accentPalette('grey');
 });
 
