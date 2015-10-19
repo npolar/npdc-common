@@ -14,7 +14,7 @@ let expandSearch = function() {
       $scope.$mdMedia = $mdMedia;
       $scope.isOpen = false;
       $scope.isFiltersOpen = false;
-      $scope.q = $location.search().q;
+      $scope.query = { q: $location.search().q };
 
       $scope.blockEvent = function($event) {
         $event.stopImmediatePropagation();
@@ -33,14 +33,17 @@ let expandSearch = function() {
         return false;
       };
 
-      $scope.close = function($event, force) {
+      $scope.keyup = function($event, force) {
         if ($event.keyCode === 27 || force) {
           $scope.isOpen = false;
         }
+        if ($event.keyCode === 13) {
+          $scope.search();
+        }
       };
 
-      $scope.search = function(q) {
-        $scope.options.onSearch.call(this, q);
+      $scope.search = function() {
+        $location.search(Object.assign($location.search(), $scope.query));
       };
 
       $scope.toggleFilters = function () {
@@ -54,7 +57,7 @@ let expandSearch = function() {
       $scope.filterCount = null;
 
       NpdcFacetingService.on('search-change', function (event, data) {
-        $scope.options.onSearch.call(this, data.q);
+        $location.search(Object.assign(data.q, $scope.query));
         $scope.filterCount = data.count || 0;
       });
 
