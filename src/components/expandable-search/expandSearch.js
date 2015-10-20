@@ -15,6 +15,7 @@ let expandSearch = function() {
       $scope.isOpen = false;
       $scope.isFiltersOpen = false;
       $scope.query = { q: $location.search().q };
+      $scope.title = npdcAppConfig.search.context || npdcAppConfig.toolbarTitle;
 
       $scope.blockEvent = function($event) {
         $event.stopImmediatePropagation();

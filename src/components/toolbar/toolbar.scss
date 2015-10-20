@@ -5,13 +5,13 @@
   top: 0;
   z-index: 5;
 
+  .np-toolbar-logo {
+    margin-right: 15px;
+  }
+
   .np-toolbar-content {
     height: 64px;
     max-height: 64px;
-  }
-
-  .np-toolbar-title {
-    margin-left: 15px;
   }
 
   npdc\:expand-search {
@@ -25,6 +25,6 @@
 
 @media(max-width: 900px) {
   .np-toolbar-title {
-    display: none;
+    visibility: hidden;
   }
 }

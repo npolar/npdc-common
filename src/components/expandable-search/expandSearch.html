@@ -15,7 +15,7 @@
         <div class="np-es-input" ng-class="{open : isFiltersOpen}" layout>
           <md-input-container md-no-float flex>
             <md-icon>search</md-icon>
-            <input type="text" ng-model="query.q" placeholder="Search">
+            <input type="text" ng-model="query.q" placeholder="Search {{title}}">
 
           </md-input-container>
           <md-button ng-click="toggleFilters();">
