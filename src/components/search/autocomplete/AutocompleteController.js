@@ -136,7 +136,8 @@ var AutocompleteController = function($filter, $http, $location, $log, $q, $reso
       $log.debug("redirectToSearch", q);
       // Arg setting new location search like below crashes the app :(
       // $location.search({q});
-      $window.location = `archive/?q=${q}`;
+      let base = NpdcAutocompleteConfig.base ? NpdcAutocompleteConfig.base+'/' : '';
+      $window.location = `${base}?q=${q}`;
     };
 
 };
