@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html ng-app="start">
+	<head>
+		<title>NPDC Start Page</title>
+		<link href="/assets/npdc-common-master-latest.css" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<meta name="viewport" content="initial-scale=1" />
+	</head>
+	<body class="npdc-home">
+		<header>
+			<npdc:toolbar></npdc:toolbar>
+			
+			<div class="row">
+				<div class="col">
+					<a href="#">
+						<md-icon>search</md-icon>
+						<span>Browse</span>
+					</a>
+				</div>
+				
+				<div class="col">
+					<a href="#">
+						<md-icon>image</md-icon>
+						<span>Visualise</span>
+					</a>
+				</div>
+				
+				<div class="col">
+					<a href="#">
+						<md-icon>file_download</md-icon>
+						<span>Download</span>
+					</a>
+				</div>
+				
+				<p>...Norwegian Polar Data</p>
+			</div>
+			
+			<nav>
+				<a href="#first">
+					<md-icon>storage</md-icon>
+					<md-tooltip md-direction="top">First</md-tooltip>
+				</a>
+				
+				<a href="#second">
+					<md-icon>room</md-icon>
+					<md-tooltip md-direction="top">Second</md-tooltip>
+				</a>
+				
+				<a href="#third">
+					<md-icon>explore</md-icon>
+					<md-tooltip md-direction="top">Third</md-tooltip>
+				</a>
+				<!--
+				<a href="#fourth">
+					<md-icon>work</md-icon>
+					<md-tooltip md-direction="top">Fourth</md-tooltip>
+				</a>
+				
+				<a href="#fifth">
+					<md-icon>dashboard</md-icon>
+					<md-tooltip md-direction="top">Fifth</md-tooltip>
+				</a>
+				-->
+			</nav>
+		</header>
+		
+		<section id="first">
+			<p>foobar</p>
+			<p>foobar</p>
+			<p>foobar</p>
+			<p>foobar</p>
+		</section>
+		
+		<section id="second">
+			<p>barbaz</p>
+			<p>barbaz</p>
+			<p>barbaz</p>
+			<p>barbaz</p>
+		</section>
+		
+		<section id="third">
+			<p>bazqux</p>
+			<p>bazqux</p>
+			<p>bazqux</p>
+			<p>bazqux</p>
+		</section>
+	</body>
+	<script src="/demo/demos.js"></script>
+</html>
