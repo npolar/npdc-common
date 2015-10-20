@@ -3,9 +3,9 @@
   min-height: 100%;
 
   .np-content-card {
-    margin: 0 10%;
+    margin: 0 9%;
     padding-top: 74px;
-    width: 80%;
+    width: 82%;
   }
 
   .np-content-title {
@@ -37,16 +37,15 @@
 .np-primary-control {
   height: 56px;
   position: fixed;
-  right: calc((10% / 2) - 28px);
+  right: calc((9% / 2) - 22px);
   top: 156px;
   width: 56px;
   z-index: 4;
 }
 
 // Responsive rules
-
 @media(max-width: 900px) {
-  .np-content-wrapper {
+  .np-content-wrapper .np-content-card {
     margin: 0;
     width: 100%;
   }
@@ -61,6 +60,17 @@
   }
 }
 
+
+@media(min-width: 1920px) {
+  .np-content-wrapper .np-content-card {
+    margin: 0 5%;
+    width: 90%;
+  }
+
+  .np-primary-control {
+    right: calc((5% / 2) - 22px);
+  }
+}
 
 .np-environment-warning {
   $color: #f00;
