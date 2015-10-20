@@ -17,9 +17,10 @@ let expandSearch = function() {
       $scope.isOpen = false;
       $scope.isFiltersOpen = false;
       $scope.query = { q: $location.search().q };
-      $scope.title = npdcAppConfig.search.context || npdcAppConfig.toolbarTitle;
+      $scope.placeholder = npdcAppConfig.search.context || npdcAppConfig.toolbarTitle;
       $scope.autocompleteConfig = NpdcAutocompleteConfig;
-      
+      NpdcAutocompleteConfig.placeholder = npdcAppConfig.search.context || NpdcAutocompleteConfig.placeholder;
+
       $scope.blockEvent = function($event) {
         $event.stopImmediatePropagation();
         return false;
