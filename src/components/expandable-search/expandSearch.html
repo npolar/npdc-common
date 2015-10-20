@@ -2,7 +2,7 @@
 <!-- <form class="np-expand-search" action="." method="get" ng-submit="this.form.submit()">
   <input type="search" incremental="" results="10" name="q" value="{{q}}">
 </form> -->
-<div class="np-expand-search" ng-keyup="close($event);" ng-class="{ open: isOpen, sm: $mdMedia('sm'), md: $mdMedia('md'), lg: $mdMedia('lg')}">
+<div class="np-expand-search" ng-keyup="keyup($event);" ng-class="{ open: isOpen, sm: $mdMedia('sm'), md: $mdMedia('md'), lg: $mdMedia('lg')}">
   <md-fab-toolbar md-theme="white" md-open="isOpen" md-direction="left">
     <md-fab-trigger>
       <md-button aria-label="search" class="md-fab md-mini" ng-focus-out="blockEvent($event);" ng-click="open($event);">
@@ -15,13 +15,14 @@
         <div class="np-es-input" ng-class="{open : isFiltersOpen}" layout>
           <md-input-container md-no-float flex>
             <md-icon>search</md-icon>
-            <input type="text" ng-model="q" placeholder="Search">
+            <input type="text" ng-model="query.q" placeholder="Search">
+
           </md-input-container>
           <md-button ng-click="toggleFilters();">
             <md-icon>{{isFiltersOpen ? 'expand_less' : 'expand_more'}}</md-icon> Filters
             <span ng-show="filterCount > 0" class="np-filter-icon">{{filterCount}}</span>
           </md-button>
-          <md-button ng-click="search(q);">
+          <md-button ng-click="search();">
             Search
           </md-button>
         </div>
@@ -33,4 +34,4 @@
   </div>
 </div>
 
-<div id="np-es-click-area" ng-class="{ open: isOpen }" ng-click="close($event, true);"></div>
+<div id="np-es-click-area" ng-class="{ open: isOpen }" ng-click="close();"></div>

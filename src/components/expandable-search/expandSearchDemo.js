@@ -16,9 +16,6 @@ angular.module('expandSearchDemo', ['npdcUi']).controller('ExpandSearchDemoCtrl'
       'coverage.south': {
         type: 'range'
       }
-    },
-    onSearch(a) {
-      console.log(a);
     }
   };
 });

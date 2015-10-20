@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-  toolbarLogoLink: "",
+  toolbarLogoLink: ".",
   toolbarLogo: "http://www.npolar.no/npcms/export/sites/np/images/logos/norsk-polarinstitutt-logo-norsk-hvit.png",
   toolbarTitle: "",
   toolbarMenuGroups: [

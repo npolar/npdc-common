@@ -9,6 +9,7 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcFacetingService) {
   let queryBuilder = new QueryBuilder();
   const UI_TYPES = ['autocomplete', 'checkbox', 'range', 'hidden'];
   const FILTER_PARAM_REQEX = /^filter-(.*)/;
+  let initialParse = false;
 
   let filters = $scope.options.filterCollection =
     $scope.options.filterCollection || new FilterCollection();
@@ -20,8 +21,8 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcFacetingService) {
           if (matches) {
             let facet = $scope.model.find((facet) => facet.key === matches[1]);
             let terms = query[key].split(',');
-            let item = facet[facet.key].find(item => item.term === terms[0]);
             if (facet) {
+              let item = facet[facet.key].find(item => item.term === terms[0]);
               if (facet.uiType === 'range') {
                 facet.slider.ceil = facet.slider.max = terms[0].split('..')[1];
                 facet.slider.floor = facet.slider.min = terms[0].split('..')[0];
@@ -31,7 +32,6 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcFacetingService) {
                 filters.add(item);
               } else {
                 terms.forEach(term => {
-                  console.log(term, facet[facet.key]);
                   let item = facet[facet.key].find(item => item.term === term);
                   filters.add(item);
                 });
@@ -109,11 +109,16 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcFacetingService) {
 
       return facet;
     });
-    parseUrl($location.search());
+
+    if ($scope.model.length > 0 && !initialParse) {
+      parseUrl($location.search());
+      initialParse = true;
+    }
   };
 
   // Init data model
   initDataModel();
+
   $scope.$watch('options.facets', (newVal, oldVal) => {
     if (newVal !== oldVal) {
       initDataModel();
