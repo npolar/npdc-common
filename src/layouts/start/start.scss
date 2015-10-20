@@ -53,6 +53,35 @@ $header-shadow: 0.05em 0.05em rgba(0, 0, 0, 0.5);
   }
 }
 
+.left-section, .right-section {
+  position: relative;
+  height: 100%;
+}
+
+.left-section {
+  width: 48vw;
+  float: left;
+}
+
+.right-section {
+  width: 48vw;
+  float: right;
+}
+
+@media(max-width:900px) {
+  .start-section {
+    min-height: 370px;
+  }
+
+  .primary-section {
+    width: calc(100vw - 30px);
+  }
+
+  .secondary-section {
+    display: none;
+  }
+}
+
 .card-circle {
   height        : 120px;
   width         : 120px;
