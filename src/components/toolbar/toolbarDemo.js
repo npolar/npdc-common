@@ -6,7 +6,7 @@ let angular = require('angular');
 angular.module('toolbar', ['npdcUi']).controller('ToolbarCtrl', function($scope, npdcAppConfig) {
   $scope.options = npdcAppConfig;
   $scope.options.search = {
-    facets: require('../faceting/demo/facets.json').facets,
+    facets: require('../search/faceting/demo/facets.json').facets,
     filterOptions: {
       'draft': {
         type: 'checkbox'

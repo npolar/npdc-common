@@ -5,8 +5,8 @@
 let appWrapper = function() {
   return {
     restrict: 'E',
-    template: require('./appWrapper.html'),
-    controller: 'NpdcAppWrapperCtrl'
+    template: require('./app.html'),
+    controller: 'NpdcAppController'
   };
 };
 

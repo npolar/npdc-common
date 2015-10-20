@@ -3,7 +3,7 @@
 require('../../');
 let angular = require('angular');
 
-let appDemo = angular.module('appWrapper', ['npdcUi', 'templates']);
+let appDemo = angular.module('appDemo', ['npdcUi', 'templates']);
 
 appDemo.controller('demoCtrl', ($scope, NpolarApiSecurity) => {
   NpolarApiSecurity.isAuthorized = () => true;
@@ -25,5 +25,5 @@ appDemo.run(npdcAppConfig => {
     }
   };
 
-  npdcAppConfig.search.facets = require('../faceting/demo/facets.json').facets;
+  npdcAppConfig.search.facets = require('../search/faceting/demo/facets.json').facets;
 });
