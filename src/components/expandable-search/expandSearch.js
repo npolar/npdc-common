@@ -33,13 +33,17 @@ let expandSearch = function() {
         return false;
       };
 
-      $scope.keyup = function($event, force) {
-        if ($event.keyCode === 27 || force) {
+      $scope.keyup = function($event) {
+        if ($event.keyCode === 27) {
           $scope.isOpen = false;
         }
         if ($event.keyCode === 13) {
           $scope.search();
         }
+      };
+
+      $scope.close = function () {
+        $scope.isOpen = false;
       };
 
       $scope.search = function() {
