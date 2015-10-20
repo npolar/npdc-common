@@ -11,7 +11,7 @@ let expandSearch = function() {
     template: require('./expandSearch.html'),
     // @ngInject
     controller: function($scope, $element, $mdMedia, $timeout, $location,
-      NpdcFacetingService, NpdcAutocompleteConfig, npdcAppConfig) {
+      NpdcFacetingService, NpdcAutocompleteConfig, NpdcSearchService, npdcAppConfig) {
 
       $scope.$mdMedia = $mdMedia;
       $scope.isOpen = false;
@@ -39,10 +39,7 @@ let expandSearch = function() {
 
       $scope.keyup = function($event) {
         if ($event.keyCode === 27) {
-          $scope.isOpen = false;
-        }
-        if ($event.keyCode === 13) {
-          $scope.search();
+          $scope.close();
         }
       };
 
@@ -51,7 +48,7 @@ let expandSearch = function() {
       };
 
       $scope.search = function() {
-        $location.search(Object.assign($location.search(), $scope.query));
+        NpdcAutocompleteConfig.emit('search-change', Object.assign($location.search(), $scope.query));
       };
 
       $scope.toggleFilters = function () {
@@ -64,8 +61,7 @@ let expandSearch = function() {
 
       $scope.filterCount = null;
 
-      NpdcFacetingService.on('search-change', function (event, data) {
-        $location.search(Object.assign(data.q, $scope.query));
+      NpdcFacetingService.on('filter-change', function (event, data) {
         $scope.filterCount = data.count || 0;
       });
 

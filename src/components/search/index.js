@@ -4,6 +4,7 @@ var angular = require('angular');
 var ui = angular.module('npdcUi');
 
 ui.service('NpdcFacetingService', require('./faceting/facetingService'));
+ui.service('NpdcSearchService', require('./searchService'));
 ui.controller('NpdcFacetingCtrl', require('./faceting/FacetingCtrl'));
 
 ui.directive('npdcFaceting', require('./faceting/facetingDirective'));

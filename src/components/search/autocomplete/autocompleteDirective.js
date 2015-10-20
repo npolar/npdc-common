@@ -6,6 +6,9 @@ let autocompleteDirective = function () {
     controller: 'NpdcAutocompleteController',
     require: '?^^npdcExpandSearch',
     template: require('./autocomplete.html'),
+    scope: {
+      query: '='
+    },
     link(scope, elem, attrs, ctrl) {
       if (ctrl) {
         scope.expandSearch = true;

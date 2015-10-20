@@ -3,16 +3,19 @@
 let Entities = require('special-entities');
 
 // @ngInject
-var AutocompleteController = function($filter, $http, $location, $q, $resource, $route, $scope, $window, NpolarApiResource, NpdcAutocompleteConfig) {
+var AutocompleteController = function($filter, $location, $window, $q, $scope, NpolarApiResource, NpdcAutocompleteConfig) {
 
   $scope.config = NpdcAutocompleteConfig;
+  $scope.collections = NpdcAutocompleteConfig.collections;
+  $scope.selectedDefault = NpdcAutocompleteConfig.selectedDefault;
+  $scope.collectionSelected = {};
+  $scope.collections.forEach(c => {
+    $scope.collectionSelected[c] = $scope.selectedDefault.includes(c) ? true : false;
+  });
+  $scope.query = $scope.query || { q: $location.search().q };
 
   let unescape = function(text) {
     return Entities.normalizeEntities(text, 'utf-8');
-  };
-
-  this.placeholder = function() {
-    return $scope.config.placeholder;
   };
 
   $scope.title = (entry) => {
@@ -21,81 +24,38 @@ var AutocompleteController = function($filter, $http, $location, $q, $resource, 
     return unescape(t);
   };
 
-
-  // called on select
-  this.title = function(e) {
-    return $scope.title(e);
-  };
-
-
-  this.collections = NpdcAutocompleteConfig.collections;
-  this.selectedDefault = NpdcAutocompleteConfig.selectedDefault;
-
-  this.collectionSelected = {};
-
-  this.collections.forEach(c => {
-    this.collectionSelected[c] = this.selectedDefault.includes(c) ? true : false;
-  });
-
-  this.searchText = $location.search().q;
-
-  this.label = function(document) {
-    if (document.collection) {
-      return document.collection;
-    } else if (document.schema && (/\/schema\//).test(document.schema)) {
-      let label = document.schema.split("/schema/")[1].replace(/\-.+$/, '').replace(/\.(\w+)$/, '');
-      if ("publication" === label) {
-        label += `/${document.publication_type}`;
-      }
-      return label;
-    } else {
-      return "";
-    }
-  };
-
   // Search all collections for text q
-  this.querySearch = function(q) {
+  $scope.querySearch = function(q) {
+    // Merge in default query, respect url
+    let query = Object.assign($location.search(), NpdcAutocompleteConfig.query, $scope.query);
 
-    // Merge in default query
-    let query = Object.assign({
-      q
-    }, NpdcAutocompleteConfig.query);
-
-    let searchCollections = this.collections.filter(c => {
-      return this.collectionSelected[c];
+    let searchCollections = $scope.collections.filter(c => {
+      return $scope.collectionSelected[c];
     });
-
 
     let resources = searchCollections.map(s => {
       s = s.replace(/^\/, ''/); //Remove trail
       let path = `/${s}`;
-      let service = {
-        path
-      };
+      let service = { path };
       return NpolarApiResource.resource(service);
     });
 
-    return $q.all(resources.map(function(resource) {
-      return resource.array(query).$promise;
-    })).then(function(results) {
-      let f = results.reduce(function(a, b) {
-        return a.concat(b);
-      }).sort(function(a, b) {
-        return (a._score < b._score);
-      });
-
-      return f;
-    });
+    return $q.all(resources.map(resource => resource.array(query).$promise))
+      .then(results => results.reduce((a, b) => a.concat(b)).sort((a, b) => a._score < b._score));
   };
 
-  this.selectedItemChange = function(entry) {
+  $scope.selectedItemChange = function(entry) {
+    if (!entry) {
+      return;
+    }
+
     let path;
 
     if (NpdcAutocompleteConfig.base) {
       path = `${NpdcAutocompleteConfig.base}/${entry.id}`;
     } else {
 
-      let collection = this.collections.find(collection => new RegExp(collection).test(entry.schema));
+      let collection = $scope.collections.find(collection => new RegExp(collection).test(entry.schema));
       if (entry && entry.schema) {
         if (collection) {
           path = `/${ collection }/${ entry.id }`;
@@ -105,15 +65,12 @@ var AutocompleteController = function($filter, $http, $location, $q, $resource, 
       }
     }
 
-    $window.location = path;
+    $window.location.path = path;
   };
 
-  this.redirectToSearch = function(q) {
-    $location.search({
-      q
-    });
+  $scope.submit = function ($event) {
+    NpdcAutocompleteConfig.emit('search-change', Object.assign($location.search(), $scope.query));
   };
-
 };
 
 module.exports = AutocompleteController;

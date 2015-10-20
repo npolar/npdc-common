@@ -10,7 +10,6 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcFacetingService) {
   const UI_TYPES = ['autocomplete', 'checkbox', 'range', 'hidden'];
   const FILTER_PARAM_REQEX = /^filter-(.*)/;
   let initialParse = false;
-
   let filters = $scope.options.filterCollection =
     $scope.options.filterCollection || new FilterCollection();
 
@@ -127,7 +126,7 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcFacetingService) {
 
   filters.on('change', function(filters) {
     let q = queryBuilder.build(false, filters);
-    NpdcFacetingService.emit('search-change', {q, count: filters.length});
+    NpdcFacetingService.emit('filter-change', {q, count: filters.length});
   });
 
   // Respect the URL!

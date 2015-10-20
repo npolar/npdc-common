@@ -10,7 +10,7 @@ demo.controller('demoCtrl', ($scope, NpolarApiSecurity) => {
 });
 
 demo.run(npdcAppConfig => {
-  npdcAppConfig.search.filterOptions = {
+  npdcAppConfig.search.filterUi = {
     'draft': {
       type: 'checkbox'
     },
