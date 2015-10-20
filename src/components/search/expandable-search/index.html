@@ -5,9 +5,15 @@
     <link href="/assets/npdc-common-master-latest.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <meta name="viewport" content="initial-scale=1" />
+    <style>
+      .global .np-expand-search {
+        top: 100px;
+      }
+    </style>
   </head>
   <body ng-controller="ExpandSearchDemoCtrl">
     <npdc:expand-search options="options"></npdc:expand-search>
+    <npdc:expand-search options="globalOptions" class="global"></npdc:expand-search>
     <script src="/demo/demos.js"></script>
   </body>
 </html>

@@ -13,11 +13,14 @@
     <md-toolbar ng-focus-out="blockEvent($event);" ng-click="blockEvent($event);">
       <md-fab-actions class="md-toolbar-tools">
         <div class="np-es-input" ng-class="{open : isFiltersOpen}" layout>
-          <md-input-container md-no-float flex>
+          <div flex layout>
             <md-icon>search</md-icon>
-            <input type="text" ng-model="query.q" placeholder="Search {{title}}">
-
-          </md-input-container>
+            <npdc:autocomplete flex ng-if="options.autocomplete"></npdc:autocomplete>
+            <md-input-container flex ng-if="!options.autocomplete">
+              <label>Search {{title}}</label>
+              <input type="text" ng-model="query.q">
+            </md-input-container>
+          </div>
           <md-button ng-click="toggleFilters();">
             <md-icon>{{isFiltersOpen ? 'expand_less' : 'expand_more'}}</md-icon> Filters
             <span ng-show="filterCount > 0" class="np-filter-icon">{{filterCount}}</span>
@@ -31,6 +34,9 @@
   </md-fab-toolbar>
   <div ng-show="isFiltersOpen && isOpen" class="np-es-filter" ng-class="{ open: isFiltersOpen && isOpen }">
     <npdc:faceting ng-if="options.facets" options="options"></npdc:faceting>
+    <div ng-if="options.autocomplete && autocompleteConfig.showCollections" ng-controller="NpdcAutocompleteController as ctrl" layout layout-wrap layout-align="space-between center">
+      <md-checkbox flex="25" ng-change="ctrl.querySearch(ctrl.searchText)" ng-model="ctrl.collectionSelected[collection]" ng-repeat="collection in ctrl.collections">{{ collection }}</md-checkbox>
+    </div>
   </div>
 </div>
 

@@ -3,7 +3,7 @@
 require('../../');
 let angular = require('angular');
 
-angular.module('expandSearchDemo', ['npdcUi']).controller('ExpandSearchDemoCtrl', function ($scope) {
+angular.module('expandSearchDemo', ['npdcUi']).controller('ExpandSearchDemoCtrl', function ($scope, NpdcAutocompleteConfig) {
   $scope.options = {
     facets: require('../faceting/demo/facets.json').facets,
     filterUi: {
@@ -18,4 +18,12 @@ angular.module('expandSearchDemo', ['npdcUi']).controller('ExpandSearchDemoCtrl'
       }
     }
   };
+
+
+  $scope.globalOptions = {
+    autocomplete: true,
+    context: ''
+  };
+
+  NpdcAutocompleteConfig.showCollections = true;
 });

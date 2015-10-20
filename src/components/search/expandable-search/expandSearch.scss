@@ -95,11 +95,8 @@
 
   .np-es-input {
     color: $color-text-light;
+    height: 100%;
     padding-bottom: 2px;
-
-    md-input-container {
-      margin-top: 20px;
-    }
 
     .md-button,
     md-icon {

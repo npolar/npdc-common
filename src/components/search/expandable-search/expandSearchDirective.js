@@ -10,22 +10,24 @@ let expandSearch = function() {
     },
     template: require('./expandSearch.html'),
     // @ngInject
-    controller: function($scope, $element, $mdMedia, $timeout, $location, NpdcFacetingService, npdcAppConfig) {
+    controller: function($scope, $element, $mdMedia, $timeout, $location,
+      NpdcFacetingService, NpdcAutocompleteConfig, npdcAppConfig) {
+
       $scope.$mdMedia = $mdMedia;
       $scope.isOpen = false;
       $scope.isFiltersOpen = false;
       $scope.query = { q: $location.search().q };
       $scope.title = npdcAppConfig.search.context || npdcAppConfig.toolbarTitle;
-
+      $scope.autocompleteConfig = NpdcAutocompleteConfig;
+      
       $scope.blockEvent = function($event) {
         $event.stopImmediatePropagation();
         return false;
       };
 
       $scope.open = function() {
-        document.querySelector('.np-es-input input').focus();
+        $element[0].querySelector('.np-es-input input').focus();
 
-        //$scope.isOpen = true;
         // Firefox workaround
         $timeout(() => {
           $scope.isOpen = true;

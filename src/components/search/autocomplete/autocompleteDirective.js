@@ -4,7 +4,13 @@
 let autocompleteDirective = function () {
   return {
     controller: 'NpdcAutocompleteController',
-    template: require('./autocomplete.html')
+    require: '?^^npdcExpandSearch',
+    template: require('./autocomplete.html'),
+    link(scope, elem, attrs, ctrl) {
+      if (ctrl) {
+        scope.expandSearch = true;
+      }
+    }
   };
 };
 
