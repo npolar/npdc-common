@@ -12,7 +12,7 @@ let FacetingCtrl = function($scope, $location, $timeout) {
   let initialParse = false;
 
   let filterChangeCallback = function (filters) {
-    let q = queryBuilder.build(false, filters);
+    let q = queryBuilder.build(filters);
     $scope.$emit('filter-change', {q, count: filters.length});
   };
 

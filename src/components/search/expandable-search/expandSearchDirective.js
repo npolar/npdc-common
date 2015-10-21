@@ -17,7 +17,6 @@ let expandSearch = function() {
       $scope.isFiltersOpen = false;
       $scope.query = { q: $location.search().q };
 
-      console.log($scope.options.autocomplete);
       if ($scope.options.autocomplete) {
         $scope.options.autocomplete = Object.assign({}, $scope.options.autocomplete, $scope.query);
       }
@@ -46,6 +45,9 @@ let expandSearch = function() {
         if ($event.keyCode === 27) {
           $scope.close();
         }
+        if ($event.keyCode === 13) {
+          $scope.search($scope.query);
+        }
       };
 
       $scope.close = function () {
@@ -55,7 +57,7 @@ let expandSearch = function() {
       $scope.search = function(q) {
         let query = Object.assign({},
           $location.search(),
-          q,
+          q || $scope.query,
           $scope.options.autocomplete ? {q: $scope.options.autocomplete.q} : {});
         NpdcSearchService.search(query);
       };
@@ -82,7 +84,10 @@ let expandSearch = function() {
 
       $scope.$on('filter-change', function (event, data) {
         $scope.filterCount = data.count || 0;
-        $scope.search(data.q);
+        let query = Object.assign({},
+          data.q,
+          $scope.options.autocomplete ? {q: $scope.options.autocomplete.q} : $scope.query);
+        NpdcSearchService.search(query);
       });
 
     }

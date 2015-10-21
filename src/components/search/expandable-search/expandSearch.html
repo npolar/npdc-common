@@ -17,8 +17,8 @@
             <md-icon class="es-search-icon">search</md-icon>
             <npdc:autocomplete ng-if="options.autocomplete" flex options="options.autocomplete"></npdc:autocomplete>
             <md-input-container ng-if="!options.autocomplete" flex>
-             <label>{{placeholder}}</label>
-             <input type="text" ng-model="query.q">
+              <label>{{placeholder}}</label>
+              <input type="text" ng-model="query.q">
            </md-input-container>
           </div>
           <md-button ng-click="toggleFilters();">
