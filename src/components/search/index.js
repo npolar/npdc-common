@@ -3,7 +3,6 @@
 var angular = require('angular');
 var ui = angular.module('npdcUi');
 
-ui.service('NpdcFacetingService', require('./faceting/facetingService'));
 ui.service('NpdcSearchService', require('./searchService'));
 ui.controller('NpdcFacetingCtrl', require('./faceting/FacetingCtrl'));
 
@@ -14,5 +13,5 @@ ui.directive('npdcSearch', require('./searchDirective'));
 ui.controller('NpdcSearchController', require('./SearchController'));
 
 ui.controller('NpdcAutocompleteController', require('./autocomplete/AutocompleteController'));
-ui.service('NpdcAutocompleteConfig', require('./autocomplete/autocompleteConfigService'));
+ui.factory('NpdcAutocompleteConfigFactory', require('./autocomplete/AutocompleteConfigFactory'));
 ui.directive('npdcAutocomplete', require('./autocomplete/autocompleteDirective'));

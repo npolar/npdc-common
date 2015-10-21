@@ -10,14 +10,18 @@ let expandSearch = function() {
     },
     template: require('./expandSearch.html'),
     // @ngInject
-    controller: function($scope, $element, $mdMedia, $timeout, $location,
-      NpdcFacetingService, NpdcAutocompleteConfig, NpdcSearchService, npdcAppConfig) {
+    controller: function($scope, $element, $mdMedia, $timeout, $location, NpdcSearchService, npdcAppConfig) {
 
       $scope.$mdMedia = $mdMedia;
       $scope.isOpen = false;
       $scope.isFiltersOpen = false;
-      $scope.autocompleteConfig = NpdcAutocompleteConfig;
-      $scope.autocompleteOptions = Object.assign({}, $scope.options, { q: $location.search().q });
+      $scope.query = { q: $location.search().q };
+
+      console.log($scope.options.autocomplete);
+      if ($scope.options.autocomplete) {
+        $scope.options.autocomplete = Object.assign({}, $scope.options.autocomplete, $scope.query);
+      }
+      $scope.placeholder = $scope.options.placeholder || 'Search ' + npdcAppConfig.toolbarTitle;
 
       $scope.blockEvent = function($event) {
         $event.stopImmediatePropagation();
@@ -48,10 +52,12 @@ let expandSearch = function() {
         $scope.isOpen = false;
       };
 
-      $scope.search = function() {
-        console.log('search', $scope.autocompleteOptions);
-        NpdcAutocompleteConfig.emit('search-change',
-          Object.assign({}, $location.search(), {q: $scope.autocompleteOptions.q}));
+      $scope.search = function(q) {
+        let query = Object.assign({},
+          $location.search(),
+          q,
+          $scope.options.autocomplete ? {q: $scope.options.autocomplete.q} : {});
+        NpdcSearchService.search(query);
       };
 
       $scope.toggleFilters = function () {
@@ -59,13 +65,24 @@ let expandSearch = function() {
         // Wait for transition
         $timeout(() => {
           $scope.$broadcast('reCalcViewDimensions');
-        }, 550);
+        }, 520);
+      };
+
+      $scope.updateAutocompleteCollection = function (q) {
+        $scope.$broadcast('update-autocomplete-collection');
       };
 
       $scope.filterCount = null;
 
-      NpdcFacetingService.on('filter-change', function (event, data) {
+      $scope.$watch('query.q', (newVal, oldVal) => {
+        if (newVal !== oldVal) {
+          $scope.search({q: newVal});
+        }
+      });
+
+      $scope.$on('filter-change', function (event, data) {
         $scope.filterCount = data.count || 0;
+        $scope.search(data.q);
       });
 
     }

@@ -3,7 +3,7 @@
 require('../../');
 let angular = require('angular');
 
-angular.module('expandSearchDemo', ['npdcUi']).controller('ExpandSearchDemoCtrl', function ($scope, NpdcAutocompleteConfig) {
+angular.module('expandSearchDemo', ['npdcUi']).controller('ExpandSearchDemoCtrl', function ($scope, NpdcAutocompleteConfigFactory) {
   $scope.options = {
     facets: require('../faceting/demo/facets.json').facets,
     filterUi: {
@@ -16,10 +16,11 @@ angular.module('expandSearchDemo', ['npdcUi']).controller('ExpandSearchDemoCtrl'
       'coverage.south': {
         type: 'range'
       }
-    },
-    collections: ['dataset'],
-    placeholder: 'Dataset'
+    }
   };
 
-  NpdcAutocompleteConfig.showCollections = true;
+  $scope.globalOptions = {
+    autocomplete: new NpdcAutocompleteConfigFactory({showCollections: true})
+  };
+
 });

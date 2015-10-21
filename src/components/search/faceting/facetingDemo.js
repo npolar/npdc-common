@@ -22,7 +22,7 @@ demo.run(npolarApiConfig => {
   angular.extend(npolarApiConfig, { resources: [resource] });
 });
 
-demo.controller('FacetingDemoCtrl', function ($scope, $location, $controller, Dataset, NpdcFacetingService) {
+demo.controller('FacetingDemoCtrl', function ($scope, $location, $controller, Dataset) {
 
   $controller('NpolarBaseController', { $scope: $scope });
   $scope.resource = Dataset;
@@ -54,9 +54,4 @@ demo.controller('FacetingDemoCtrl', function ($scope, $location, $controller, Da
     }
   };
 
-  NpdcFacetingService.on('filter-change', (e, data) => {
-    let query = $scope.query(data.q);
-    $scope.filterCount = data.count;
-    $scope.search(query);
-  });
 });
