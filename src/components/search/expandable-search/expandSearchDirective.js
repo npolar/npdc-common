@@ -18,10 +18,12 @@ let expandSearch = function() {
       $scope.query = { q: $location.search().q };
       $scope.filterCount = null;
 
-      if ($scope.options.autocomplete) {
-        $scope.options.autocomplete = Object.assign({}, $scope.options.autocomplete, $scope.query);
+      if ($scope.options) {
+        if ($scope.options.autocomplete) {
+          $scope.options.autocomplete = Object.assign({}, $scope.options.autocomplete, $scope.query);
+        }
+        $scope.placeholder = $scope.options.placeholder || 'Search ' + npdcAppConfig.toolbarTitle;
       }
-      $scope.placeholder = $scope.options.placeholder || 'Search ' + npdcAppConfig.toolbarTitle;
 
       $scope.blockEvent = function($event) {
         $event.stopImmediatePropagation();
