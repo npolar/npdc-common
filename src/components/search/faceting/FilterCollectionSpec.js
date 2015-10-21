@@ -1,11 +1,13 @@
 'use strict';
 require('should');
 const FilterCollection = require('./FilterCollection');
-let filters;
+let filters, $scope, callback;
 
 describe('FilterCollection', function() {
   beforeEach(function() {
-    filters = new FilterCollection();
+    $scope = {};
+    callback = () => {};
+    filters = new FilterCollection($scope, callback);
   });
   describe('#add', function() {
 
@@ -31,14 +33,14 @@ describe('FilterCollection', function() {
       filters.array.length.should.eql(1);
     });
 
-    it('should trigger event', function(done) {
+    it('should trigger callback', function(done) {
+      callback = () => {done();};
+      filters = new FilterCollection($scope, callback);
       var item = {
         facet: 'test',
         term: 'test'
       };
-      filters.on('change', filters => {
-        done();
-      });
+
       filters.add(item);
     });
   });

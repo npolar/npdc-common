@@ -10,16 +10,18 @@ let expandSearch = function() {
     },
     template: require('./expandSearch.html'),
     // @ngInject
-    controller: function($scope, $element, $mdMedia, $timeout, $location,
-      NpdcFacetingService, NpdcAutocompleteConfig, npdcAppConfig) {
+    controller: function($scope, $element, $mdMedia, $timeout, $location, NpdcSearchService, npdcAppConfig) {
 
       $scope.$mdMedia = $mdMedia;
       $scope.isOpen = false;
       $scope.isFiltersOpen = false;
       $scope.query = { q: $location.search().q };
-      $scope.placeholder = npdcAppConfig.search.context || npdcAppConfig.toolbarTitle;
-      $scope.autocompleteConfig = NpdcAutocompleteConfig;
-      NpdcAutocompleteConfig.placeholder = npdcAppConfig.search.context || NpdcAutocompleteConfig.placeholder;
+      $scope.filterCount = null;
+
+      if ($scope.options.autocomplete) {
+        $scope.options.autocomplete = Object.assign({}, $scope.options.autocomplete, $scope.query);
+      }
+      $scope.placeholder = $scope.options.placeholder || 'Search ' + npdcAppConfig.toolbarTitle;
 
       $scope.blockEvent = function($event) {
         $event.stopImmediatePropagation();
@@ -27,7 +29,10 @@ let expandSearch = function() {
       };
 
       $scope.open = function() {
-        $element[0].querySelector('.np-es-input input').focus();
+        let input = $element[0].querySelector('.np-es-input input');
+        if (input) {
+          input.focus();
+        }
 
         // Firefox workaround
         $timeout(() => {
@@ -39,10 +44,10 @@ let expandSearch = function() {
 
       $scope.keyup = function($event) {
         if ($event.keyCode === 27) {
-          $scope.isOpen = false;
+          $scope.close();
         }
         if ($event.keyCode === 13) {
-          $scope.search();
+          $scope.search($scope.query);
         }
       };
 
@@ -50,8 +55,12 @@ let expandSearch = function() {
         $scope.isOpen = false;
       };
 
-      $scope.search = function() {
-        $location.search(Object.assign($location.search(), $scope.query));
+      $scope.search = function(q) {
+        let query = Object.assign({},
+          $location.search(),
+          q || $scope.query,
+          $scope.options.autocomplete ? {q: $scope.options.autocomplete.q} : {});
+        NpdcSearchService.search(query);
       };
 
       $scope.toggleFilters = function () {
@@ -59,14 +68,21 @@ let expandSearch = function() {
         // Wait for transition
         $timeout(() => {
           $scope.$broadcast('reCalcViewDimensions');
-        }, 550);
+        }, 520);
       };
 
-      $scope.filterCount = null;
+      $scope.$watch('query.q', (newVal, oldVal) => {
+        if (newVal !== oldVal) {
+          $scope.search({q: newVal});
+        }
+      });
 
-      NpdcFacetingService.on('search-change', function (event, data) {
-        $location.search(Object.assign(data.q, $scope.query));
+      $scope.$on('filter-change', function (event, data) {
         $scope.filterCount = data.count || 0;
+        let query = Object.assign({},
+          data.q,
+          $scope.options.autocomplete ? {q: $scope.options.autocomplete.q} : $scope.query);
+        NpdcSearchService.search(query);
       });
 
     }

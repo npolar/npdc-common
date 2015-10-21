@@ -15,11 +15,11 @@
         <div class="np-es-input" ng-class="{open : isFiltersOpen}" layout>
           <div flex layout>
             <md-icon class="es-search-icon">search</md-icon>
-            <npdc:autocomplete flex ng-if="options.autocomplete"></npdc:autocomplete>
-            <md-input-container flex ng-if="!options.autocomplete">
-              <label>Search {{placeholder}}</label>
+            <npdc:autocomplete ng-if="options.autocomplete" flex options="options.autocomplete"></npdc:autocomplete>
+            <md-input-container ng-if="!options.autocomplete" flex>
+              <label>{{placeholder}}</label>
               <input type="text" ng-model="query.q">
-            </md-input-container>
+           </md-input-container>
           </div>
           <md-button ng-click="toggleFilters();">
             <md-icon>{{isFiltersOpen ? 'expand_less' : 'expand_more'}}</md-icon> Filters
@@ -33,9 +33,9 @@
     </md-toolbar>
   </md-fab-toolbar>
   <div ng-show="isFiltersOpen && isOpen" class="np-es-filter" ng-class="{ open: isFiltersOpen && isOpen }">
-    <npdc:faceting ng-if="options.facets && !options.autocomplete" options="options"></npdc:faceting>
-    <div ng-if="options.autocomplete && autocompleteConfig.showCollections" ng-controller="NpdcAutocompleteController as ctrl" layout layout-wrap layout-align="space-between center">
-      <md-checkbox flex="25" ng-change="ctrl.querySearch(ctrl.searchText)" ng-model="ctrl.collectionSelected[collection]" ng-repeat="collection in ctrl.collections">{{ collection }}</md-checkbox>
+    <npdc:faceting ng-if="options.facets" options="options"></npdc:faceting>
+    <div ng-if="options.autocomplete && options.autocomplete.showCollections" layout layout-wrap layout-align="space-between center">
+      <md-checkbox flex="25" ng-model="options.autocomplete.collections[collection]" ng-repeat="(collection, value) in options.autocomplete.collections">{{ collection }}</md-checkbox>
     </div>
   </div>
 </div>

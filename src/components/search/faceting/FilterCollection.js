@@ -1,35 +1,32 @@
 'use strict';
 
-let EventEmitter = require('events');
-
-let FilterCollection = function() {
-  let filters = [];
-  let emitter = new EventEmitter();
+let FilterCollection = function($scope, callback) {
+  $scope.filterArray = $scope.filterArray || [];
 
   let equals = function(itemA, itemB) {
     return (itemA.term === itemB.term && itemA.facet === itemB.facet);
   };
 
   let add = function(filter) {
-    if (!filters.some(item => equals(filter, item))) {
-      filters.push(filter);
-      emitter.emit('change', filters);
+    if (!$scope.filterArray.some(item => equals(filter, item))) {
+      $scope.filterArray.push(filter);
+      callback($scope.filterArray);
     }
   };
 
   let remove = function(filter) {
-    let index = filters.findIndex(item => equals(filter, item));
+    let index = $scope.filterArray.findIndex(item => equals(filter, item));
     if (index !== -1) {
-      filters.splice(index, 1)[0].selected = false;
-      emitter.emit('change', filters);
+      $scope.filterArray.splice(index, 1)[0].selected = false;
+      callback($scope.filterArray);
     }
   };
 
   let removeRangeFilter = function(facet) {
-    let index = filters.findIndex(item => item.facet === facet.key);
+    let index = $scope.filterArray.findIndex(item => item.facet === facet.key);
     if (index !== -1) {
-      filters.splice(index, 1);
-      emitter.emit('change', filters);
+      $scope.filterArray.splice(index, 1);
+      callback($scope.filterArray);
     }
   };
 
@@ -48,14 +45,14 @@ let FilterCollection = function() {
       facet: facet.key,
       type: /^(year|month|day)-.*$/.test(facet.key) ? 'date' : 'number'
     };
-    existingFilter = filters.find(item => filter.facet === item.facet);
+    existingFilter = $scope.filterArray.find(item => filter.facet === item.facet);
     if (!existingFilter) {
-      filters.push(filter);
+      $scope.filterArray.push(filter);
     } else {
       existingFilter.term = filter.term;
       existingFilter.count = filter.count;
     }
-    emitter.emit('change', filters);
+    callback($scope.filterArray);
   };
 
   return {
@@ -63,8 +60,7 @@ let FilterCollection = function() {
     addRangeFilter,
     remove,
     removeRangeFilter,
-    array: filters,
-    on() { EventEmitter.prototype.on.apply(emitter, arguments); }
+    array: $scope.filterArray
   };
 };
 

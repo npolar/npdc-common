@@ -4,16 +4,19 @@ let FilterCollection = require('./FilterCollection');
 let QueryBuilder = require('./QueryBuilder');
 
 // @ngInject
-let FacetingCtrl = function($scope, $location, $timeout, NpdcFacetingService) {
+let FacetingCtrl = function($scope, $location, $timeout) {
 
   let queryBuilder = new QueryBuilder();
   const UI_TYPES = ['autocomplete', 'checkbox', 'range', 'hidden'];
   const FILTER_PARAM_REQEX = /^filter-(.*)/;
   let initialParse = false;
 
-  let filters = $scope.options.filterCollection =
-    $scope.options.filterCollection || new FilterCollection();
+  let filterChangeCallback = function (filters) {
+    let q = queryBuilder.build(filters);
+    $scope.$emit('filter-change', {q, count: filters.length});
+  };
 
+  let filters = new FilterCollection($scope, filterChangeCallback);
     let parseUrl = function (query) {
       if (query) {
         Object.keys(query).forEach((key) => {
@@ -125,14 +128,9 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcFacetingService) {
     }
   });
 
-  filters.on('change', function(filters) {
-    let q = queryBuilder.build(false, filters);
-    NpdcFacetingService.emit('search-change', {q, count: filters.length});
-  });
-
   // Respect the URL!
   $scope.$on('$locationChangeSuccess', (event, data) => {
-    parseUrl(data);
+    parseUrl($location.search());
   });
 
   // Chips

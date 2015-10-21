@@ -24,10 +24,8 @@ const QueryBuilder = function () {
     return value;
   };
 
-  let build = function (q, filters) {
-    let query = {
-      q: q || ''
-    };
+  let build = function (filters) {
+    let query = {};
 
     filters.forEach(filter => {
       let key = filterKey(filter);

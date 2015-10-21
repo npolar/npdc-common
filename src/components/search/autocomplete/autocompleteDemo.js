@@ -5,12 +5,13 @@ let angular = require('angular');
 
 let demo = angular.module('autocompleteDemo', ['npdcUi', 'templates']);
 
-demo.controller('demoCtrl', ($scope, NpolarApiSecurity) => {
-  // noop
+demo.controller('demoCtrl', ($scope, NpolarApiSecurity, NpdcAutocompleteConfigFactory) => {
+  let options = {showCollections: true};
+  $scope.options = new NpdcAutocompleteConfigFactory(options);
 });
 
 demo.run(npdcAppConfig => {
-  npdcAppConfig.search.filterOptions = {
+  npdcAppConfig.search.filterUi = {
     'draft': {
       type: 'checkbox'
     },
@@ -21,6 +22,5 @@ demo.run(npdcAppConfig => {
       type: 'range'
     }
   };
-
   npdcAppConfig.search.facets = require('../faceting/demo/facets.json').facets;
 });
