@@ -1,0 +1,320 @@
+/** http://paletton.com/#uid=63o0f0kq-flghpJlxkyv-aqHL5V **/
+
+// Primary colors
+$color-1-bg: #0F3F4C;
+$color-1-fg: #417280;
+$color-1-ex: #01171D;
+
+// Secondary colors
+$color-2-bg: #0E503E;
+$color-2-fg: #428673;
+$color-2-ex: #001F16;
+
+// Tertiary colors
+$color-3-bg: #132F50;
+$color-3-fg: #486486;
+$color-3-ex: #020F1F;
+
+// Quaternary colors
+$color-4-bg: #7A4815;
+$color-4-fg: #CD9965;
+$color-4-ex: #2F1800;
+
+*
+{
+	margin:		0;
+	padding:	0;
+}
+
+body.npdc-home
+{
+	background-attachment:		fixed;
+	background-color:			white;
+	background-image:
+		repeating-linear-gradient(30deg,
+			rgba(15,  63,  76, .4) 10%,
+			rgba(65, 114, 128, .2) 30%,
+			rgba(36,  87, 102, .2) 60%
+		),
+		repeating-linear-gradient(170deg,
+			rgba(65, 114, 128, .2) 20%,
+			rgba(15,  63,  76, .2) 40%,
+			rgba( 2,  41,  52, .4) 80%
+		),
+		repeating-linear-gradient(250deg,
+			rgba(15,  63,  76, .2) 10%,
+			rgba(36,  87, 102, .2) 40%,
+			rgba( 1,  23,  29, .4) 90%
+		);
+		
+	height: 					auto;
+	
+	header
+	{
+		$bg-offset-top:			40%;
+		
+		background-color:		$color-1-bg;
+		background-position:	50% $bg-offset-top;
+		background-repeat:		no-repeat;
+		font-size:				30px;
+		height:					90vh;
+		position:				relative;
+		text-align:				center;
+		
+		md-toolbar
+		{
+			background-color:	$color-1-bg;
+			box-shadow:			none;
+			
+			img
+			{
+				display:		none;
+			}
+		}
+		
+		
+		md-toolbar:after
+		{
+			content: '';
+			display: block;
+			position: absolute;
+			height: 80px;
+			width: 100%;
+			background: linear-gradient(180deg, $color-1-bg, transparent 80%);
+		}
+		
+		
+		.row
+		{
+			display:			block;
+			position: 			relative;
+			font-size:			0;
+			top:				50%;
+			transform:			translateY(-50%);
+			
+			.col
+			{
+				display:		inline-block;
+				
+				a
+				{
+					color:				$color-2-fg;
+					display:			block;
+					padding:			5vh 15vh;
+					text-align: 		center;
+					text-decoration:	none;
+					text-shadow: 		1px 1px 2px $color-1-ex;
+					//transition:			.4s;
+					
+					md-icon
+					{
+						color:			white;
+						display:		block;
+						font-size:		80px;
+						height:			1em;
+						text-shadow: 	0 0 10px $color-1-ex;
+						width:			1em;
+					}
+					
+					span.label
+					{
+						display:		block;
+						font-size:		30px;
+					}
+					
+					span.text
+					{
+						color:			$color-2-ex;
+						font-size:		15px;
+						text-shadow:	none;
+					}
+				}
+				
+				a:hover
+				{
+					color:				$color-2-ex;
+					text-shadow: 		0 0 10px $color-2-fg;
+					transform:			scale(1.2, 1.2);
+				}
+			}
+			
+			.col:not(:last-of-type)
+			{
+				border-right: 1px solid $color-1-ex;
+				padding-right: 10px;
+			}
+			
+			.col:not(:first-of-type)
+			{
+				border-left: 1px solid $color-1-fg;
+				padding-left: 10px;
+			}
+			
+			p
+			{
+				color:				$color-1-fg;
+				font-size:			30px;
+				margin-top: 		50px;
+				text-shadow: 		1px 1px 2px $color-1-ex;
+			}
+		}
+		
+		h1
+		{
+			font-size:			2em;
+			margin:				0 0 1em 0;
+			position:			relative;
+			top:				$bg-offset-top;
+			transform:			translateY(140px);
+		}
+		
+		nav
+		{
+			bottom:				0;
+			position:			absolute;
+			text-align:			center;
+			width:				100%;
+			
+			a
+			{
+				background-color:	$color-1-ex;
+				border-radius:		50% 50% 0 0;
+				color:				$color-1-fg;
+				display:			inline-block;
+				padding-bottom:		5px;
+				position:			relative;
+				transition:			.2s;
+				vertical-align:		bottom;
+				
+				md-icon
+				{
+					color:			inherit;
+					font-size:		30px;
+					padding:		15px;
+					width:			1em;
+				}
+			}
+			
+			a:hover
+			{
+				box-shadow:			0 0 15px 0 rgba(0, 0, 0, 0.5);
+				padding-bottom:		15px;
+			}
+			
+			a:after
+			{
+				border-left:		1em solid transparent;
+				border-right:		1em solid transparent;
+				border-top:			1em solid $color-1-ex;
+				bottom:				-1em;
+				content:			'';
+				left:				0;
+				position:			absolute;
+				animation:			onhover .2s reverse;
+			}
+			
+			a:hover:after
+			{
+				@keyframes after-hover-anim
+				{
+					to
+					{
+						bottom: -5vh;
+					}
+				}
+				
+				animation:			after-hover-anim .2s forwards;
+			}
+			
+			a:hover:before
+			{
+				@keyframes before-hover-anim
+				{
+					from
+					{
+						height: 0;
+						bottom: 0;
+					}
+					to
+					{
+						height: calc(5vh - 1em);
+						bottom: calc(-5vh + 1em);
+					}
+				}
+				
+				background:			inherit;
+				content:			'';
+				position:			absolute;
+				width:				2em;
+				//height:				calc(5vh - 1em);
+				//bottom:				calc(-5vh + 1em);
+				animation:			before-hover-anim .2s forwards;
+			}
+			
+			a[href="#news"]
+			{
+				background-color:	$color-2-bg;
+				color:				$color-2-fg;
+			}
+			
+			a[href="#news"]:after
+			{
+				border-top: 		1em solid $color-2-bg;
+			}
+			
+			a[href="#second"]
+			{
+				background-color:	$color-3-bg;
+				color:				$color-3-fg;
+			}
+			a[href="#second"]:after
+			{
+				border-top:			1em solid $color-3-bg;
+			}
+			
+			a[href="#policy"]
+			{
+				background-color:	$color-4-bg;
+				color:				$color-4-fg;
+			}
+			
+			a[href="#policy"]:after
+			{
+				border-top:			1em solid $color-4-bg;
+			}
+		}
+	}
+	
+	section
+	{
+		background-color:			$color-1-bg;
+		position:					relative;
+		top:						10vh;
+		
+		p
+		{
+			padding: 40px;
+		}
+	}
+	
+	section[id="news"]
+	{
+		background-color:	$color-2-bg;
+		color:				$color-2-fg;
+		//margin-right:		10vh;
+	}
+	
+	section[id="second"]
+	{
+		background-color:	$color-3-bg;
+		color:				$color-3-fg;
+		//margin-left:		10vh;
+	}
+	
+	section[id="policy"]
+	{
+		background-color:	$color-4-bg;
+		color:				$color-4-fg;
+		//margin-right:		10vh;
+	}
+}
