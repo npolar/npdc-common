@@ -33,8 +33,8 @@
       <!-- checkbox -->
       <div ng-if="facet.uiType === 'checkbox'" class="np-custom-facet">
         <label>Filter {{facet.key}}</label>
-        <ul>
-          <li ng-repeat="item in facet[facet.key]">
+        <ul layout layout-wrap>
+          <li ng-repeat="item in facet[facet.key] | orderBy:'-term'" flex="none">
             <md-checkbox ng-model="item.selected" ng-change="toggleSelect(item)">
               {{item.term}} ({{item.count}})
             </md-checkbox>
