@@ -116,10 +116,17 @@ body.npdc-home
 						width:			1em;
 					}
 					
-					span
+					span.label
 					{
 						display:		block;
 						font-size:		30px;
+					}
+					
+					span.text
+					{
+						color:			$color-2-ex;
+						font-size:		15px;
+						text-shadow:	none;
 					}
 				}
 				
@@ -244,13 +251,13 @@ body.npdc-home
 				animation:			before-hover-anim .2s forwards;
 			}
 			
-			a[href="#first"]
+			a[href="#news"]
 			{
 				background-color:	$color-2-bg;
 				color:				$color-2-fg;
 			}
 			
-			a[href="#first"]:after
+			a[href="#news"]:after
 			{
 				border-top: 		1em solid $color-2-bg;
 			}
@@ -265,13 +272,13 @@ body.npdc-home
 				border-top:			1em solid $color-3-bg;
 			}
 			
-			a[href="#third"]
+			a[href="#policy"]
 			{
 				background-color:	$color-4-bg;
 				color:				$color-4-fg;
 			}
 			
-			a[href="#third"]:after
+			a[href="#policy"]:after
 			{
 				border-top:			1em solid $color-4-bg;
 			}
@@ -290,7 +297,7 @@ body.npdc-home
 		}
 	}
 	
-	section[id="first"]
+	section[id="news"]
 	{
 		background-color:	$color-2-bg;
 		color:				$color-2-fg;
@@ -304,7 +311,7 @@ body.npdc-home
 		//margin-left:		10vh;
 	}
 	
-	section[id="third"]
+	section[id="policy"]
 	{
 		background-color:	$color-4-bg;
 		color:				$color-4-fg;
