@@ -63,11 +63,6 @@ var AutocompleteController = function($filter, $location, $window, $q, $scope,
   $scope.submit = function ($event) {
     NpdcSearchService.search(Object.assign({}, $location.search(), {q: $scope.options.q}));
   };
-
-  $scope.$on('update-autocomplete-collection', () => {
-    console.log('uac');
-    $scope.querySearch();
-  });
 };
 
 module.exports = AutocompleteController;

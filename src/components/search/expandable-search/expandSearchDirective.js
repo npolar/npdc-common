@@ -16,6 +16,7 @@ let expandSearch = function() {
       $scope.isOpen = false;
       $scope.isFiltersOpen = false;
       $scope.query = { q: $location.search().q };
+      $scope.filterCount = null;
 
       if ($scope.options.autocomplete) {
         $scope.options.autocomplete = Object.assign({}, $scope.options.autocomplete, $scope.query);
@@ -69,12 +70,6 @@ let expandSearch = function() {
           $scope.$broadcast('reCalcViewDimensions');
         }, 520);
       };
-
-      $scope.updateAutocompleteCollection = function (q) {
-        $scope.$broadcast('update-autocomplete-collection');
-      };
-
-      $scope.filterCount = null;
 
       $scope.$watch('query.q', (newVal, oldVal) => {
         if (newVal !== oldVal) {

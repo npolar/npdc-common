@@ -20,7 +20,7 @@
 
     <div ng-if="options.showCollections && !expandSearch">
       <br/>
-      <md-checkbox ng-change="querySearch(options.q)" ng-model="options.collections[collection]" ng-repeat="(collection, value) in options.collections">{{ collection }}</md-checkbox>
+      <md-checkbox ng-model="options.collections[collection]" ng-repeat="(collection, value) in options.collections">{{ collection }}</md-checkbox>
     </div>
 
   </form>
