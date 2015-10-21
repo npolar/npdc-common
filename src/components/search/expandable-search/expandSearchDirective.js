@@ -16,10 +16,8 @@ let expandSearch = function() {
       $scope.$mdMedia = $mdMedia;
       $scope.isOpen = false;
       $scope.isFiltersOpen = false;
-      $scope.query = { q: $location.search().q };
-      $scope.placeholder = npdcAppConfig.search.context || npdcAppConfig.toolbarTitle;
       $scope.autocompleteConfig = NpdcAutocompleteConfig;
-      NpdcAutocompleteConfig.placeholder = npdcAppConfig.search.context || NpdcAutocompleteConfig.placeholder;
+      $scope.autocompleteOptions = Object.assign({}, $scope.options, { q: $location.search().q });
 
       $scope.blockEvent = function($event) {
         $event.stopImmediatePropagation();
@@ -27,7 +25,10 @@ let expandSearch = function() {
       };
 
       $scope.open = function() {
-        $element[0].querySelector('.np-es-input input').focus();
+        let input = $element[0].querySelector('.np-es-input input');
+        if (input) {
+          input.focus();
+        }
 
         // Firefox workaround
         $timeout(() => {
@@ -48,7 +49,9 @@ let expandSearch = function() {
       };
 
       $scope.search = function() {
-        NpdcAutocompleteConfig.emit('search-change', Object.assign($location.search(), $scope.query));
+        console.log('search', $scope.autocompleteOptions);
+        NpdcAutocompleteConfig.emit('search-change',
+          Object.assign({}, $location.search(), {q: $scope.autocompleteOptions.q}));
       };
 
       $scope.toggleFilters = function () {

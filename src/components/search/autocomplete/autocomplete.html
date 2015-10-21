@@ -3,24 +3,24 @@
   <form ng-submit="submit($event);">
     <md-autocomplete
       md-item-text="title(item)"
-      md-items="item in querySearch(query.q)"
+      md-items="item in querySearch(options.q)"
       md-min-length="1"
       md-no-cache="true"
-      md-search-text="query.q"
+      md-search-text="options.q"
       md-selected-item-change="selectedItemChange(item)"
       md-selected-item="selectedItem"
-      md-floating-label="{{config.placeholder}}">
+      md-floating-label="{{options.placeholder}}">
 
       <md-item-template>
-        <span md-highlight-flags="^i" md-highlight-text="query.q" ng-if="item">[{{item.collection}}]
+        <span md-highlight-flags="^i" md-highlight-text="options.q" ng-if="item">[{{item.collection}}]
           {{ item.name || item.title || item.code || item.titles[0].title || item.id }}</span>
       </md-item-template>
 
     </md-autocomplete>
 
-    <div ng-if="config.showCollections && !expandSearch">
+    <div ng-if="options.showCollections && !expandSearch">
       <br/>
-      <md-checkbox ng-change="querySearch(query.q)" ng-model="collectionSelected[collection]" ng-repeat="collection in collections">{{ collection }}</md-checkbox>
+      <md-checkbox ng-change="querySearch(options.q)" ng-model="collectionSelected[collection]" ng-repeat="collection in options.collections">{{ collection }}</md-checkbox>
     </div>
 
   </form>

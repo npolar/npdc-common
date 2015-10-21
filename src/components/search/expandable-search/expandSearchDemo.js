@@ -16,13 +16,9 @@ angular.module('expandSearchDemo', ['npdcUi']).controller('ExpandSearchDemoCtrl'
       'coverage.south': {
         type: 'range'
       }
-    }
-  };
-
-
-  $scope.globalOptions = {
-    autocomplete: true,
-    context: ''
+    },
+    collections: ['dataset'],
+    placeholder: 'Dataset'
   };
 
   NpdcAutocompleteConfig.showCollections = true;

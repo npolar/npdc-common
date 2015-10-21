@@ -7,7 +7,7 @@ let autocompleteDirective = function () {
     require: '?^^npdcExpandSearch',
     template: require('./autocomplete.html'),
     scope: {
-      query: '='
+      options: '='
     },
     link(scope, elem, attrs, ctrl) {
       if (ctrl) {
