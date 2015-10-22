@@ -34,13 +34,6 @@ $anim-speed: .4s;
 
 //** END OF PAGE CONFIGURATIONS **\\
 
-
-*
-{
-	margin:		0;
-	padding:	0;
-}
-
 body.npdc-home
 {
 	background-attachment:		fixed;
@@ -78,11 +71,10 @@ body.npdc-home
 			position: absolute;
 			height: 80px;
 			width: 100%;
-			background: linear-gradient(180deg, $color-1-bg, transparent 80%);
+			//background: linear-gradient(180deg, $color-1-bg, rgba(255,255,255,.8) 90%);
 		}
 		
-		
-		.row
+		.quicknav
 		{
 			display:			block;
 			font-size:			0;
@@ -90,7 +82,7 @@ body.npdc-home
 			top:				50%;
 			transform:			translateY(-50%);
 			
-			.col
+			.quicknav-item
 			{
 				display:		inline-block;
 				
@@ -98,7 +90,8 @@ body.npdc-home
 				{
 					color:				$color-2-fg;
 					display:			block;
-					padding:			5vh 15vh;
+					font-size:			15px;
+					padding:			5vh 10vh;
 					text-align: 		center;
 					text-decoration:	none;
 					text-shadow: 		1px 1px 2px $color-1-ex;
@@ -108,7 +101,7 @@ body.npdc-home
 					{
 						color:			white;
 						display:		block;
-						font-size:		80px;
+						font-size:		4em;
 						height:			1em;
 						text-shadow: 	0 0 10px $color-1-ex;
 						width:			1em;
@@ -117,13 +110,13 @@ body.npdc-home
 					span.label
 					{
 						display:		block;
-						font-size:		30px;
+						font-size:		2em;
 					}
 					
 					span.text
 					{
 						color:			$color-2-ex;
-						font-size:		15px;
+						font-size:		1em;
 						text-shadow:	none;
 					}
 				}
@@ -134,15 +127,23 @@ body.npdc-home
 					text-shadow: 		0 0 10px $color-2-fg;
 					transform:			scale(1.2, 1.2) rotateZ(5deg);
 				}
+				
+				@media (max-height: 400px)
+				{
+					a
+					{
+						font-size:		10px;
+					}
+				}
 			}
 			
-			.col:not(:last-of-type)
+			.quicknav-item:not(:last-of-type)
 			{
 				border-right: 1px solid $color-1-ex;
 				padding-right: 10px;
 			}
 			
-			.col:not(:first-of-type)
+			.quicknav-item:not(:first-of-type)
 			{
 				border-left: 1px solid $color-1-fg;
 				padding-left: 10px;
@@ -214,6 +215,7 @@ body.npdc-home
 	section
 	{
 		background-color:			$color-1-bg;
+		margin:						0;
 		position:					relative;
 		top:						10vh;
 		
@@ -231,7 +233,7 @@ body.npdc-home
 		{
 			bottom:					1em;
 			color:					$color-1-bg;
-			font-size:				180px;
+			font-size:				80px;
 			opacity: 				.1;
 			position:				absolute;
 			right:					1em;
@@ -240,6 +242,7 @@ body.npdc-home
 		
 		p
 		{
+			margin: 0;
 			padding: 40px;
 		}
 	}
