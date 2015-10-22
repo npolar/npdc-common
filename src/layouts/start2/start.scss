@@ -34,6 +34,7 @@ $anim-speed: .4s;
 
 //** END OF PAGE CONFIGURATIONS **\\
 
+
 body.npdc-home
 {
 	background-attachment:		fixed;
@@ -43,7 +44,7 @@ body.npdc-home
 		repeating-linear-gradient(170deg, rgba(65, 114, 128, .2) 20%, rgba(15,  63,  76, .2) 40%, rgba( 2,  41,  52, .4) 80%),
 		repeating-linear-gradient(250deg, rgba(15,  63,  76, .2) 10%, rgba(36,  87, 102, .2) 40%, rgba( 1,  23,  29, .4) 90%);
 	height: 					auto;
-	
+
 	header
 	{
 		background-color:		$color-1-bg;
@@ -51,19 +52,18 @@ body.npdc-home
 		height:					90vh;
 		position:				relative;
 		text-align:				center;
-		
+
 		md-toolbar
 		{
 			background-color:	$color-1-bg;
 			box-shadow:			none;
-			
+
 			img
 			{
 				display:		none;
 			}
 		}
-		
-		
+
 		md-toolbar:after
 		{
 			content: '';
@@ -73,7 +73,7 @@ body.npdc-home
 			width: 100%;
 			//background: linear-gradient(180deg, $color-1-bg, rgba(255,255,255,.8) 90%);
 		}
-		
+
 		.quicknav
 		{
 			display:			block;
@@ -85,7 +85,7 @@ body.npdc-home
 			.quicknav-item
 			{
 				display:		inline-block;
-				
+
 				a
 				{
 					color:				$color-2-fg;
@@ -96,7 +96,7 @@ body.npdc-home
 					text-decoration:	none;
 					text-shadow: 		1px 1px 2px $color-1-ex;
 					transition:			$anim-speed;
-					
+
 					md-icon
 					{
 						color:			white;
@@ -106,13 +106,13 @@ body.npdc-home
 						text-shadow: 	0 0 10px $color-1-ex;
 						width:			1em;
 					}
-					
+
 					span.label
 					{
 						display:		block;
 						font-size:		2em;
 					}
-					
+
 					span.text
 					{
 						color:			$color-2-ex;
@@ -120,7 +120,7 @@ body.npdc-home
 						text-shadow:	none;
 					}
 				}
-				
+
 				a:hover
 				{
 					color:				$color-2-ex;
@@ -136,27 +136,27 @@ body.npdc-home
 					}
 				}
 			}
-			
+
 			.quicknav-item:not(:last-of-type)
 			{
 				border-right: 1px solid $color-1-ex;
 				padding-right: 10px;
 			}
-			
+
 			.quicknav-item:not(:first-of-type)
 			{
 				border-left: 1px solid $color-1-fg;
 				padding-left: 10px;
 			}
 		}
-		
+
 		nav
 		{
 			bottom:				0;
 			position:			absolute;
 			text-align:			center;
 			width:				100%;
-			
+
 			a
 			{
 				background-color:	$color-1-ex;
@@ -167,7 +167,7 @@ body.npdc-home
 				position:			relative;
 				transition:			$anim-speed;
 				vertical-align:		bottom;
-				
+
 				md-icon
 				{
 					color:			inherit;
@@ -176,14 +176,14 @@ body.npdc-home
 					width:			1em;
 				}
 			}
-			
+
 			a:hover
 			{
 				box-shadow:			0 0 15px 0 rgba(0, 0, 0, 0.5);
 				padding-bottom:		15px;
 				transform:			translateY(15px);
 			}
-			
+
 			a:after
 			{
 				border-left:		1em solid transparent;
@@ -194,7 +194,7 @@ body.npdc-home
 				left:				0;
 				position:			absolute;
 			}
-			
+
 			// Customize defined sections
 			@each $id, $bg, $fg, $ex in $section-map
 			{
@@ -203,7 +203,7 @@ body.npdc-home
 					background-color:	$bg;
 					color:				$fg;
 				}
-				
+
 				a[href="##{$id}"]:after
 				{
 					border-top: 		1em solid $bg;
@@ -211,14 +211,14 @@ body.npdc-home
 			}
 		}
 	}
-	
+
 	section
 	{
 		background-color:			$color-1-bg;
 		margin:						0;
 		position:					relative;
 		top:						10vh;
-		
+
 		h2
 		{
 			color:					$color-1-bg;
@@ -228,7 +228,7 @@ body.npdc-home
 			padding:				20px 0;
 			text-align:				center;
 		}
-		
+
 		md-icon
 		{
 			bottom:					1em;
@@ -239,14 +239,14 @@ body.npdc-home
 			right:					1em;
 			text-shadow: 			-1px -1px 0 $color-1-ex, 1px 1px 0 $color-1-fg;
 		}
-		
+
 		p
 		{
 			margin: 0;
 			padding: 40px;
 		}
 	}
-	
+
 	// Customize defined sections
 	@each $id, $bg, $fg, $ex in $section-map
 	{
@@ -254,7 +254,7 @@ body.npdc-home
 		{
 			background-color:	$bg;
 			color:				$fg;
-			
+
 			h2
 			{
 				color:			$bg;
