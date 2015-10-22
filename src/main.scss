@@ -3,6 +3,10 @@
 @import 'layouts/**/*';
 @import 'components/**/*';
 
+body {
+  height: 100.1%; // Force vertical scrollbar
+}
+
 a,
 a:visited,
 md-menu-item a.md-button,
