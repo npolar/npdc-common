@@ -20,6 +20,21 @@ $color-4-bg: #7A4815;
 $color-4-fg: #CD9965;
 $color-4-ex: #2F1800;
 
+// Page section map
+$section-map:
+(
+	("news",	$color-2-bg, $color-2-fg, $color-2-ex),
+	("foobar",	$color-3-bg, $color-3-fg, $color-3-ex),
+	("policy",	$color-4-bg, $color-4-fg, $color-4-ex)
+);
+
+// Animation speeds
+$anim-speed: .4s;
+
+
+//** END OF PAGE CONFIGURATIONS **\\
+
+
 *
 {
 	margin:		0;
@@ -31,31 +46,14 @@ body.npdc-home
 	background-attachment:		fixed;
 	background-color:			white;
 	background-image:
-		repeating-linear-gradient(30deg,
-			rgba(15,  63,  76, .4) 10%,
-			rgba(65, 114, 128, .2) 30%,
-			rgba(36,  87, 102, .2) 60%
-		),
-		repeating-linear-gradient(170deg,
-			rgba(65, 114, 128, .2) 20%,
-			rgba(15,  63,  76, .2) 40%,
-			rgba( 2,  41,  52, .4) 80%
-		),
-		repeating-linear-gradient(250deg,
-			rgba(15,  63,  76, .2) 10%,
-			rgba(36,  87, 102, .2) 40%,
-			rgba( 1,  23,  29, .4) 90%
-		);
-		
+		repeating-linear-gradient( 30deg, rgba(15,  63,  76, .4) 10%, rgba(65, 114, 128, .2) 30%, rgba(36,  87, 102, .2) 60%),
+		repeating-linear-gradient(170deg, rgba(65, 114, 128, .2) 20%, rgba(15,  63,  76, .2) 40%, rgba( 2,  41,  52, .4) 80%),
+		repeating-linear-gradient(250deg, rgba(15,  63,  76, .2) 10%, rgba(36,  87, 102, .2) 40%, rgba( 1,  23,  29, .4) 90%);
 	height: 					auto;
 	
 	header
 	{
-		$bg-offset-top:			40%;
-		
 		background-color:		$color-1-bg;
-		background-position:	50% $bg-offset-top;
-		background-repeat:		no-repeat;
 		font-size:				30px;
 		height:					90vh;
 		position:				relative;
@@ -87,8 +85,8 @@ body.npdc-home
 		.row
 		{
 			display:			block;
-			position: 			relative;
 			font-size:			0;
+			position:			relative;
 			top:				50%;
 			transform:			translateY(-50%);
 			
@@ -104,7 +102,7 @@ body.npdc-home
 					text-align: 		center;
 					text-decoration:	none;
 					text-shadow: 		1px 1px 2px $color-1-ex;
-					//transition:			.4s;
+					transition:			$anim-speed;
 					
 					md-icon
 					{
@@ -134,7 +132,7 @@ body.npdc-home
 				{
 					color:				$color-2-ex;
 					text-shadow: 		0 0 10px $color-2-fg;
-					transform:			scale(1.2, 1.2);
+					transform:			scale(1.2, 1.2) rotateZ(5deg);
 				}
 			}
 			
@@ -149,23 +147,6 @@ body.npdc-home
 				border-left: 1px solid $color-1-fg;
 				padding-left: 10px;
 			}
-			
-			p
-			{
-				color:				$color-1-fg;
-				font-size:			30px;
-				margin-top: 		50px;
-				text-shadow: 		1px 1px 2px $color-1-ex;
-			}
-		}
-		
-		h1
-		{
-			font-size:			2em;
-			margin:				0 0 1em 0;
-			position:			relative;
-			top:				$bg-offset-top;
-			transform:			translateY(140px);
 		}
 		
 		nav
@@ -183,7 +164,7 @@ body.npdc-home
 				display:			inline-block;
 				padding-bottom:		5px;
 				position:			relative;
-				transition:			.2s;
+				transition:			$anim-speed;
 				vertical-align:		bottom;
 				
 				md-icon
@@ -199,6 +180,7 @@ body.npdc-home
 			{
 				box-shadow:			0 0 15px 0 rgba(0, 0, 0, 0.5);
 				padding-bottom:		15px;
+				transform:			translateY(15px);
 			}
 			
 			a:after
@@ -210,77 +192,21 @@ body.npdc-home
 				content:			'';
 				left:				0;
 				position:			absolute;
-				animation:			onhover .2s reverse;
 			}
 			
-			a:hover:after
+			// Customize defined sections
+			@each $id, $bg, $fg, $ex in $section-map
 			{
-				@keyframes after-hover-anim
+				a[href="##{$id}"]
 				{
-					to
-					{
-						bottom: -5vh;
-					}
+					background-color:	$bg;
+					color:				$fg;
 				}
 				
-				animation:			after-hover-anim .2s forwards;
-			}
-			
-			a:hover:before
-			{
-				@keyframes before-hover-anim
+				a[href="##{$id}"]:after
 				{
-					from
-					{
-						height: 0;
-						bottom: 0;
-					}
-					to
-					{
-						height: calc(5vh - 1em);
-						bottom: calc(-5vh + 1em);
-					}
+					border-top: 		1em solid $bg;
 				}
-				
-				background:			inherit;
-				content:			'';
-				position:			absolute;
-				width:				2em;
-				//height:				calc(5vh - 1em);
-				//bottom:				calc(-5vh + 1em);
-				animation:			before-hover-anim .2s forwards;
-			}
-			
-			a[href="#news"]
-			{
-				background-color:	$color-2-bg;
-				color:				$color-2-fg;
-			}
-			
-			a[href="#news"]:after
-			{
-				border-top: 		1em solid $color-2-bg;
-			}
-			
-			a[href="#second"]
-			{
-				background-color:	$color-3-bg;
-				color:				$color-3-fg;
-			}
-			a[href="#second"]:after
-			{
-				border-top:			1em solid $color-3-bg;
-			}
-			
-			a[href="#policy"]
-			{
-				background-color:	$color-4-bg;
-				color:				$color-4-fg;
-			}
-			
-			a[href="#policy"]:after
-			{
-				border-top:			1em solid $color-4-bg;
 			}
 		}
 	}
@@ -291,30 +217,46 @@ body.npdc-home
 		position:					relative;
 		top:						10vh;
 		
+		h2
+		{
+			color:					$color-1-bg;
+			font-size:				3em;
+			margin:					0 20px;
+			opacity: 				.4;
+			padding:				20px 0;
+			text-align:				center;
+		}
+		
+		md-icon
+		{
+			bottom:					1em;
+			color:					$color-1-bg;
+			font-size:				180px;
+			opacity: 				.1;
+			position:				absolute;
+			right:					1em;
+			text-shadow: 			-1px -1px 0 $color-1-ex, 1px 1px 0 $color-1-fg;
+		}
+		
 		p
 		{
 			padding: 40px;
 		}
 	}
 	
-	section[id="news"]
+	// Customize defined sections
+	@each $id, $bg, $fg, $ex in $section-map
 	{
-		background-color:	$color-2-bg;
-		color:				$color-2-fg;
-		//margin-right:		10vh;
-	}
-	
-	section[id="second"]
-	{
-		background-color:	$color-3-bg;
-		color:				$color-3-fg;
-		//margin-left:		10vh;
-	}
-	
-	section[id="policy"]
-	{
-		background-color:	$color-4-bg;
-		color:				$color-4-fg;
-		//margin-right:		10vh;
+		section[id="#{$id}"]
+		{
+			background-color:	$bg;
+			color:				$fg;
+			
+			h2
+			{
+				color:			$bg;
+				text-shadow:	-1px -1px 0 $ex, 1px 1px 0 $fg;
+			}
+		}
 	}
 }
