@@ -6,7 +6,7 @@ let angular = require('angular');
 angular.module('bottomSheetDemo', ['ngRoute', 'npdcUi', 'templates'])
   .controller('BottomSheetDemoCtrl', ($scope) => {
     $scope.items = [
-      { name: 'Hangout', icon: 'hangout', action() {console.log('action!');} },
+      { name: 'Delete', icon: 'delete', action() {console.log('action!');}, classes: 'md-warn' },
       { name: 'Mail', icon: 'mail', action() {console.log('action!');} },
       { name: 'Message', icon: 'message', action() {console.log('action!');} },
       { name: 'Copy', icon: 'copy', action() {console.log('action!');} },
