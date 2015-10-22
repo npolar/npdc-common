@@ -21,20 +21,17 @@ let BottomSheetController = function($scope, $mdBottomSheet, $mdToast) {
         };
 
         $timeout(init);
-
-        $scope.listItemClick = function($index) {
-          var item = $scope.items[$index];
-          $mdBottomSheet.hide(item);
-        };
       },
       targetEvent: $event,
       parent: document.querySelector('.np-content') || 'body',
-    }).then(item => {
-      item.action.apply({});
     });
-
   };
 
+  $scope.listItemClick = function($index) {
+    var item = $scope.options.items[$index];
+    item.action.apply({});
+    $mdBottomSheet.hide(item);
+  };
 
 };
 

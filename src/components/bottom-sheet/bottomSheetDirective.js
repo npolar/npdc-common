@@ -1,16 +1,15 @@
 "use strict";
 
 // @ngInject
-
-let appWrapper = function() {
+let npdcBottomSheetDirective = function() {
   return {
     restrict: 'E',
     scope: {
-      items: '='
+      options: '='
     },
     template: require('./bottomSheet.html'),
     controller: 'NpdcBottomSheetController'
   };
 };
 
-module.exports = appWrapper;
+module.exports = npdcBottomSheetDirective;
