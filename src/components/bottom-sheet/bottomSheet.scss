@@ -2,9 +2,14 @@
   position: absolute;
   right: 0;
   top: 0;
-  z-index: 5;
+  z-index: 3;
 }
 
-.np-bottom-sheet-static {
+md-content.np-bottom-sheet-static {
   margin-bottom: 150px;
+}
+
+// always show bottom sheet needs lower z-index.
+npdc\:bottom-sheet md-bottom-sheet {
+  z-index: 60;
 }

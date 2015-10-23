@@ -1,10 +1,11 @@
 'use strict';
 
 // @ngInject
-var SearchController = function($scope, $location, NpolarApiSecurity) {
+var SearchController = function($scope, $location, NpolarApiSecurity, npdcAppConfig) {
 
   $scope.security = NpolarApiSecurity;
   $scope.q = $location.search().q;
+  npdcAppConfig.search.immidiate = true;
 
   // Simplify facet array to facet object
   $scope.facet = function(farr) {
