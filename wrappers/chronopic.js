@@ -45,8 +45,13 @@
 							format: (typeof options.format == "string" ? options.format : null),
 							className: 'chronopic.chronopic-ext-md',
 							onChange: function(elem, date) {
-								model.$viewValue = date.toISOString();
-								scope.field.value = date.toISOString();
+								var internalFormat = date.toISOString(); // ISO-8601
+								
+								if(scope.field.format == "date") {
+									internalFormat = internalFormat.slice(0, 10); // yyyy-mm-dd
+								}
+								
+								model.$viewValue = scope.field.value = internalFormat;
 								
 								if(typeof options.onChange == "function") {
 									options.onChange(elem, date, scope);
