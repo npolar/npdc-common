@@ -64,6 +64,7 @@ module.exports = {
         type: 'range'
       }
     },
-    facets: undefined
+    facets: undefined,
+    immidiate: false
   }
 };

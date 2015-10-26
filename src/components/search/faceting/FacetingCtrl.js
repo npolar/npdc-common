@@ -123,7 +123,7 @@ let FacetingCtrl = function($scope, $location, $timeout) {
   initDataModel();
 
   $scope.$watch('options.facets', (newVal, oldVal) => {
-    if (newVal !== oldVal) {
+    if (newVal !== oldVal && oldVal.length > 0) {
       initDataModel();
     }
   });

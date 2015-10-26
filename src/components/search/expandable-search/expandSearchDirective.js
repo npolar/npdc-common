@@ -50,6 +50,7 @@ let expandSearch = function() {
         }
         if ($event.keyCode === 13) {
           $scope.search($scope.query);
+          $scope.close();
         }
       };
 
@@ -74,7 +75,7 @@ let expandSearch = function() {
       };
 
       $scope.$watch('query.q', (newVal, oldVal) => {
-        if (newVal !== oldVal) {
+        if (newVal !== oldVal && npdcAppConfig.search.immidiate) {
           $scope.search({q: newVal});
         }
       });
