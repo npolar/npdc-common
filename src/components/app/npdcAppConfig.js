@@ -25,9 +25,6 @@ module.exports = {
       link: "/vessel",
       name: "Historic Vessels"
     }, {
-      link: "/indicator",
-      name: "Indicators (environmental monitoring)"
-    }, {
       link: "/map/archive",
       name: "Map archive"
     }, {
@@ -45,11 +42,24 @@ module.exports = {
     }]
   }],
   toolbarInternalApps: [{
-    name: "Internal applications",
+    name: "My applications",
     apps: [{
       link: "/courses",
       name: "Courses"
-    }, {
+    },
+    {
+      link: "/indicator",
+      name: "Indicators (environmental monitoring)"
+    },
+    {
+      link: "/indicator/parameter",
+      name: "Parameters (environmental monitoring)"
+    },{
+      link: "/indicator/timeseries",
+      name: "Timeseries (environmental monitoring)"
+    },
+    
+    {
       link: "/marine/biology",
       name: "Marine Biology"
     }, {
