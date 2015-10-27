@@ -3,7 +3,7 @@
 let Entities = require('special-entities');
 
 // @ngInject
-var AutocompleteController = function($filter, $location, $q, $scope,
+var AutocompleteController = function($filter, $location, $element, $q, $scope,
   NpolarApiResource, NpdcSearchService) {
   $scope.options.q = $scope.options.q || ($location.search().q || "");
 
@@ -36,8 +36,10 @@ var AutocompleteController = function($filter, $location, $q, $scope,
 
   // Search all collections for text q
   $scope.querySearch = function(q) {
-    // Merge in default query, respect url
-    let query = Object.assign({}, $location.search(), $scope.options.query, {q});
+    // Merge in default query, respect url ?
+    let query = Object.assign({},
+      $scope.options.respectUrl ? $location.search() : {},
+      $scope.options.query, {q});
     let searchCollections = [];
     Object.keys($scope.options.collections).forEach(c => {
       if ($scope.options.collections[c]) {
@@ -61,7 +63,8 @@ var AutocompleteController = function($filter, $location, $q, $scope,
   };
 
   $scope.submit = function ($event) {
-    NpdcSearchService.search(Object.assign({}, $location.search(), {q: $scope.options.q}));
+    this.$$childHead.$mdAutocompleteCtrl.hidden = true;
+    NpdcSearchService.search({q: $scope.options.q}, $scope.options.location);
   };
 };
 

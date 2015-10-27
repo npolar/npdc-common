@@ -25,15 +25,16 @@
     .md-button {
       margin-right: 15px;
     }
-
-    .np-filter-icon {
-      -webkit-transition-delay: .5s;
-      transition-delay: .5s;
-    }
   }
 
   md-fab-toolbar md-toolbar {
     z-index: 0;
+  }
+
+  label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   //WebKit, Blink, Edge
@@ -65,9 +66,6 @@
     vertical-align: middle;
     width: 100%;
   }
-
-  // @TODO fix transitions so that scroll is not visible during transition.
-  // Might need js and transitionEnd event.
 
   .np-es-filter {
     background-color: $color-bg-light;
@@ -103,39 +101,14 @@
       color: $color-primary-0 !important;
     }
 
+    > .md-button {
+      margin-top: 6px;
+    }
+
     .es-search-icon {
       margin-top: 25px;
     }
 
-    &.open {
-      .np-filter-icon {
-        opacity: 0;
-        z-index: 0;
-      }
-    }
-
-    .np-filter-icon {
-      right: 4px;
-      top: 13px;
-    }
-  }
-
-  .np-filter-icon {
-    background-color: red;
-    border-radius: 7.5px;
-    box-shadow: 1px 1px 5px -1px;
-    color: $color-text-grey;
-    font-size: 10px;
-    height: 15px;
-    line-height: 15px;
-    opacity: 1;
-    position: absolute;
-    right: 31px;
-    top: 0;
-    -webkit-transition: opacity .5s;
-    transition: opacity .5s;
-    width: 15px;
-    z-index: 22;
   }
 
   &.open {
@@ -147,11 +120,6 @@
 
     md-toolbar.md-white-theme md-input-container:not(.md-input-focused) md-icon {
       color: $color-text-grey;
-    }
-
-    md-fab-trigger .np-filter-icon {
-      opacity: 0;
-      z-index: 0;
     }
   }
 }

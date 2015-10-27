@@ -3,15 +3,12 @@
 // @ngInject
 let SearchService = function ($location, npdcAppConfig) {
   return {
-    search (query) {
-      console.log('changeSearch', query);
-      if (!npdcAppConfig.search.immidiate) {
-        $location.url('/');
+    search (query, location) {
+      console.log('changeSearch', query, location);
+      if (location) {
+        $location.url(location);
       }
       $location.search(query);
-      if (typeof npdcAppConfig.search.callback === 'function') {
-        npdcAppConfig.search.callback.call({}, query);
-      }
     }
   };
 };

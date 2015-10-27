@@ -6,7 +6,6 @@ var searchInputDirective = function () {
     template: require('./searchInput.html'),
     // @ngInject
     controller: function ($scope, $element, $location, NpdcSearchService, npdcAppConfig) {
-      npdcAppConfig.search.immidiate = true;
       $scope.options = npdcAppConfig.search;
 
       $scope.$watch('q', (newVal, oldVal) => {

@@ -15,15 +15,13 @@ let expandSearch = function() {
       $scope.$mdMedia = $mdMedia;
       $scope.isOpen = false;
       $scope.isFiltersOpen = false;
-      $scope.query = { q: $location.search().q };
-      $scope.filterCount = null;
 
-      if ($scope.options) {
-        if ($scope.options.autocomplete) {
-          $scope.options.autocomplete = Object.assign({}, $scope.options.autocomplete, $scope.query);
-        }
-        $scope.placeholder = $scope.options.placeholder || 'Search ' + npdcAppConfig.toolbarTitle;
-      }
+      Object.assign($scope.options.autocomplete, $scope.query, {
+        location: '/',
+        respectUrl: false
+      });
+
+      $scope.placeholder = $scope.options.placeholder || 'Search ' + npdcAppConfig.toolbarTitle;
 
       $scope.blockEvent = function($event) {
         $event.stopImmediatePropagation();
@@ -45,11 +43,11 @@ let expandSearch = function() {
       };
 
       $scope.keyup = function($event) {
+        console.log('enter');
         if ($event.keyCode === 27) {
           $scope.close();
         }
         if ($event.keyCode === 13) {
-          $scope.search($scope.query);
           $scope.close();
         }
       };
@@ -61,25 +59,13 @@ let expandSearch = function() {
       $scope.search = function(q) {
         let query = Object.assign({},
           $location.search(),
-          q || $scope.query,
-          $scope.options.autocomplete ? {q: $scope.options.autocomplete.q} : {});
+          q || {q: $scope.options.autocomplete.q});
         NpdcSearchService.search(query);
       };
 
       $scope.toggleFilters = function () {
         $scope.isFiltersOpen = !$scope.isFiltersOpen;
-        // Wait for transition
-        $timeout(() => {
-          $scope.$broadcast('reCalcViewDimensions');
-        }, 520);
       };
-
-      $scope.$watch('query.q', (newVal, oldVal) => {
-        if (newVal !== oldVal && npdcAppConfig.search.immidiate) {
-          $scope.search({q: newVal});
-        }
-      });
-
     }
   };
 };

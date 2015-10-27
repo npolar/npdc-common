@@ -34,7 +34,9 @@ let AutocompleteConfigFactory = function($location, $rootScope) {
       showCollections,
       placeholder,
       base,
-      query
+      query,
+      respectUrl: true,
+      location: undefined,
     }, options);
   };
 
