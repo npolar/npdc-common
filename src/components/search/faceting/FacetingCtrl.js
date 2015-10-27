@@ -4,7 +4,7 @@ let FilterCollection = require('./FilterCollection');
 let QueryBuilder = require('./QueryBuilder');
 
 // @ngInject
-let FacetingCtrl = function($scope, $location, $timeout) {
+let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
 
   let queryBuilder = new QueryBuilder();
   const UI_TYPES = ['autocomplete', 'checkbox', 'range', 'hidden'];
@@ -13,6 +13,7 @@ let FacetingCtrl = function($scope, $location, $timeout) {
 
   let filterChangeCallback = function (filters) {
     let q = queryBuilder.build(filters);
+    NpdcSearchService.search(q);
     $scope.$emit('filter-change', {q, count: filters.length});
   };
 

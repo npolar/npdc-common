@@ -9,6 +9,9 @@ let SearchService = function ($location, npdcAppConfig) {
         $location.url('/');
       }
       $location.search(query);
+      if (typeof npdcAppConfig.search.callback === 'function') {
+        npdcAppConfig.search.callback.call({}, query);
+      }
     }
   };
 };

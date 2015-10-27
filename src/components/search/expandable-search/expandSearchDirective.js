@@ -80,14 +80,6 @@ let expandSearch = function() {
         }
       });
 
-      $scope.$on('filter-change', function (event, data) {
-        $scope.filterCount = data.count || 0;
-        let query = Object.assign({},
-          data.q,
-          $scope.options.autocomplete ? {q: $scope.options.autocomplete.q} : $scope.query);
-        NpdcSearchService.search(query);
-      });
-
     }
   };
 };

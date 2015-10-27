@@ -9,8 +9,9 @@ ui.controller('NpdcFacetingCtrl', require('./faceting/FacetingCtrl'));
 ui.directive('npdcFaceting', require('./faceting/facetingDirective'));
 ui.directive('npdcExpandSearch', require('./expandable-search/expandSearchDirective'));
 
-ui.directive('npdcSearch', require('./searchDirective'));
-ui.controller('NpdcSearchController', require('./SearchController'));
+ui.directive('npdcSearch', require('./results/searchResultsDirective'));
+ui.directive('npdcSearchInput', require('./input/searchInputDirective'));
+ui.controller('NpdcSearchResultsController', require('./results/SearchResultsController'));
 
 ui.controller('NpdcAutocompleteController', require('./autocomplete/AutocompleteController'));
 ui.factory('NpdcAutocompleteConfigFactory', require('./autocomplete/AutocompleteConfigFactory'));

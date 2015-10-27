@@ -78,7 +78,8 @@ let npdcAppConfigFactory = function (NpdcAutocompleteConfigFactory) {
       },
       facets: undefined,
       autocomplete: new NpdcAutocompleteConfigFactory({showCollections: true}),
-      immidiate: false
+      immidiate: false,
+      callback: undefined
     }
   };
 };
