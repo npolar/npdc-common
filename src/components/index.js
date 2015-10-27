@@ -5,7 +5,7 @@ var ui = angular.module('npdcUi');
 require('./search');
 
 ui.directive('ngFocusOut', require('./focusOutDirective'));
-ui.value('npdcAppConfig', require('./app/npdcAppConfig'));
+ui.factory('npdcAppConfig', require('./app/npdcAppConfig'));
 
 ui.directive('npdcDocument', require('./document/document'));
 ui.directive('npdcToolbar', require('./toolbar/toolbarDirective'));
