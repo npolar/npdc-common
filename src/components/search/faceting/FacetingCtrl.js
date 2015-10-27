@@ -61,20 +61,11 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
 
   let initRangeFacet = function (facet, oldFacet) {
     let floor, ceil, min, max;
-    floor = ceil = min = max = termToInt(facet[facet.key][0].term);
 
-    facet[facet.key].forEach((term, index) => {
-      if (index === 0) {
-        return;
-      }
-      floor = min = Math.min(termToInt(term.term), termToInt(facet[facet.key][index-1].term));
-    });
-    facet[facet.key].forEach((term, index) => {
-      if (index === 0) {
-        return;
-      }
-      ceil = max = Math.max(termToInt(term.term), termToInt(facet[facet.key][index-1].term));
-    });
+    floor = min = facet[facet.key].reduce((memo, term) => Math.min(termToInt(term.term), memo),
+      termToInt(facet[facet.key][0].term));
+    ceil = max = facet[facet.key].reduce((memo, term) => Math.max(termToInt(term.term), memo),
+      termToInt(facet[facet.key][0].term));
     if (oldFacet && oldFacet.slider) {
       facet.slider = oldFacet.slider;
     } else {
