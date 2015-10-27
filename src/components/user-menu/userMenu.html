@@ -3,7 +3,7 @@
   <md-button aria-label="Open user" class="md-icon-button" ng-click="$mdOpenMenu($event)">
     <md-icon md-menu-origin>person<md-tooltip>Login</md-tooltip></md-icon>
   </md-button>
-  <md-menu-content>
+  <md-menu-content width="6">
         
     <form ng-if="true" role="form" layout-padding class="np-login">
       <div>
@@ -20,7 +20,7 @@
         <a ng-href="/user/reset?username={{user.username}}">Forgot password?</a>
         <a href="/user/register">Sign up</a>
 <!--        <md-button type="submit" ng-click="gouncer.onetime(email)" class="md-raised md-primary">1-time password</md-button>
--->        <md-button type="submit" ng-click="login(email,password)" class="md-raised md-primary">Login</md-button>
+-->     <md-button type="submit" ng-click="login(email,password)" class="md-raised md-primary">Login</md-button>
       </div>
     </form>
     
@@ -30,19 +30,24 @@
 
 <md-menu ng-if="security.isAuthenticated()">
   <md-button aria-label="Open user" class="md-icon-button" ng-click="$mdOpenMenu($event)">
-    <md-icon md-menu-origin>face<md-tooltip>{{ security.getUser().name }}</md-tooltip></md-icon>
+    <md-icon md-menu-origin>verified_user<md-tooltip>{{ security.getUser().name }}</md-tooltip></md-icon>
   </md-button>
-  <md-menu-content>
+  <md-menu-content width="6">
+    
     <md-menu-item>
-      <md-button ng-href="/user/{{security.getUser().email }}" title="View profile for user {{user.username}}">
+      <md-button ng-href="/user/{{security.getUser().email }}" title="View profile for {{ security.getUser().name }}">
         <md-icon md-menu-align-target>face</md-icon>
-        {{ user.name }}
+        {{ security.getUser().name }}
       </md-button>
     </md-menu-item>
+    
+    <md-divider></md-divider>
+                
     <md-menu-item>
       <md-button ng-click="logout()">
-        <span>Logout</span> <small>(session expires {{ security.getUser().expires.split('T')[1] }})</small> <!--@todo-->
+        <span>Logout</span>
       </md-button>
     </md-menu-item>
+    
   </md-menu-content>
 </md-menu>
