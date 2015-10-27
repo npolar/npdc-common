@@ -8,8 +8,7 @@ let npdcUserMenu = function(NpolarApiSecurity) {
     template: require('./userMenu.html'),
     controller: 'NpolarLoginController',
     link: function(scope) {
-      scope.user = NpolarApiSecurity.getUser();
-      //scope.gouncer = Gouncer;
+      scope.security = NpolarApiSecurity;
     }
   };
 };
