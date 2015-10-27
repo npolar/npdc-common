@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<md-input-container md-no-float md-autofocus>
-  <md-icon>search</md-icon>
-  <input ng-model="q" placeholder="Search Datasets" type="text">
-</md-input-container>
-<div>
-  <npdc:faceting ng-if="feed.facets" options="options"></npdc:faceting>
-</div>
+<md-whiteframe class="np-search-input md-whiteframe-z1">
+  <div>
+    <md-input-container md-no-float md-autofocus>
+      <md-icon>search</md-icon>
+      <input ng-model="q" placeholder="Search Datasets" type="text">
+    </md-input-container>
+    <npdc:faceting ng-if="feed.facets" options="options"></npdc:faceting>
+  </div>
+</md-whiteframe>
