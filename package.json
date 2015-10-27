@@ -21,6 +21,7 @@
     "angular-animate": "1.4.7",
     "angular-aria": "1.4.7",
     "angular-material": "0.11.3",
+    "chronopic": "git://github.com/npolar/chronopic.js",
     "jusas-angularjs-slider": "baelter/angularjs-slider",
     "angular-npolar": "npolar/angular-npolar",
     "special-entities": "^1.0.2"
@@ -29,7 +30,6 @@
     "angular-route": "1.4.7",
     "babelify": "*",
     "browserify-ngannotate": "*",
-    "chronopic": "git://github.com/npolar/chronopic.js",
     "event-stream": "^3.3.1",
     "formula": "npolar/formula",
     "gulp": "^3.9.0",
