@@ -1,7 +1,7 @@
 "use strict";
 
 // @ngInject
-let BottomSheetController = function($scope, $mdBottomSheet, $mdToast) {
+let BottomSheetController = function($scope, $mdBottomSheet) {
   $scope.showBottomSheet = function($event) {
     $mdBottomSheet.show({
       templateUrl: 'bottom-sheet-template.tmpl',
