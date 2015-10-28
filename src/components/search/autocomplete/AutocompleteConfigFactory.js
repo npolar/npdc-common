@@ -5,7 +5,6 @@ let AutocompleteConfigFactory = function($location, $rootScope) {
 
   let showCollections = false;
   let placeholder = "Search Norwegian Polar Data Centre";
-  let base = $location.path().replace(/^\//, '');
 
   let collections = {
     'dataset': true,
@@ -33,7 +32,6 @@ let AutocompleteConfigFactory = function($location, $rootScope) {
       collections,
       showCollections,
       placeholder,
-      base,
       query,
       respectUrl: true,
       location: undefined,

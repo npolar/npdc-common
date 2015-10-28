@@ -23,8 +23,8 @@ let parseUrl = function($scope, filters, query) {
   if (query) {
     Object.keys(query).forEach((key) => {
       let matches = FILTER_PARAM_REQEX.exec(key);
-      let key_reqex = new RegExp(`^((day|month|year)-)?${matches[1]}$`);
       if (matches) {
+        let key_reqex = new RegExp(`^((day|month|year)-)?${matches[1]}$`);
         let facet = $scope.model.find((facet) => key_reqex.test(facet.key));
         let terms = query[key].split(',');
         if (facet) {

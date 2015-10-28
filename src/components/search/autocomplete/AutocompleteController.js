@@ -3,9 +3,14 @@
 let Entities = require('special-entities');
 
 // @ngInject
-var AutocompleteController = function($filter, $location, $element, $q, $scope,
+var AutocompleteController = function($filter, $location, $element, $window, $q, $scope,
   NpolarApiResource, NpdcSearchService) {
   $scope.options.q = $scope.options.q || ($location.search().q || "");
+  let appBase = () => {
+    let baseElem = document.querySelector('base');
+    let baseParts = (baseElem.href || '/').split('/');
+    return '/' + (baseParts.pop() || baseParts.pop());
+  }();
 
   let unescape = function (text) {
     return Entities.normalizeEntities(text, 'utf-8');
@@ -13,17 +18,14 @@ var AutocompleteController = function($filter, $location, $element, $q, $scope,
 
   let getPath = function (entry) {
     let path;
-    if ($scope.options.base) {
-      path = `${$scope.options.base}/${entry.id}`;
-    } else {
-      let collection = Object.keys($scope.collections).find(collection => new RegExp(collection).test(entry.schema));
-      if (entry && entry.schema) {
-        if (collection) {
-          path = `/${ collection }/${ entry.id }`;
-        }
-      } else if (entry && entry.collection) {
-        path = `/${ entry.collection }/${ entry.id }`;
+
+    let collection = Object.keys($scope.options.collections).find(collection => new RegExp(collection).test(entry.schema));
+    if (entry && entry.schema) {
+      if (collection) {
+        path = `/${ collection }/${ entry.id }`;
       }
+    } else if (entry && entry.collection) {
+      path = `/${ entry.collection }/${ entry.id }`;
     }
     return path;
   };
@@ -59,7 +61,16 @@ var AutocompleteController = function($filter, $location, $element, $q, $scope,
     if (!entry) {
       return;
     }
-    $location.url(getPath(entry));
+    let path = getPath(entry);
+    console.log('path', appBase, path);
+    if (path.includes(appBase)) {
+      path = path.replace(appBase, '');
+      $location.url(path);
+    } else {
+      $window.location.href = getPath(entry);
+    }
+    $scope.options.q = "";
+    $scope.$emit('autocomplete-navigate');
   };
 
   $scope.submit = function ($event) {

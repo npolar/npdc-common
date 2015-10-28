@@ -43,7 +43,6 @@ let expandSearch = function() {
       };
 
       $scope.keyup = function($event) {
-        console.log('enter');
         if ($event.keyCode === 27) {
           $scope.close();
         }
@@ -66,6 +65,8 @@ let expandSearch = function() {
       $scope.toggleFilters = function () {
         $scope.isFiltersOpen = !$scope.isFiltersOpen;
       };
+
+      $scope.$on('autocomplete-navigate', $scope.close);
     }
   };
 };
