@@ -3,10 +3,10 @@
 ## Develop
 In `npdc-common` 
 ```sh
-➜  npdc-common git:(master) ✗ npm link
+$ npm link
 ```
 
 In your app
 ```sh
-➜  npdc-common git:(master) ✗ npm link npdc-common
+$ npm link npdc-common
 ```
