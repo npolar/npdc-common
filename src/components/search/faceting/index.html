@@ -11,11 +11,7 @@
       <label>Search</label>
       <input ng-model="q">
     </md-input-container>
-    Filter count: {{filterCount}}
-    <div layout>
-      <npdc:faceting ng-if="feed" options="options" flex="50"></npdc:faceting>
-      <npdc:faceting ng-if="feed" options="options" flex="50"></npdc:faceting>
-    </div>
+    <npdc:faceting ng-if="feed" options="options"></npdc:faceting>
 
     <ul>
       <li ng-repeat="item in feed.entries">{{ item.title }}</li>

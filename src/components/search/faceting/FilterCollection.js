@@ -58,6 +58,7 @@ let FilterCollection = function($scope, callback) {
   return {
     add,
     addRangeFilter,
+    equals,
     remove,
     removeRangeFilter,
     array: $scope.filterArray

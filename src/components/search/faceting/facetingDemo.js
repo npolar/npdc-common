@@ -22,36 +22,24 @@ demo.run(npolarApiConfig => {
   angular.extend(npolarApiConfig, { resources: [resource] });
 });
 
-demo.controller('FacetingDemoCtrl', function ($scope, $location, $controller, Dataset) {
+demo.controller('FacetingDemoCtrl', function ($scope, $location, $controller, Dataset, npdcAppConfig) {
 
   $controller('NpolarBaseController', { $scope: $scope });
   $scope.resource = Dataset;
-  $scope.filterCount = 0;
+  $scope.options = npdcAppConfig.search;
 
-  $scope.query = function(params) {
+  let defaults = { limit: "50", sort: "-updated,-released", fields: 'title,id,collection,updated', facets: "topics", score: true };
+  let invariants = $scope.security.isAuthenticated() ? {} : { "not-draft": "yes", "not-progress": "planned", "filter-links.rel": "data" };
+  let query = Object.assign({}, defaults, invariants);
 
-    let defaults = { limit: "all", sort: "-updated", fields: 'title,id,updated', facets: 'coverage.south,people.email,progress,topics,draft' };
-    let invariants = {};
-
-    return angular.extend(defaults, invariants, params);
+  let search = function (q) {
+    $scope.search(Object.assign({}, query, q));
   };
 
-  $scope.search($scope.query()).$promise.then((data) => {
-    $scope.options.facets = data.feed.facets;
+  search(query);
+
+  $scope.$on('$locationChangeSuccess', (event, data) => {
+    search($location.search());
   });
-
-  $scope.options = {
-    filterUi: {
-      'draft': {
-        type: 'checkbox'
-      },
-      'year-released': {
-        type: 'range'
-      },
-      'coverage.south': {
-        type: 'range'
-      }
-    }
-  };
 
 });
