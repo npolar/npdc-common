@@ -58,11 +58,6 @@ body.npdc-home
 			background-color:	$color-1-bg;
 			box-shadow:			none;
 			text-align:			left;
-
-			img
-			{
-				display:		none;
-			}
 		}
 
 		/*
@@ -76,7 +71,7 @@ body.npdc-home
 			//background:			linear-gradient(180deg, $color-1-bg, rgba(255,255,255,.8) 90%);
 		}
 		*/
-		
+
 		.quicknav
 		{
 			display:			block;
@@ -85,11 +80,11 @@ body.npdc-home
 			top:				50%;
 			transform:			translateY(-50%);
 			overflow:			hidden;
-			
+
 			.item
 			{
 				display:		block;
-				
+
 				a
 				{
 					color:				$color-2-fg;
@@ -100,7 +95,7 @@ body.npdc-home
 					text-decoration:	none;
 					text-shadow: 		1px 1px 2px $color-1-ex;
 					transition:			$anim-speed;
-					
+
 					md-icon
 					{
 						color:			white;
@@ -110,19 +105,19 @@ body.npdc-home
 						text-shadow: 	0 0 10px $color-1-ex;
 						width:			1em;
 					}
-	
+
 					span.label
 					{
 						display:		block;
 						font-size:		1em;
 					}
-	
+
 					span.text
 					{
 						display:		none;
 					}
 				}
-				
+
 				a:hover
 				{
 					color:				$color-2-ex;
@@ -131,11 +126,11 @@ body.npdc-home
 				}
 			}
 		}
-		
+
 		@media (min-width: 700px)
 		{
 			.quicknav
-			{				
+			{
 				.item
 				{
 					display:				inline-block;
@@ -146,7 +141,7 @@ body.npdc-home
 						padding:			5vh 5vw;
 						text-align: 		center;
 						text-shadow: 		1px 1px 2px $color-1-ex;
-	
+
 						md-icon
 						{
 							color:			white;
@@ -156,12 +151,12 @@ body.npdc-home
 							text-shadow: 	0 0 10px $color-1-ex;
 							width:			1em;
 						}
-	
+
 						span.label
 						{
 							font-size:		2em;
 						}
-	
+
 						span.text
 						{
 							color:			$color-2-ex;
@@ -170,12 +165,12 @@ body.npdc-home
 							text-shadow:	none;
 						}
 					}
-	
+
 					a:hover
 					{
 						transform:			scale(1.2, 1.2) rotateZ(5deg);
 					}
-					
+
 					@media (max-height: 400px)
 					{
 						a
@@ -184,13 +179,13 @@ body.npdc-home
 						}
 					}
 				}
-	
+
 				.item:not(:last-of-type)
 				{
 					border-right: 1px solid $color-1-ex;
 					padding-right: 10px;
 				}
-	
+
 				.item:not(:first-of-type)
 				{
 					border-left: 1px solid $color-1-fg;
@@ -205,6 +200,7 @@ body.npdc-home
 			position:			absolute;
 			text-align:			center;
 			width:				100%;
+			z-index:			100;
 
 			a
 			{
