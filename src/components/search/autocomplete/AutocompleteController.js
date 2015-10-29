@@ -45,15 +45,10 @@ var AutocompleteController = function($filter, $location, $element, $window, $q,
     let searchCollections = [];
     Object.keys($scope.options.collections).forEach(c => {
       if ($scope.options.collections[c]) {
-        searchCollections.push(c);
+        searchCollections.push(NpolarApiResource.resource({ path: '/' + c.replace(/^\//, '')}));
       }
     });
-
-    let resources = searchCollections.map(s => {
-      // Force starting /
-      return NpolarApiResource.resource({ path: '/' + s.replace(/^\//, '')});
-    });
-    return $q.all(resources.map(resource => resource.array(query).$promise))
+    return $q.all(searchCollections.map(resource => resource.array(query).$promise))
       .then(results => results.reduce((a, b) => a.concat(b)).sort((a, b) => a._score < b._score));
   };
 
@@ -62,7 +57,6 @@ var AutocompleteController = function($filter, $location, $element, $window, $q,
       return;
     }
     let path = getPath(entry);
-    console.log('path', appBase, path);
     if (path.includes(appBase)) {
       path = path.replace(appBase, '');
       $location.url(path);
@@ -75,7 +69,11 @@ var AutocompleteController = function($filter, $location, $element, $window, $q,
 
   $scope.submit = function ($event) {
     this.$$childHead.$mdAutocompleteCtrl.hidden = true;
-    NpdcSearchService.search({q: $scope.options.q}, $scope.options.location);
+    if (appBase === 'home') {
+      NpdcSearchService.search({q: $scope.options.q});
+    } else {
+      $window.location.href = '/home/search?q='+$scope.options.q;
+    }
   };
 };
 

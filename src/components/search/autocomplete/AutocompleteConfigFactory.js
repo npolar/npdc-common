@@ -7,18 +7,18 @@ let AutocompleteConfigFactory = function($location, $rootScope) {
   let placeholder = "Search Norwegian Polar Data Centre";
 
   let collections = {
-    'dataset': true,
-    'expedition': true,
-    'indicator': true,
-    'publication': true,
-    'project': true,
-    'indicator/parameter': false,
-    'map/archive': false,
-    'person': false,
-    'placename': false,
-    'tracking/deployment': false,
-    'service': false,
-    'vessel': false
+    '/dataset': true,
+    '/expedition': true,
+    '/indicator': true,
+    '/publication': true,
+    '/project': true,
+    '/indicator/parameter': false,
+    '/map/archive': false,
+    '/person': false,
+    '/placename': false,
+    '/tracking/deployment': false,
+    '/service': false,
+    '/vessel': false
   };
 
   let query = {
