@@ -16,16 +16,16 @@
             <md-list>
               <md-list-item class="md-2-line">
                 <div class="np-search-icon md-avatar" title="ID: {{ e.id }}">
-                  <span>{{ e.id.substr(0,3) }}</span>
+                  <span>{{ avatar(e) }}</span>
                 </div>
                 <div class="md-list-item-text">
                   <h3 class="md-headline">
                     {{ title(e) }}
-                    <em ng-if="e.created_by">
-                      「{{ e.created_by }}」
+                    <em ng-if="subTitle(e)">
+                      「{{ subTitle(e) }}」
                     </em>
                   </h3>
-                  <h4>{{ e.updated.split("T")[0] }}</h4>
+                  <h4>{{ detail(e) }}</h4>
                 </div>
               </md-list-item>
             </md-list>
