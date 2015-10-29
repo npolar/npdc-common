@@ -7,7 +7,7 @@ var AutocompleteController = function($filter, $location, $element, $window, $q,
   NpolarApiResource, NpdcSearchService) {
   $scope.options.q = $scope.options.q || ($location.search().q || "");
   let appBase = () => {
-    let baseElem = document.querySelector('base');
+    let baseElem = document.querySelector('base') || {};
     let baseParts = (baseElem.href || '/').split('/');
     return '/' + (baseParts.pop() || baseParts.pop());
   }();

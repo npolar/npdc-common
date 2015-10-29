@@ -71,6 +71,7 @@ let npdcAppConfigFactory = function (NpdcAutocompleteConfigFactory) {
     }],
     cardTitle: "Norwegian Polar Data Centre",
     search: {
+      results: {},
       filterUi: {
         'year-released': {
           type: 'range'
