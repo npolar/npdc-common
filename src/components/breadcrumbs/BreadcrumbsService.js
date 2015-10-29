@@ -4,7 +4,7 @@
  * Angular breadcrumbs service
  * @ngInject
  */
-var NpdcBreadcrumbs = function($location, $log, $rootScope, $window) {
+var NpdcBreadcrumbs = function($location, $rootScope, $window) {
 
   var self = this;
 
@@ -12,7 +12,7 @@ var NpdcBreadcrumbs = function($location, $log, $rootScope, $window) {
 
   this.path = "";
 
-  var home = { href: "/", title: "Home [Norwegian Polar Data Centre]", text: "home" };
+  var home = { href: "/home", title: "Home [Norwegian Polar Data Centre]", text: "home" };
 
   let translate = (string) => {
     return string; // .charAt(0).toUpperCase() + string.slice(1);
@@ -25,7 +25,7 @@ var NpdcBreadcrumbs = function($location, $log, $rootScope, $window) {
     }
 
     if (i > 0) {
-      self.path += `/${crumb}`;
+      self.path += (i > 1 ? '/' : '') + crumb;
     }
 
     if (i >= 2 && (/^\w{8}-\w{4}-/).test(crumb)) {
@@ -38,12 +38,9 @@ var NpdcBreadcrumbs = function($location, $log, $rootScope, $window) {
     return { href: self.path, title: translate(crumb), text: decodeURIComponent(translate(crumb)) };
   };
 
-  $rootScope.$on('$locationChangeSuccess', function(event, uri) {
-
-    //$log.debug("$locationChangeSuccess <-", event, uri);
-
+  var buildCrumbs = function(event, uri) {
     // Get URI parts (split by /)
-    let parts = uri.split("//")[1].split('?')[0].split("/").filter(p => { return !(/^$/).test(p); });
+    let parts = uri.split("//")[1].split('?')[0].split("/").slice(1).filter(p => !!p);
 
     // Add query
     if ($location.search().q) {
@@ -56,16 +53,19 @@ var NpdcBreadcrumbs = function($location, $log, $rootScope, $window) {
     }
 
     let i = 0;
+    console.log('parts', parts);
     self.breadcrumbs = parts.map(
       crumb => {
         return link(crumb, i++);
       }
     );
-
     // Set html/head/title
     $window.document.title = $location.host() +' > ' + self.breadcrumbs.slice(1).map(b => b.text.toLowerCase()).join(' > ');
+  };
 
-  });
+  $rootScope.$on('$locationChangeSuccess', buildCrumbs);
+  buildCrumbs(null, $location.absUrl());
+  console.log('bc', self.breadcrumbs);
 
   return this;
 };
