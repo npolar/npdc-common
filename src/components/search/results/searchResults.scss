@@ -1,0 +1,50 @@
+.npdc-search {
+  height: 100%;
+
+  a {
+    text-decoration: none;
+  }
+
+  md-chips .md-chips {
+    box-shadow: none;
+  }
+
+  md-list {
+    h3 {
+      font-size: 18px !important;
+      font-weight: bold !important;
+
+      em {
+        font-size: 15px;
+        color: $color-primary-1;
+        margin-left: 1em;
+      }
+    }
+
+    h4 {
+      font-size: 12px;
+      color: #aaa  !important;
+    }
+  }
+
+  .np-search-icon {
+    position: relative;
+    background-color: $color-primary-1;
+    color: #fff;
+    text-align: center;
+
+    span {
+      font-size: 12px;
+      font-weight:bold;
+      position: relative;
+      top: calc((40px/2) - 1em);
+    }
+  }
+}
+
+
+
+
+.np-layout-list:hover {
+  background-color: #eee !important;
+}
