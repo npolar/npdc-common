@@ -5,8 +5,8 @@
       <md-button aria-label="search" class="md-fab md-mini" ng-focus-out="blockEvent($event);" ng-click="open($event);">
         <md-icon>search</md-icon>
       </md-button>
-      <md-tooltip>Global search</md-tooltip>
     </md-fab-trigger>
+
     <md-toolbar ng-focus-out="blockEvent($event);" ng-click="blockEvent($event);">
       <md-fab-actions class="md-toolbar-tools">
         <div class="np-es-input" ng-class="{open : isFiltersOpen}" layout>
@@ -23,6 +23,7 @@
       </md-fab-actions>
     </md-toolbar>
   </md-fab-toolbar>
+
   <div ng-show="isFiltersOpen && isOpen" class="np-es-filter" ng-class="{ open: isFiltersOpen && isOpen }">
     <div ng-if="options.autocomplete.showCollections" layout layout-wrap layout-align="space-between center">
       <md-checkbox flex="25" ng-model="options.autocomplete.collections[collection]" ng-repeat="(collection, value) in options.autocomplete.collections">{{ collection }}</md-checkbox>
