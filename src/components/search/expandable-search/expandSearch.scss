@@ -1,10 +1,9 @@
 .np-expand-search {
   color: $color-text-grey;
   font-size: 16px;
-  position: fixed;
+  position: absolute;
   right: 0;
   top: 0;
-  height: 48px;
   width: 60px;
   z-index: 10;
 
