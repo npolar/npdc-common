@@ -13,7 +13,6 @@
     </span>
 
     <!-- Application menu -->
-
     <md-menu>
       <md-button class="md-icon-button" ng-click="$mdOpenMenu($event)">
         <md-icon md-menu-origin>apps</md-icon>
@@ -34,8 +33,7 @@
       </md-menu-content>
     </md-menu>
 
-    <!-- Shortcuts to my applications -->
-
+    <!-- User applications menu -->
     <md-menu ng-show="security.isAuthenticated()">
       <md-button class="md-icon-button" ng-click="$mdOpenMenu($event)">
         <md-icon md-menu-origin>flash_on</md-icon>
@@ -56,9 +54,10 @@
       </md-menu-content>
     </md-menu>
 
-    <!-- Login + Search controls -->
-
+    <!-- User login and menu -->
     <npdc:user-menu></npdc:user-menu>
+
+    <!-- Search component -->
     <npdc:expand-search options="options.search"></npdc:expand-search>
   </div>
 </md-toolbar>
