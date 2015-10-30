@@ -69,8 +69,8 @@ var AutocompleteController = function($filter, $location, $element, $window, $q,
 
   $scope.submit = function ($event) {
     this.$$childHead.$mdAutocompleteCtrl.hidden = true;
-    if (appBase === 'home') {
-      NpdcSearchService.search({q: $scope.options.q});
+    if (/home/.test(appBase)) {
+      NpdcSearchService.search({q: $scope.options.q}, '/search');
     } else {
       $window.location.href = '/home/search?q='+$scope.options.q;
     }
