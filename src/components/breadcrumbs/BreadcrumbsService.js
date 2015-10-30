@@ -66,10 +66,10 @@ var NpdcBreadcrumbs = function($location, $rootScope, $window) {
     );
     // Set html/head/title
     $window.document.title = $location.host() +' > ' + self.breadcrumbs.slice(1).map(b => b.text.toLowerCase()).join(' > ');
+    self.path = "";
   };
 
   $rootScope.$on('$locationChangeSuccess', buildCrumbs);
-  buildCrumbs(null, $location.absUrl());
 
   return this;
 };
