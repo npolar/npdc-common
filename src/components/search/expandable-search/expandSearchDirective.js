@@ -17,7 +17,6 @@ let expandSearch = function() {
       $scope.isFiltersOpen = false;
 
       Object.assign($scope.options.autocomplete, $scope.query, {
-        location: '/',
         respectUrl: false
       });
 
@@ -43,11 +42,17 @@ let expandSearch = function() {
       };
 
       $scope.keyup = function($event) {
-        if ($event.keyCode === 27) {
-          $scope.close();
-        }
-        if ($event.keyCode === 13) {
-          $scope.close();
+        switch ($event.keyCode) {
+          case 27:
+          case 13:
+            $scope.close();
+            break;
+          case 32:
+            // Workaround for angular material bug with inputs in fab-toolbar 
+            $scope.options.autocomplete.q += ' ';
+            break;
+          default:
+            //noop;
         }
       };
 
