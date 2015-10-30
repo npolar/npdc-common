@@ -20,12 +20,11 @@ var NpdcBreadcrumbs = function($location, $rootScope, $window) {
 
   var link = (crumb, i) => {
     if (i === 0) {
-      self.path = "";
       return home;
     }
 
     if (i > 0) {
-      self.path += (i > 1 ? '/' : '') + crumb;
+      self.path += '/' + crumb;
     }
 
     if (i >= 2 && (/^\w{8}-\w{4}-/).test(crumb)) {
@@ -42,6 +41,13 @@ var NpdcBreadcrumbs = function($location, $rootScope, $window) {
     // Get URI parts (split by /)
     let parts = uri.split("//")[1].split('?')[0].split("/").slice(1).filter(p => !!p);
 
+    // Handle home
+    if (parts[0] === 'home') {
+      self.path += '/home';
+    } else {
+      parts.unshift('home');
+    }
+
     // Add query
     if ($location.search().q) {
       parts = parts.concat(`"${$location.search().q}"`);
@@ -53,7 +59,6 @@ var NpdcBreadcrumbs = function($location, $rootScope, $window) {
     }
 
     let i = 0;
-    console.log('parts', parts);
     self.breadcrumbs = parts.map(
       crumb => {
         return link(crumb, i++);
@@ -65,7 +70,6 @@ var NpdcBreadcrumbs = function($location, $rootScope, $window) {
 
   $rootScope.$on('$locationChangeSuccess', buildCrumbs);
   buildCrumbs(null, $location.absUrl());
-  console.log('bc', self.breadcrumbs);
 
   return this;
 };
