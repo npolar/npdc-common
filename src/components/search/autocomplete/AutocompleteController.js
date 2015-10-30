@@ -30,6 +30,11 @@ var AutocompleteController = function($filter, $location, $element, $window, $q,
     return path;
   };
 
+  let submit = function ($event) {
+    this.$$childHead.$mdAutocompleteCtrl.hidden = true;
+    NpdcSearchService.search({q: $scope.options.q});
+  };
+
   $scope.title = function (entry) {
     let t = entry.title || entry.name || entry.code || $filter('lang')(entry.titles, 'title') || entry.id;
     t = t.split('_').join('');
@@ -67,12 +72,9 @@ var AutocompleteController = function($filter, $location, $element, $window, $q,
     $scope.$emit('autocomplete-navigate');
   };
 
-  $scope.submit = function ($event) {
-    this.$$childHead.$mdAutocompleteCtrl.hidden = true;
-    if (/home/.test(appBase)) {
-      NpdcSearchService.search({q: $scope.options.q}, '/search');
-    } else {
-      $window.location.href = '/home/search?q='+$scope.options.q;
+  $scope.keyup = function ($event) {
+    if ($event.keyCode === 13) {
+      submit();
     }
   };
 };

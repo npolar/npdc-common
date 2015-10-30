@@ -1,14 +1,18 @@
 'use strict';
 
 // @ngInject
-let SearchService = function ($location, npdcAppConfig) {
+let SearchService = function ($location, $window, npdcAppConfig) {
   return {
-    search (query, location) {
-      console.log('changeSearch', query, location);
-      if (location) {
-        $location.url(location);
+    search (query) {
+      console.log('changeSearch', query);
+
+      if (/^\/home\/search/.test($location.path())) {
+        $location.search(query);
+      } else if (/^\/home/) {
+        $window.location.href = '/home/search?q='+query.q;
+      } else {
+        $location.search(query);
       }
-      $location.search(query);
     }
   };
 };
