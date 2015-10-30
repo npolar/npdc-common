@@ -7,7 +7,6 @@
 
     <span><b>{{options.toolbarTitle}}</b></span>
     <span class="np-toolbar-title">&nbsp;Norwegian Polar Data Centre</span>
-    
 
     <span class="flex">
       <!-- This span is used to push the other content to the right -->
@@ -18,6 +17,7 @@
     <md-menu>
       <md-button class="md-icon-button" ng-click="$mdOpenMenu($event)">
         <md-icon md-menu-origin>apps</md-icon>
+        <md-tooltip>Quick navigation</md-tooltip>
       </md-button>
       <md-menu-content width="6">
         <div ng-repeat="group in options.toolbarMenuGroups">
@@ -39,6 +39,7 @@
     <md-menu ng-show="security.isAuthenticated()">
       <md-button class="md-icon-button" ng-click="$mdOpenMenu($event)">
         <md-icon md-menu-origin>flash_on</md-icon>
+        <md-tooltip>User applications</md-tooltip>
       </md-button>
       <md-menu-content width="6">
         <div ng-repeat="group in options.toolbarInternalApps">
