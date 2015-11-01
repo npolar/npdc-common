@@ -33,7 +33,7 @@ let AutocompleteConfigFactory = function($location, $rootScope) {
       showCollections,
       placeholder,
       query,
-      respectUrl: true,
+      global: false,
       location: undefined,
     }, options);
   };

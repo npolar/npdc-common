@@ -78,7 +78,7 @@ let npdcAppConfigFactory = function (NpdcAutocompleteConfigFactory) {
         }
       },
       facets: [],
-      autocomplete: new NpdcAutocompleteConfigFactory({showCollections: true})
+      autocomplete: new NpdcAutocompleteConfigFactory({showCollections: true, global: true})
     }
   };
 };

@@ -30,9 +30,13 @@ var AutocompleteController = function($filter, $location, $element, $window, $q,
     return path;
   };
 
-  let submit = function ($event) {
-    this.$$childHead.$mdAutocompleteCtrl.hidden = true;
-    NpdcSearchService.search({q: $scope.options.q});
+  $scope.submit = function ($event) {
+    $scope.$$childHead.$mdAutocompleteCtrl.hidden = true;
+    if ($scope.options.global) {
+      NpdcSearchService.globalSearch({q: $scope.options.q});
+    } else {
+      NpdcSearchService.search({q: $scope.options.q});
+    }
   };
 
   $scope.title = function (entry) {
@@ -74,7 +78,7 @@ var AutocompleteController = function($filter, $location, $element, $window, $q,
 
   $scope.keyup = function ($event) {
     if ($event.keyCode === 13) {
-      submit();
+      $scope.submit();
     }
   };
 };

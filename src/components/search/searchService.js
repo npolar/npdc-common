@@ -4,14 +4,19 @@
 let SearchService = function ($location, $window, npdcAppConfig) {
   return {
     search (query) {
-      console.log('changeSearch', query);
-
+      console.log('Search', query);
+      $location.search(query);
+    },
+    globalSearch (query) {
+      console.log('Global search', query);
       if (/^\/home\/search/.test($location.path())) {
         $location.search(query);
-      } else if (/^\/home/) {
-        $window.location.href = '/home/search?q='+query.q;
+      } else if (/^\/home/.test($location.path())) {
+        $location.$$search = query;
+        $location.$$path = '/search/';
+        $location.$$compose();
       } else {
-        $location.search(query);
+        $window.location.href = '/home/search?q=' + query.q;
       }
     }
   };
