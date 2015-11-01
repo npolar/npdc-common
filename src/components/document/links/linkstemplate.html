@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<section>
+  <h3>Links</h3>
+  <div ng-repeat="link in links">
+    {{ link.rel }}: <a ng-href="{{link.href}}">{{ link.title || link.href }}</a>
+  </div>
+
+  <h3>Related datasets</h3>
+  <ol ng-if="related.datasets.length > 0">
+    <li ng-repeat="p in related.datasets" ng-if="p._score > 0.05">
+      <a ng-href="{{p.id}}">{{ p.title }}</a> {{p._score}}
+    </li>
+  </ol>
+
+  <h3>Related publications</h3>
+  <ol>
+    <li ng-repeat="p in related.publications" ng-if="p._score > 0.1">
+      <a ng-href="?q=&filter-iso_topics={{iso_topic}}">{{ (p.title) }}</a> {{p._score}}
+    </li>
+  </ol>
+
+  <h3>Related projects</h3>
+  <ol>
+    <li ng-repeat="p in related.projects" ng-if="p._score > 0.1">
+      <a ng-href="?q=&filter-iso_topics={{iso_topic}}">{{ p.title }}</a> {{p._score}}
+    </li>
+  </ol>
+</section>

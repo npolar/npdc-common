@@ -3,11 +3,11 @@
 var angular = require('angular');
 var ui = angular.module('npdcUi');
 require('./search');
+require('./document');
 
 ui.directive('ngFocusOut', require('./focusOutDirective'));
 ui.factory('npdcAppConfig', require('./app/npdcAppConfig'));
 
-ui.directive('npdcDocument', require('./document/document'));
 ui.directive('npdcToolbar', require('./toolbar/toolbarDirective'));
 ui.directive('npdcUserMenu', require('./user-menu/userMenu'));
 
@@ -25,7 +25,6 @@ ui.directive('npdcDeleteButton', require('./button/DeleteButton'));
 ui.controller('NpdcButtonComponent', require('./button/ButtonComponent'));
 
 ui.directive('npdcFormula', require('./formula/formula'));
-ui.directive('npdcShow', require('./document/document'));
 
 ui.controller('NpdcAppController', require('./app/AppController'));
 ui.directive('npdcApp', require('./app/appDirective'));

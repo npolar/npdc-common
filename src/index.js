@@ -6,8 +6,10 @@ require('angular-animate');
 require('angular-material');
 require('angular-npolar');
 require('jusas-angularjs-slider');
+require('angular-marked');
 
-var ui = angular.module('npdcUi', ['npolarUi', 'npolarApi', 'ngMaterial', 'ngAnimate', 'rzModule']);
+var ui = angular.module('npdcUi', ['npolarUi', 'npolarApi', 'ngMaterial',
+  'ngAnimate', 'rzModule', 'hc.marked']);
 
 ui.config(function($mdThemingProvider) {
   var npdcPrimary = $mdThemingProvider.extendPalette('light-blue', {

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<section>
+  <h3 class="headline">Organisations</h3>
+  <div ng-repeat="o in organisation">
+
+    <h2 class="md-title" id="organisation-{{ o.id }}">{{ o.name }}</h2>
+    <p>{{ o.roles.join(" ")}}</p>
+
+    <md-chips class="md-actions" layout-align="end center" layout="row" ng-repeat="role in person.roles">
+
+      <md-chip>{{ role }}</md-chip>
+    </md-chips>
+  </div>
+</section>

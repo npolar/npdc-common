@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<section>
+  <h3>People</h3>
+  <md-divider></md-divider>
+  <div ng-repeat="person in person">
+    <h2 class="md-title">{{ person.first_name }}
+      {{ person.last_name }}</h2>
+    <p>
+      <a ng-click="gotoAnchor('organisation-'+person.organisation)">{{ orgName(person.organisation, document.organisations) }}</a>
+    </p>
+    <p>
+      <span ng-repeat="role in person.roles">{{ role }}
+        <span ng-if="!$last">,
+        </span>
+      </span>
+    </p>
+  </div>
+</section>

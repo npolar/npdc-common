@@ -20,10 +20,11 @@
     "angular": "1.4.7",
     "angular-animate": "1.4.7",
     "angular-aria": "1.4.7",
+    "angular-marked": "0.0.18",
     "angular-material": "0.11.3",
+    "angular-npolar": "npolar/angular-npolar",
     "chronopic": "git://github.com/npolar/chronopic.js",
     "jusas-angularjs-slider": "baelter/angularjs-slider",
-    "angular-npolar": "npolar/angular-npolar",
     "special-entities": "^1.0.2"
   },
   "devDependencies": {
