@@ -150,13 +150,32 @@ body.npdc-home
 	{
 		background-color:			$color-1-bg;
 		color:						$color-1-fg;
-		margin:						0;
-		text-align:					center;
+		margin:						32px 0 0 0;
+		padding:					32px;
 
-		p
+		h3
 		{
+			margin:					0 0 32px 0;
+			text-shadow:			0 0 5px $color-1-ex;
+		}
+
+		ol
+		{
+			font-size:				16px;
+			list-style:				none;
 			margin:					0;
-			padding:				32px;
+			padding:				0;
+			text-align:				left;
+
+			a
+			{
+				color:				$color-1-fg;
+				text-decoration:	none;
+
+				&:hover
+				{
+				}
+			}
 		}
 	}
 
@@ -223,6 +242,7 @@ body.npdc-home
 
 			.pagenav
 			{
+				/*
 				bottom:					0;
 				display:				block;
 				position:				absolute;
@@ -265,6 +285,7 @@ body.npdc-home
 						position:		absolute;
 					}
 				}
+				*/
 			}
 
 			// Customize defined sections
