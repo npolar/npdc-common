@@ -32,6 +32,11 @@ div[tabindex] {
   width: 60%;
 }
 
+.np-padding {
+  padding: 1em;
+  box-sizing: border-box;
+}
+
 .bg-primary {
   background-color: $color-primary-0;
 }
