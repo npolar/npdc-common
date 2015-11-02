@@ -59,5 +59,8 @@
       "partialify",
       "browserify-ngannotate"
     ]
+  },
+  "scripts": {
+    "postinstall": "gulp sass"
   }
 }
