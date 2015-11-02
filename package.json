@@ -59,6 +59,6 @@
     ]
   },
   "scripts": {
-    "postinstall": "gulp sass"
+    "postinstall": "gulp sass copy-assets"
   }
 }
