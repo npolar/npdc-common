@@ -15,10 +15,10 @@ var git = require('gulp-git');
 var rename = require('gulp-rename');
 var minifyCss = require('gulp-minify-css');
 var sourcemaps = require('gulp-sourcemaps');
-var debug = require('gulp-debug');
 
 var baseConfig = npdcGulp.baseConfig;
 var config = {
+  // @TODO fix this ugly workaround for npms new flat install
   deps: {
     css: [
       baseConfig.deps.root+'/angular-material/angular-material.css',
@@ -45,7 +45,6 @@ var config = {
 npdcGulp.loadModuleTasks(gulp, config);
 
 gulp.task('sass', function (cb) {
-  console.log('conf', config.deps.css);
   git.revParse({
     args: '--abbrev-ref HEAD', quiet: true
   }, function(err, ref) {
@@ -57,7 +56,6 @@ gulp.task('sass', function (cb) {
       .pipe(sourcemaps.write());
 
     es.concat(vendorFiles, compiledFiles)
-      .pipe(debug())
       .pipe(sourcemaps.init())
       .pipe(concat(baseConfig.pkgname + '-' + baseConfig.version() + '.css'))
       .pipe(gulpif(global.isProd, minifyCss()))
