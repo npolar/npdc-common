@@ -15,6 +15,7 @@ var git = require('gulp-git');
 var rename = require('gulp-rename');
 var minifyCss = require('gulp-minify-css');
 var sourcemaps = require('gulp-sourcemaps');
+var debug = require('gulp-debug');
 
 var baseConfig = npdcGulp.baseConfig;
 var config = {
@@ -54,6 +55,7 @@ gulp.task('sass', function (cb) {
       .pipe(sourcemaps.write());
 
     es.concat(vendorFiles, compiledFiles)
+      .pipe(debug())
       .pipe(sourcemaps.init())
       .pipe(concat(baseConfig.pkgname + '-' + baseConfig.version() + '.css'))
       .pipe(gulpif(global.isProd, minifyCss()))
