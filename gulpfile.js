@@ -21,10 +21,8 @@ var config = {
   // @TODO fix this ugly workaround for npms new flat install
   deps: {
     css: [
-      baseConfig.deps.root+'/angular-material/angular-material.css',
-      '../angular-material/angular-material.css',
-      baseConfig.deps.root+'/jusas-angularjs-slider/dist/rzslider.css',
-      '../jusas-angularjs-slider/dist/rzslider.css'
+      require.resolve('angular-material/angular-material.css'),
+      require.resolve('jusas-angularjs-slider/dist/rzslider.css')
     ].concat(baseConfig.deps.css)
   },
   dist: {
@@ -56,7 +54,7 @@ gulp.task('sass', function (cb) {
       .pipe(sourcemaps.write());
 
     es.concat(vendorFiles, compiledFiles)
-      .pipe(sourcemaps.init())
+      .pipe(sourcemaps.init({loadMaps: true}))
       .pipe(concat(baseConfig.pkgname + '-' + baseConfig.version() + '.css'))
       .pipe(gulpif(global.isProd, minifyCss()))
       .pipe(sourcemaps.write())
