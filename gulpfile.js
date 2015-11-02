@@ -42,6 +42,7 @@ var config = {
 npdcGulp.loadModuleTasks(gulp, config);
 
 gulp.task('sass', function (cb) {
+  console.log('conf', config.deps.css);
   git.revParse({
     args: '--abbrev-ref HEAD', quiet: true
   }, function(err, ref) {
