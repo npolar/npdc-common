@@ -1,28 +1,26 @@
 <!DOCTYPE html>
 <section>
   <h3>Links</h3>
-  <div ng-repeat="link in links">
-    {{ link.rel }}: <a ng-href="{{link.href}}">{{ link.title || link.href }}</a>
+  <md-divider></md-divider>
+  <md-list>
+    <md-list-item class="md-2-line" ng-repeat="link in links">
+      <div class="md-list-item-text">
+        <a ng-href="{{link.href}}">{{ link.title || link.href }}</a>
+        <p>{{ link.rel }}</p>
+      </div>
+    </md-list-item>
+  </md-list>
+
+  <div>
+    <h3>Related documents</h3>
+    <md-list>
+      <md-list-item class="md-2-line" ng-repeat="rel in related" ng-if="rel._score > 0.1">
+        <div class="md-list-item-text">
+          <a ng-href="{{'/' + rel.collection + '/' + rel.id}}">{{ rel.title }}</a>
+          <p>{{ rel.collection }} ({{ rel._score }})</p>
+        </div>
+      </md-list-item>
+    </md-list>
   </div>
 
-  <h3>Related datasets</h3>
-  <ol ng-if="related.datasets.length > 0">
-    <li ng-repeat="p in related.datasets" ng-if="p._score > 0.05">
-      <a ng-href="{{p.id}}">{{ p.title }}</a> {{p._score}}
-    </li>
-  </ol>
-
-  <h3>Related publications</h3>
-  <ol>
-    <li ng-repeat="p in related.publications" ng-if="p._score > 0.1">
-      <a ng-href="?q=&filter-iso_topics={{iso_topic}}">{{ (p.title) }}</a> {{p._score}}
-    </li>
-  </ol>
-
-  <h3>Related projects</h3>
-  <ol>
-    <li ng-repeat="p in related.projects" ng-if="p._score > 0.1">
-      <a ng-href="?q=&filter-iso_topics={{iso_topic}}">{{ p.title }}</a> {{p._score}}
-    </li>
-  </ol>
 </section>

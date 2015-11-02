@@ -1,14 +1,13 @@
 'use strict';
-// Organisation directive
 
 // @ngInject
 var linkDirective = function() {
   return {
-    template: require('./linkstemplate.html'),
     scope: {
-      links: "=",
-      related: "="
-    }
+      links: '=',
+      related: '='
+    },
+    template: require('./linkstemplate.html')
   };
 };
 

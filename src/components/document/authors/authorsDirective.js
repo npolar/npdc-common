@@ -3,7 +3,10 @@
 // @ngInject
 var authorsDirective = function() {
   return {
-    template: require('./authorstemplate.html'),
+    scope: {
+      authors: '='
+    },
+    template: require('./authorstemplate.html')
   };
 };
 
