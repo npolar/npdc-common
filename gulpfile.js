@@ -18,7 +18,6 @@ var sourcemaps = require('gulp-sourcemaps');
 
 var baseConfig = npdcGulp.baseConfig;
 var config = {
-  // @TODO fix this ugly workaround for npms new flat install
   deps: {
     css: [
       require.resolve('angular-material/angular-material.css'),
