@@ -21,8 +21,10 @@ var baseConfig = npdcGulp.baseConfig;
 var config = {
   deps: {
     css: [
-      process.cwd() + '/' + baseConfig.deps.root+'/angular-material/angular-material.css',
-      process.cwd() + '/' + baseConfig.deps.root+'/jusas-angularjs-slider/dist/rzslider.css'
+      baseConfig.deps.root+'/angular-material/angular-material.css',
+      '../angular-material/angular-material.css',
+      baseConfig.deps.root+'/jusas-angularjs-slider/dist/rzslider.css'
+      '../jusas-angularjs-slider/dist/rzslider.css'
     ].concat(baseConfig.deps.css)
   },
   dist: {
