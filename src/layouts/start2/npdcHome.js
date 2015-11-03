@@ -4,7 +4,7 @@ require("../../");
 var angular = require("angular");
 
 angular.module("npdcHome", ["npdcUi"])
-.controller("npdcHomeController", function(npdcAppConfig, $scope) {
+.controller("npdcHomeController", function(npdcAppConfig, $scope, $anchorScroll) {
 	$scope.options = npdcAppConfig;
 });
 
