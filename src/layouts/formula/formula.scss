@@ -47,8 +47,8 @@
 
   md-whiteframe {
     display: block;
-    padding: 1em;
     margin: .5em 0;
+    padding: 1em;
   }
 
   .np-formula-array {
@@ -115,6 +115,7 @@
 
   .np-field-info + md-select,
   .np-field-info + input[type="number"],
+  .np-field-info + input[type="text"],
   .np-field-info + md-slider,
   .np-field-info + md-checkbox {
     width: calc(100% - 33px);
@@ -137,8 +138,30 @@
   .np-formula-select,
   .np-formula-range {
     .np-field-info {
-      top: 20px;
+      bottom: 37px;
+      top: initial;
     }
   }
 
+  .multi-ctrls {
+    .np-field-info {
+      right: 40px;
+    }
+
+    md-select,
+    input[type="number"],
+    input[type="text"],
+    md-slider,
+    md-checkbox {
+      width: calc(100% - 33px);
+    }
+
+    .np-field-info + md-select,
+    .np-field-info + input[type="number"],
+    .np-field-info + input[type="text"],
+    .np-field-info + md-slider,
+    .np-field-info + md-checkbox {
+      width: calc(100% - 73px);
+    }
+  }
 }

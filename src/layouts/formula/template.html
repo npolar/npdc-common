@@ -63,7 +63,7 @@
 
             <!-- input -->
             <md-input-container ng-if="field.mdType === 'input'" class="np-formula-input">
-              <label for="{{field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title) }}</label>
+              <label for="{{field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title ) }}</label>
               <div ng-include="'ft-field-info.html'" class="np-field-info" ng-if="field.description"></div>
               <div formula:field="field"></div>
               <div ng-include="'ft-validation-message.html'" class="np-validation-message"></div>
@@ -138,7 +138,7 @@
                   <div ng-if="field.typeOf('field')">
                     <ul class="np-formula-array">
                       <li ng-class="{ valid: value.valid, error: value.error }" ng-repeat="value in field.values">
-                        <formula:field-instance field="value" style="position: relative;"></formula:field-instance>
+                        <formula:field-instance field="value" style="position: relative;" class="multi-ctrls"></formula:field-instance>
                         <md-menu class="np-formula-input-ctrls remove">
                           <md-button aria-label="Remove" class="md-icon-button remove" ng-click="$mdOpenMenu($event)">
                             <md-icon md-menu-origin>close</md-icon>
