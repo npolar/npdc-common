@@ -56,7 +56,10 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
     return facet;
   };
 
-  let initDataModel = function () {
+  let initDataModel = function (facets) {
+    if (!$scope.options.facets) {
+      return;
+    }
     $scope.model = $scope.options.facets.filter(facet => facet[Object.keys(facet)[0]].length > 0).map(facet => {
       let oldFacet;
       facet.key = Object.keys(facet)[0];

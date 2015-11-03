@@ -2,7 +2,7 @@
 
 // @ngInject
 var SearchResultsController = function($scope, $location, NpolarApiSecurity, npdcAppConfig) {
-  $scope.options = npdcAppConfig.search.results;
+  let options = npdcAppConfig.search.results;
 
   $scope.security = NpolarApiSecurity;
   $scope.q = $location.search().q;
@@ -26,16 +26,16 @@ var SearchResultsController = function($scope, $location, NpolarApiSecurity, npd
   };
 
   $scope.avatar = (entry) => {
-    if ($scope.options.avatar) {
-      return valueFromPath(entry, $scope.options.avatar);
+    if (options.avatar) {
+      return valueFromPath(entry, options.avatar);
     }
 
     return entry.id.substr(0,3);
   };
 
   $scope.title = (entry) => {
-    if ($scope.options.title) {
-      return valueFromPath(entry, $scope.options.title);
+    if (options.title) {
+      return valueFromPath(entry, options.title);
     }
 
     if (entry.titles) {
@@ -46,15 +46,15 @@ var SearchResultsController = function($scope, $location, NpolarApiSecurity, npd
   };
 
   $scope.subTitle = (entry) => {
-    if ($scope.options.subtitle) {
-      return valueFromPath(entry, $scope.options.subtitle);
+    if (options.subtitle) {
+      return valueFromPath(entry, options.subtitle);
     }
     return entry.created_by;
   };
 
   $scope.detail = (entry) => {
-    if ($scope.options.detail) {
-      return valueFromPath(entry, $scope.options.detail);
+    if (options.detail) {
+      return valueFromPath(entry, options.detail);
     }
 
     return entry.updated.split("T")[0];
