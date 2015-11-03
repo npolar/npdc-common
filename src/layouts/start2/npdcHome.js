@@ -51,15 +51,18 @@ angular.module("npdcHome", ["npdcUi"])
 				}
 
 				if(scrollY >= header.offsetHeight - toolbar.offsetHeight) {
-					toolbar.style.boxShadow = boxShadow;
 					header.style.boxShadow = "none";
+					toolbar.style.boxShadow = boxShadow;
 					pagenav.style.position = "fixed";
 					pagenav.style.top = "16px";
+					pagenav.style.bottom = "auto";
+
 				} else {
-					toolbar.style.boxShadow = "none";
 					header.style.boxShadow = boxShadow;
+					toolbar.style.boxShadow = "none";
 					pagenav.style.position = "";
 					pagenav.style.top = "";
+					pagenav.style.bottom = "0";
 				}
 
 				for(var p in pageNavSet) {
