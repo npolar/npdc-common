@@ -55,7 +55,6 @@ body.npdc-home
 		background-color:			$color-1-bg;
 		padding-top:				64px;
 		position:					relative;
-		z-index:					2;
 
 		.quicknav
 		{
@@ -98,17 +97,17 @@ body.npdc-home
 
 	section
 	{
+		padding:					2em;
 		position:					relative;
 		margin:						0;
-		z-index:					1;
 
 		h2
 		{
 			color:					$color-1-bg;
 			font-size:				2em;
-			margin:					0 20px;
+			margin:					0;
 			opacity: 				.4;
-			padding:				20px 0;
+			padding:				0;
 			text-align:				left;
 		}
 
@@ -125,8 +124,9 @@ body.npdc-home
 
 		p
 		{
-			margin:					0;
-			padding:				20px;
+			margin:					2em 0 0;
+			padding:				0;
+			text-align:				justify;
 		}
 	}
 
@@ -150,7 +150,6 @@ body.npdc-home
 	{
 		background-color:			$color-1-bg;
 		color:						$color-1-fg;
-		margin:						32px 0 0 0;
 		padding:					32px;
 
 		h3
@@ -183,10 +182,16 @@ body.npdc-home
 	{
 		header
 		{
+			height:						80vh;
+			padding:					0;
+			margin-bottom:				20vh;
+
 			.quicknav
 			{
 				font-size:				0;
-				padding:				64px 15px 128px 15px;
+				position:				relative;
+				top:					50%;
+				transform:				translateY(-50%);
 
 				a
 				{
@@ -242,12 +247,13 @@ body.npdc-home
 
 			.pagenav
 			{
-				/*
+
 				bottom:					0;
 				display:				block;
 				position:				absolute;
 				text-align:				center;
 				width:					100%;
+				z-index:				10;
 
 				a
 				{
@@ -270,8 +276,7 @@ body.npdc-home
 					&:hover
 					{
 						box-shadow:		0 0 15px 0 rgba(0, 0, 0, 0.5);
-						padding-bottom:	5px;
-						transform:		translateY(15px);
+						transform:		translateY(10px);
 					}
 
 					&:after
@@ -285,14 +290,12 @@ body.npdc-home
 						position:		absolute;
 					}
 				}
-				*/
 			}
 
 			// Customize defined sections
 			@each $id, $bg, $fg, $ex in $section-map
 			{
-				/*
-				a[href="##{$id}"]
+				a[href="###{$id}"]
 				{
 					background-color:	$bg;
 					color:				$fg;
@@ -302,7 +305,6 @@ body.npdc-home
 						border-top: 	1em solid $bg;
 					}
 				}
-				*/
 			}
 		}
 
@@ -313,6 +315,11 @@ body.npdc-home
 				font-size:				3em;
 				text-align:				center;
 			}
+		}
+
+		footer
+		{
+			//margin-top:					20vh;
 		}
 	}
 }
