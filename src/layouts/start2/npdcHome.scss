@@ -130,6 +130,25 @@ body.npdc-home
 		}
 	}
 
+	#splash
+	{
+		box-sizing:					border-box;
+		height:						20vh;
+
+		p
+		{
+			color:					$color-1-bg;
+			font-size:				1.5em;
+			margin:					0;
+			padding:				0;
+			position:				relative;
+			text-align:				center;
+			text-shadow:			1px 1px 0 $color-1-ex;
+			top:					50%;
+			transform:				translateY(-50%);
+		}
+	}
+
 	// Customize defined sections
 	@each $id, $bg, $fg, $ex in $section-map
 	{
@@ -184,7 +203,6 @@ body.npdc-home
 		{
 			height:						80vh;
 			padding:					0;
-			margin-bottom:				20vh;
 
 			.quicknav
 			{
@@ -253,7 +271,7 @@ body.npdc-home
 				position:				absolute;
 				text-align:				center;
 				width:					100%;
-				z-index:				10;
+				z-index:				5;
 
 				a
 				{

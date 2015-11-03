@@ -18,6 +18,21 @@ angular.module("npdcHome", ["npdcUi"])
 			var pagenav = header.querySelector(".pagenav");
 			var boxShadow = window.getComputedStyle(toolbar).boxShadow;
 
+			var pageNavSet = [
+				{
+					section: document.querySelector("#news"),
+					link: pagenav.querySelectorAll("a")[0]
+				},
+				{
+					section: document.querySelector("#expeditions"),
+					link: pagenav.querySelectorAll("a")[1]
+				},
+				{
+					section: document.querySelector("#policy"),
+					link: pagenav.querySelectorAll("a")[2]
+				}
+			];
+
 			toolbar.style.boxShadow = "none";
 			header.style.boxShadow = boxShadow;
 
@@ -36,15 +51,22 @@ angular.module("npdcHome", ["npdcUi"])
 				}
 
 				if(scrollY >= header.offsetHeight - toolbar.offsetHeight) {
-					toolbar.style.boxShadow = boxShadow;
 					header.style.boxShadow = "none";
+					toolbar.style.boxShadow = boxShadow;
 					pagenav.style.position = "fixed";
 					pagenav.style.top = "16px";
+					pagenav.style.bottom = "auto";
+
 				} else {
-					toolbar.style.boxShadow = "none";
 					header.style.boxShadow = boxShadow;
-					pagenav.style.position = "absolute";
-					pagenav.style.top = "initial";
+					toolbar.style.boxShadow = "none";
+					pagenav.style.position = "";
+					pagenav.style.top = "";
+					pagenav.style.bottom = "0";
+				}
+
+				for(var p in pageNavSet) {
+					pageNavSet[p].link.style.transform = (scrollY >= pageNavSet[p].section.offsetTop - toolbar.offsetHeight) ? "scale(0.0)" : "";
 				}
 			};
 
