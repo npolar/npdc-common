@@ -8,16 +8,16 @@
 <md-content class="np-content-wrapper">
   <!-- Subheader bar -->
   <div class="np-sub-toolbar"></div>
-  <md-card class="np-content-card">
+  <div class="np-content-card">
     <md-toolbar class="np-content-title">
       <h3>{{options.cardTitle}}</h3>
     </md-toolbar>
-    <md-content class="np-content" layout="column" layout-padding>
+    <md-content class="np-content md-whiteframe-12dp" layout="column" layout-padding>
       <!--div class="np-bottom-sheet-container"><div class="np-bottom-sheet-inner-container"></div></div-->
       <npdc:crumbs></npdc:crumbs>
       <div class="np-content-view" flex ng-view></div>
     </md-content>
-  </md-card>
+  </div>
 </md-content>
 
 <div npolar-api-message></div>
