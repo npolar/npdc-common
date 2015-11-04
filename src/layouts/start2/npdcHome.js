@@ -71,23 +71,5 @@ angular.module("npdcHome", ["npdcUi"])
 			window.addEventListener("scroll", updateCallback);
 			window.addEventListener("resize", updateCallback);
 		}
-
-		/*
-		var globe = new glacier.GlobeScene("expeditionCanvas", {
-			background:		new glacier.Color(19, 47, 80),
-			texture: 		"gfx/earth.jpg",
-			mouseControl:	false,
-			nightTexture:	"gfx/earth_night.jpg",
-			normalMap:		"gfx/normal_bathymetry.jpg"
-		});
-
-		globe.addData("http://api.npolar.no/expedition/track/?q=&filter-code=Utsettingstokt-2014&format=geojson&limit=all", glacier.color.RED);
-		globe.addData("http://api.npolar.no/expedition/track/?q=&filter-code=Framstrait-2014&format=geojson&limit=all", glacier.color.YELLOW);
-		globe.addData("http://api.npolar.no/expedition/track/?q=&filter-code=MOSJ-ICE-2014&format=geojson&limit=all", glacier.color.GREEN);
-		globe.addData("http://api.npolar.no/expedition/track/?q=&filter-code=PolarBear2-2014&format=geojson&limit=all", glacier.color.BLUE);
-		globe.context.resize(globe.container.offsetWidth, globe.container.offsetHeight);
-		globe.focus(new glacier.Vector2(10, 70));
-		globe.run();
-		*/
 	});
 })(".npdc-home");
