@@ -327,6 +327,23 @@ body.npdc-home
 						position:		absolute;
 					}
 				}
+
+				&.docked
+				{
+					bottom:				auto;
+					position:			fixed;
+					top:				64px;
+
+					a
+					{
+						opacity:		0.6;
+
+						&:hover
+						{
+							opacity:	1.0;
+						}
+					}
+				}
 			}
 
 			// Customize defined sections

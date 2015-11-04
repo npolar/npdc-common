@@ -54,22 +54,17 @@ angular.module("npdcHome", ["npdcUi"])
 				if(scrollY >= header.offsetHeight - toolbar.offsetHeight) {
 					header.style.boxShadow = "none";
 					toolbar.style.boxShadow = boxShadow;
-					pagenav.style.position = "fixed";
-					pagenav.style.top = toolbar.offsetHeight + "px";
-					pagenav.style.bottom = "auto";
+					pagenav.classList.add("docked");
 					scrollUp.style.transform = "scale(1.0)";
 				} else {
 					header.style.boxShadow = boxShadow;
 					toolbar.style.boxShadow = "none";
-					pagenav.style.position = "";
-					pagenav.style.top = "";
-					pagenav.style.bottom = "0";
+					pagenav.classList.remove("docked");
 					scrollUp.style.transform = "scale(0.0)";
 				}
 
 				pageSets.forEach(function(set, index, arr) {
 					set.link.style.transform = ((scrollY >= set.section.offsetTop - toolbar.offsetHeight) ? "scale(0.0)" : "");
-					//set.link.style.transform = ((scrollY >= (set.section.offsetTop + set.section.offsetHeight) - toolbar.offsetHeight) ? "scale(1.0) translateY(1em) rotateZ(180deg)" : (scrollY >= (set.section.offsetTop - toolbar.offsetHeight) ? "scale(0.0) translateY(0) rotateZ(0)" : ""));
 				});
 			};
 
