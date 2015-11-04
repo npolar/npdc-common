@@ -113,12 +113,12 @@ body.npdc-home
 
 		md-icon
 		{
-			bottom:					1em;
+			bottom:					15px;
 			color:					$color-1-bg;
 			font-size:				80px;
 			opacity: 				.1;
 			position:				absolute;
-			right:					1em;
+			right:					15px;
 			text-shadow: 			-1px -1px 0 $color-1-ex, 1px 1px 0 $color-1-fg;
 		}
 
@@ -325,6 +325,23 @@ body.npdc-home
 						content:		'';
 						left:			0;
 						position:		absolute;
+					}
+				}
+
+				&.docked
+				{
+					bottom:				auto;
+					position:			fixed;
+					top:				64px;
+
+					a
+					{
+						opacity:		0.6;
+
+						&:hover
+						{
+							opacity:	1.0;
+						}
 					}
 				}
 			}
