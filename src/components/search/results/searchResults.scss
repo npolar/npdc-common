@@ -15,29 +15,30 @@
       font-weight: bold !important;
 
       em {
-        font-size: 15px;
         color: $color-primary-1;
+        font-size: 15px;
         margin-left: 1em;
       }
     }
 
     h4 {
+      color: #aaa !important;
       font-size: 12px;
-      color: #aaa  !important;
     }
   }
 
   .np-search-icon {
-    position: relative;
     background-color: $color-primary-1;
-    color: #fff;
+    color: $color-text-light;
+    position: relative;
     text-align: center;
 
     span {
+      display: inline-block;
       font-size: 12px;
-      font-weight:bold;
-      position: relative;
-      top: calc((40px/2) - 1em);
+      font-weight: bold;
+      line-height: 40px;
+      vertical-align: middle;
     }
   }
 }
