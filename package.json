@@ -4,7 +4,7 @@
   "description": "Common modules for NPDC apps",
   "main": "src/index.js",
   "scripts": {
-    "postinstall": "gulp sass copy-assets"
+    "postinstall": "gulp sass copy-assets copy-deps-assets"
   },
   "repository": {
     "type": "git",
@@ -39,6 +39,7 @@
     "gulp-sourcemaps": "^1.6.0",
     "gulp-watch": "^4.3.4",
     "jusas-angularjs-slider": "baelter/angularjs-slider",
+    "material-design-icons": "^2.0.0",
     "npdc-gulp": "npolar/npdc-gulp",
     "run-sequence": "^1.1.2",
     "special-entities": "^1.0.2"

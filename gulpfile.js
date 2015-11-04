@@ -21,8 +21,10 @@ var config = {
   deps: {
     css: [
       require.resolve('angular-material/angular-material.css'),
-      require.resolve('jusas-angularjs-slider/dist/rzslider.css')
-    ].concat(baseConfig.deps.css)
+      require.resolve('jusas-angularjs-slider/dist/rzslider.css'),
+      baseConfig.src.root+'/material-icons.css'
+    ].concat(baseConfig.deps.css),
+    assets: [require.resolve('material-design-icons').replace('index.html', '') + 'iconfont/*']
   },
   dist: {
     approot: baseConfig.dist.root + '/demo',
@@ -89,7 +91,7 @@ gulp.task('watch-demo', function () {
 });
 
 gulp.task('default', function (cb) {
-  runSequence(['clean', 'info'], 'lint', 'test', ['sass', 'browserify', 'copy-assets', 'copy-html', 'copy-demo'],
+  runSequence(['clean', 'info'], 'lint', 'test', ['sass', 'browserify', 'copy-deps-assets', 'copy-assets', 'copy-html', 'copy-demo'],
     'browserSync', ['watch-html', 'watch-views', 'watch-test', 'watch-deps', 'watch-sass', 'watch-demo', 'watch-assets'], cb);
 });
 

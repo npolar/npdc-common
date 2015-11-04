@@ -11,4 +11,20 @@
   .np-grid-img {
     flex-shrink: 0;
   }
+
+  md-grid-tile-footer {
+    background: rgba(255, 255, 255, .6);
+    color: $color-text-dark;
+
+    > * {
+      margin: 0;
+      width: 100%;
+    }
+
+    h3 {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
 }

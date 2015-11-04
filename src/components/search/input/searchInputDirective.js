@@ -7,7 +7,7 @@ var searchInputDirective = function () {
     // @ngInject
     controller: function ($scope, $element, $location, NpdcSearchService, npdcAppConfig) {
       $scope.options = npdcAppConfig.search;
-      $scope.options.facets = [];
+      $scope.options.facets = $scope.options.facets || [];
 
       $scope.$watch('q', (newVal, oldVal) => {
         if (newVal !== oldVal) {
