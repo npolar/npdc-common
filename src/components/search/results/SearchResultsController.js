@@ -2,10 +2,12 @@
 
 // @ngInject
 var SearchResultsController = function($scope, $location, NpolarApiSecurity, npdcAppConfig) {
-  let options = npdcAppConfig.search.results;
+  let options = ($scope.options || npdcAppConfig.search.local).results;
 
   $scope.security = NpolarApiSecurity;
-  $scope.q = $location.search().q;
+  $scope.q = function () {
+    return $location.search().q;
+  };
 
   $scope.entryHref = function(id) {
     if ((/[.]/).test(id)) {

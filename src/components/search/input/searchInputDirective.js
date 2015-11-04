@@ -3,11 +3,16 @@
 // @ngInject
 var searchInputDirective = function () {
   return {
+    scope: {
+      options: '=',
+      feed: '='
+    },
     template: require('./searchInput.html'),
     // @ngInject
     controller: function ($scope, $element, $location, NpdcSearchService, npdcAppConfig) {
-      $scope.options = npdcAppConfig.search;
-      $scope.options.facets = $scope.options.facets || [];
+      $scope.options = $scope.options || npdcAppConfig.search.local;
+      $scope.options.facets = $scope.feed ? $scope.feed.facets : npdcAppConfig.search.local.facets;
+      $scope.q = $location.search().q;
 
       $scope.$watch('q', (newVal, oldVal) => {
         if (newVal !== oldVal) {
@@ -15,6 +20,12 @@ var searchInputDirective = function () {
             $location.search(),
             {q: newVal});
           NpdcSearchService.search(query);
+        }
+      });
+
+      $scope.$watch('feed', (newVal, oldVal) => {
+        if (newVal !== oldVal) {
+          $scope.options.facets = newVal.facets;
         }
       });
 

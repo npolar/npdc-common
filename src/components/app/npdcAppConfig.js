@@ -1,7 +1,7 @@
 'use strict';
 
 // @ngInject
-let npdcAppConfigFactory = function (NpdcAutocompleteConfigFactory) {
+let npdcAppConfigFactory = function (NpdcAutocompleteConfigFactory, NpdcSearchConfigFactory) {
   return {
     toolbarTitle: "",
     toolbarMenuGroups: [{
@@ -69,14 +69,8 @@ let npdcAppConfigFactory = function (NpdcAutocompleteConfigFactory) {
     }],
     cardTitle: "Norwegian Polar Data Centre",
     search: {
-      results: {},
-      filterUi: {
-        'year-released': {
-          type: 'range'
-        }
-      },
-      facets: [],
-      autocomplete: new NpdcAutocompleteConfigFactory({showCollections: true, global: true})
+      local: new NpdcSearchConfigFactory(),
+      global: new NpdcAutocompleteConfigFactory({showCollections: true, global: true})
     }
   };
 };
