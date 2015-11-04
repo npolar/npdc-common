@@ -15,20 +15,21 @@ angular.module("npdcHome", ["npdcUi"])
 			var header = body.querySelector("header");
 			var toolbar = body.querySelector("md-toolbar");
 			var quicknav = header.querySelector(".quicknav");
-			var pagenav = header.querySelector(".pagenav");
+			var pagenav = body.querySelector(".pagenav");
 			var boxShadow = window.getComputedStyle(toolbar).boxShadow;
+			var scrollUp = document.getElementById("scroll-up");
 
-			var pageNavSet = [
+			var pageSets = [
 				{
-					section: document.querySelector("#news"),
+					section: document.getElementById("news"),
 					link: pagenav.querySelectorAll("a")[0]
 				},
 				{
-					section: document.querySelector("#expeditions"),
+					section: document.getElementById("expeditions"),
 					link: pagenav.querySelectorAll("a")[1]
 				},
 				{
-					section: document.querySelector("#policy"),
+					section: document.getElementById("documents"),
 					link: pagenav.querySelectorAll("a")[2]
 				}
 			];
@@ -54,20 +55,22 @@ angular.module("npdcHome", ["npdcUi"])
 					header.style.boxShadow = "none";
 					toolbar.style.boxShadow = boxShadow;
 					pagenav.style.position = "fixed";
-					pagenav.style.top = "16px";
+					pagenav.style.top = toolbar.offsetHeight + "px";
 					pagenav.style.bottom = "auto";
-
+					scrollUp.style.transform = "scale(1.0)";
 				} else {
 					header.style.boxShadow = boxShadow;
 					toolbar.style.boxShadow = "none";
 					pagenav.style.position = "";
 					pagenav.style.top = "";
 					pagenav.style.bottom = "0";
+					scrollUp.style.transform = "scale(0.0)";
 				}
 
-				for(var p in pageNavSet) {
-					pageNavSet[p].link.style.transform = (scrollY >= pageNavSet[p].section.offsetTop - toolbar.offsetHeight) ? "scale(0.0)" : "";
-				}
+				pageSets.forEach(function(set, index, arr) {
+					set.link.style.transform = ((scrollY >= set.section.offsetTop - toolbar.offsetHeight) ? "scale(0.0)" : "");
+					//set.link.style.transform = ((scrollY >= (set.section.offsetTop + set.section.offsetHeight) - toolbar.offsetHeight) ? "scale(1.0) translateY(1em) rotateZ(180deg)" : (scrollY >= (set.section.offsetTop - toolbar.offsetHeight) ? "scale(0.0) translateY(0) rotateZ(0)" : ""));
+				});
 			};
 
 			window.addEventListener("scroll", updateCallback);
