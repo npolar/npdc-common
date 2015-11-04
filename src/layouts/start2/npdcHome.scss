@@ -25,7 +25,7 @@ $section-map:
 (
 	("news",		$color-2-bg, $color-2-fg, $color-2-ex),
 	("expeditions",	$color-3-bg, $color-3-fg, $color-3-ex),
-	("policy",		$color-4-bg, $color-4-fg, $color-4-ex)
+	("documents",	$color-4-bg, $color-4-fg, $color-4-ex)
 );
 
 // Animation speeds
@@ -138,7 +138,7 @@ body.npdc-home
 		p
 		{
 			color:					$color-1-bg;
-			font-size:				1.5em;
+			font-size:				2em;
 			margin:					0;
 			padding:				0;
 			position:				relative;
@@ -193,6 +193,23 @@ body.npdc-home
 				&:hover
 				{
 				}
+			}
+		}
+
+		#scroll-up
+		{
+			background:				rgba(0, 0, 0, 0.1);
+			bottom:					1em;
+			border-radius:			50%;
+			padding:				.5em;
+			position:				fixed;
+			right:					1em;
+			transform:				scale(0.0);
+			transition:				all $anim-speed;
+
+			&:hover
+			{
+				background:			rgba(0, 0, 0, 0.2);
 			}
 		}
 	}
@@ -268,10 +285,11 @@ body.npdc-home
 
 				bottom:					0;
 				display:				block;
+				height:					0;
 				position:				absolute;
 				text-align:				center;
 				width:					100%;
-				z-index:				5;
+				z-index:				1;
 
 				a
 				{
@@ -281,14 +299,15 @@ body.npdc-home
 					display:			inline-block;
 					font-size:			1.5em;
 					margin:				0 5px;
+					padding:			.5em .5em .2em;
 					position:			relative;
 					transition:			$anim-speed;
-					vertical-align:		bottom;
+					top:				-1.5em;
 
 					md-icon
 					{
 						color:			inherit;
-						padding:		.5em;
+
 					}
 
 					&:hover
