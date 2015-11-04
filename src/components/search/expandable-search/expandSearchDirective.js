@@ -16,8 +16,9 @@ let expandSearch = function() {
       $scope.isOpen = false;
       $scope.isFiltersOpen = false;
 
-      Object.assign($scope.options.autocomplete, $scope.query, {
-        respectUrl: false
+      Object.assign($scope.options, {
+        respectUrl: false,
+        q: $location.search().q
       });
 
       $scope.placeholder = $scope.options.placeholder || 'Search ' + npdcAppConfig.toolbarTitle;
@@ -48,7 +49,7 @@ let expandSearch = function() {
             $scope.close();
             break;
           case 32:
-            // Workaround for angular material bug with inputs in fab-toolbar 
+            // Workaround for angular material bug with inputs in fab-toolbar
             $scope.options.autocomplete.q += ' ';
             break;
           default:

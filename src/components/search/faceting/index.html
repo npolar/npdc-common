@@ -4,17 +4,21 @@
     <title>NPDC loaders component</title>
     <link href="/assets/npdc-common-master-latest.css" rel="stylesheet">
     <meta name="viewport" content="initial-scale=1" />
-  </head>
-  <body ng-controller="FacetingDemoCtrl">
-    <md-input-container flex>
-      <label>Search</label>
-      <input ng-model="q">
-    </md-input-container>
-    <npdc:faceting ng-if="feed" options="options"></npdc:faceting>
 
-    <ul>
-      <li ng-repeat="item in feed.entries">{{ item.title }}</li>
-    </ul>
+    <script type="text/ng-template" id="demo.tmpl">
+      <md-input-container flex>
+        <label>Search</label>
+        <input ng-model="q">
+      </md-input-container>
+      <npdc:faceting options="options"></npdc:faceting>
+
+      <ul>
+        <li ng-repeat="item in feed.entries">{{ item.title }}</li>
+      </ul>
+    </script>
+  </head>
+  <body>
+    <div ng-view></div>
     <script src="/demo/demos.js"></script>
   </body>
 </html>

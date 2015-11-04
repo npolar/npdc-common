@@ -9,18 +9,3 @@ demo.controller('demoCtrl', ($scope, NpolarApiSecurity, NpdcAutocompleteConfigFa
   let options = {showCollections: true};
   $scope.options = new NpdcAutocompleteConfigFactory(options);
 });
-
-demo.run(npdcAppConfig => {
-  npdcAppConfig.search.filterUi = {
-    'draft': {
-      type: 'checkbox'
-    },
-    'year-released': {
-      type: 'range'
-    },
-    'coverage.south': {
-      type: 'range'
-    }
-  };
-  npdcAppConfig.search.facets = require('../faceting/demo/facets.json').facets;
-});

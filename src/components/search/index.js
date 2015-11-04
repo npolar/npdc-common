@@ -12,6 +12,7 @@ ui.directive('npdcExpandSearch', require('./expandable-search/expandSearchDirect
 ui.directive('npdcSearch', require('./results/searchResultsDirective'));
 ui.directive('npdcSearchInput', require('./input/searchInputDirective'));
 ui.controller('NpdcSearchResultsController', require('./results/SearchResultsController'));
+ui.factory('NpdcSearchConfigFactory', require('./SearchConfigFactory'));
 
 ui.controller('NpdcAutocompleteController', require('./autocomplete/AutocompleteController'));
 ui.factory('NpdcAutocompleteConfigFactory', require('./autocomplete/AutocompleteConfigFactory'));

@@ -93,9 +93,10 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
   // Init data model
   initDataModel();
 
-  $scope.$on('npolar-feed', (event, data) => {
-    $scope.options.facets = data.facets;
-    initDataModel();
+  $scope.$watch('options.facets', (newVal, oldVal) => {
+    if (oldVal !== newVal) {
+      initDataModel();
+    }
   });
 
   // Respect the URL!

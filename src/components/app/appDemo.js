@@ -11,19 +11,3 @@ appDemo.controller('demoCtrl', ($scope, NpolarApiSecurity) => {
     path: '/demo'
   };
 });
-
-appDemo.run(npdcAppConfig => {
-  npdcAppConfig.search.filterOptions = {
-    'draft': {
-      type: 'checkbox'
-    },
-    'year-released': {
-      type: 'range'
-    },
-    'coverage.south': {
-      type: 'range'
-    }
-  };
-
-  npdcAppConfig.search.facets = require('../search/faceting/demo/facets.json').facets;
-});
