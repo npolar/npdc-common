@@ -90,12 +90,13 @@
 
 			<md-grid-list md-cols="4" md-gutter="1em" md-row-height="180px">
 				<md-grid-tile ng-repeat="expedition in latest['expedition']">
-					<!-- Image of and link to expedition -->
-					<!-- ng-href="/expedition/{{ expedition.id }}" -->
+					<a ng-href="/expedition/{{ expedition.id }}">
+						<!-- Image of expedition -->
 
-					<md-grid-tile-footer>
-						<h3>{{ expedition.code }}</h3>
-					</md-grid-tile-footer>
+						<md-grid-tile-footer>
+							<h3>{{ expedition.code }}</h3>
+						</md-grid-tile-footer>
+					</a>
 				</md-grid-tile>
 			</md-grid-list>
 		</section>
@@ -120,19 +121,23 @@
 
 			<md-grid-list md-cols="2" md-gutter="1em" md-row-height="220px">
 				<md-grid-tile>
-					<!-- Image and link to data policy document -->
+					<a ng-href="">
+						<!-- Image of data policy document -->
 
-					<md-grid-tile-footer>
-						<h3>Data Policy</h3>
-					</md-grid-tile-footer>
+						<md-grid-tile-footer>
+							<h3>Data Policy</h3>
+						</md-grid-tile-footer>
+					</a>
 				</md-grid-tile>
 
 				<md-grid-tile>
-					<!-- Image and link to publication guidelines -->
+					<a ng-href="">
+						<!-- Image of publication guidelines -->
 
-					<md-grid-tile-footer>
-						<h3>Publication Guidelines</h3>
-					</md-grid-tile-footer>
+						<md-grid-tile-footer>
+							<h3>Publication Guidelines</h3>
+						</md-grid-tile-footer>
+					</a>
 				</md-grid-tile>
 			</md-grid-list>
 
