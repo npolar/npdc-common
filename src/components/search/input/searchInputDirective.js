@@ -10,7 +10,8 @@ var searchInputDirective = function () {
     template: require('./searchInput.html'),
     // @ngInject
     controller: function ($scope, $element, $location, NpdcSearchService, npdcAppConfig) {
-      $scope.options = Object.assign({}, npdcAppConfig.search.local,
+      $scope.options = $scope.options || {};
+      Object.assign($scope.options, npdcAppConfig.search.local,
         $scope.options, $scope.feed ? {facets: $scope.feed.facets} : {});
       $scope.q = $location.search().q;
       $scope.isFiltersOpen = false;
@@ -25,7 +26,7 @@ var searchInputDirective = function () {
       });
 
       $scope.$watch('feed', (newVal, oldVal) => {
-        if (newVal !== oldVal) {
+        if (newVal && newVal.facets) {
           $scope.options.facets = newVal.facets;
         }
       });
