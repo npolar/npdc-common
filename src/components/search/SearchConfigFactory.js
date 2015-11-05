@@ -2,10 +2,15 @@
 
 // @ngInject
 let SearchConfigFactory = function($location) {
-  let results = {};
+  let results = {
+    avatar: undefined,
+    title: undefined,
+    subtitle: undefined,
+    detail: undefined
+  };
   let filterUi = {
       'year-released': {
-        type: 'range'
+        type: 'range' // 'autocomplete', 'checkbox', 'hidden'
       }
     };
 

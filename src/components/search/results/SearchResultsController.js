@@ -28,6 +28,9 @@ var SearchResultsController = function($scope, $location, NpolarApiSecurity, npd
   };
 
   $scope.avatar = (entry) => {
+    if (typeof options.avatar === 'function') {
+      return options.avatar.call({}, entry);
+    }
     if (options.avatar) {
       return valueFromPath(entry, options.avatar);
     }
@@ -36,6 +39,9 @@ var SearchResultsController = function($scope, $location, NpolarApiSecurity, npd
   };
 
   $scope.title = (entry) => {
+    if (typeof options.title === 'function') {
+      return options.title.call({}, entry);
+    }
     if (options.title) {
       return valueFromPath(entry, options.title);
     }
@@ -48,6 +54,9 @@ var SearchResultsController = function($scope, $location, NpolarApiSecurity, npd
   };
 
   $scope.subTitle = (entry) => {
+    if (typeof options.subTitle === 'function') {
+      return options.subTitle.call({}, entry);
+    }
     if (options.subtitle) {
       return valueFromPath(entry, options.subtitle);
     }
@@ -55,6 +64,9 @@ var SearchResultsController = function($scope, $location, NpolarApiSecurity, npd
   };
 
   $scope.detail = (entry) => {
+    if (typeof options.detail === 'function') {
+      return options.detail.call({}, entry);
+    }
     if (options.detail) {
       return valueFromPath(entry, options.detail);
     }
