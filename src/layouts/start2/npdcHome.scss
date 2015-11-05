@@ -111,7 +111,7 @@ body.npdc-home
 			text-align:				left;
 		}
 
-		md-icon
+		& > md-icon
 		{
 			bottom:					15px;
 			color:					$color-1-bg;
@@ -127,6 +127,16 @@ body.npdc-home
 			margin:					2em 0 0;
 			padding:				0;
 			text-align:				justify;
+		}
+
+		a
+		{
+			text-decoration:		none;
+		}
+
+		md-grid-list
+		{
+			margin:					2em 0 0;
 		}
 	}
 
@@ -161,6 +171,21 @@ body.npdc-home
 			{
 				color:				$bg;
 				text-shadow:		-1px -1px 0 $ex, 1px 1px 0 $fg;
+			}
+
+			a
+			{
+				color:				$ex;
+
+				&:hover
+				{
+					text-decoration:	underline;
+				}
+			}
+
+			md-grid-tile
+			{
+				background-color:	$ex;
 			}
 		}
 	}
