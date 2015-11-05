@@ -13,11 +13,13 @@ let SearchConfigFactory = function($location) {
         type: 'range' // 'autocomplete', 'checkbox', 'hidden'
       }
     };
+  let placeholder = 'Search';
 
   let constructor = function (options) {
     return Object.assign({
       results,
       filterUi,
+      placeholder
     }, options);
   };
 
