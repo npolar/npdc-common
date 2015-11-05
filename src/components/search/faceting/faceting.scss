@@ -3,6 +3,7 @@
   ul {
     list-style-type: none;
     padding: 0;
+    -webkit-padding-start: 0;
   }
 
   .md-chips .md-chip {
@@ -23,9 +24,9 @@
 
   .np-custom-facet {
     box-sizing: border-box;
+    margin-bottom: 15px;
     margin-left: 4px;
     margin-right: 4px;
-    margin-top: 26px;
   }
 
   label,
