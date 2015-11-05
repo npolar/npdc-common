@@ -56,7 +56,7 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
     return facet;
   };
 
-  let initDataModel = function (facets) {
+  let initDataModel = function () {
     if (!$scope.options.facets) {
       return;
     }
@@ -94,7 +94,7 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
   initDataModel();
 
   $scope.$watch('options.facets', (newVal, oldVal) => {
-    if (oldVal !== newVal) {
+    if (newVal) {
       initDataModel();
     }
   });

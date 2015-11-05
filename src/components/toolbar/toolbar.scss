@@ -18,16 +18,17 @@
     max-height: 100%;
   }
 
-  npdc\:user-menu
-  {
-	  margin-right: 60px;
+  npdc\:user-menu {
+    margin-right: 60px;
   }
 
   em {
-    margin-left: 1.25em;
     font-size: 16px;
     font-weight: bold;
-    display: block;
+  }
+
+  .np-toolbar-title {
+    margin-right: 1.25em;
   }
 }
 

@@ -1,25 +1,23 @@
 'use strict';
 
 // @ngInject
-let SearchConfigFactory = function($location, $rootScope) {
-  let results = {};
+let SearchConfigFactory = function($location) {
+  let results = {
+    avatar: undefined,
+    title: undefined,
+    subtitle: undefined,
+    detail: undefined
+  };
   let filterUi = {
       'year-released': {
-        type: 'range'
+        type: 'range' // 'autocomplete', 'checkbox', 'hidden'
       }
     };
-
-  let facets = [];
-
-  $rootScope.$on('npolar-feed', (event, data) => {
-    facets = data.facets;
-  });
 
   let constructor = function (options) {
     return Object.assign({
       results,
       filterUi,
-      facets
     }, options);
   };
 
