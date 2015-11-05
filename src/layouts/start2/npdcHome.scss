@@ -137,6 +137,18 @@ body.npdc-home
 		md-grid-list
 		{
 			margin:					2em 0 0;
+
+			md-grid-tile
+			{
+				transition:			all $anim-speed;
+				transform:			scale(0.9);
+
+				&:hover
+				{
+					box-shadow:		0 0 15px 0 black;
+					transform:		scale(1.0)
+				}
+			}
 		}
 	}
 
@@ -186,6 +198,11 @@ body.npdc-home
 			md-grid-tile
 			{
 				background-color:	$ex;
+
+				md-grid-tile-footer
+				{
+					color:			$fg;
+				}
 			}
 		}
 	}
