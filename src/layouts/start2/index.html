@@ -92,6 +92,7 @@
 				<md-grid-tile ng-repeat="expedition in latest['expedition']">
 					<a ng-href="/expedition/{{ expedition.id }}">
 						<!-- Image of expedition -->
+						<md-progress-circular></md-progress-circular>
 
 						<md-grid-tile-footer>
 							<h3>{{ expedition.code }}</h3>
@@ -121,8 +122,9 @@
 
 			<md-grid-list md-cols="2" md-gutter="1em" md-row-height="220px">
 				<md-grid-tile>
-					<a ng-href="">
+					<a ng-href="//data.npolar.no/policy/NP-datapolitikk.pdf">
 						<!-- Image of data policy document -->
+						<md-progress-circular></md-progress-circular>
 
 						<md-grid-tile-footer>
 							<h3>Data Policy</h3>
@@ -133,6 +135,7 @@
 				<md-grid-tile>
 					<a ng-href="">
 						<!-- Image of publication guidelines -->
+						<md-progress-circular></md-progress-circular>
 
 						<md-grid-tile-footer>
 							<h3>Publication Guidelines</h3>
