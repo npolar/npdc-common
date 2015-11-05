@@ -84,32 +84,17 @@
 
 			<p>
 				<!-- Some information about our expeditions... -->
-				The following is a list of a few selected expeditions the Environmental Data Section has been involved with.
-				For a complete list of expeditions, check out the <a href="">Expeditions</a> page.
+				The following is a list of the latest expeditions the Environmental Data Section has been involved with.
+				For a complete list of expeditions, check out the <a href="/expedition">Expedition</a> application.
 			</p>
 
-			<md-grid-list md-cols="3" md-gutter="1em" md-row-height="4:3">
-				<md-grid-tile>
+			<md-grid-list md-cols="4" md-gutter="1em" md-row-height="180px">
+				<md-grid-tile ng-repeat="expedition in latest['expedition']">
 					<!-- Image of and link to expedition -->
+					<!-- ng-href="/expedition/{{ expedition.id }}" -->
 
 					<md-grid-tile-footer>
-						<h3>Framstrait 2015</h3>
-					</md-grid-tile-footer>
-				</md-grid-tile>
-
-				<md-grid-tile>
-					<!-- Image of and link to expedition -->
-
-					<md-grid-tile-footer>
-						<h3>N-ICE 2015</h3>
-					</md-grid-tile-footer>
-				</md-grid-tile>
-
-				<md-grid-tile>
-					<!-- Image of and link to expedition -->
-
-					<md-grid-tile-footer>
-						<h3>Lance Transit 2014</h3>
+						<h3>{{ expedition.code }}</h3>
 					</md-grid-tile-footer>
 				</md-grid-tile>
 			</md-grid-list>
@@ -133,7 +118,7 @@
 				Phasellus non ullamcorper urna.
 			</p>
 
-			<md-grid-list md-cols="2" md-gutter="1em" md-row-height="2:1">
+			<md-grid-list md-cols="2" md-gutter="1em" md-row-height="220px">
 				<md-grid-tile>
 					<!-- Image and link to data policy document -->
 

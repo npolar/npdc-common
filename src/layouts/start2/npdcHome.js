@@ -4,10 +4,26 @@ require("../../");
 var angular = require("angular");
 
 angular.module("npdcHome", ["npdcUi"])
-.controller("npdcHomeController", function(npdcAppConfig, $scope, $anchorScroll) {
-	$scope.options = npdcAppConfig;
+.controller("npdcHomeController", function(npdcAppConfig, $scope, $anchorScroll, NpolarApiResource) {
+	$scope.options	= npdcAppConfig;
+	$scope.latest	= {};
+
+	[
+		{ path: "/expedition",	params: { "not-draft": "yes" } }
+
+	].forEach(function(service) {
+		var resource = NpolarApiResource.resource({ path: service.path });
+		var params = { limit: 4, sort: "-created" };
+
+		resource.array(Object.assign(params, service.params), response => {
+			$scope.latest[service.path.slice(1)] = response;
+
+			console.log($scope.latest);
+		});
+	});
 });
 
+// Aestethic page dynamics
 (function(body) {
 	document.addEventListener("DOMContentLoaded", function() {
 		if((body = document.querySelector(body))) {
