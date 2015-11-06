@@ -146,7 +146,18 @@ $anim-speed: .4s;
 				&:hover
 				{
 					box-shadow:		0 0 15px 0 black;
-					transform:		scale(1.0)
+					transform:		scale(1.0);
+
+					md-icon
+					{
+						transform:	rotateY(360deg);
+					}
+				}
+
+				md-icon
+				{
+					font-size:		3em;
+					transition:		all $anim-speed;
 				}
 			}
 		}
@@ -199,7 +210,8 @@ $anim-speed: .4s;
 			{
 				background-color:	$ex;
 
-				md-grid-tile-footer
+				md-grid-tile-footer,
+				md-icon
 				{
 					color:			$fg;
 				}
