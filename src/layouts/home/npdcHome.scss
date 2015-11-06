@@ -391,7 +391,7 @@ $anim-speed: .4s;
 			// Customize defined sections
 			@each $id, $bg, $fg, $ex in $section-map
 			{
-				a[href="###{$id}"]
+				a[href="##{$id}"]
 				{
 					background-color:	$bg;
 					color:				$fg;
