@@ -35,15 +35,13 @@
         </md-content>
       </div>
 
-      <!-- https://github.com/angular/angular.js/issues/13174 -->
-      <md-subheader class="md-primary">
-        <div>
-          <div ng-if="feed.opensearch.totalResults > 0">{{feed.opensearch.totalResults}} results, displaying {{ feed.entries.length}}
-            <div><button ng-if="showNext()" ng-click="next()">More</button></div>
-          </div>
-          <div ng-if="feed.opensearch.totalResults == 0">No results when searching for "{{q()}}"</div>
+      <div layout-padding>
+        <div ng-if="feed.opensearch.totalResults > 0" layout layout-align="space-between center">
+          <div style="line-height: 48px;">{{feed.opensearch.totalResults}} results, displaying {{ feed.entries.length}}</div>
+          <div><md-button class="md-raised md-primary" ng-if="showNext()" ng-click="next()">More ...</md-button></div>
         </div>
-      </md-subheader>
+        <div ng-if="feed.opensearch.totalResults == 0">No results when searching for "{{q()}}"</div>
+      </div>
     </section>
   </md-content>
 </div>
