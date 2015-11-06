@@ -97,5 +97,5 @@ gulp.task('default', function (cb) {
 
 gulp.task('prod', function (cb) {
   global.isProd = true;
-  runSequence(['clean', 'info'], 'lint', 'test', ['sass', 'copy-all'], cb);
+  runSequence(['clean', 'info'], 'lint', 'test', ['sass', 'copy-all', 'copy-assets'], cb);
 });
