@@ -1,10 +1,16 @@
+npdc\:app {
+  height: calc(100% - 64px);
+  position: absolute;
+  top: 64px;
+  width: 100%;
+}
+
 .np-content-wrapper {
   background-color: $color-bg-dark;
-  min-height: 100%;
 
   .np-content-card {
     margin: 0 9%;
-    padding-top: 74px;
+    padding-top: 10px;
     width: 82%;
   }
 
@@ -20,14 +26,10 @@
   }
 
   .np-content {
+    background-color: $color-text-light;
     min-height: 480px;
-    overflow: hidden;
     position: relative;
-    padding: 0;
-  }
-
-  .np-content-view {
-    padding: 0;
+    margin-bottom: 64px;
   }
 
 }
@@ -36,7 +38,7 @@
   background-color: $color-primary-1;
   box-shadow: $bar-shadow;
   height: 192px;
-  position: fixed;
+  position: absolute;
   top: 0;
   width: 100%;
   z-index: 0;
