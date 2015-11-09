@@ -28,9 +28,9 @@ npdc\:app {
 
   .np-content {
     background-color: $color-text-light;
+    margin-bottom: 64px;
     min-height: 480px;
     position: relative;
-    margin-bottom: 64px;
   }
 
 }
@@ -48,7 +48,7 @@ npdc\:app {
 .np-primary-control {
   height: 56px;
   position: fixed;
-  right: calc((9% / 2) - 22px);
+  right: calc((9% / 2) - 10px);
   top: 156px;
   width: 56px;
   z-index: 4;
@@ -62,7 +62,7 @@ npdc\:app {
   }
 
   .np-primary-control {
-    right: 10px;
+    right: 23px;
     top: calc(100% - 66px);
   }
 
@@ -79,7 +79,7 @@ npdc\:app {
   }
 
   .np-primary-control {
-    right: calc((5% / 2) - 22px);
+    right: calc((5% / 2) - 10px);
   }
 }
 
