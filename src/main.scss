@@ -4,7 +4,9 @@
 @import 'components/**/*';
 
 body {
+  background-color: $color-bg-dark;
   overflow: hidden;
+  z-index: -2;
 }
 
 a,
