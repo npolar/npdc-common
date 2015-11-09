@@ -24,7 +24,7 @@ var config = {
       require.resolve('jusas-angularjs-slider/dist/rzslider.css'),
       baseConfig.src.root+'/material-icons.css'
     ].concat(baseConfig.deps.css),
-    assets: [require.resolve('material-design-icons').replace('index.html', '') + 'iconfont/*']
+    sharedAssets: [require.resolve('material-design-icons').replace('index.html', '') + 'iconfont/*']
   },
   dist: {
     approot: baseConfig.dist.root + '/demo',
@@ -71,13 +71,13 @@ gulp.task('watch-sass', function () {
 });
 
 gulp.task('copy-assets', function() {
-  return gulp.src(baseConfig.src.img, { ignore: '**/demo/**' })
+  return gulp.src(baseConfig.src.static, { ignore: '**/demo/**' })
     .pipe(changed(baseConfig.dist.assets))
     .pipe(gulp.dest(baseConfig.dist.assets));
 });
 
 gulp.task('watch-assets', function () {
-  watch(baseConfig.src.img, function () { runSequence('copy-assets');});
+  watch(baseConfig.src.static, function () { runSequence('copy-assets');});
 });
 
 gulp.task('copy-demo', function() {
