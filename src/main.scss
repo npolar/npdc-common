@@ -3,12 +3,6 @@
 @import 'layouts/**/*';
 @import 'components/**/*';
 
-body {
-  background-color: $color-bg-dark;
-  overflow: hidden;
-  z-index: -2;
-}
-
 a,
 a:visited,
 md-menu-item a.md-button,

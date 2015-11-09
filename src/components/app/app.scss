@@ -1,16 +1,19 @@
 npdc\:app {
-  height: calc(100% - 64px);
-  position: absolute;
-  top: 64px;
-  width: 100%;
+  display: block;
+  height: 100%;
+  position: relative;
 }
 
+$offset: 9%;
+
 .np-content-wrapper {
-  background-color: transparent;
+  background-color: $color-bg-dark;
+  height: 100%;
+  overflow: visible;
 
   .np-content-card {
-    margin: 0 9%;
-    padding-top: 10px;
+    margin: 0 $offset;
+    padding-top: 74px;
     width: 82%;
     z-index: 2;
   }
@@ -42,16 +45,21 @@ npdc\:app {
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: -1;
 }
 
+$control-size: 56px;
+
 .np-primary-control {
-  height: 56px;
+  height: $control-size;
   position: fixed;
-  right: calc((9% / 2) - 10px);
-  top: 156px;
-  width: 56px;
+  right: calc((#{$offset} / 2) - (#{$control-size} / 2));
+  top: 162px;
+  width: $control-size;
   z-index: 4;
+
+  a {
+    margin: 0;
+  }
 }
 
 // Responsive rules
@@ -62,7 +70,7 @@ npdc\:app {
   }
 
   .np-primary-control {
-    right: 23px;
+    right: 10px;
     top: calc(100% - 66px);
   }
 
@@ -73,13 +81,16 @@ npdc\:app {
 
 
 @media(min-width: 1920px) {
+
+  $offset: 5%;
+
   .np-content-wrapper .np-content-card {
-    margin: 0 5%;
+    margin: 0 $offset;
     width: 90%;
   }
 
   .np-primary-control {
-    right: calc((5% / 2) - 10px);
+    right: calc((#{$offset} / 2) - (#{$control-size} / 2));
   }
 }
 
