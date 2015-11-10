@@ -1,14 +1,14 @@
 'use strict';
 
 // @ngInject
-var SearchResultsController = function($scope, $location, $http, $rootScope, NpolarApiSecurity, npdcAppConfig) {
+var SearchResultsController = function($scope, $location, $http, $rootScope, $sce, NpolarApiSecurity, npdcAppConfig) {
   let options = ($scope.options || npdcAppConfig.search.local).results;
 
   $scope.security = NpolarApiSecurity;
   $scope.resource = $scope.$parent.resource;
 
   $scope.q = function () {
-    return $location.search().q;
+    return $location.search().q || "";
   };
 
   $scope.entryHref = function(id) {
@@ -40,19 +40,22 @@ var SearchResultsController = function($scope, $location, $http, $rootScope, Npo
     return entry.id.substr(0,3);
   };
 
-  $scope.title = (entry) => {
+  $scope.title = (entry, query) => {
+    let title = '';
     if (typeof options.title === 'function') {
-      return options.title.call({}, entry);
+      title = options.title.call({}, entry);
+    } else if (options.title) {
+      title = valueFromPath(entry, options.title);
+    } else if (entry.titles) {
+      title = entry.titles[0].title;
+    } else {
+      title = entry.title || entry.name || entry.code || entry.id;
     }
-    if (options.title) {
-      return valueFromPath(entry, options.title);
+    if (query && query.length > 0) {
+      let q = new RegExp(`(${query})`, 'ig');
+      title = title.replace(q, '<span class="highlight">$1</span>');
     }
-
-    if (entry.titles) {
-      return entry.titles[0].title;
-    }
-
-    return entry.title || entry.name || entry.code || entry.id;
+    return $sce.trustAsHtml(title);
   };
 
   $scope.subTitle = (entry) => {

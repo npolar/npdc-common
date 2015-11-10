@@ -10,7 +10,7 @@ $offset: 9%;
 
 .np-content-wrapper {
   background-color: $color-bg-dark;
-  height: 100%;
+  min-height: 100vh;
   overflow: visible;
 
   .np-content-card {

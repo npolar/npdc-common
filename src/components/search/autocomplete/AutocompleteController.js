@@ -3,7 +3,7 @@
 let Entities = require('special-entities');
 
 // @ngInject
-var AutocompleteController = function($filter, $location, $element, $window, $q, $scope,
+var AutocompleteController = function($filter, $location, $window, $q, $scope,
   NpolarApiResource, NpdcSearchService) {
   $scope.options.q = $scope.options.q || ($location.search().q || "");
   let appBase = () => {
