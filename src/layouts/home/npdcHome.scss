@@ -141,6 +141,11 @@ $anim-speed: .4s;
 			text-decoration:		none;
 		}
 
+		md-list
+		{
+			margin:					2em 0 0;
+		}
+
 		md-grid-list
 		{
 			margin:					2em 0 0;
@@ -159,6 +164,16 @@ $anim-speed: .4s;
 					{
 						transform:	rotateY(360deg);
 					}
+				}
+
+				img
+				{
+					height:			100%;
+					left:			0;
+					object-fit:		cover;
+					position:		absolute;
+					top:			0;
+					width:			100%;
 				}
 
 				md-icon
@@ -199,8 +214,8 @@ $anim-speed: .4s;
 
 			h2
 			{
-				color:				$bg;
-				text-shadow:		-1px -1px 0 $ex, 1px 1px 0 $fg;
+				color:				$ex;
+				text-shadow:		-1px -1px 0 $bg, 1px 1px 0 $fg;
 			}
 
 			a
@@ -213,6 +228,27 @@ $anim-speed: .4s;
 				}
 			}
 
+			md-list-item
+			{
+				background-color:	$ex;
+				color:				$fg;
+				margin:				1px 0;
+				//opacity:			.4;
+				transform:			scale(0.92);
+				transition:			all $anim-speed;
+
+				&:hover
+				{
+					box-shadow:		2px 2px 2px 0 rgba(0, 0, 0, .4);
+					transform:		scale(0.95);
+				}
+
+				h3, h4
+				{
+					color:			inherit;
+				}
+			}
+
 			md-grid-tile
 			{
 				background-color:	$ex;
@@ -220,7 +256,8 @@ $anim-speed: .4s;
 				md-grid-tile-footer,
 				md-icon
 				{
-					color:			$fg;
+					color:			white;
+					text-shadow:	0 0 1px black;
 				}
 			}
 		}
