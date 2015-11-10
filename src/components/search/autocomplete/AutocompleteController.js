@@ -3,7 +3,7 @@
 let Entities = require('special-entities');
 
 // @ngInject
-var AutocompleteController = function($filter, $location, $element, $window, $q, $scope,
+var AutocompleteController = function($filter, $location, $window, $q, $scope,
   NpolarApiResource, NpdcSearchService) {
   $scope.options.q = $scope.options.q || ($location.search().q || "");
   let appBase = () => {
@@ -22,10 +22,10 @@ var AutocompleteController = function($filter, $location, $element, $window, $q,
     let collection = Object.keys($scope.options.collections).find(collection => new RegExp(collection).test(entry.schema));
     if (entry && entry.schema) {
       if (collection) {
-        path = `/${ collection }/${ entry.id }`;
+        path = `/${ collection.replace(/^\//, '') }/${ entry.id }`;
       }
     } else if (entry && entry.collection) {
-      path = `/${ entry.collection }/${ entry.id }`;
+      path = `/${ entry.collection.replace(/^\//, '') }/${ entry.id }`;
     }
     return path;
   };

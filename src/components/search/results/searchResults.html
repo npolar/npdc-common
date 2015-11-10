@@ -20,7 +20,7 @@
                 </div>
                 <div class="md-list-item-text">
                   <h3 class="md-headline">
-                    {{ title(e) }}
+                    <span ng-bind-html="title(e, q())"></span>
                     <em ng-if="subTitle(e)">
                       「{{ subTitle(e) }}」
                     </em>
