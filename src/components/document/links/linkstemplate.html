@@ -17,7 +17,7 @@
       <md-list-item class="md-2-line" ng-repeat="rel in related" ng-if="rel._score > 0.1">
         <div class="md-list-item-text">
           <a ng-href="{{'/' + rel.collection + '/' + rel.id}}">{{ rel.title }}</a>
-          <p>{{ rel.collection }} ({{ rel._score }})</p>
+          <p>{{ rel.collection }}</p>
         </div>
       </md-list-item>
     </md-list>
