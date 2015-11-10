@@ -12,6 +12,10 @@
   </head>
 
   <body ng-controller="demoCtrl">
+    <div style="position: absolute; top: 200px; left: 15%; z-index: 99;">
+      <button ng-click="error();">error</button>
+      <button ng-click="info();">info</button>
+    </div>
     <npdc:app></npdc:app>
     <npdc:create-button class="np-primary-control"></npdc:create-button>
   </body>

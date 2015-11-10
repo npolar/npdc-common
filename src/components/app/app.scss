@@ -97,6 +97,14 @@ $control-size: 56px;
   }
 }
 
+md-toast {
+  margin: 74px 10px 10px;
+
+  &.error {
+    background-color: $color-np-error;
+  }
+}
+
 .np-environment-warning {
   $color: #f00;
   bottom: 10px;
