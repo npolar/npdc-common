@@ -43,10 +43,7 @@ let npdcAppConfigFactory = function (NpdcAutocompleteConfigFactory, NpdcSearchCo
     }],
     toolbarInternalApps: [{
       name: "My applications",
-      apps: [{
-        link: "/courses",
-        name: "Courses"
-      },
+      apps: [
       {
         link: "/indicator",
         name: "Indicators (environmental monitoring)"
@@ -58,7 +55,10 @@ let npdcAppConfigFactory = function (NpdcAutocompleteConfigFactory, NpdcSearchCo
         link: "/indicator/timeseries",
         name: "Timeseries (environmental monitoring)"
       },
-
+      {
+        link: "/courses",
+        name: "Courses"
+      },
       {
         link: "/marine/biology",
         name: "Marine Biology"

@@ -59,7 +59,8 @@ $control-size: 56px;
   width: $control-size;
   z-index: 4;
 
-  a {
+  a,
+  button {
     margin: 0;
   }
 }
