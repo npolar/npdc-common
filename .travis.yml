@@ -4,3 +4,7 @@ node_js:
 before_script:
   - npm install -g gulp
 script: gulp ci
+sudo: false
+cache:
+  directories:
+    - node_modules
