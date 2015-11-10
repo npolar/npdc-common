@@ -96,6 +96,7 @@ gulp.task('default', function (cb) {
 });
 
 gulp.task('ci', function (cb) {
+  global.isCIBuild = true;
   runSequence(['clean', 'info'], 'lint', 'test', ['sass', 'browserify', 'copy-deps-assets', 'copy-deps-shared-assets', 'copy-assets', 'copy-html', 'copy-demo'], cb);
 });
 
