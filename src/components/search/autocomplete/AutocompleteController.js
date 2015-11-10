@@ -22,10 +22,10 @@ var AutocompleteController = function($filter, $location, $element, $window, $q,
     let collection = Object.keys($scope.options.collections).find(collection => new RegExp(collection).test(entry.schema));
     if (entry && entry.schema) {
       if (collection) {
-        path = `/${ collection }/${ entry.id }`;
+        path = `/${ collection.replace(/^\//, '') }/${ entry.id }`;
       }
     } else if (entry && entry.collection) {
-      path = `/${ entry.collection }/${ entry.id }`;
+      path = `/${ entry.collection.replace(/^\//, '') }/${ entry.id }`;
     }
     return path;
   };
