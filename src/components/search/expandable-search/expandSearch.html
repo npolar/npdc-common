@@ -25,8 +25,8 @@
   </md-fab-toolbar>
 
   <div ng-show="isFiltersOpen && isOpen" class="np-es-filter" ng-class="{ open: isFiltersOpen && isOpen }">
-    <div ng-if="options.autocomplete.showCollections" layout layout-wrap layout-align="space-between center">
-      <md-checkbox flex="25" ng-model="options.autocomplete.collections[collection]" ng-repeat="(collection, value) in options.autocomplete.collections">{{ collection }}</md-checkbox>
+    <div ng-if="options.showCollections" layout layout-wrap layout-align="space-between center">
+      <md-checkbox flex="25" ng-model="options.collections[collection]" ng-repeat="(collection, value) in options.collections">{{ collection }}</md-checkbox>
     </div>
   </div>
 </div>
