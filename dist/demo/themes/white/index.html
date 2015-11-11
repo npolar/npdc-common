@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>NPDC white theme</title>
+  <link href="/assets/npdc-common-master-latest.css" rel="stylesheet">
+  <meta name="viewport" content="initial-scale=1" />
+  <style>
+    .buttondemoBasicUsage section {
+      background: #f7f7f7;
+      border-radius: 3px;
+      text-align: center;
+      margin: 1em;
+      position: relative !important;
+      padding-bottom: 10px;
+    }
+
+    .buttondemoBasicUsage {
+      margin-right: 7px;
+    }
+
+    .buttondemoBasicUsage section .md-button {
+      margin-top: 16px;
+      margin-bottom: 16px;
+    }
+
+    .buttondemoBasicUsage .label {
+      position: absolute;
+      bottom: 5px;
+      left: 7px;
+      font-size: 14px;
+      opacity: 0.54;
+    }
+  </style>
+</head>
+
+<body ng-app="whiteThemeDemo" md-theme="white">
+  <md-content class="buttondemoBasicUsage">
+    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+      <md-button>title</md-button>
+      <md-button md-no-ink class="md-primary">Primary (md-noink)</md-button>
+      <md-button ng-disabled="true" class="md-primary">Disabled</md-button>
+      <md-button class="md-warn">title</md-button>
+      <div class="label">Flat</div>
+    </section>
+    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+      <md-button class="md-raised">Button</md-button>
+      <md-button class="md-raised md-primary">Primary</md-button>
+      <md-button ng-disabled="true" class="md-raised md-primary">Disabled</md-button>
+      <md-button class="md-raised md-warn">Warn</md-button>
+      <div class="label">Raised</div>
+    </section>
+    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+      <md-button class="md-fab" aria-label="Eat cake">
+        <md-icon>cake</md-icon>
+      </md-button>
+      <md-button class="md-fab md-primary" aria-label="Use Android">
+        <md-icon>android</md-icon>
+      </md-button>
+      <md-button class="md-fab" ng-disabled="true" aria-label="Comment">
+        <md-icon>comment</md-icon>
+      </md-button>
+      <md-button class="md-fab md-primary md-hue-2" aria-label="Profile">
+        <md-icon>people</md-icon>
+      </md-button>
+      <md-button class="md-fab md-mini" aria-label="Eat cake">
+        <md-icon>cake</md-icon>
+      </md-button>
+      <md-button class="md-fab md-mini md-primary" aria-label="Use Android">
+        <md-icon style="color: greenyellow;">android</md-icon>
+      </md-button>
+      <div class="label">FAB</div>
+    </section>
+    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+      <md-button ng-href="#" target="_blank">Default Link</md-button>
+      <md-button class="md-primary" ng-href="#" target="_blank">Primary Link</md-button>
+      <md-button>Default Button</md-button>
+      <div class="label">Link vs. Button</div>
+    </section>
+    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+      <md-button class="md-primary md-hue-1">Primary Hue 1</md-button>
+      <md-button class="md-warn md-raised md-hue-2">Warn Hue 2</md-button>
+      <md-button class="md-accent">Accent</md-button>
+      <md-button class="md-accent md-raised md-hue-1">Accent Hue 1</md-button>
+      <div class="label">Themed</div>
+    </section>
+    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+      <md-button class="md-icon-button md-primary" aria-label="Settings">
+        <md-icon>menu</md-icon>
+      </md-button>
+      <md-button class="md-icon-button md-accent" aria-label="Favorite">
+        <md-icon>favorite</md-icon>
+      </md-button>
+      <md-button class="md-icon-button" aria-label="More">
+        <md-icon>more_vert</md-icon>
+      </md-button>
+      <md-button href="http://google.com" title="Launch Google.com in new window" target="_blank" ng-disabled="true" aria-label="Google.com" class="md-icon-button launch">
+        <md-icon>launch</md-icon>
+      </md-button>
+      <div class="label">Icon Button</div>
+    </section>
+  </md-content>
+</body>
+<script src="/demo/demos.js"></script>
+
+</html>
