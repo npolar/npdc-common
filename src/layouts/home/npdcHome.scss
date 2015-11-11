@@ -190,6 +190,31 @@ $anim-speed: .4s;
 		box-sizing:					border-box;
 		height:						20vh;
 
+		ul
+		{
+			left:					0;
+			list-style:				none;
+			margin:					0;
+			padding:				0;
+			position:				absolute;
+			text-align:				center;
+			top:					50%;
+			transform:				translateY(-50%);
+			width:					100%;
+
+			li
+			{
+				display:			inline-block;
+				font-size:			20px;
+				margin:				5px 15px;
+
+				span
+				{
+					font-weight:	bold;
+				}
+			}
+		}
+
 		p
 		{
 			color:					$color-1-bg;
