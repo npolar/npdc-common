@@ -18,6 +18,7 @@ after_script:
   - git config user.name "Travis CI"
   - git config user.email "travis.ci@npolar.no"
   - git config remote.origin.url https://${GH_TOKEN}@github.com/npolar/npdc-common.git
+  - git remote set-branches --add origin ci
   - git fetch
   - git checkout ci
   - git add --force dist/
