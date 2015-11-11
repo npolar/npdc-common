@@ -1,9 +1,0 @@
-<!DOCTYPE html>
-<div class="npdc-crumbs-container">
-	<span ng-repeat="crumb in breadcrumbs.breadcrumbs">
-    <span ng-if="!$last"><a ng-href="{{crumb.href}}" title="{{crumb.title || crumb.text || crumb.href }}">{{ crumb.text || crumb.title || crumb.href }}</a>
-      <md-icon>chevron_right</md-icon>
-    </span>
-    <span ng-if="$last">{{ crumb.text || crumb.title || crumb.href }}</span>
-  </span>
-</div>
