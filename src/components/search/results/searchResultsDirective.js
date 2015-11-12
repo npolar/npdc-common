@@ -8,7 +8,11 @@ var searchResultsDirective = function () {
       feed: '='
     },
     controller: 'NpdcSearchResultsController',
-    template: require('./searchResults.html')
+    template: require('./searchResults.html'),
+    link(scope) {
+      scope.resource = scope.$parent.resource;
+      scope.error = scope.$parent.error;
+    }
   };
 };
 

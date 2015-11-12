@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<section ng-if="document.placenames">
+  <h3>Placenames</h3>
+  <md-divider></md-divider>
+  <p>
+    <div ng-repeat="p in document.placenames">
+      {{ p.placename || p.area }}
+    </div>
+  </p>
+</section>

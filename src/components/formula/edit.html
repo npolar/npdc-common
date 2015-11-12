@@ -9,8 +9,4 @@
   <npdc:save-button class="np-primary-control"></npdc:save-button>
 </md-content>
 
-<div ng-if="!document" class="formula">
-  <div layout="row" layout-sm="column" layout-align="space-around">
-   <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-  </div>
-</div>
+<npdc:loader ng-if="!document"></npdc:loader>

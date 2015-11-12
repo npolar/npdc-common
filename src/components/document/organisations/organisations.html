@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<section ng-if="document.organisations">
+  <h3 class="headline">Organisations</h3>
+  <md-divider></md-divider>
+  <md-list>
+    <md-list-item class="md-2-line" ng-repeat="o in document.organisations">
+      <md-icon>business</md-icon>
+      <div class="md-list-item-text">
+        <h3>{{ o.name }}</h3>
+        <p>{{o.role}}</p>
+      </div>
+    </md-list-item>
+  </md-list>
+</section>

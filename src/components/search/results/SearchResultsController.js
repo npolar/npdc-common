@@ -6,7 +6,6 @@ var SearchResultsController = function($scope, $location, $http, $rootScope, $sa
   let options = ($scope.options || npdcAppConfig.search.local).results;
 
   $scope.security = NpolarApiSecurity;
-  $scope.resource = $scope.$parent.resource;
 
   $scope.q = function () {
     return $location.search().q || "";
