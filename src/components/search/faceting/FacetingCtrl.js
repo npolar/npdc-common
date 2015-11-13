@@ -3,6 +3,7 @@
 let FilterCollection = require('./FilterCollection');
 let QueryBuilder = require('./QueryBuilder');
 let urlFilterParser = require('./urlFilterParser');
+let content = require('./facetsContentBundle.json');
 
 // @ngInject
 let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
@@ -163,6 +164,11 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
     } else {
       filters.addRangeFilter(facet);
     }
+  };
+
+  // Content
+  $scope.i18n = function(key) {
+    return content[key] ? content[key].en : `?${key}?`;
   };
 
 };
