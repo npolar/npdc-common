@@ -1,15 +1,17 @@
 .np-search-input {
   display: block;
   margin-bottom: 3px;
-  padding: 15px;
 
   .np-search-input-input {
-    padding-bottom: 12px;
+    margin: 15px 15px 0;
   }
 
   .np-faceting-facets {
+    background-color: rgba(176, 190, 197, .15);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2) inset;
     max-height: 0;
     opacity: 0;
+    padding: 0;
     -webkit-transition: all .5s;
     transition: all .5s;
   }
@@ -17,5 +19,6 @@
   .open .np-faceting-facets {
     max-height: 900px;
     opacity: 1;
+    padding: 5px 15px;
   }
 }
