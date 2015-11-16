@@ -10,6 +10,10 @@ let toolbar = function ($mdSidenav, NpolarApiSecurity) {
       template: require('./toolbar.html'),
       link: function(scope) {
         scope.security = NpolarApiSecurity;
+      },
+      //@ngInject
+      controller: function($scope, npdcAppConfig) {
+        $scope.options = $scope.options || npdcAppConfig;
       }
     };
   };

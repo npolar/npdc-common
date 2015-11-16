@@ -33,3 +33,4 @@ ui.controller('NpdcBottomSheetController', require('./bottom-sheet/BottomSheetCo
 ui.directive('npdcBottomSheet', require('./bottom-sheet/bottomSheetDirective'));
 
 ui.directive('npdcLoader', require('./loader/loaderDirective'));
+ui.directive('npdcFooter', require('./footer/footerDirective'));

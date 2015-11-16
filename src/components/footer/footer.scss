@@ -1,0 +1,74 @@
+footer {
+  $color-1-fg: #417280;
+  background-color: $color-primary-0;
+  color: $color-1-fg;
+  padding: 64px 5%;
+
+  > div {
+    margin: 15px 0;
+  }
+
+  h3 {
+    display: inline-block;
+    line-height: 50px;
+    margin: 0 0 32px;
+    text-shadow: 0 0 2px $color-text-dark;
+    vertical-align: middle;
+  }
+
+  .np-toolbar-logo {
+    margin-right: 15px;
+    opacity: .6;
+  }
+
+  .md-icon-button > i {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 48px 48px;
+    display: inline-block;
+    height: 48px;
+    opacity: .6;
+    width: 48px;
+
+    &.github-icon {
+      background-image: url('/assets/img/GitHub-Mark-Light-64px.png');
+    }
+
+    &.facebook-icon {
+      background-image: url('/assets/img/facebook.png');
+    }
+
+    &.twitter-icon {
+      background-image: url('/assets/img/twitter.png');
+      background-size: 55px 55px;
+    }
+  }
+
+  ol {
+    font-size: 16px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+
+    a {
+      color: $color-1-fg;
+      text-decoration: none;
+    }
+  }
+
+  #scroll-up {
+    background: rgba(0, 0, 0, .1);
+    border-radius: 50%;
+    bottom: 1em;
+    padding: .5em;
+    position: fixed;
+    right: 1em;
+    transform: scale(0);
+    transition: all .4s;
+
+    &:hover {
+      background: rgba(0, 0, 0, .2);
+    }
+  }
+}
