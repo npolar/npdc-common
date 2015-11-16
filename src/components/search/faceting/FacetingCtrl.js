@@ -142,7 +142,7 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
 
   $scope.querySearch = function(facet) {
     return facet[facet.key].filter(item =>
-      item.term.toLowerCase().indexOf(facet.searchText.toLowerCase()) === 0);
+      item.term.toString().toLowerCase().indexOf(facet.searchText.toLowerCase()) === 0);
   };
 
 
