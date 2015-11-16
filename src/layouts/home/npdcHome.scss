@@ -24,7 +24,8 @@ $color-4-ex: #2F1800;
 $section-map:
 (
 	("publications", $color-2-bg, $color-2-fg, $color-2-ex),
-	("expeditions",  $color-3-bg, $color-3-fg, $color-3-ex),
+	("projects",     $color-3-bg, $color-3-fg, $color-3-ex),
+	("expeditions",  $color-1-ex, $color-1-fg, $color-1-bg),
 	("documents",    $color-4-bg, $color-4-fg, $color-4-ex)
 );
 
@@ -55,6 +56,35 @@ $anim-speed: .4s;
 	md-toolbar
 	{
 		background-color:			$color-1-bg;
+	}
+
+	#tutorial
+	{
+		background-color:			$color-1-ex;
+		border-radius:				15px;
+		box-shadow:					0 0 5px $color-1-ex;
+		color:						$color-1-fg;
+		font-size:					1em;
+		left:						15px;
+		opacity:					.95;
+		padding:					15px;
+		position:					fixed;
+		right:						15px;
+		text-align:					center;
+		text-transform:				uppercase;
+		top:						64px;
+		z-index:					5;
+
+		&:before
+		{
+			border-left:			1em solid transparent;
+			border-right:			1em solid transparent;
+			border-bottom:			1em solid $color-1-ex;
+			content:				'';
+			position:				absolute;
+			right:					136px;
+			top:					-1em;
+		}
 	}
 
 	header

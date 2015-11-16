@@ -51,8 +51,8 @@ footer {
     padding: 0;
     text-align: left;
 
-    a {
-      color: $color-1-fg;
+    li a {
+      color: $color-1-fg !important;
       text-decoration: none;
     }
   }
