@@ -54,3 +54,18 @@ dl {
     padding: 0 0 .5em;
   }
 }
+
+.md-open-menu-container {
+  z-index: 1100;
+}
+
+#leaflet-map {
+  min-height: 100px;
+}
+
+@media(max-width: 900px) {
+  #leaflet-map {
+    margin: 0 auto;
+    max-width: 80%;
+  }
+}

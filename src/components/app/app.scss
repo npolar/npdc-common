@@ -57,7 +57,7 @@ $control-size: 56px;
   right: calc((#{$offset} / 2) - (#{$control-size} / 2));
   top: 162px;
   width: $control-size;
-  z-index: 4;
+  z-index: 1004;
 
   a,
   button {
