@@ -11,11 +11,11 @@ let mapDirective = function () {
 		template: '<div id="leaflet-map"></div>',
 		//@ngInject
 		controller: function ($scope) {
-			var map = L.map('leaflet-map');
-			var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-			var osmAttrib = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
-			var osm = L.tileLayer(osmUrl, {attribution: osmAttrib});
-			var center = [69, 19], covs;
+			let map = L.map('leaflet-map');
+			let osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+			let osmAttrib = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+			let osm = L.tileLayer(osmUrl, {attribution: osmAttrib});
+			let covs;
 			$scope.options = Object.assign({}, $scope.options);
 			covs = $scope.options.coverage;
 
@@ -30,13 +30,11 @@ let mapDirective = function () {
 					x_min = Math.min(x_min, cov.west);
 					y_min = Math.min(y_min, cov.south);
 					let poly = [[cov.north, cov.west], [cov.south, cov.east]];
-					L.polygon(poly).addTo(map);
+					L.rectangle(poly).addTo(map);
 				});
-
-				center = [y_min+(y_max-y_min)/2, x_min+(x_max-x_min)/2];
+				map.fitBounds([[y_min, x_min],[y_max, x_max]], {padding: [20, 20]});
 			}
 
-			map.setView(center, 4);
 			map.addLayer(osm);
 		}
 	};
