@@ -14,11 +14,24 @@
     padding: 0;
     -webkit-transition: all .5s;
     transition: all .5s;
+    visibility: hidden;
   }
 
   .open .np-faceting-facets {
     max-height: 900px;
     opacity: 1;
-    padding: 5px 15px;
+    padding: 8px 15px;
+    visibility: visible;
+  }
+
+  .filter-icon {
+    background-image: url('/assets/img/filter.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 24px 24px;
+    display: inline-block;
+    height: 48px;
+    opacity: .6;
+    width: 48px;
   }
 }
