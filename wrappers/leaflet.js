@@ -11,13 +11,14 @@ let mapDirective = function () {
 		template: '<div id="leaflet-map"></div>',
 		//@ngInject
 		controller: function ($scope) {
-			let map = L.map('leaflet-map');
+			let map = L.map('leaflet-map', {maxZoom: 10, minZoom: 2, maxBounds: [[-90,180],[90,-180]]});
 			let osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 			let osmAttrib = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
 			let osm = L.tileLayer(osmUrl, {attribution: osmAttrib});
 			let covs;
 			$scope.options = Object.assign({}, $scope.options);
 			covs = $scope.options.coverage;
+
 
 			if (covs) {
 				let x_max, x_min, y_min, y_max;
