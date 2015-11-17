@@ -134,6 +134,7 @@ $anim-speed: .4s;
 
 	section
 	{
+		font-size:					1.2em;
 		padding:					2em;
 		position:					relative;
 		margin:						0;
@@ -174,6 +175,20 @@ $anim-speed: .4s;
 		md-list
 		{
 			margin:					2em 0 0;
+
+			md-list-item a
+			{
+				display:			block;
+				height:				100%;
+				width:				100%;
+
+				div
+				{
+					position:		absolute;
+					top:			50%;
+					transform:		translateY(-50%);
+				}
+			}
 		}
 
 		md-grid-list
@@ -273,7 +288,7 @@ $anim-speed: .4s;
 				text-shadow:		-1px -1px 0 $bg, 1px 1px 0 $fg;
 			}
 
-			a
+			p a
 			{
 				color:				$ex;
 
@@ -300,7 +315,7 @@ $anim-speed: .4s;
 
 				h3, h4
 				{
-					color:			inherit;
+					color:			$fg;
 				}
 			}
 
@@ -335,7 +350,7 @@ $anim-speed: .4s;
 				a
 				{
 					margin:				3vh 0;
-					padding:			2vh 5vw;
+					padding:			2vh 4vw;
 					position:			relative;
 
 					md-icon
@@ -354,10 +369,11 @@ $anim-speed: .4s;
 
 					span.text
 					{
-						color:			$color-2-ex;
+						color:			$color-2-fg;
 						display:		block;
-						font-size:		1em;
-						text-shadow:	none;
+						font-size:		1.2em;
+						text-shadow:	0 0 2px $color-1-ex;
+						transition:		all $anim-speed;
 					}
 
 					&:hover
