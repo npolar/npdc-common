@@ -73,17 +73,27 @@ $anim-speed: .4s;
 		text-align:					center;
 		text-transform:				uppercase;
 		top:						64px;
-		z-index:					5;
+		z-index:					1005;
 
-		&:before
+		&:before,
+		&:after
 		{
 			border-left:			1em solid transparent;
 			border-right:			1em solid transparent;
 			border-bottom:			1em solid $color-1-ex;
 			content:				'';
 			position:				absolute;
-			right:					136px;
 			top:					-1em;
+		}
+
+		&:before
+		{
+			right:					135px;
+		}
+
+		&:after
+		{
+			right:					75px;
 		}
 	}
 
