@@ -25,8 +25,8 @@ $section-map:
 (
 	("publications", $color-2-bg, $color-2-fg, $color-2-ex),
 	("projects",     $color-3-bg, $color-3-fg, $color-3-ex),
-	("expeditions",  $color-1-ex, $color-1-fg, $color-1-bg),
-	("documents",    $color-4-bg, $color-4-fg, $color-4-ex)
+	("expeditions",  $color-4-bg, $color-4-fg, $color-4-ex),
+	("documents",    $color-1-ex, $color-1-fg, $color-1-bg)
 );
 
 // Animation speeds
@@ -100,7 +100,7 @@ $anim-speed: .4s;
 
 			a
 			{
-				color:				$color-1-fg;
+				color:				$color-2-fg;
 				display:			inline-block;
 				font-size:			15px;
 				margin:				0 15px;
@@ -180,11 +180,12 @@ $anim-speed: .4s;
 			{
 				display:			block;
 				height:				100%;
+				overflow:			ellipsis;
 				width:				100%;
 
 				div
 				{
-					position:		absolute;
+					position:		relative;
 					top:			50%;
 					transform:		translateY(-50%);
 				}
@@ -313,9 +314,14 @@ $anim-speed: .4s;
 					transform:		scale(0.95);
 				}
 
-				h3, h4
+				h3
 				{
 					color:			$fg;
+				}
+
+				h4
+				{
+					color:			$bg;
 				}
 			}
 
@@ -369,7 +375,7 @@ $anim-speed: .4s;
 
 					span.text
 					{
-						color:			$color-2-fg;
+						color:			$color-1-fg;
 						display:		block;
 						font-size:		1.2em;
 						text-shadow:	0 0 2px $color-1-ex;
