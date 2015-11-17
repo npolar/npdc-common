@@ -50,7 +50,7 @@ let expandSearch = function() {
             break;
           case 32:
             // Workaround for angular material bug with inputs in fab-toolbar
-            $scope.options.autocomplete.q += ' ';
+            $scope.options.q += ' ';
             break;
           default:
             //noop;
@@ -64,7 +64,7 @@ let expandSearch = function() {
       $scope.search = function(q) {
         let query = Object.assign({},
           $location.search(),
-          q || {q: $scope.options.autocomplete.q});
+          q || {q: $scope.options.q});
         NpdcSearchService.search(query);
       };
 
