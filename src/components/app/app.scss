@@ -116,3 +116,8 @@ md-toast {
   text-shadow: 1px 1px $color-text-dark;
   z-index: 3;
 }
+
+// Leaflet uses z.index up to 1000, so bumping some others...
+.md-virtual-repeat-container.md-autocomplete-suggestions-container {
+  z-index: 1100;
+}
