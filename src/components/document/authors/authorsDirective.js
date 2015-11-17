@@ -6,7 +6,13 @@ var authorsDirective = function() {
     scope: {
       authors: '='
     },
-    template: require('./authorstemplate.html')
+    template: require('./authorstemplate.html'),
+    //@ngInject
+    controller: function($scope) {
+      $scope.fullnames = function (authors) {
+        return authors.reduce((m, a, i) => m + a.first_name + ' ' + a.last_name + (i < authors.length-1 ? ', ':''), '');
+      };
+    }
   };
 };
 
