@@ -16,7 +16,7 @@
                 </div>
                 <div class="md-list-item-text">
                   <h3 class="md-headline">
-                    <span ng-bind-html="title(e, q())"></span>
+                    <span md-highlight-text="q()" md-highlight-flags="ig">{{title(e)}}</span>
                     <em ng-if="subTitle(e)">
                       「{{ subTitle(e) }}」
                     </em>

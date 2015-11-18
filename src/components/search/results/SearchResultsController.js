@@ -1,7 +1,7 @@
 'use strict';
 
 // @ngInject
-var SearchResultsController = function($scope, $location, $http, $rootScope, $sanitize, $sce,
+var SearchResultsController = function($scope, $location, $http, $rootScope,
     NpolarApiSecurity, npdcAppConfig) {
   let options = ($scope.options || npdcAppConfig.search.local).results;
 
@@ -40,7 +40,7 @@ var SearchResultsController = function($scope, $location, $http, $rootScope, $sa
     return entry.id.substr(0,3);
   };
 
-  $scope.title = (entry, query) => {
+  $scope.title = (entry) => {
     let title = '';
     if (typeof options.title === 'function') {
       title = options.title.call({}, entry);
@@ -51,12 +51,7 @@ var SearchResultsController = function($scope, $location, $http, $rootScope, $sa
     } else {
       title = entry.title || entry.name || entry.code || entry.id;
     }
-    title = $sanitize(title);
-    if (query && query.length > 0) {
-      let q = new RegExp(`(${query})`, 'ig');
-      title = title.replace(q, '<span class="highlight">$1</span>');
-    }
-    return $sce.trustAsHtml(title);
+    return title;
   };
 
   $scope.subTitle = (entry) => {

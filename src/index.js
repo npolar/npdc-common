@@ -7,10 +7,8 @@ require('angular-material');
 require('angular-npolar');
 require('jusas-angularjs-slider');
 require('angular-marked');
-require('angular-sanitize');
-
 var ui = angular.module('npdcUi', ['npolarUi', 'npolarApi', 'ngMaterial',
-  'ngAnimate', 'ngSanitize', 'rzModule', 'hc.marked']);
+  'ngAnimate', 'rzModule', 'hc.marked']);
 
 ui.config(function($mdThemingProvider) {
   var npdcPrimary = $mdThemingProvider.extendPalette('light-blue', {
