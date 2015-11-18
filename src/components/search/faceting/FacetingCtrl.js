@@ -58,8 +58,7 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
 
   let emptyFacet = function (facet) {
     let key = Object.keys(facet)[0];
-    let hasMoreThanOneResult = facet[key].some(term => term.count > 1);
-    return facet[key].length > 1 && hasMoreThanOneResult;
+    return facet[key].length > 1;
   };
 
   let initDataModel = function () {
@@ -89,6 +88,8 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
 
       return facet;
     });
+
+    filters.updateCount($scope.model);
 
     if (!isURLParsed && $scope.options.facets.length > 0) {
       urlFilterParser.parseUrl($scope, filters, $location.search());
