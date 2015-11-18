@@ -5,6 +5,11 @@ let SearchService = function ($location, $window, npdcAppConfig) {
   return {
     search (query) {
       console.log('Search', query);
+      let prevSearch = $location.search();
+      Object.keys(prevSearch).filter(k => !(/^filter-/.test(k) || query.hasOwnProperty(k))).forEach(k => {
+        query[k] = prevSearch[k];
+      });
+
       $location.search(query);
     },
     globalSearch (query) {

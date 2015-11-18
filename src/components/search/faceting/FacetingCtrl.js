@@ -10,7 +10,7 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
 
   let queryBuilder = new QueryBuilder();
   const UI_TYPES = ['autocomplete', 'checkbox', 'range', 'hidden'];
-  let initialParse = false;
+  let isURLParsed = false;
 
   let filterChangeCallback = function (filters) {
     let q = queryBuilder.build(filters);
@@ -33,23 +33,22 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
     return typeof term === 'string' ? parseInt(term.replace(/-/g, '')) : term;
   };
 
-  let initRangeFacet = function (facet, oldFacet) {
-    let floor, ceil, min, max;
+  let initRangeFacet = function (facet) {
+    let floor, ceil, min, max, filter;
     facet.slider = {};
 
     floor = min = facet[facet.key].reduce((memo, term) => Math.min(termToInt(term.term), memo),
       termToInt(facet[facet.key][0].term));
     ceil = max = facet[facet.key].reduce((memo, term) => Math.max(termToInt(term.term), memo),
       termToInt(facet[facet.key][0].term));
-    if (oldFacet && oldFacet.slider) {
-      floor = Math.min(oldFacet.slider.floor, floor);
-      ceil = Math.max(oldFacet.slider.ceil, ceil);
-      min = oldFacet.slider.min;
-      max = oldFacet.slider.max;
+    filter = $scope.filterArray.find(item => facet.key === item.facet);
+    if (filter) {
+      min = filter.min;
+      max = filter.max;
     }
     facet.slider = {
-      floor,
-      ceil,
+      floor: Math.min(min, floor),
+      ceil: Math.max(max, ceil),
       min: min,
       max: max
     };
@@ -57,11 +56,17 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
     return facet;
   };
 
+  let emptyFacet = function (facet) {
+    let key = Object.keys(facet)[0];
+    let hasMoreThanOneResult = facet[key].some(term => term.count > 1);
+    return facet[key].length > 1 && hasMoreThanOneResult;
+  };
+
   let initDataModel = function () {
     if (!$scope.options.facets) {
       return;
     }
-    $scope.model = $scope.options.facets.filter(facet => facet[Object.keys(facet)[0]].length > 0).map(facet => {
+    $scope.model = $scope.options.facets.filter(emptyFacet).map(facet => {
       let oldFacet;
       facet.key = Object.keys(facet)[0];
       oldFacet = $scope.model ? $scope.model.find(item => item.key === facet.key) : null;
@@ -75,7 +80,7 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
       });
 
       if (facet.uiType === 'range') {
-        facet = initRangeFacet(facet, oldFacet);
+        facet = initRangeFacet(facet);
       }
 
       if (facet.uiType === 'autocomplete') {
@@ -85,9 +90,9 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
       return facet;
     });
 
-    if ($scope.model.length > 0 && !initialParse) {
+    if (!isURLParsed && $scope.options.facets.length > 0) {
       urlFilterParser.parseUrl($scope, filters, $location.search());
-      initialParse = true;
+      isURLParsed = true;
     }
   };
 

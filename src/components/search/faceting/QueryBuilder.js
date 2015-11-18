@@ -7,19 +7,17 @@ const QueryBuilder = function () {
   let filterKey = function (filter) {
     let key = 'filter-';
     if (filter.type === 'date') {
-      key += filter.facet.replace(/^(year|day|month)-/, '');
+      key += filter.facet.replace(/^year-/, '');
     } else {
       key += filter.facet;
     }
     return key;
   };
 
-  // @TODO need support for month and day
   let filterValue = function (filter) {
     let value = filter.term;
     if (filter.type === 'date') {
-      let parts = filter.term.split(RANGE_SEPARATOR);
-      value = parts[0] + UTC_DATE_PART + RANGE_SEPARATOR + parts[1] + UTC_DATE_PART;
+      value = filter.min + UTC_DATE_PART + RANGE_SEPARATOR + (filter.max+1) + UTC_DATE_PART;
     }
     return value;
   };

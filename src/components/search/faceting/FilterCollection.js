@@ -38,19 +38,20 @@ let FilterCollection = function($scope, callback) {
   let addRangeFilter = function(facet) {
     let filter, existingFilter;
     let terms = facet[facet.key].filter(item => isInRange(item, facet.slider.min, facet.slider.max));
-
+    let isDate = /^(year)-.*$/.test(facet.key);
     filter = {
       count: terms.reduce((memo, item) => memo + item.count, 0),
       term: facet.slider.min + ".." + facet.slider.max,
       facet: facet.key,
-      type: /^(year|month|day)-.*$/.test(facet.key) ? 'date' : 'number'
+      type: isDate ? 'date' : 'number',
+      min: facet.slider.min,
+      max: facet.slider.max
     };
     existingFilter = $scope.filterArray.find(item => filter.facet === item.facet);
     if (!existingFilter) {
       $scope.filterArray.push(filter);
     } else {
-      existingFilter.term = filter.term;
-      existingFilter.count = filter.count;
+      Object.assign(existingFilter, filter);
     }
     callback($scope.filterArray);
   };
