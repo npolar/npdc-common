@@ -53,6 +53,9 @@
   "organisations.id": {
     "en": "Organisation"
   },
+  "orgtree": {
+    "en": "Unit"
+  },
   "sets": {
     "en": "Sets"
   },
@@ -100,5 +103,8 @@
   },
   "year-released": {
     "en": "Year released"
+  },
+  "workplace": {
+    "en": "Workplace"
   }
 }
