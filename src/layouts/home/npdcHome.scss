@@ -1,24 +1,24 @@
-/** http://paletton.com/#uid=63o0f0kq-flghpJlxkyv-aqHL5V **/
+// http://paletton.com/#uid=63o0f0kq-flghpJlxkyv-aqHL5V
 
 // Primary colors
 $color-1-bg: #0F3F4C;
-$color-1-fg: #417280;
-$color-1-ex: #01171D;
+$color-1-fg: #8AB6C2; //65AFC5; //417280;
+$color-1-ex: #011C23; //01171D;
 
 // Secondary colors
 $color-2-bg: #0E503E;
-$color-2-fg: #428673;
-$color-2-ex: #001F16;
+$color-2-fg: #8BBEAF; //629E8D; //4FB8A2; //428673;
+$color-2-ex: #00251B; //02251A; //011912; //001F16;
 
 // Tertiary colors
 $color-3-bg: #132F50;
-$color-3-fg: #486486;
-$color-3-ex: #020F1F;
+$color-3-fg: #91AAC7; //486486;
+$color-3-ex: #021225; //020F1F;
 
 // Quaternary colors
 $color-4-bg: #7A4815;
-$color-4-fg: #CD9965;
-$color-4-ex: #2F1800;
+$color-4-fg: #FFD9B3; //CD9965;
+$color-4-ex: #391D00; //2F1800;
 
 // Page section map
 $section-map:
@@ -45,6 +45,7 @@ $anim-speed: .4s;
 
 .npdc-home
 {
+	//@FIXME make a little bit lighter...
 	background-attachment:			fixed;
 	background-color:				white;
 	background-image:
@@ -154,7 +155,7 @@ $anim-speed: .4s;
 			color:					$color-1-bg;
 			font-size:				2em;
 			margin:					0;
-			opacity: 				.4;
+			opacity: 				.7;
 			padding:				0;
 			text-align:				left;
 		}
@@ -163,8 +164,8 @@ $anim-speed: .4s;
 		{
 			bottom:					15px;
 			color:					$color-1-bg;
-			font-size:				80px;
-			opacity: 				.1;
+			font-size:				5vw; //80px;
+			opacity: 				.2;
 			position:				absolute;
 			right:					15px;
 			text-shadow: 			-1px -1px 0 $color-1-ex, 1px 1px 0 $color-1-fg;
@@ -301,12 +302,17 @@ $anim-speed: .4s;
 
 			p a
 			{
-				color:				$ex;
+				color:				lighten($fg, 35%);
 
 				&:hover
 				{
 					text-decoration:	underline;
 				}
+			}
+
+			& > md-icon
+			{
+				color:					$bg;
 			}
 
 			md-list-item
@@ -331,7 +337,7 @@ $anim-speed: .4s;
 
 				h4
 				{
-					color:			$bg;
+					color:			lighten($bg, 20%);
 				}
 			}
 
