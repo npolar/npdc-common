@@ -13,7 +13,7 @@ let npdcAppConfigFactory = function (NpdcAutocompleteConfigFactory, NpdcSearchCo
         link: "//api.npolar.no",
         name: "APIs"
       }, {
-        link: "//geodata.npolar.no",
+        link: "/geodata",
         name: "Geographic services"
       }, ]
     }, {
