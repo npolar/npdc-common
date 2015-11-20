@@ -3,7 +3,7 @@ node_js:
   - '5.0'
 before_script:
   - npm install -g gulp
-script: gulp ci
+script: gulp prod
 sudo: false
 cache:
   directories:

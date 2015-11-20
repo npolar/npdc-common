@@ -17,60 +17,20 @@ describe('FacetingCtrl', function() {
     };
   });
 
-  it('should init day range facets', function() {
-    let facet;
-    scopeMock.options.facets = [{
-      "day-measured": [{
-        "term": "2015-01-01",
-        "count": 0
-      }, {
-        "term": "2015-01-02",
-        "count": 0
-      }]
-    }];
-    scopeMock.options.filterUi = {
-      'day-measured': {
-        type: 'range'
-      }
-    };
-
-    facetingCtrl = new FacetingCtrl(scopeMock, locationMock);
-    facet = scopeMock.options.facets[0];
-
-    facet.slider.min.should.eql(20150101);
-    facet.slider.max.should.eql(20150102);
-  });
-
-  it('should init month range facets', function() {
-    let facet;
-    scopeMock.options.facets = [{
-      "month-measured": [{
-        "term": "2015-01",
-        "count": 0
-      }]
-    }];
-    scopeMock.options.filterUi = {
-      'month-measured': {
-        type: 'range'
-      }
-    };
-
-    facetingCtrl = new FacetingCtrl(scopeMock, locationMock);
-    facet = scopeMock.options.facets[0];
-
-    facet.slider.min.should.eql(201501);
-  });
-
   it('should init year range facets', function() {
     let facet;
     scopeMock.options.facets = [{
-      "month-measured": [{
+      "year-measured": [{
         "term": "2015",
         "count": 0
+      },
+      {
+        "term": "2016",
+        "count": 1
       }]
     }];
     scopeMock.options.filterUi = {
-      'month-measured': {
+      'year-measured': {
         type: 'range'
       }
     };

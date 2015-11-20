@@ -10,11 +10,13 @@ describe('QueryBuilder', function() {
       let filters = [{
         term: '2007..2010',
         facet: 'year-released',
-        type: 'date'
+        type: 'date',
+        min: 2007,
+        max: 2010
       }];
 
       let expected = {
-        'filter-released': '2007-01-01T00:00:00Z..2010-01-01T00:00:00Z'
+        'filter-released': '2007-01-01T00:00:00Z..2011-01-01T00:00:00Z'
       };
 
       qb.build(filters).should.eql(expected);
