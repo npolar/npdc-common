@@ -31,7 +31,7 @@ var task = function (gulp, config) {
       gutil.log("templateCache", templateCache);
       bundler.add(templateCache);
 
-      bundler.require([{file: './' + app, expose: 'npdc-common'}, 'angular', 'formula']);
+      bundler.require([{file: './' + app, expose: 'npdc-common'}, 'angular']);
 
       bundle = function (ids) {
           var bundleName = config.pkgname + '-' + config.version() + '.js';
