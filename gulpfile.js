@@ -2,8 +2,7 @@
 
 var gulp = require('gulp');
 var npdcGulp = require('npdc-gulp');
-var runSequence = require('run-sequence');
-var watch = require('gulp-watch');
+var runSequence = require('run-sequence').use(gulp);
 var changed = require('gulp-changed');
 
 var config = require('./config')(npdcGulp.baseConfig);
@@ -25,7 +24,7 @@ gulp.task('copy-demo', function() {
 });
 
 gulp.task('watch-demo', function () {
-  watch(config.src.root+'/**/demo/**', function () { runSequence('copy-demo');});
+  gulp.watch(config.src.root+'/**/demo/**', function () { runSequence('copy-demo');});
 });
 
 gulp.task('default', function (cb) {
