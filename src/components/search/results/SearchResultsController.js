@@ -54,9 +54,9 @@ var SearchResultsController = function($scope, $location, $http, $rootScope,
     return title;
   };
 
-  $scope.subTitle = (entry) => {
-    if (typeof options.subTitle === 'function') {
-      return options.subTitle.call({}, entry);
+  $scope.subtitle = (entry) => {
+    if (typeof options.subtitle === 'function') {
+      return options.subtitle.call({}, entry);
     }
     if (options.subtitle) {
       return valueFromPath(entry, options.subtitle);
