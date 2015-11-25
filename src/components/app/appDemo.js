@@ -5,7 +5,7 @@ let angular = require('angular');
 
 let appDemo = angular.module('appDemo', ['npdcUi', 'templates']);
 
-appDemo.controller('demoCtrl', ($scope, NpolarApiSecurity, NpolarApiMessage) => {
+appDemo.controller('AppDemoCtrl', ($scope, NpolarApiSecurity, NpolarApiMessage) => {
   NpolarApiSecurity.isAuthorized = () => true;
   $scope.resource = {
     path: '/demo'
@@ -18,4 +18,12 @@ appDemo.controller('demoCtrl', ($scope, NpolarApiSecurity, NpolarApiMessage) => 
   $scope.info = function () {
     NpolarApiMessage.emit('npolar-info', 'info');
   };
+});
+
+// Routing
+appDemo.config(function ($routeProvider) {
+  $routeProvider.otherwise({
+    templateUrl: 'demo.tmpl',
+    controller: 'AppDemoCtrl'
+  });
 });

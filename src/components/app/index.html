@@ -4,21 +4,15 @@
     <title>NPDC Application</title>
     <link href="/assets/npdc-common-master-latest.css" rel="stylesheet">
     <meta name="viewport" content="initial-scale=1" />
-    <style>
-      .np-content {
-        height: 200px;
-      }
-    </style>
+
+    <script type="text/ng-template" id="demo.tmpl">
+      <div style="height: 2000px;"></div>
+    </script>
+
   </head>
 
-  <body ng-controller="demoCtrl">
-    <div style="position: absolute; top: 200px; left: 15%; z-index: 99;">
-      <button ng-click="error();">error</button>
-      <button ng-click="info();">info</button>
-    </div>
+  <body>
     <npdc:app></npdc:app>
-    <npdc:create-button class="np-primary-control"></npdc:create-button>
-
     <script src="/demo/demos.js"></script>
   </body>
 </html>

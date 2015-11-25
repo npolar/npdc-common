@@ -9,6 +9,7 @@ require('jusas-angularjs-slider');
 require('angular-marked');
 require('angular-route');
 require('formula');
+require('./browser-warning');
 
 var ui = angular.module('npdcUi', ['ngRoute', 'npolarUi', 'npolarApi', 'ngMaterial',
   'ngAnimate', 'rzModule', 'hc.marked', 'formula', 'templates']);
