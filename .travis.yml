@@ -12,8 +12,13 @@ branches:
   except:
     - ci
 env:
+  - CXX=g++-4.8
   global:
     secure: "Bj3btEhZtbJcApzI4JQw3LCU1xqbprYmS4ufrUFt0gGhtfvBgEjooObgKUWvsddosEI25tl1bru4vLHfoiYawQmYtJxJXmeUhXlIdN4bm1QuQLk0NmCE3phvvxq9p4JlzH14E0GpZKVvuArLi5KGV7REc5o4YssY6+mFEvBOkXPOOeeo0Sa1ubw9RY8Zhrng4FVU2Ajgq5afRHxU7AWjNXph4GuJvhM1D+wGP1yaeSNpn4QWxFX7QGSkcdPQhz1oOvqduhHRb/lf9eL05HsFTVX5kCDyeI/bRknWKAG7KEjFURVTRX4xOEekRMAzGJHGA1WG4HQE0i+D0m81SfrCIn3T8AbrYvDPEsgnVgMa1aWEr+WmwUk4ZFeP/pWiK70qHOYL7k+0E9FsNY0VZOCPQHqUduyPRcAnPItHa+KbjdwYEcor3ETZjhK6geCPeci2FZ5wIyoeThObHR6GedGi8lcb3pzCcHhFVLaf70EPj5hr4ellHwLZUqoR1l1g9jO3bjy9UccCm3NDQv8pFC3b20QErZd9rXKJcqC+lawq1+F2gSeTs3mLypV9pYR6NSVxd1rqHxyyS3JbPSSMIKlI1H4qXBpE5lE4Ppo0GJCm4DlZ7K2yMUzH2u0YPNLVJUeUCG8OokOxLyqVfqzM3WvTIOVxpRu5CICFbewr7iPHR7M="
+addons:
+  apt:
+    packages:
+    - g++-4.8
 after_script:
   - git config user.name "Travis CI"
   - git config user.email "travis.ci@npolar.no"
