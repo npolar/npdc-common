@@ -173,7 +173,7 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
 
   // Content
   $scope.i18n = function(key) {
-    return 'npdc.field.'+key;
+    return 'field.'+key;
   };
 
 };

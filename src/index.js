@@ -31,13 +31,11 @@ ui.config(function($mdThemingProvider) {
   $mdThemingProvider.theme('white').primaryPalette('npdcPrimary').accentPalette('grey');
 });
 
-ui.run(($http, NpolarLang, NpolarTranslate) => {
+ui.run(($http, NpolarTranslate) => {
   // Load text dictionary
   $http.get('//api.npolar.no/text/?q=&filter-bundle=npolar|npdc&format=json&variant=array&limit=all').then(response => {
     NpolarTranslate.addToDictionary(response.data);
   });
-
-  NpolarLang.setLanguages(['en', 'nb', 'nn']);
 });
 
 require('./components');
