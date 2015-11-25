@@ -34,7 +34,7 @@ ui.config(function($mdThemingProvider) {
 ui.run(($http, NpolarTranslate) => {
   // Load text dictionary
   $http.get('//api.npolar.no/text/?q=&filter-bundle=npolar|npdc&format=json&variant=array&limit=all').then(response => {
-    NpolarTranslate.addToDictionary(response.data);
+    NpolarTranslate.appendToDictionary(response.data);
   });
 });
 

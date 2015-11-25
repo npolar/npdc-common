@@ -9,11 +9,11 @@ var config = function(baseConfig) {
     'version': function () {return pkg.version;},
     deps: {
       css: [
-        require.resolve('angular-material/angular-material.css'),
-        require.resolve('jusas-angularjs-slider/dist/rzslider.css'),
+        'node_modules/angular-material/angular-material.css',
+        'node_modules/jusas-angularjs-slider/dist/rzslider.css',
         baseConfig.src.root + '/material-icons.css'
       ].concat(baseConfig.deps.css),
-      sharedAssets: [require.resolve('material-design-icons').replace('index.html', '') + 'iconfont/*']
+      sharedAssets: ['node_modules/material-design-icons/iconfont/*']
     },
     dist: {
       approot: baseConfig.dist.root + '/demo',
