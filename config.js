@@ -7,6 +7,7 @@ var config = function(baseConfig) {
     'pkg': pkg,
     'pkgname': pkg.name,
     'version': function () {return pkg.version;},
+    name: 'assets',
     deps: {
       css: [
         'node_modules/angular-material/angular-material.css',
