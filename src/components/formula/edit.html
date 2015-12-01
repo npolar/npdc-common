@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <npdc:bottom-sheet options="bottomSheetOptions"></npdc:bottom-sheet>
 <md-content ng-show="document" ng-class="{ 'np-bottom-sheet-static': bottomSheetOptions.alwaysShow }">
-  <div layout-padding>
+  <!--div layout-padding>
     <div ng-show="!isChanged() && document._rev">Document unchanged since last save {{ document.updated }}</div>
     <div ng-show="isChanged() && document._rev">Autosaving in {{ 30 - i%30 }} seconds</div>
-  </div>
+  </div-->
   <div formula="formula"></div>
   <npdc:save-button class="np-primary-control"></npdc:save-button>
 </md-content>
