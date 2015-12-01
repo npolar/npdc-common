@@ -10,7 +10,7 @@ $offset: 9%;
 
 .np-content-wrapper {
   background-color: $color-bg-dark;
-  min-height: 100vh;
+  min-height: calc(100vh - 215px); // subtract footer!
   overflow: visible;
 
   .np-content-card {
