@@ -32,7 +32,15 @@ ui.config(function($mdThemingProvider) {
   $mdThemingProvider.theme('white').primaryPalette('npdcPrimary').accentPalette('grey');
 });
 
-ui.run(($http, NpolarTranslate) => {
+ui.run(($http, NpolarTranslate, $templateCache) => {
+  let og = $templateCache.get;
+  $templateCache.get = function () {
+    let o = og.apply(this, arguments);
+    if (!o) {
+      throw `${arguments[0]} not in templateCache!`;
+    }
+    return o;
+  };
   // Load text dictionary
   $http.get('//api.npolar.no/text/?q=&filter-bundle=npolar|npdc&format=json&variant=array&limit=all').then(response => {
     NpolarTranslate.appendToDictionary(response.data);
