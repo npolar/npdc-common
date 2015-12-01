@@ -55,8 +55,14 @@ dl {
   }
 }
 
+
+// need to raise z-index to allow leaflet an others to use bigger range
 .md-open-menu-container {
-  z-index: 1100;
+  z-index: 1100 !important;
+}
+
+.md-menu-backdrop {
+  z-index: 1050 !important;
 }
 
 #leaflet-map {
