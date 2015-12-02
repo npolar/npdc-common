@@ -31,7 +31,7 @@ let npdcAppConfigFactory = function (NpdcAutocompleteConfigFactory, NpdcSearchCo
         link: "/people",
         name: "People"
       }, {
-        link: "/placename",
+        link: "//placename.npolar.no",
         name: "Placenames"
       }, {
         link: "/project",
