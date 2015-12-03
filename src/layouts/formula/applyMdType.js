@@ -32,6 +32,7 @@ let applyMdType = function(FileFunnelService) {
       field.mdType = 'select';
     } else if (isFile(field)) {
       field.mdType = 'file';
+      field.disabled = true;
     } else if (isNormalInput(field)) {
       field.mdType = 'input';
     } else if (isFileArray(field)) {
@@ -78,7 +79,7 @@ let applyMdType = function(FileFunnelService) {
                   default:
                     // noop
                 }
-                field.disabled = true;
+                field.readonly = true;
               });
             });
           });
