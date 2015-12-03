@@ -13,7 +13,6 @@ var formula = function ($mdDialog, npdcAppConfig) {
           items: [],
           alwaysShow: false
         };
-        console.log('security', scope.security.isAuthorized('delete', scope.resource.path), scope.document._rev);
         if (scope.security.isAuthorized('delete', scope.resource.path) && scope.document._rev) {
           scope.bottomSheetOptions.items.push({
             name: 'Delete',

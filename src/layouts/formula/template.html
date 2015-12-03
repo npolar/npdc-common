@@ -68,7 +68,7 @@
               <md-input-container ng-if="field.mdType === 'input'" class="np-formula-input">
                 <label for="{{field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title ) }}</label>
                 <div ng-include="'ft-field-info.html'" class="np-field-info" ng-if="field.description"></div>
-                <div formula:field="field" ng-attr-readonly="field.readonly"></div>
+                <div formula:field="field" ng-attr-readonly="{{field.readonly}}"></div>
                 <div ng-include="'ft-validation-message.html'" class="np-validation-message"></div>
               </md-input-container>
 
@@ -76,7 +76,7 @@
               <md-input-container ng-if="field.mdType === 'file'" class="np-formula-file">
                 <label for="{{field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title ) }}</label>
                 <div ng-include="'ft-field-info.html'" class="np-field-info" ng-if="field.description"></div>
-                <input type="text" ng-model="field.value" filefunnel ng-readonly="true">
+                <input type="text" ng-model="field.value" filefunnel readonly>
                 <div ng-include="'ft-validation-message.html'" class="np-validation-message"></div>
               </md-input-container>
             </div>

@@ -3,6 +3,8 @@
 // @ngInject
 let applyMdType = function(FileFunnelService) {
 
+  const FILE_SCHEME_REGEX = /\/_schema\/ref\/file\//;
+
   let isNumberRange = function(field) {
     return field.typeOf('range');
   };
@@ -12,8 +14,11 @@ let applyMdType = function(FileFunnelService) {
   };
 
   let isFile = function(field) {
-    return field.format === 'file-uri' ||
-      (field.schema.items && /\/_schema\/ref\/file\//.test(field.schema.items.id));
+    return field.format === 'file-uri' || (field.schema &&
+      (FILE_SCHEME_REGEX.test(field.schema.id) ||
+        (field.schema.items && FILE_SCHEME_REGEX.test(field.schema.items.id))
+      ));
+
   };
 
   let isFileArray = function(field) {
@@ -32,7 +37,7 @@ let applyMdType = function(FileFunnelService) {
       field.mdType = 'select';
     } else if (isFile(field)) {
       field.mdType = 'file';
-      field.disabled = true;
+      field.readonly = true;
     } else if (isNormalInput(field)) {
       field.mdType = 'input';
     } else if (isFileArray(field)) {
@@ -50,18 +55,19 @@ let applyMdType = function(FileFunnelService) {
     scope: {
       field: '=applyMdType'
     },
-    link: function(scope, element, attrs, controller) {
-      setMdType(scope.field);
+    // @ngInject
+    controller: function($scope) {
+      setMdType($scope.field);
 
-      if (isFileArray(scope.field)) {
-        let oldItemAdd = scope.field.itemAdd;
-        scope.field.itemAdd = function(ev) {
+      if (isFileArray($scope.field)) {
+        let oldItemAdd = $scope.field.itemAdd;
+        $scope.field.itemAdd = function(ev) {
           FileFunnelService.showUpload(ev, {multiple: true}).then(files => {
             files.forEach(file => {
               if (file.status !== FileFunnelService.status.COMPLETED) {
                 return;
               }
-              let newItem = oldItemAdd.call(scope.field);
+              let newItem = oldItemAdd.call($scope.field);
               newItem.fields.forEach(field => {
                 switch (field.id) {
                   case 'uri':
