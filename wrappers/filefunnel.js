@@ -1,6 +1,6 @@
 'use strict';
 
-let FileFunnel = require('filefunnel.js/src/filefunnel.js');
+let FileFunnel = require('filefunnel.js');
 let angular = require('angular');
 
 let ff = angular.module('filefunnel', ['ngMaterial']);
@@ -8,19 +8,19 @@ let ff = angular.module('filefunnel', ['ngMaterial']);
 ff.controller('FFUploadController', function ($scope, $mdDialog, options) {
 	let ff = new FileFunnel(null, options);
 	$scope.ff = ff;
-	$scope.progress = 0;
-	$scope.error = false;
 
 	ff._elements.fileInput.on('change', () => {
 		$scope.$apply();
 	});
 
 	ff.on('success', file => {
-		$mdDialog.hide(file.location);
+		if (ff.status === FileFunnel.status.COMPLETED) {
+			$mdDialog.hide(ff.files);
+		}
 	}).on('error', file => {
-		$scope.error = file.elements.info.value;
+		// noop
 	}).on('progress', file => {
-		$scope.progress =	file.progress;
+		// noop
 	});
 
 	$scope.isDisabled = function () {
@@ -29,29 +29,43 @@ ff.controller('FFUploadController', function ($scope, $mdDialog, options) {
 
 });
 
-ff.directive('filefunnel', function () {
+ff.service('FileFunnelService', function ($mdDialog) {
+	let options = {
+		server: "http://apptest.data.npolar.no/_file",
+		accept: "*/*",
+		chunked: true
+	};
+
+	let showUpload = function (ev, opts) {
+		options = Object.assign({}, options, opts);
+		return $mdDialog.show({
+			clickOutsideToClose:true,
+			controller: 'FFUploadController',
+			locals: {options},
+			targetEvent: ev,
+			template: require('./filefunnel.html')
+		});
+	};
+
+	return {
+		options,
+		showUpload,
+		status: FileFunnel.status
+	};
+});
+
+ff.directive('filefunnel', function (FileFunnelService) {
 	return {
 		scope: {
 			options: '=filefunnel'
 		},
 		//@ngInject
 		controller($scope, $mdDialog) {
-			let options = Object.assign({}, {
-				server: "http://aptest.data.npolar.no/_file",
-				accept: "*/*",
-				chunked: true
-			}, $scope.options);
-
 			$scope.showUpload = function (ev) {
-				$mdDialog.show({
-					clickOutsideToClose:true,
-					controller: 'FFUploadController',
-					locals: {options},
-					targetEvent: ev,
-					template: require('./filefunnel.html')
-				}).then(fileref => {
-					ev.target.value = options.server + fileref;
-				});
+				FileFunnelService.showUpload(ev, $scope.options)
+					.then(files => {
+						ev.target.value = FileFunnelService.options.server + files[0].location;
+					});
 			};
 		},
 		link(scope, element, attrs) {

@@ -18,8 +18,9 @@
       "string_color",
       {
         "id": "string_file",
-        "type": "file"
-      }
+        "format": "file-uri"
+      },
+      "file_ref"
     ]
   }, {
     "title": "numbers and boolean",
@@ -39,7 +40,9 @@
       "array_object",
       "array_string_enum",
       "array_string",
-      "ref_object"
+      "ref_object",
+      "array_file",
+      "array_string:file"
     ]
   }, {
     "title": "array hierarchy",

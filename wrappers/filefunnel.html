@@ -2,14 +2,14 @@
 <md-dialog aria-label="File upload" class="filefunnel">
   <md-dialog-content>
     <div class="md-dialog-content">
-      <h2 class="md-title">Upload attachment</h2>
+      <h2 class="md-title">Upload attachments</h2>
       <md-list>
         <md-list-item class="md-3-line" ng-repeat="file in ff.files">
           <md-icon class="md-avatar">attachment</md-icon>
           <div class="md-list-item-text">
             <h3>{{file.reference.name}}</h3>
-            <md-progress-linear md-mode="determinate" value="{{progress}}"></md-progress-linear>
-            <span ng-if="error" class="info error">{{error}}</span>
+            <md-progress-linear md-mode="determinate" value="{{file.progress}}"></md-progress-linear>
+            <span class="{{file.elements.info.dom.className}}">{{file.elements.info.value}}</span>
           </div>
         </md-list-item>
       </md-list>

@@ -9,10 +9,11 @@ require('jusas-angularjs-slider');
 require('angular-marked');
 require('angular-route');
 require('formula');
+require('../wrappers/filefunnel');
 require('./browser-warning');
 
 var ui = angular.module('npdcUi', ['ngRoute', 'npolarUi', 'npolarApi', 'ngMaterial',
-  'ngAnimate', 'rzModule', 'hc.marked', 'formula', 'templates']);
+  'ngAnimate', 'rzModule', 'hc.marked', 'formula', 'filefunnel', 'templates']);
 
 ui.config(function($mdThemingProvider) {
   var npdcPrimary = $mdThemingProvider.extendPalette('light-blue', {
