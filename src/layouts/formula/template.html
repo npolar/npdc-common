@@ -68,6 +68,14 @@
               <div formula:field="field"></div>
               <div ng-include="'ft-validation-message.html'" class="np-validation-message"></div>
             </md-input-container>
+
+            <!-- file -->
+            <md-input-container ng-if="field.mdType === 'file'" class="np-formula-file">
+              <label for="{{field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title ) }}</label>
+              <div ng-include="'ft-field-info.html'" class="np-field-info" ng-if="field.description"></div>
+              <input type="text" ng-model="field.value" filefunnel>
+              <div ng-include="'ft-validation-message.html'" class="np-validation-message"></div>
+            </md-input-container>
           </div>
 
           <!-- object -->
@@ -170,7 +178,7 @@
     </md-tab>
   </md-tabs>
 
-  <footer layout="row" layout-align="space-between center" ng-if="!(form.uiValidateHidden && form.uiSaveHidden)">
+  <div layout="row" layout-align="space-between center" ng-if="!(form.uiValidateHidden && form.uiSaveHidden)">
     <span ng-if="form.errors" title="{{ form.errors.join('\n') }}">{{ form.i18n.invalid | formulaReplace : { count: form.errors.length } }}</span>
 
     <div>
@@ -181,7 +189,7 @@
 
     </div>
 
-  </footer>
+  </div>
 </form>
 
 <npdc:loader ng-if="!form.fieldsets"></npdc:loader>

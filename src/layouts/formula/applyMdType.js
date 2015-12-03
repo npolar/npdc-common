@@ -11,6 +11,10 @@ let applyMdType = function() {
     return ['integer', 'number', 'string'].indexOf(field.schema.type) !== -1;
   };
 
+  let isFile = function (field) {
+    return field.typeOf('file'); // || field.schema.id.test(/\/file\//);
+  };
+
   let hasSubFields = function(field) {
     return field.fields instanceof Array;
   };
@@ -19,8 +23,10 @@ let applyMdType = function() {
     field.mdType = field.schema.type;
     if (isNumberRange(field)) {
       field.mdType = 'range';
-	} else if (field.typeOf('select')) {
+    } else if (field.typeOf('select')) {
       field.mdType = 'select';
+    } else if (isFile(field)) {
+      field.mdType = 'file';
     } else if (isNormalInput(field)) {
       field.mdType = 'input';
     } else if (hasSubFields(field)) {
