@@ -74,8 +74,8 @@ let initMdField = function(FileFunnelService, npdcAutocompleteSourceService) {
           console.warn(e);
           field.source = [];
         });
-        $scope.querySearch = function (q) {
-          let results = field.source.filter(item => item.includes(q));
+        field.querySearch = function (q) {
+          let results = this.source.filter(item => item.includes(q));
           console.log('querySearch', q, results);
           return results;
         };

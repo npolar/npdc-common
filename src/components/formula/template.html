@@ -83,13 +83,12 @@
               <!-- autocomplete -->
               <md-autocomplete ng-if="field.mdType === 'autocomplete'"
                 md-items="item in field.querySearch(field.value)"
-                md-item-text="item"
                 md-min-length="0"
                 md-search-text="field.value"
                 md-floating-label="{{field.title}}">
 
                 <md-item-template>
-                  <span md-highlight-flags="^i" md-highlight-text="field.value" ng-if="item"></span>
+                  <span md-highlight-flags="^i" md-highlight-text="field.value" ng-if="item">{{item}}</span>
                 </md-item-template>
 
               </md-autocomplete>
