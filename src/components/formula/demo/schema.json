@@ -178,6 +178,15 @@
           }
         }
       }
+    },
+    "autocomplete_array": {
+      "type": "string"
+    },
+    "autocomplete_url": {
+      "type": "string"
+    },
+    "autocomplete_fn": {
+      "type": "string"
     }
   },
   "required": [

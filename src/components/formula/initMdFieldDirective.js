@@ -1,7 +1,7 @@
 'use strict';
 
 // @ngInject
-let applyMdType = function(FileFunnelService) {
+let initMdField = function(FileFunnelService, npdcAutocompleteSourceService) {
 
   const FILE_SCHEME_REGEX = /\/_schema\/ref\/file\//;
 
@@ -11,6 +11,10 @@ let applyMdType = function(FileFunnelService) {
 
   let isNormalInput = function(field) {
     return ['integer', 'number', 'string'].indexOf(field.schema.type) !== -1;
+  };
+
+  let isAutoComplete = function (field) {
+    return field.typeOf("text") && field.hasOwnProperty("autocomplete");
   };
 
   let isFile = function(field) {
@@ -38,6 +42,8 @@ let applyMdType = function(FileFunnelService) {
     } else if (isFile(field)) {
       field.mdType = 'file';
       field.readonly = true;
+    } else if (isAutoComplete(field)) {
+      field.mdType = 'autocomplete';
     } else if (isNormalInput(field)) {
       field.mdType = 'input';
     } else if (isFileArray(field)) {
@@ -53,21 +59,37 @@ let applyMdType = function(FileFunnelService) {
     restrict: 'A',
     require: ['^formula'],
     scope: {
-      field: '=applyMdType'
+      field: '=initMdField'
     },
     // @ngInject
     controller: function($scope) {
-      setMdType($scope.field);
+      let field = $scope.field;
+      setMdType(field);
 
-      if (isFileArray($scope.field)) {
-        let oldItemAdd = $scope.field.itemAdd;
-        $scope.field.itemAdd = function(ev) {
+      if (isAutoComplete(field)) {
+        field.source = [];
+        npdcAutocompleteSourceService.getSource(field.autocomplete).then(source => {
+          field.source = source;
+        }, (e) => {
+          console.warn(e);
+          field.source = [];
+        });
+        $scope.querySearch = function (q) {
+          let results = field.source.filter(item => item.includes(q));
+          console.log('querySearch', q, results);
+          return results;
+        };
+      }
+
+      if (isFileArray(field)) {
+        let oldItemAdd = field.itemAdd;
+        field.itemAdd = function(ev) {
           FileFunnelService.showUpload(ev, {multiple: true}).then(files => {
             files.forEach(file => {
               if (file.status !== FileFunnelService.status.COMPLETED) {
                 return;
               }
-              let newItem = oldItemAdd.call($scope.field);
+              let newItem = oldItemAdd.call(field);
               newItem.fields.forEach(field => {
                 switch (field.id) {
                   case 'uri':
@@ -95,4 +117,4 @@ let applyMdType = function(FileFunnelService) {
   };
 };
 
-module.exports = applyMdType;
+module.exports = initMdField;

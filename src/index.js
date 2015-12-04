@@ -49,7 +49,6 @@ ui.run(($http, NpolarTranslate, $templateCache) => {
 });
 
 require('./components');
-require('./layouts');
 
 module.exports = {
   AutoConfig: require('./config/AutoConfig')

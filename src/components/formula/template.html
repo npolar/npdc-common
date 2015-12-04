@@ -22,7 +22,7 @@
     <md-tab label="{{fieldset.title}}" ng-disabled="fieldset.disabled" ng-repeat="fieldset in form.fieldsets">
       <fieldset>
         <div formula:field-definition ng-repeat="field in fieldset.fields">
-          <div apply-md-type="field" ng-show="field.visible">
+          <div init-md-field="field" ng-show="field.visible">
             <!-- input field-->
             <div ng-if="field.typeOf('input')">
 
@@ -79,6 +79,20 @@
                 <input type="text" ng-model="field.value" filefunnel readonly>
                 <div ng-include="'ft-validation-message.html'" class="np-validation-message"></div>
               </md-input-container>
+
+              <!-- autocomplete -->
+              <md-autocomplete ng-if="field.mdType === 'autocomplete'"
+                md-items="item in field.querySearch(field.value)"
+                md-item-text="item"
+                md-min-length="0"
+                md-search-text="field.value"
+                md-floating-label="{{field.title}}">
+
+                <md-item-template>
+                  <span md-highlight-flags="^i" md-highlight-text="field.value" ng-if="item"></span>
+                </md-item-template>
+
+              </md-autocomplete>
             </div>
 
             <!-- object -->
