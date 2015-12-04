@@ -76,7 +76,6 @@ let initMdField = function(FileFunnelService, npdcAutocompleteSourceService) {
         });
         field.querySearch = function (q) {
           let results = this.source.filter(item => item.includes(q));
-          console.log('querySearch', q, results);
           return results;
         };
       }
