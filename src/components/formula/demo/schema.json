@@ -187,6 +187,9 @@
     },
     "autocomplete_fn": {
       "type": "string"
+    },
+    "autocomplete_obj": {
+      "type": "string"
     }
   },
   "required": [

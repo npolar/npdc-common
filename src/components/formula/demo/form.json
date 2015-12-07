@@ -63,6 +63,13 @@
       {
         "id": "autocomplete_fn",
         "autocomplete": "foobar"
+      },
+      {
+        "id": "autocomplete_obj",
+        "autocomplete": {
+          "source": "http://api.npolar.no/publication/?q=&fields=people.email&format=json&variant=array&limit=5",
+          "callback": "emailCallback"
+        }
       }
     ]
     }]

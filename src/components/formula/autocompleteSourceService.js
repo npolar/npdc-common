@@ -4,40 +4,62 @@
 let AutocompleteSourceService = function($http, $q) {
 
   const URI_REGEX = /^(https?|\/\/)/;
-  const ERR = "Invalid autocomplete source";
+  const ERR = "Invalid autocomplete source ";
 
   let sources = {};
 
-  let defineSource = function (key, cb) {
+  let isFn = function (key) {
+    return sources[key] && sources[key].constructor === Function;
+  };
+
+  let isObject = function (source) {
+    return source.constructor === Object &&
+      source.hasOwnProperty('source') && source.hasOwnProperty('callback');
+  };
+
+  let isURI = function (source) {
+    return source && (URI_REGEX.test(source) || (isObject(source) && isURI(source.source)));
+  };
+
+  let defineSourceFunction = function (key, cb) {
     sources[key] = cb;
   };
 
-  let getSource = function (source) {
+  let getSource = function (source, q) {
     let deferred = $q.defer();
 
-    if (sources.hasOwnProperty(source) && sources[source].constructor === Function) {
+    if (isFn(source)) {
       // source is a registred function
       deferred.resolve(sources[source].call({}));
     } else if (URI_REGEX.test(source)) {
       // source is uri
-      $http.get(source).then(response => {
-        deferred.resolve(response);
+      let config = q ? { params: { q: q } } : {};
+      $http.get(source, config).then(response => {
+        deferred.resolve(response.data);
       }, response => {
-        deferred.reject(new Error(ERR, source));
+        deferred.reject(new Error(ERR + source));
       });
     } else if (source.constructor === Array) {
-      // source is json array
+      // source is array
       deferred.resolve(source);
+    } else if (isObject(source)) {
+      // source is object
+      getSource(source.source, q).then(response => {
+        deferred.resolve(sources[source.callback].call({}, response));
+      }, response => {
+        deferred.reject(new Error(ERR + source));
+      });
     } else {
-      deferred.reject(new Error(ERR, source));
+      deferred.resolve(source);
     }
 
     return deferred.promise;
   };
 
   return {
-    defineSource,
-    getSource
+    defineSourceFunction,
+    getSource,
+    isURI
   };
 };
 
