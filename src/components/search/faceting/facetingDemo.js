@@ -5,7 +5,7 @@ let angular = require('angular');
 require('angular-npolar');
 require('angular-route');
 
-let demo = angular.module('faceting', ['ngRoute', 'npdcUi', 'npolarApi']);
+let demo = angular.module('faceting', ['ngRoute', 'npdcCommon', 'npolarApi']);
 
 // Bootstrap ngResource models using NpolarApiResource
 var resource = {'path': '/dataset', 'resource': 'Dataset' };
@@ -60,11 +60,6 @@ demo.controller('FacetingDemoCtrl', function ($scope, $location, $controller, Da
         {q: newVal});
       NpdcSearchService.search(query);
     }
-  });
-
-  $scope.$on('npolar-feed', (event, data) => {
-    console.log('feed', data);
-    $scope.options.facets = data.facets;
   });
 
 });

@@ -6,16 +6,16 @@
 var formula = function ($mdDialog, npdcAppConfig) {
   return {
     templateUrl: 'npdc-common/src/components/formula/edit.html',
-    link(scope, iElement, iAttrs) {
+    //@ngInject
+    controller($scope) {
 
       let initBottomSheet = function () {
-        scope.bottomSheetOptions = {
+        $scope.bottomSheetOptions = {
           items: [],
           alwaysShow: false
         };
-        console.log('security', scope.security.isAuthorized('delete', scope.resource.path), scope.document._rev);
-        if (scope.security.isAuthorized('delete', scope.resource.path) && scope.document._rev) {
-          scope.bottomSheetOptions.items.push({
+        if ($scope.security.isAuthorized('delete', $scope.resource.path) && $scope.document._rev) {
+          $scope.bottomSheetOptions.items.push({
             name: 'Delete',
             icon: 'delete',
             classes: 'md-warn',
@@ -28,7 +28,7 @@ var formula = function ($mdDialog, npdcAppConfig) {
                 .ok('Delete')
                 .cancel('Cancel');
               $mdDialog.show(confirm).then(function() {
-                scope.delete();
+                $scope.delete();
               }, function() {
                 // noop
               });
@@ -37,11 +37,10 @@ var formula = function ($mdDialog, npdcAppConfig) {
         }
       };
 
-      scope.$watch('document', (newVal) => {
+      $scope.$watch('document', (newVal) => {
         if (newVal) {
           npdcAppConfig.cardTitle = newVal._rev ? newVal.title || newVal.id.slice(0,8) :
             'New document, not yet saved';
-
           initBottomSheet();
         }
       }, true);

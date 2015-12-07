@@ -1,7 +1,7 @@
 "use strict";
 
 var angular = require('angular');
-var ui = angular.module('npdcUi');
+var ui = angular.module('npdcCommon');
 require('./search');
 require('./document');
 
@@ -24,7 +24,6 @@ ui.directive('npdcSaveButton', require('./button/SaveButton'));
 ui.directive('npdcDeleteButton', require('./button/DeleteButton'));
 ui.controller('NpdcButtonComponent', require('./button/ButtonComponent'));
 
-ui.directive('npdcFormula', require('./formula/formula'));
 
 ui.controller('NpdcAppController', require('./app/AppController'));
 ui.directive('npdcApp', require('./app/appDirective'));
@@ -34,3 +33,11 @@ ui.directive('npdcBottomSheet', require('./bottom-sheet/bottomSheetDirective'));
 
 ui.directive('npdcLoader', require('./loader/loaderDirective'));
 ui.directive('npdcFooter', require('./footer/footerDirective'));
+
+ui.service('npdcAutocompleteSourceService', require('./formula/autocompleteSourceService'));
+ui.directive('npdcFormula', require('./formula/formulaDirective'));
+ui.directive('initMdField', require('./formula/initMdFieldDirective'));
+
+ui.run(function($templateCache) {
+  $templateCache.put('formula/material.html', require('./formula/template.html'));
+});

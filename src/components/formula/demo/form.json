@@ -1,0 +1,76 @@
+{
+  "title": "Formula Test Form",
+  "fieldsets": [{
+    "title": "strings",
+    "fields": [
+      "string",
+      "string_required",
+      "string_minlength_maxlength",
+      {
+        "id": "string_textarea",
+        "type": "textarea"
+      },
+      "string_datetime",
+      "string_date",
+      "string_datefullyear",
+      "string_time",
+      "string_enum_default",
+      "string_color",
+      {
+        "id": "string_file",
+        "format": "file-uri"
+      },
+      "file_ref"
+    ]
+  }, {
+    "title": "numbers and boolean",
+    "fields": [
+      "integer_maximum",
+      "number_default",
+      {
+        "id": "number_minimum_maximum",
+        "step": 0.1,
+        "type": "range"
+      },
+      "boolean"
+    ]
+  }, {
+    "title": "arrays and objects",
+    "fields": [
+      "array_object",
+      "array_string_enum",
+      "array_string",
+      "ref_object",
+      "array_file",
+      "array_string:file"
+    ]
+  }, {
+    "title": "array hierarchy",
+    "fields": [
+      "array_hierarchy"
+    ]
+  },{
+    "title": "autocomplete",
+    "fields": [
+      {
+        "id": "autocomplete_array",
+        "autocomplete": ["Dalene", "Allan", "Lecia", "Leta", "Matthew", "Marlen", "Collette", "Alfredo", "Francina", "Dorene", "Ali", "Anette", "Courtney", "Arlena", "Spring", "Suzanna", "Roseanne", "Evita", "Gaynell", "Ellena", "Lucinda", "Delisa", "Lamont", "Eloy", "Luanna", "Cyndi", "Lynn", "Clare", "Stacey", "Tameka", "Cheryll", "Jong", "Hoyt", "Marhta", "Roselia", "Gala", "Chun", "Weston", "Zola", "Luana", "Arnette", "Delorse", "Libbie", "Nenita", "Lorina", "Carolyn", "Burma", "Russell", "Beatris", "Macie"]
+      },
+      {
+        "id": "autocomplete_url",
+        "autocomplete": "//api.npolar.no/"
+      },
+      {
+        "id": "autocomplete_fn",
+        "autocomplete": "foobar"
+      },
+      {
+        "id": "autocomplete_obj",
+        "autocomplete": {
+          "source": "http://api.npolar.no/publication/?q=&fields=people.email&format=json&variant=array&limit=5",
+          "callback": "emailCallback"
+        }
+      }
+    ]
+    }]
+}

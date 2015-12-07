@@ -3,4 +3,4 @@
 require('../../');
 let angular = require('angular');
 
-angular.module('footerDemo', ['npdcUi']);
+angular.module('footerDemo', ['npdcCommon']);

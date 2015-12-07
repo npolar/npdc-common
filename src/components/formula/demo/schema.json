@@ -58,6 +58,13 @@
       "description": "string input with color format property set",
       "format": "color"
     },
+    "string_file": {
+      "type": "string",
+      "description": "string input (file ref)"
+    },
+    "file_ref": {
+      "$ref": "http://api.npolar.no/_schema/ref/file"
+    },
     "integer_maximum": {
       "type": "integer",
       "description": "integer input with maximum property set",
@@ -121,6 +128,21 @@
         "minLength": 5
       }
     },
+    "array_file": {
+      "type": "array",
+      "description": "array input with items type property set to string",
+      "items": {
+        "$ref": "http://api.npolar.no/_schema/ref/file"
+      }
+    },
+    "array_string:file": {
+      "type": "array",
+      "description": "array input with items type property set to string",
+      "items": {
+        "type": "string",
+        "format": "file-uri"
+      }
+    },
     "ref_object": {
       "$ref": "http://api.npolar.no/schema/user"
     },
@@ -156,6 +178,18 @@
           }
         }
       }
+    },
+    "autocomplete_array": {
+      "type": "string"
+    },
+    "autocomplete_url": {
+      "type": "string"
+    },
+    "autocomplete_fn": {
+      "type": "string"
+    },
+    "autocomplete_obj": {
+      "type": "string"
     }
   },
   "required": [

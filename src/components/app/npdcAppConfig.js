@@ -70,7 +70,11 @@ let npdcAppConfigFactory = function (NpdcAutocompleteConfigFactory, NpdcSearchCo
     cardTitle: "Norwegian Polar Data Centre",
     search: {
       local: new NpdcSearchConfigFactory(),
-      global: new NpdcAutocompleteConfigFactory({showCollections: true, global: true})
+      global: new NpdcAutocompleteConfigFactory({
+        showCollections: true,
+        global: true,
+        placeholder: "Search Norwegian Polar Data Centre"
+      })
     }
   };
 };

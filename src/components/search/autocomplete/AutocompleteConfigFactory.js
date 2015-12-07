@@ -1,10 +1,10 @@
 'use strict';
 
 // @ngInject
-let AutocompleteConfigFactory = function($location, $rootScope) {
+let AutocompleteConfigFactory = function() {
 
   let showCollections = false;
-  let placeholder = "Search Norwegian Polar Data Centre";
+  let placeholder = "";
 
   let collections = {
     '/dataset': true,
@@ -26,6 +26,7 @@ let AutocompleteConfigFactory = function($location, $rootScope) {
     score: true,
     fields: 'id,_score,schema,collection,titles,names,title,name,code,platform,publication_type,journal.name,published_sort'
   };
+
 
   let constructor = function (options) {
     return Object.assign({

@@ -3,4 +3,4 @@
 require('../../');
 let angular = require('angular');
 
-angular.module('grid', ['npdcUi']);
+angular.module('grid', ['npdcCommon']);

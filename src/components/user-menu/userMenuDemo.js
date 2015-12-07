@@ -3,4 +3,4 @@
 require('../../');
 let angular = require('angular');
 
-angular.module('userMenu', ['npdcUi']);
+angular.module('userMenu', ['npdcCommon']);

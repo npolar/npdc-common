@@ -92,7 +92,6 @@ var SearchResultsController = function($scope, $location, $http, $rootScope,
       $http.get(nextLink.href.replace(/^https?:/, '')).success(function(response) {
         response.feed.entries = $scope.feed.entries.concat(response.feed.entries);
         $scope.feed = response.feed;
-        $rootScope.$broadcast('npolar-feed', response.feed);
       });
     }
   };

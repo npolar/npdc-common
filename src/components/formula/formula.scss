@@ -165,3 +165,52 @@
     }
   }
 }
+
+
+.filefunnel {
+  background-color: $color-bg-light;
+  box-shadow: $bar-shadow;
+  max-width: 600px;
+  width: 90vw;
+
+  h2 {
+    margin-top: 0;
+  }
+
+  fieldset {
+    border: 0;
+  }
+
+  legend {
+    display: none;
+  }
+
+  input[type="button"],
+  input[type="reset"],
+  input[type="submit"] {
+    margin: 5px;
+  }
+
+  .info {
+    display: block;
+    margin-top: 5px;
+  }
+
+  .error {
+    color: $color-np-error;
+  }
+
+  .success {
+    color: $color-np-success;
+  }
+
+  .size,
+  .type {
+    text-overflow: ellipsis;
+    width: 90px;
+  }
+
+  md-progress-linear {
+    margin-top: 5px;
+  }
+}

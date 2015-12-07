@@ -1,7 +1,7 @@
 "use strict";
 
 var angular = require('angular');
-var ui = angular.module('npdcUi');
+var ui = angular.module('npdcCommon');
 
 ui.directive('npdcDocument', require('./show/document'));
 ui.directive('npdcShow', require('./show/document'));

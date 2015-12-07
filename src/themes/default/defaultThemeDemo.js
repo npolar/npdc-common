@@ -3,4 +3,4 @@
 require('../../');
 let angular = require('angular');
 
-angular.module('defaultThemeDemo', ['npdcUi', 'templates']);
+angular.module('defaultThemeDemo', ['npdcCommon', 'templates']);

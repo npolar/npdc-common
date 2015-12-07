@@ -3,4 +3,4 @@
 require('../../');
 let angular = require('angular');
 
-angular.module('list', ['npdcUi']);
+angular.module('list', ['npdcCommon']);

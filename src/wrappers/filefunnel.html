@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<md-dialog aria-label="File upload" class="filefunnel">
+  <md-dialog-content>
+    <div class="md-dialog-content">
+      <h2 class="md-title">Upload attachments</h2>
+      <md-list>
+        <md-list-item class="md-3-line" ng-repeat="file in ff.files">
+          <md-icon class="md-avatar">attachment</md-icon>
+          <div class="md-list-item-text">
+            <h3>{{file.reference.name}}</h3>
+            <md-progress-linear md-mode="determinate" value="{{file.progress}}"></md-progress-linear>
+            <span class="{{file.elements.info.dom.className}}">{{file.elements.info.value}}</span>
+          </div>
+        </md-list-item>
+      </md-list>
+    </div>
+  </md-dialog-content>
+  <div class="md-actions">
+    <div flex layout="row" layout-align="space-between center">
+      <md-button aria-label="Choose file" class="md-fab md-mini" ng-click="ff.browse();">
+        <md-icon>add</md-icon>
+      </md-button>
+      <md-button class="md-raised md-primary" ng-click="ff.upload();" ng-disabled="isDisabled()">Upload</md-button>
+    </div>
+  </div>
+</md-dialog>

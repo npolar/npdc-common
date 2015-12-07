@@ -3,7 +3,7 @@
 require('../../');
 let angular = require('angular');
 
-angular.module('bottomSheetDemo', ['ngRoute', 'npdcUi', 'templates'])
+angular.module('bottomSheetDemo', ['ngRoute', 'npdcCommon', 'templates'])
   .controller('BottomSheetDemoCtrl', ($scope) => {
     $scope.options = {
       items: [
