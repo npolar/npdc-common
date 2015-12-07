@@ -3,6 +3,6 @@
 require('../../');
 let angular = require('angular');
 
-angular.module('toolbar', ['npdcUi']).controller('ToolbarCtrl', function($scope, npdcAppConfig) {
+angular.module('toolbar', ['npdcCommon']).controller('ToolbarCtrl', function($scope, npdcAppConfig) {
   $scope.options = npdcAppConfig;
 });

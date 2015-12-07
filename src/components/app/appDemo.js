@@ -3,20 +3,20 @@
 require('../../');
 let angular = require('angular');
 
-let appDemo = angular.module('appDemo', ['npdcUi', 'templates']);
+let appDemo = angular.module('appDemo', ['npdcCommon', 'templates']);
 
-appDemo.controller('AppDemoCtrl', ($scope, NpolarApiSecurity, NpolarApiMessage) => {
+appDemo.controller('AppDemoCtrl', ($scope, NpolarApiSecurity, NpolarMessage) => {
   NpolarApiSecurity.isAuthorized = () => true;
   $scope.resource = {
     path: '/demo'
   };
 
   $scope.error = function () {
-    NpolarApiMessage.emit('npolar-error', 'error');
+    NpolarMessage.error('error');
   };
 
   $scope.info = function () {
-    NpolarApiMessage.emit('npolar-info', 'info');
+    NpolarMessage.info('info');
   };
 });
 

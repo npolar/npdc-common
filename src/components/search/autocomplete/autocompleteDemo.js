@@ -3,7 +3,7 @@
 require('../../../');
 let angular = require('angular');
 
-let demo = angular.module('autocompleteDemo', ['npdcUi', 'templates']);
+let demo = angular.module('autocompleteDemo', ['npdcCommon', 'templates']);
 
 demo.controller('demoCtrl', ($scope, NpolarApiSecurity, NpdcAutocompleteConfigFactory) => {
   let options = {showCollections: true};

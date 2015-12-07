@@ -4,7 +4,7 @@ require('../../');
 let angular = require('angular');
 
 angular
-  .module('document', ['npdcUi'])
+  .module('document', ['npdcCommon'])
   .controller('DocumentCtrl', ($scope) => {
     $scope.document = require('./demo/doc.json');
   });

@@ -9,13 +9,13 @@ require('jusas-angularjs-slider');
 require('angular-marked');
 require('angular-route');
 require('formula');
-require('../wrappers/filefunnel');
+require('./wrappers/filefunnel');
 require('./browser-warning');
 
-var ui = angular.module('npdcUi', ['ngRoute', 'npolarUi', 'npolarApi', 'ngMaterial',
+var common = angular.module('npdcCommon', ['ngRoute', 'ngNpolar', 'ngMaterial',
   'ngAnimate', 'rzModule', 'hc.marked', 'formula', 'filefunnel', 'templates']);
 
-ui.config(function($mdThemingProvider) {
+common.config(function($mdThemingProvider) {
   var npdcPrimary = $mdThemingProvider.extendPalette('light-blue', {
     "300": "#0f3f4c",
     "500": "#0c3642",
@@ -33,7 +33,7 @@ ui.config(function($mdThemingProvider) {
   $mdThemingProvider.theme('white').primaryPalette('npdcPrimary').accentPalette('grey');
 });
 
-ui.run(($http, NpolarTranslate, $templateCache) => {
+common.run(($http, NpolarTranslate, $templateCache) => {
   let og = $templateCache.get;
   $templateCache.get = function () {
     let o = og.apply(this, arguments);

@@ -1,7 +1,7 @@
 "use strict";
 
 var angular = require('angular');
-var ui = angular.module('npdcUi');
+var ui = angular.module('npdcCommon');
 require('./search');
 require('./document');
 
