@@ -34,7 +34,7 @@ var task = function (gulp, config) {
       bundler.require([{file: './' + app, expose: 'npdc-common'}, 'angular']);
 
       bundle = function (ids) {
-          var bundleName = config.pkgname + '-' + config.version() + '.js';
+          var bundleName = config.pkgname + '-' + config.version().split('.')[0] + '.js';
           gutil.log('Bundling', ids instanceof Array ? ids : '');
 
           // Browseriy
