@@ -3,7 +3,7 @@ Autocomplete directive
 See NpdcAutocompleteConfig for configuration options
 
 ```xml
-<npdc:autocomplete></npdc:autocomplete>
+<npdc:autocomplete options="options"></npdc:autocomplete>
 ```
 
 Usage example for single-api autocomplete
@@ -13,23 +13,16 @@ Usage example for single-api autocomplete
 /**
  * @ngInject
  */
-var DatasetSearchController = function ($scope, $location, $controller, Dataset, NpdcAutocompleteConfig) {
+var Controller = function ($scope, NpdcAutocompleteConfigFactory, npdcAppConfig) {
 
-  $controller('NpolarBaseController', { $scope: $scope });
-  $scope.resource = Dataset;
-  
-  let defaults = { limit: 50, sort: "-updated,-released", fields: 'title,id,collection,schema', facets: "topics", score: true };
-  let invariants = $scope.security.isAuthenticated() ? {} : { "not-draft": "yes", "not-progress": "planned", "filter-links.rel": "data" } ;  
-  let query = Object.assign(defaults, $location.search(), invariants);
-  
-  NpdcAutocompleteConfig.selectedDefault = ['dataset'];
-  NpdcAutocompleteConfig.placeholder = 'Search dataset catalogue';
-  NpdcAutocompleteConfig.query = defaults;
-  
-  
-  $scope.search(query);
-  
+  $scope.options = new NpdcAutocompleteConfigFactory({});
+  // See NpdcAutocompleteConfigFactory for defaults
+
+  // or
+
+  $scope.options = npdcAppConfig.search.global;
+  // for global autocomplete search configuration
 };
 
-module.exports = DatasetSearchController;
+module.exports = Controller;
 ```
