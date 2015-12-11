@@ -1,62 +1,60 @@
-(function() {
-	"use strict";
+"use strict";
 
-	var Chronopic = require('chronopic'), _;
-	require('chronopic/dist/js/chronopic-i18n.min.js');
+let Chronopic = require('chronopic');
+let angular = require('angular');
+require('chronopic/dist/js/chronopic-i18n.min.js');
 
-	_ = function(options = {}) {
-		// String formats used to invoke Chronopic constructor
-		var formats = [ 'date', 'date-time' ];
+let cp = angular.module('chronopic', []);
 
-		options = Object.assign({}, {
-			date: null,
-			format: "{date}"
-		}, options);
+cp.service('ChronopicService', function() {
+  let options = {
+    date: null,
+    format: "{date}"
+  };
 
-		return function() {
-			return {
-				restrict: 'E',
-				require: '?ngModel',
-				link: function(scope, elem, attrs, model) {
-					if(model && scope.field && formats.indexOf(scope.field.format) > -1) {
-						// Try parsing any pre-existing value as a date
-						var parsedDate = (options.date instanceof Date ? options.date : new Date(Date.parse(scope.field.value)));
+  return {
+    options
+  };
+});
 
-						// CSS Overrides
-						if(typeof options.css === "object") {
-							Object.keys(options.css).forEach(key => {
-								elem.css(key, options.css[key]);
-							});
-						}
+cp.directive('chronopic', function(ChronopicService) {
+  return {
+    restrict: 'A',
+    link: function(scope, elem, attrs) {
+      let options = ChronopicService.options;
 
-						// Inject Chronopic instance on element
-						new Chronopic(elem[0], {
-							date: isNaN(parsedDate) ? null : parsedDate,
-							format: (typeof options.format === "string" ? options.format : null),
-							className: 'chronopic.chronopic-ext-md',
-							onChange: function(elem, date) {
-								var internalFormat = date.toISOString(); // ISO-8601
+      // Try parsing any pre-existing value as a date
+      let parsedDate = (options.date instanceof Date ?
+        options.date : new Date(Date.parse(scope.field.value)));
 
-								if(scope.field.format === "date") {
-									internalFormat = internalFormat.slice(0, 10); // yyyy-mm-dd
-								}
+      // CSS Overrides
+      if (typeof options.css === "object") {
+        Object.keys(options.css).forEach(key => {
+          elem.css(key, options.css[key]);
+        });
+      }
 
-								model.$viewValue = scope.field.value = internalFormat;
+      // Inject Chronopic instance on element
+      new Chronopic(elem[0], {
+        date: isNaN(parsedDate) ? null : parsedDate,
+        format: (typeof options.format === "string" ? options.format : null),
+        className: 'chronopic.chronopic-ext-md',
+        onChange: function(elem, date) {
+          let internalFormat = date.toISOString(); // ISO-8601
 
-								if(typeof options.onChange === "function") {
-									options.onChange(elem, date, scope);
-								}
-							}
-						});
-					}
-				}
-			};
-		};
-	};
+          if (scope.field.format === "date") {
+            internalFormat = internalFormat.slice(0, 10); // yyyy-mm-dd
+          }
 
-	if(typeof module === "object") {
-		module.exports = _;
-	}
+          scope.field.value = internalFormat;
 
-	return _;
-})();
+          if (typeof options.onChange === "function") {
+            options.onChange(elem, date, scope);
+          }
+
+					scope.$apply();
+        }
+      });
+    }
+  };
+});

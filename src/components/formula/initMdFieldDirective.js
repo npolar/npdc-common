@@ -1,15 +1,15 @@
 'use strict';
 
 // @ngInject
-let initMdField = function(FileFunnelService, npdcAutocompleteSourceService) {
+let initMdField = function (npdcAutocompleteSourceService) {
 
   const FILE_SCHEME_REGEX = /\/_schema\/ref\/file\//;
 
-  let isNumberRange = function(field) {
+  let isNumberRange = function (field) {
     return field.typeOf('range');
   };
 
-  let isNormalInput = function(field) {
+  let isNormalInput = function (field) {
     return ['integer', 'number', 'string'].indexOf(field.schema.type) !== -1;
   };
 
@@ -17,7 +17,7 @@ let initMdField = function(FileFunnelService, npdcAutocompleteSourceService) {
     return field.typeOf("text") && field.hasOwnProperty("autocomplete");
   };
 
-  let isFile = function(field) {
+  let isFile = function (field) {
     return field.format === 'file-uri' || (field.schema &&
       (FILE_SCHEME_REGEX.test(field.schema.id) ||
         (field.schema.items && FILE_SCHEME_REGEX.test(field.schema.items.id))
@@ -25,20 +25,26 @@ let initMdField = function(FileFunnelService, npdcAutocompleteSourceService) {
 
   };
 
-  let isFileArray = function(field) {
+  let isFileArray = function (field) {
     return field.fields && isFile(field);
   };
 
-  let hasSubFields = function(field) {
+  let isDate = function (field) {
+    return field.typeOf('date') || field.typeOf('datetime');
+  };
+
+  let hasSubFields = function (field) {
     return field.fields instanceof Array;
   };
 
-  let setMdType = function(field) {
+  let setMdType = function (field) {
     field.mdType = field.schema.type;
     if (isNumberRange(field)) {
       field.mdType = 'range';
     } else if (field.typeOf('select')) {
       field.mdType = 'select';
+    } else if (isDate(field)) {
+      field.mdType = 'date';
     } else if (isFile(field)) {
       field.mdType = 'file';
       field.readonly = true;
@@ -57,12 +63,12 @@ let initMdField = function(FileFunnelService, npdcAutocompleteSourceService) {
 
   return {
     restrict: 'A',
-    require: ['^formula'],
+    require: '^formula',
     scope: {
       field: '=initMdField'
     },
     // @ngInject
-    controller: function($scope) {
+    controller ($scope) {
       let field = $scope.field;
       setMdType(field);
 
@@ -81,39 +87,6 @@ let initMdField = function(FileFunnelService, npdcAutocompleteSourceService) {
           } else {
             return self.source.filter(item => item.includes(q));
           }
-        };
-      }
-
-      if (isFileArray(field)) {
-        let oldItemAdd = field.itemAdd;
-        field.itemAdd = function(ev) {
-          FileFunnelService.showUpload(ev, {multiple: true}).then(files => {
-            files.forEach(file => {
-              if (file.status !== FileFunnelService.status.COMPLETED) {
-                return;
-              }
-              let newItem = oldItemAdd.call(field);
-              newItem.fields.forEach(field => {
-                switch (field.id) {
-                  case 'uri':
-                    field.value = FileFunnelService.options.server + file.location;
-                    break;
-                  case 'filename':
-                    field.value = file.reference.name;
-                    break;
-                  case 'filesize':
-                    field.value = file.reference.size;
-                    break;
-                  case 'mimetype':
-                    field.value = file.reference.type;
-                    break;
-                  default:
-                    // noop
-                }
-                field.readonly = true;
-              });
-            });
-          });
         };
       }
     }

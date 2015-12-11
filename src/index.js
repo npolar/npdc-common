@@ -1,19 +1,31 @@
 'use strict';
 
 let angular = require('angular');
-require('angular-aria');
 require('angular-animate');
+require('angular-aria');
+require('angular-marked');
 require('angular-material');
 require('angular-npolar');
-require('jusas-angularjs-slider');
-require('angular-marked');
 require('angular-route');
+require('angular-sanitize');
 require('formula');
-require('./wrappers/filefunnel');
+require('jusas-angularjs-slider');
 require('./browser-warning');
+require('./wrappers/chronopic');
+require('./wrappers/filefunnel');
 
-var common = angular.module('npdcCommon', ['ngRoute', 'ngNpolar', 'ngMaterial',
-  'ngAnimate', 'rzModule', 'hc.marked', 'formula', 'filefunnel', 'templates']);
+var common = angular.module('npdcCommon', [
+  'chronopic',
+  'filefunnel',
+  'formula',
+  'hc.marked',
+  'ngAnimate',
+  'ngMaterial',
+  'ngNpolar',
+  'ngRoute',
+  'rzModule',
+  'templates'
+]);
 
 common.config(function($mdThemingProvider) {
   var npdcPrimary = $mdThemingProvider.extendPalette('light-blue', {

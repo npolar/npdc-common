@@ -10,7 +10,16 @@ angular
     $scope.formulaData = {
       schema: "./demo/schema.json",
       form: "./demo/form.json",
-      template: "material"
+      template: "material",
+      hideButtons: false,
+      templates: [
+        {
+          match(field) {
+            return field.id === "ref_object";
+          },
+          template: require('./demo/customObject.html')
+        }
+      ]
     };
 
     let fn = function (q) {

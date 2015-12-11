@@ -76,7 +76,15 @@
               <md-input-container ng-if="field.mdType === 'file'" class="np-formula-file">
                 <label for="{{field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title ) }}</label>
                 <div ng-include="'ft-field-info.html'" class="np-field-info" ng-if="field.description"></div>
-                <input type="text" ng-model="field.value" filefunnel readonly>
+                <input type="text" ng-model="field.value" filefunnel ng-readonly="true">
+                <div ng-include="'ft-validation-message.html'" class="np-validation-message"></div>
+              </md-input-container>
+
+              <!-- date -->
+              <md-input-container ng-if="field.mdType === 'date'" class="np-formula-date">
+                <label for="{{field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title ) }}</label>
+                <div ng-include="'ft-field-info.html'" class="np-field-info" ng-if="field.description"></div>
+                <input type="text" ng-model="field.value" chronopic>
                 <div ng-include="'ft-validation-message.html'" class="np-validation-message"></div>
               </md-input-container>
 
@@ -96,7 +104,20 @@
 
             <!-- object -->
             <div ng-if="field.typeOf('object')" class="np-formula-object">
-              <md-whiteframe class="md-whiteframe-z2" ng-attr-filefunnel="field.mdType === 'file'" field="field">
+
+              <!-- file object -->
+              <md-whiteframe class="md-whiteframe-z2 np-formula-fileobject" ng-if="field.mdType === 'file'" filefunnel>
+                <fieldset formula:field="field">
+                  <legend>{{ field.title }}</legend>
+
+                  <div ng-repeat="field in field.fields" ng-show="field.visible">
+                    <formula:field-instance field="field"></formula:field-instance>
+                  </div>
+                </fieldset>
+              </md-whiteframe>
+
+              <!-- plain object -->
+              <md-whiteframe class="md-whiteframe-z2" ng-if="field.mdType === 'object'">
                 <fieldset formula:field="field">
                   <legend>{{ field.title }}</legend>
 
@@ -143,10 +164,7 @@
                                   </md-menu>
                                 </div>
                               </legend>
-
-                              <div class="np-formula-subarray" ng-repeat="subfield in field.fields" ng-show="value.visible">
-                                <formula:field-instance field="value.fields[$index]" ng-show="subfield.visible"></formula:field-instance>
-                              </div>
+                              <formula:field-instance field="value" ng-show="value.visible" class="np-formula-subarray" />
                             </fieldset>
                           </md-whiteframe>
                         </li>
@@ -188,6 +206,7 @@
                 </md-whiteframe>
               </div>
             </div>
+
           </div>
         </div>
       </fieldset>
@@ -195,15 +214,14 @@
     </md-tab>
   </md-tabs>
 
-  <div layout="row" layout-align="space-between center" ng-if="!(form.uiValidateHidden && form.uiSaveHidden)">
+  <div layout="row" layout-align="space-between center" ng-if="!data.hideButtons">
     <span ng-if="form.errors" title="{{ form.errors.join('\n') }}">{{ form.i18n.invalid | formulaReplace : { count: form.errors.length } }}</span>
 
     <div>
-      <md-button class="md-raised" ng-click="form.validate()" ng-if="!form.uiValidateHidden" title="{{ form.i18n.validate[1] }}">
+      <md-button class="md-raised" ng-click="form.validate(true)" title="{{ form.i18n.validate[1] }}">
         <md-icon>check</md-icon> {{ form.i18n.validate[0] }}</md-button>
-      <md-button class="md-raised md-primary" ng-click="form.save()" ng-disabled="!form.valid" ng-if="!form.uiSaveHidden" title="{{ form.i18n.save[1] }}">
+      <md-button class="md-raised md-primary" ng-click="form.save()" ng-disabled="!form.valid" title="{{ form.i18n.save[1] }}">
         <md-icon>save</md-icon> {{ form.i18n.save[0] }}</md-button>
-
     </div>
 
   </div>

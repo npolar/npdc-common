@@ -72,6 +72,10 @@
 
   .np-formula-subarray {
     margin-top: 28px;
+
+    md-whiteframe:first-child {
+      box-shadow: none;
+    }
   }
 
   .np-formula-object-ctrls {

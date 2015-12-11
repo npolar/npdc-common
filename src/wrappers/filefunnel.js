@@ -36,8 +36,7 @@ ff.service('FileFunnelService', function($mdDialog) {
     chunked: true
   };
 
-  let showUpload = function(ev, opts) {
-    options = Object.assign({}, options, opts);
+  let showUpload = function(ev) {
     return $mdDialog.show({
       clickOutsideToClose: true,
       controller: 'FFUploadController',
@@ -58,17 +57,14 @@ ff.service('FileFunnelService', function($mdDialog) {
 
 ff.directive('filefunnel', function(FileFunnelService) {
   return {
-    scope: {
-      options: '=filefunnel',
-			field: '='
-    },
+    restrict: 'A',
     //@ngInject
     controller($scope, $mdDialog) {
-      $scope.showUpload = function(ev) {
-        FileFunnelService.showUpload(ev, $scope.options)
+      $scope.showUpload = function(ev, target) {
+        FileFunnelService.showUpload(ev)
           .then(files => {
-            if (ev.target instanceof HTMLInputElement) {
-              ev.target.value = FileFunnelService.options.server + files[0].location;
+            if (target[0] instanceof HTMLInputElement) {
+              target[0].value = FileFunnelService.options.server + files[0].location;
             } else if ($scope.field) {
               $scope.field.fields.forEach(field => {
                 switch (field.id) {
@@ -89,12 +85,47 @@ ff.directive('filefunnel', function(FileFunnelService) {
                 }
                 field.readonly = true;
               });
+
+              if ($scope.field.itemAdd) {
+                let oldItemAdd = $scope.field.itemAdd;
+                $scope.field.itemAdd.itemAdd = function (ev) {
+                  FileFunnelService.showUpload(ev, {multiple: true}).then(files => {
+                    files.forEach(file => {
+                      if (file.status !== FileFunnelService.status.COMPLETED) {
+                        return;
+                      }
+                      let newItem = oldItemAdd.call($scope.field);
+                      newItem.fields.forEach(field => {
+                        switch (field.id) {
+                          case 'uri':
+                            field.value = FileFunnelService.options.server + file.location;
+                            break;
+                          case 'filename':
+                            field.value = file.reference.name;
+                            break;
+                          case 'filesize':
+                            field.value = file.reference.size;
+                            break;
+                          case 'mimetype':
+                            field.value = file.reference.type;
+                            break;
+                          default:
+                            // noop
+                        }
+                        field.readonly = true;
+                      });
+                    });
+                  });
+                };
+              }
             }
           });
       };
     },
     link(scope, element, attrs) {
-      element.bind('click', scope.showUpload);
+      element.bind('click', function(ev) {
+        scope.showUpload(ev, element);
+      });
     }
   };
 });
