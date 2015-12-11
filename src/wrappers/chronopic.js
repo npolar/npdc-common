@@ -17,7 +17,7 @@ cp.service('ChronopicService', function() {
   };
 });
 
-cp.directive('chronopic', function(ChronopicService) {
+cp.directive('chronopic', function($timeout, ChronopicService) {
   return {
     restrict: 'A',
     link: function(scope, elem, attrs) {
@@ -40,19 +40,19 @@ cp.directive('chronopic', function(ChronopicService) {
         format: (typeof options.format === "string" ? options.format : null),
         className: 'chronopic.chronopic-ext-md',
         onChange: function(elem, date) {
-          let internalFormat = date.toISOString(); // ISO-8601
+          $timeout(() => {
+            let internalFormat = date.toISOString(); // ISO-8601
 
-          if (scope.field.format === "date") {
-            internalFormat = internalFormat.slice(0, 10); // yyyy-mm-dd
-          }
+            if (scope.field.format === "date") {
+              internalFormat = internalFormat.slice(0, 10); // yyyy-mm-dd
+            }
 
-          scope.field.value = internalFormat;
+            scope.field.value = internalFormat;
 
-          if (typeof options.onChange === "function") {
-            options.onChange(elem, date, scope);
-          }
-
-					scope.$apply();
+            if (typeof options.onChange === "function") {
+              options.onChange(elem, date, scope);
+            }
+          });
         }
       });
     }
