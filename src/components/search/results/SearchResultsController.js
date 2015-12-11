@@ -12,9 +12,6 @@ var SearchResultsController = function($scope, $location, $http, $rootScope,
   };
 
   $scope.entryHref = function(id) {
-    if ((/[.]/).test(id)) {
-      id += ".json";
-    }
     // Get relative path of entry by removing hostname + appname from request URI
     let segments = $location.absUrl().split("//")[1].split("?")[0].split("/").filter(s => {
       return s !== "";
