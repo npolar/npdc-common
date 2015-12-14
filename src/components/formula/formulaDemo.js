@@ -6,7 +6,7 @@ let angular = require('angular');
 
 angular
   .module('formulaDemo', ['npdcCommon', 'formula'])
-  .controller('FormulaCtrl', ($mdDialog, $scope, $compile, npdcAutocompleteSourceService) => {
+  .controller('FormulaCtrl', ($mdDialog, $scope, $compile, formulaAutoCompleteService) => {
     $scope.formulaData = {
       schema: "./demo/schema.json",
       form: "./demo/form.json",
@@ -36,7 +36,7 @@ angular
       return emails;
     };
 
-    npdcAutocompleteSourceService.defineSourceFunction("foobar", fn);
-    npdcAutocompleteSourceService.defineSourceFunction("emailCallback", emailCallback);
+    formulaAutoCompleteService.defineSourceFunction("foobar", fn);
+    formulaAutoCompleteService.defineSourceFunction("emailCallback", emailCallback);
 
   });

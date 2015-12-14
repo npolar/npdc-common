@@ -1,7 +1,7 @@
 'use strict';
 
 // @ngInject
-let initMdField = function (npdcAutocompleteSourceService) {
+let initMdField = function () {
 
   const FILE_SCHEME_REGEX = /\/_schema\/ref\/file\//;
 
@@ -14,7 +14,7 @@ let initMdField = function (npdcAutocompleteSourceService) {
   };
 
   let isAutoComplete = function (field) {
-    return field.typeOf("text") && field.hasOwnProperty("autocomplete");
+    return field.typeOf("autocomplete");
   };
 
   let isFile = function (field) {
@@ -71,24 +71,6 @@ let initMdField = function (npdcAutocompleteSourceService) {
     controller ($scope) {
       let field = $scope.field;
       setMdType(field);
-
-      if (isAutoComplete(field)) {
-        field.source = [];
-        npdcAutocompleteSourceService.getSource(field.autocomplete).then(source => {
-          field.source = source;
-        }, (e) => {
-          console.warn(e);
-          field.source = [];
-        });
-        field.querySearch = function (q) {
-          let self = this;
-          if (npdcAutocompleteSourceService.isURI(self.autocomplete)) {
-            return npdcAutocompleteSourceService.getSource(self.autocomplete, q);
-          } else {
-            return self.source.filter(item => item.includes(q));
-          }
-        };
-      }
     }
   };
 };

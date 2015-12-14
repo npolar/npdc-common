@@ -34,7 +34,6 @@ ui.directive('npdcBottomSheet', require('./bottom-sheet/bottomSheetDirective'));
 ui.directive('npdcLoader', require('./loader/loaderDirective'));
 ui.directive('npdcFooter', require('./footer/footerDirective'));
 
-ui.service('npdcAutocompleteSourceService', require('./formula/autocompleteSourceService'));
 ui.directive('npdcFormula', require('./formula/formulaDirective'));
 ui.directive('initMdField', require('./formula/initMdFieldDirective'));
 
