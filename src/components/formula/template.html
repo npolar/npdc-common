@@ -134,14 +134,14 @@
                 <md-whiteframe class="md-whiteframe-z2">
                   <fieldset ng-class="{ valid: field.valid, error: field.error }">
 
-                    <legend>{{ field.title }} ({{ field.values.length || 0 }})
+                    <legend>{{ field.title }} ({{ field.nrArrayValues() || 0 }})
                       <div ng-include="'ft-field-info.html'" class="np-field-info" ng-if="field.description"></div>
                     </legend>
 
                     <!-- fieldset -->
                     <div ng-if="field.typeOf('fieldset')">
                       <ul>
-                        <li ng-repeat="value in field.values">
+                        <li ng-repeat="value in field.values" ng-if="!value.hidden">
                           <md-whiteframe class="md-whiteframe-z2">
                             <fieldset ng-class="{ valid: value.valid }">
                               <legend>
