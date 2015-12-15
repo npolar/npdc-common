@@ -170,6 +170,10 @@
   }
 }
 
+md-select-menu md-option[selected] {
+  color: rgb(3, 155, 229) !important;
+}
+
 
 .filefunnel {
   background-color: $color-bg-light;
