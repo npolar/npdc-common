@@ -7,7 +7,6 @@ require('angular-marked');
 require('angular-material');
 require('angular-npolar');
 require('angular-route');
-require('angular-sanitize');
 require('formula');
 require('jusas-angularjs-slider');
 require('./browser-warning');
