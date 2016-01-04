@@ -53,6 +53,7 @@
   .np-formula-array {
     ul {
       list-style-type: none;
+      margin: 0;
       padding: 0;
       position: relative;
 
@@ -71,11 +72,9 @@
   }
 
   .np-formula-subarray {
+    display: block;
     margin-top: 28px;
-
-    md-whiteframe:first-child {
-      box-shadow: none;
-    }
+    position: relative;
   }
 
   .np-formula-object-ctrls {
