@@ -53,12 +53,12 @@
 
                 <!-- single-select -->
                 <md-select ng-model="field.value" ng-if="!field.multiple">
-                  <md-option ng-repeat="val in field.values" value="{{val.id}}">{{val.label}}</md-option>
+                  <md-option ng-repeat="val in field.values" value="{{val.id}}">{{val.title}}</md-option>
                 </md-select>
 
                 <!-- multi-select, ref: https://docs.angularjs.org/error/$compile/selmulti -->
                 <md-select ng-model="field.value" multiple ng-if="field.multiple">
-                  <md-option ng-repeat="val in field.values" value="{{val.id}}">{{val.label}}</md-option>
+                  <md-option ng-repeat="val in field.values" value="{{val.id}}">{{val.title}}</md-option>
                 </md-select>
 
                 <div ng-include="'ft-validation-message.html'" class="np-validation-message"></div>
