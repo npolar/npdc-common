@@ -139,7 +139,10 @@
 
   .np-formula-input,
   .np-formula-select,
-  .np-formula-range {
+  .np-formula-range,
+  .np-formula-file,
+  .np-formula-date,
+  .np-formula-autocomplete {
     .np-field-info {
       bottom: 37px;
       top: initial;

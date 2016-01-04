@@ -93,7 +93,8 @@
                 md-items="item in field.querySearch(field.value)"
                 md-min-length="1"
                 md-search-text="field.value"
-                md-floating-label="{{field.title}}">
+                md-floating-label="{{field.title}}"
+                class="np-formula-autocomplete">
 
                 <md-item-template>
                   <span md-highlight-flags="^i" md-highlight-text="field.value" ng-if="item">{{item}}</span>
