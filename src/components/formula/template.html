@@ -8,8 +8,8 @@
 
 <!-- validation message -->
 <script type="text/ng-template" id="ft-validation-message.html">
-  <div class="md-caption" role="alert" ng-show="{{ field.error !== null }}">
-    {{ field.error }}
+  <div class="md-caption" role="alert" ng-show="field.error">
+    {{ field.error.message }}
   </div>
 </script>
 
