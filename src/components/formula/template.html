@@ -92,7 +92,7 @@
               <md-autocomplete ng-if="field.mdType === 'autocomplete'"
                 md-items="item in field.querySearch(field.value)"
                 md-min-length="0"
-                md-search-text="field.value"
+                md-search-text="field.value || ''"
                 md-floating-label="{{field.title}}">
 
                 <md-item-template>
