@@ -7,6 +7,7 @@ let BottomSheetController = function($scope, $mdBottomSheet) {
       templateUrl: 'bottom-sheet-template.tmpl',
       scope: $scope,
       preserveScope: true,
+      // @ngInject
       controller: function ($scope, $timeout) {
         let init = function () {
           let wrapper = document.querySelector('.np-content');
@@ -23,7 +24,7 @@ let BottomSheetController = function($scope, $mdBottomSheet) {
         $timeout(init);
       },
       targetEvent: $event,
-      parent: document.querySelector('.np-content') || 'body',
+      parent: document.querySelector('.np-content'),
     });
   };
 
