@@ -71,7 +71,7 @@
       "maximum": 10
     },
     "number_default": {
-      "type": "number",
+      "type": ["number", "null"],
       "description": "number input with default property set",
       "default": 123
     },
@@ -125,7 +125,8 @@
       "description": "array input with items type property set to string",
       "items": {
         "type": "string",
-        "minLength": 5
+        "minLength": 5,
+        "description": "string with minLength 5"
       }
     },
     "array_file": {

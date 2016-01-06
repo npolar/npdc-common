@@ -8,7 +8,7 @@ var DeleteButtonComponent = function ($scope, $mdDialog, NpolarApiSecurity) {
     // Appending dialog to document.body to cover sidenav in docs app
     var confirm = $mdDialog.confirm()
       .title('DELETE')
-      .content('Are you sure you want to delete?')
+      .textContent('Are you sure you want to delete?')
       .targetEvent(ev)
       .ok('Delete')
       .cancel('Cancel');

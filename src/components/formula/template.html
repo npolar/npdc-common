@@ -24,11 +24,10 @@
         <div formula:field-definition ng-repeat="field in fieldset.fields">
           <div init-md-field="field" ng-show="field.visible">
             <!-- input field-->
-            <div ng-if="field.typeOf('input')">
+            <div ng-if="field.typeOf('input')" layout="row" class="np-formula-field">
 
               <!-- boolean -->
-              <div ng-if="field.mdType === 'boolean'" class="np-formula-boolean">
-                <div ng-include="'ft-field-info.html'" class="np-field-info" ng-if="field.description"></div>
+              <div flex ng-if="field.mdType === 'boolean'" class="np-formula-boolean">
                 <md-checkbox ng-attr-id="field.uid" ng-model="field.value" aria-label="{{ field.title }}">
                   <label for="{{field.uid}}">{{ field.title }}</label>
                 </md-checkbox>
@@ -36,60 +35,55 @@
               </div>
 
               <!-- range -->
-              <div ng-if="field.mdType === 'range'" class="np-formula-range">
+              <div flex ng-if="field.mdType === 'range'" class="np-formula-range">
                 <label for="{{field.uid}}">{{ field.title }}:
                   <span>{{field.value}}</span>
                 </label>
-                <div ng-include="'ft-field-info.html'" class="np-field-info" ng-if="field.description"></div>
                 <md-slider flex min="{{field.minimum}}" max="{{field.maximum}}" step="{{field.step}}" md-discrete ng-model="field.value" aria-label="{{field.title}}" ng-attr-id="field.uid">
                 </md-slider>
                 <div ng-include="'ft-validation-message.html'" class="np-validation-message"></div>
               </div>
 
               <!-- select -->
-              <md-input-container ng-if="field.mdType === 'select'" class="np-formula-select">
+              <md-input-container flex ng-if="field.mdType === 'select'" class="np-formula-select">
                 <label for="{{field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title) }}</label>
-                <div ng-include="'ft-field-info.html'" class="np-field-info" ng-if="field.description"></div>
 
                 <!-- single-select -->
                 <md-select ng-model="field.value" ng-if="!field.multiple">
-                  <md-option ng-repeat="val in field.values" value="{{val.id}}">{{val.title}}</md-option>
+                  <md-option ng-repeat="val in field.values" value="{{val.id}}">{{val.label}}</md-option>
                 </md-select>
 
                 <!-- multi-select, ref: https://docs.angularjs.org/error/$compile/selmulti -->
                 <md-select ng-model="field.value" multiple ng-if="field.multiple">
-                  <md-option ng-repeat="val in field.values" value="{{val.id}}">{{val.title}}</md-option>
+                  <md-option ng-repeat="val in field.values" value="{{val.id}}">{{val.label}}</md-option>
                 </md-select>
 
                 <div ng-include="'ft-validation-message.html'" class="np-validation-message"></div>
               </md-input-container>
 
               <!-- input -->
-              <md-input-container ng-if="field.mdType === 'input'" class="np-formula-input">
+              <md-input-container flex ng-if="field.mdType === 'input'" class="np-formula-input">
                 <label for="{{field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title ) }}</label>
-                <div ng-include="'ft-field-info.html'" class="np-field-info" ng-if="field.description"></div>
                 <div formula:field="field" ng-attr-readonly="{{field.readonly}}"></div>
                 <div ng-include="'ft-validation-message.html'" class="np-validation-message"></div>
               </md-input-container>
 
               <!-- file -->
-              <md-input-container ng-if="field.mdType === 'file'" class="np-formula-file">
+              <md-input-container flex ng-if="field.mdType === 'file'" class="np-formula-file">
                 <label for="{{field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title ) }}</label>
-                <div ng-include="'ft-field-info.html'" class="np-field-info" ng-if="field.description"></div>
                 <input type="text" ng-model="field.value" filefunnel ng-readonly="true">
                 <div ng-include="'ft-validation-message.html'" class="np-validation-message"></div>
               </md-input-container>
 
               <!-- date -->
-              <md-input-container ng-if="field.mdType === 'date'" class="np-formula-date">
+              <md-input-container flex ng-if="field.mdType === 'date'" class="np-formula-date">
                 <label for="{{field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title ) }}</label>
-                <div ng-include="'ft-field-info.html'" class="np-field-info" ng-if="field.description"></div>
                 <input type="text" ng-model="field.value" chronopic>
                 <div ng-include="'ft-validation-message.html'" class="np-validation-message"></div>
               </md-input-container>
 
               <!-- autocomplete -->
-              <md-autocomplete ng-if="field.mdType === 'autocomplete'"
+              <md-autocomplete flex ng-if="field.mdType === 'autocomplete'"
                 md-items="item in field.querySearch(field.value)"
                 md-min-length="1"
                 md-search-text="field.value"
@@ -101,6 +95,8 @@
                 </md-item-template>
 
               </md-autocomplete>
+
+              <div ng-include="'ft-field-info.html'" class="np-field-info" ng-if="field.description"></div>
             </div>
 
             <!-- object -->
@@ -109,7 +105,9 @@
               <!-- file object -->
               <md-whiteframe class="md-whiteframe-z2 np-formula-fileobject" ng-if="field.mdType === 'file'" filefunnel>
                 <fieldset formula:field="field">
-                  <legend>{{ field.title }}</legend>
+                  <legend>{{ field.title }}
+                    <div ng-include="'ft-field-info.html'" class="np-field-info" ng-if="field.description"></div>
+                  </legend>
 
                   <div ng-repeat="field in field.fields" ng-show="field.visible">
                     <formula:field-instance field="field"></formula:field-instance>
@@ -120,7 +118,9 @@
               <!-- plain object -->
               <md-whiteframe class="md-whiteframe-z2" ng-if="field.mdType === 'object'">
                 <fieldset formula:field="field">
-                  <legend>{{ field.title }}</legend>
+                  <legend>{{ field.title }}
+                    <div ng-include="'ft-field-info.html'" class="np-field-info" ng-if="field.description"></div>
+                  </legend>
 
                   <div ng-repeat="field in field.fields" ng-show="field.visible">
                     <formula:field-instance field="field"></formula:field-instance>
@@ -135,7 +135,8 @@
                 <md-whiteframe class="md-whiteframe-z2">
                   <fieldset ng-class="{ valid: field.valid, error: field.error }">
 
-                    <legend>{{ field.title }} ({{ field.nrArrayValues() || 0 }})
+                    <legend>
+                      <div>{{ field.title }} ({{ field.nrArrayValues() || 0 }})</div>
                       <div ng-include="'ft-field-info.html'" class="np-field-info" ng-if="field.description"></div>
                     </legend>
 
@@ -143,29 +144,33 @@
                     <div ng-if="field.typeOf('fieldset')">
                       <ul>
                         <li ng-repeat="value in field.values" ng-if="!value.hidden">
-                          <fieldset ng-class="{ valid: value.valid }">
-                            <legend>
-                              <span ng-if="!value.visible">{{ value.fields | formulaInlineValues }}</span>
-                              <div class="np-formula-object-ctrls">
-                                <a class="toggle" href="" ng-click="field.itemToggle($index)" title="{{ value.visible ? form.i18n.minimize[1] : form.i18n.maximize[1] }}">
-                                  <md-icon>{{ value.visible ? 'expand_less' : 'expand_more' }}</md-icon>
-                                </a>
-                                <md-menu>
-                                  <md-button aria-label="Remove" class="md-icon-button remove" ng-click="$mdOpenMenu($event)">
-                                    <md-icon md-menu-origin>close</md-icon>
-                                  </md-button>
-                                  <md-menu-content>
-                                    <md-menu-item>
-                                      <md-button ng-click="field.itemRemove($index)" title="{{ form.i18n.remove[1] }}" class="md-warn">
-                                        <md-icon md-menu-align-target>delete</md-icon> Remove item
-                                      </md-button>
-                                    </md-menu-item>
-                                  </md-menu-content>
-                                </md-menu>
-                              </div>
-                            </legend>
-                            <formula:field-instance field="value" ng-show="value.visible" class="np-formula-subarray" />
-                          </fieldset>
+                          <md-whiteframe class="md-whiteframe-z2">
+                            <fieldset ng-class="{ valid: value.valid }">
+                              <legend>
+                                <span>{{ value.title }}</span>
+                                <span ng-if="!value.visible">{{ value.fields | formulaInlineValues }}</span>
+                                <div class="np-formula-object-ctrls">
+                                  <div ng-include="'ft-field-info.html'" class="np-field-info" ng-init="field=value" ng-if="value.description"></div>
+                                  <a class="toggle" href="" ng-click="field.itemToggle($index)" title="{{ value.visible ? form.i18n.minimize[1] : form.i18n.maximize[1] }}">
+                                    <md-icon>{{ value.visible ? 'expand_less' : 'expand_more' }}</md-icon>
+                                  </a>
+                                  <md-menu>
+                                    <md-button aria-label="Remove" class="md-icon-button remove" ng-click="$mdOpenMenu($event)">
+                                      <md-icon md-menu-origin>close</md-icon>
+                                    </md-button>
+                                    <md-menu-content>
+                                      <md-menu-item>
+                                        <md-button ng-click="field.itemRemove($index)" title="{{ form.i18n.remove[1] }}" class="md-warn">
+                                          <md-icon md-menu-align-target>delete</md-icon> Remove item
+                                        </md-button>
+                                      </md-menu-item>
+                                    </md-menu-content>
+                                  </md-menu>
+                                </div>
+                              </legend>
+                              <formula:field-instance field="value" ng-show="value.visible" class="np-formula-subarray" />
+                            </fieldset>
+                          </md-whiteframe>
                         </li>
                       </ul>
                       <div class="np-formula-array-add">

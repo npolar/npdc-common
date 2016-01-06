@@ -5,7 +5,7 @@ let angular = require('angular');
 require('angular-npolar');
 require('angular-route');
 
-let demo = angular.module('faceting', ['ngRoute', 'npdcCommon', 'npolarApi']);
+let demo = angular.module('faceting', ['ngRoute', 'npdcCommon', 'ngNpolar']);
 
 // Bootstrap ngResource models using NpolarApiResource
 var resource = {'path': '/dataset', 'resource': 'Dataset' };

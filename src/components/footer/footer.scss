@@ -21,26 +21,32 @@ footer {
     opacity: .6;
   }
 
-  .md-icon-button > i {
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 48px 48px;
-    display: inline-block;
+  a.md-button.md-icon-button {
     height: 48px;
-    opacity: .6;
+    padding: 0;
     width: 48px;
 
-    &.github-icon {
-      background-image: url('/assets/img/GitHub-Mark-Light-64px.png');
-    }
+    > i {
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 48px 48px;
+      display: inline-block;
+      height: 48px;
+      opacity: .6;
+      width: 48px;
 
-    &.facebook-icon {
-      background-image: url('/assets/img/facebook.png');
-    }
+      &.github-icon {
+        background-image: url('/assets/img/GitHub-Mark-Light-64px.png');
+      }
 
-    &.twitter-icon {
-      background-image: url('/assets/img/twitter.png');
-      background-size: 55px 55px;
+      &.facebook-icon {
+        background-image: url('/assets/img/facebook.png');
+      }
+
+      &.twitter-icon {
+        background-image: url('/assets/img/twitter.png');
+        background-size: 55px 55px;
+      }
     }
   }
 

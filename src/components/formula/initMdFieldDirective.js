@@ -10,7 +10,7 @@ let initMdField = function () {
   };
 
   let isNormalInput = function (field) {
-    return ['integer', 'number', 'string'].indexOf(field.schema.type) !== -1;
+    return ['integer', 'number', 'string'].indexOf(field.mainType) !== -1;
   };
 
   let isAutoComplete = function (field) {
@@ -38,7 +38,7 @@ let initMdField = function () {
   };
 
   let setMdType = function (field) {
-    field.mdType = field.schema.type;
+    field.mdType = field.mainType;
     if (isNumberRange(field)) {
       field.mdType = 'range';
     } else if (field.typeOf('select')) {

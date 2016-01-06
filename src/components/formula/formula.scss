@@ -1,4 +1,5 @@
 .formula {
+
   a {
     display: inline-block;
     height: 1em;
@@ -11,13 +12,19 @@
     padding: 0;
     position: relative;
     width: 100%;
+
+    .np-field-info {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
   }
 
   fieldset {
     border: 0;
     margin: 0;
     min-width: 0;
-    padding: .5em;
+    padding: 3px;
     position: relative;
   }
 
@@ -73,8 +80,17 @@
 
   .np-formula-subarray {
     display: block;
-    margin-top: 28px;
     position: relative;
+
+    > div > .np-formula-object > md-whiteframe {
+      box-shadow: none;
+      margin: 0;
+      padding: 0;
+
+      > fieldset > legend {
+        display: none;
+      }
+    }
   }
 
   .np-formula-object-ctrls {
@@ -82,18 +98,26 @@
     right: -26px;
     top: -17px;
     z-index: 15;
+
+    .np-field-info {
+      display: inline-block;
+      margin-right: 15px;
+      position: static;
+    }
   }
 
   .np-formula-input-ctrls {
     position: absolute;
-    right: -18px;
-    top: -16px;
+    right: -14px;
+    top: 2px;
     z-index: 15;
   }
 
   .np-validation-message {
     @include order(99);
-    margin-top: 8px;
+    clear: left;
+    padding-top: 8px;
+    position: relative;
 
     .md-caption {
       color: $color-secondary-2;
@@ -106,22 +130,15 @@
 
   .np-field-info {
     cursor: help;
-    position: absolute;
-    right: 0;
-    top: 0;
+    height: 24px;
+    position: relative;
+    top: 20px;
+    width: 24px;
     z-index: 15;
 
     md-icon {
       color: rgba(0, 0, 0, .26);
     }
-  }
-
-  .np-field-info + md-select,
-  .np-field-info + input[type="number"],
-  .np-field-info + input[type="text"],
-  .np-field-info + md-slider,
-  .np-field-info + md-checkbox {
-    width: calc(100% - 33px);
   }
 
   .np-formula-range,
@@ -137,39 +154,15 @@
     }
   }
 
-  .np-formula-input,
-  .np-formula-select,
-  .np-formula-range,
-  .np-formula-file,
-  .np-formula-date,
-  .np-formula-autocomplete {
-    .np-field-info {
-      bottom: 37px;
-      top: initial;
-    }
-  }
-
   .multi-ctrls {
-    .np-field-info {
-      right: 40px;
-    }
-
-    md-select,
-    input[type="number"],
-    input[type="text"],
-    md-slider,
-    md-checkbox {
-      width: calc(100% - 33px);
-    }
-
-    .np-field-info + md-select,
-    .np-field-info + input[type="number"],
-    .np-field-info + input[type="text"],
-    .np-field-info + md-slider,
-    .np-field-info + md-checkbox {
-      width: calc(100% - 73px);
+    .np-formula-field {
+      width: calc(100% - 30px);
     }
   }
+}
+
+.np-formula-field {
+  position: relative;
 }
 
 md-select-menu md-option[selected] {
