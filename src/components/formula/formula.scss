@@ -57,6 +57,11 @@
     padding: 1em;
   }
 
+  .md-errors-spacer {
+    // we don't use material errors
+    display: none;
+  }
+
   .np-formula-array {
     ul {
       list-style-type: none;
