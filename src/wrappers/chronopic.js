@@ -6,26 +6,40 @@ require('chronopic/dist/js/chronopic-i18n.min.js');
 
 let cp = angular.module('chronopic', []);
 
-cp.service('ChronopicService', function() {
-  let options = {
+cp.service('chronopicService', function() {
+  const DEFAULTS = {
     date: null,
     format: "{date}"
   };
+  let opts = {};
+
+  let defineOptions = function (key, options) {
+    opts[key] = Object.assign({}, DEFAULTS, options);
+  };
+
+  let getOptions = function (key) {
+    return opts[key] || DEFAULTS;
+  };
 
   return {
-    options
+    defineOptions,
+    getOptions
   };
 });
 
-cp.directive('chronopic', function($timeout, ChronopicService) {
+cp.directive('chronopic', function($timeout, chronopicService) {
   return {
     restrict: 'A',
     link: function(scope, elem, attrs) {
-      let options = ChronopicService.options;
+      let options = chronopicService.getOptions(scope.field.path);
+      let onChange = options.onChange;
+      delete options.onChange;
 
       // Try parsing any pre-existing value as a date
-      let parsedDate = (options.date instanceof Date ?
-        options.date : new Date(Date.parse(scope.field.value)));
+      if (!(options.date instanceof Date)) {
+        let date = new Date(Date.parse(scope.field.value));
+        options.date = isNaN(date) ? null : date;
+      }
 
       // CSS Overrides
       if (typeof options.css === "object") {
@@ -35,11 +49,10 @@ cp.directive('chronopic', function($timeout, ChronopicService) {
       }
 
       // Inject Chronopic instance on element
-      new Chronopic(elem[0], {
-        date: isNaN(parsedDate) ? null : parsedDate,
-        format: (typeof options.format === "string" ? options.format : null),
+      new Chronopic(elem[0], Object.assign({
         className: 'chronopic.chronopic-ext-md',
         onChange: function(elem, date) {
+          console.log('onChange!', elem, date);
           $timeout(() => {
             let internalFormat = date.toISOString(); // ISO-8601
 
@@ -49,12 +62,12 @@ cp.directive('chronopic', function($timeout, ChronopicService) {
 
             scope.field.value = internalFormat;
 
-            if (typeof options.onChange === "function") {
-              options.onChange(elem, date, scope);
+            if (typeof onChange === "function") {
+              onChange(elem, date, scope);
             }
           });
         }
-      });
+      }, options));
     }
   };
 });
