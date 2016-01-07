@@ -102,7 +102,9 @@ md-toast {
   margin: 74px 10px 10px;
 
   &.error {
-    background-color: $color-np-error;
+    .md-toast-content {
+      background-color: $color-np-error;
+    }
   }
 }
 
