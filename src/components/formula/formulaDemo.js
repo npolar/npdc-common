@@ -77,6 +77,7 @@ angular
     formulaAutoCompleteService.defineSourceFunction("foobar", fn);
     formulaAutoCompleteService.defineSourceFunction("emailCallback", emailCallback);
     fileFunnelService.defineOptions('#/string_file', {multiple: true});
-    chronopicService.defineOptions('#/string_date', {locale: 'ja'});
+    chronopicService.defineOptions('#/string_date', {locale: 'ja', format: "{YYYY} {YY} {YYYY} {MMM} {DD} {MMMM}"});
+    chronopicService.defineOptions('#/string_datetime', {locale: 'en'});
 
   });
