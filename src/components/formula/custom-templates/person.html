@@ -1,1 +1,8 @@
 <!DOCTYPE html>
+<div layout="row">
+  <div flex="50"><formula:field-instance field="firstName"></formula:field-instance></div>
+  <div flex="50"><formula:field-instance field="lastName"></formula:field-instance></div>
+</div>
+<div ng-repeat="field in otherFields" ng-show="field.visible">
+  <formula:field-instance field="field"></formula:field-instance>
+</div>

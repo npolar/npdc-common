@@ -91,21 +91,6 @@
     }
   }
 
-  .np-formula-subarray {
-    display: block;
-    position: relative;
-
-    > div > .np-formula-object > md-whiteframe {
-      box-shadow: none;
-      margin: 0;
-      padding: 0;
-
-      > fieldset > legend {
-        display: none;
-      }
-    }
-  }
-
   .np-formula-object-ctrls {
     position: absolute;
     right: -26px;

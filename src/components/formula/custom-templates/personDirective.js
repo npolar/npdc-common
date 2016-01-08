@@ -4,18 +4,56 @@
  * @ngInject
  */
 var formula = function (formulaAutoCompleteService) {
+
+  var onlyUnique = function (value, index, self) {
+    return self.indexOf(value) === index;
+  };
+
   return {
     templateUrl: 'npdc-common/src/components/formula/custom-templates/person.html',
     //@ngInject
     controller($scope) {
-      formulaAutoCompleteService.defineSourceFunction('npdcFirstName', function(persons) {
-        return persons.map(person => person.first_name);
+      $scope.firstName = $scope.field.fields.find(field => field.id === 'first_name');
+      $scope.lastName = $scope.field.fields.find(field => field.id === 'last_name');
+
+      let matched = [];
+      let overrideSource = [];
+
+      formulaAutoCompleteService.bindSourceCallback($scope.firstName.path, function(persons) {
+        if (overrideSource.length > 0) {
+          persons = overrideSource;
+        }
+        matched = persons;
+        return persons.map(person => person.first_name).filter(onlyUnique);
       });
 
-      formulaAutoCompleteService.defineSourceFunction('npdcLastName', function(persons) {
-        return persons.map(person => person.last_name);
+      formulaAutoCompleteService.bindSourceCallback($scope.lastName.path, function(persons) {
+        if (overrideSource.length > 0) {
+          persons = overrideSource;
+        }
+        matched = persons;
+        return persons.map(person => person.last_name).filter(onlyUnique);
       });
 
+      formulaAutoCompleteService.bindSelectCallback($scope.firstName.path, function(value) {
+        let matches = matched.filter(person => person.first_name === value);
+        if (matches.length === 1) {
+          $scope.lastName.value = matches[0].last_name;
+        } else {
+          overrideSource = matches;
+        }
+      });
+
+      formulaAutoCompleteService.bindSelectCallback($scope.lastName.path, function(value) {
+        let matches = matched.filter(person => person.last_name === value);
+        if (matches.length === 1) {
+          $scope.firstName.value = matches[0].first_name;
+        } else {
+          overrideSource = matches;
+        }
+      });
+
+      $scope.otherFields = $scope.field.fields.filter(field => !['first_name', 'last_name'].includes(field.id));
     }
   };
 };

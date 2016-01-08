@@ -74,8 +74,8 @@ angular
       return emails;
     };
 
-    formulaAutoCompleteService.defineSourceFunction("foobar", fn);
-    formulaAutoCompleteService.defineSourceFunction("emailCallback", emailCallback);
+    formulaAutoCompleteService.bindSourceCallback("#/autocomplete_fn", fn);
+    formulaAutoCompleteService.bindSourceCallback("#/autocomplete_url", emailCallback);
     fileFunnelService.defineOptions('#/string_file', {multiple: true});
     chronopicService.defineOptions('#/string_date', {locale: 'ja', format: "{YYYY} {YY} {YYYY} {MMM} {DD} {MMMM}"});
     chronopicService.defineOptions('#/string_datetime', {locale: 'en'});

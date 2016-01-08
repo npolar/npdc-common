@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<ul class="np-formula-array">
+<ul>
   <li ng-class="{ valid: value.valid, error: value.error }" ng-repeat="value in field.values">
     <formula:field-instance field="value" style="position: relative;" class="multi-ctrls"></formula:field-instance>
     <md-menu class="np-formula-input-ctrls remove">
@@ -16,8 +16,3 @@
     </md-menu>
   </li>
 </ul>
-<div class="np-formula-array-add">
-  <md-button ng-click="field.itemAdd()" class="md-fab md-mini md-primary md-hue-1" aria-label="{{ form.i18n.add[1] }}">
-    <md-icon>add</md-icon>
-  </md-button>
-</div>

@@ -47,24 +47,27 @@
 
             <!-- array -->
             <div ng-if="field.typeOf('array')" class="np-formula-array">
-              <div formula:field="field">
-                <md-whiteframe class="md-whiteframe-z2">
-                  <fieldset ng-class="{ valid: field.valid, error: field.error }">
+              <md-whiteframe class="md-whiteframe-z2">
+                <fieldset ng-class="{ valid: field.valid, error: field.error }">
 
-                    <legend>
-                      <div>{{ field.title }} ({{ field.nrArrayValues() || 0 }})</div>
-                      <div npdc:formula-field-info class="np-field-info" ng-if="field.description"></div>
-                    </legend>
+                  <legend>
+                    <div>{{ field.title }} ({{ field.nrArrayValues() || 0 }})</div>
+                    <div npdc:formula-field-info class="np-field-info" ng-if="field.description"></div>
+                  </legend>
 
-                    <!-- fieldset -->
-                    <div npdc:formula-fieldset-array ng-if="field.typeOf('fieldset')"></div>
+                  <!-- fieldset -->
+                  <div npdc:formula-fieldset-array ng-if="field.typeOf('fieldset')"></div>
 
-                    <!-- field -->
-                    <div npdc:formula-field-array ng-if="field.typeOf('field')"></div>
+                  <!-- field -->
+                  <div npdc:formula-field-array ng-if="field.typeOf('field')"></div>
 
-                  </fieldset>
-                </md-whiteframe>
-              </div>
+                  <div class="np-formula-array-add">
+                    <md-button ng-click="field.itemAdd()" class="md-fab md-mini md-primary md-hue-1" aria-label="{{ form.i18n.add[1] }}">
+                      <md-icon>add</md-icon>
+                    </md-button>
+                  </div>
+                </fieldset>
+              </md-whiteframe>
             </div>
 
           </div>

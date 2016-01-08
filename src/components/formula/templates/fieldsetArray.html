@@ -25,13 +25,12 @@
             </md-menu>
           </div>
         </legend>
-        <formula:field-instance field="value" ng-show="value.visible" class="np-formula-subarray" />
+        <fieldset formula:field="value" ng-show="field.visible">
+          <div ng-repeat="field in field.fields" ng-show="field.visible">
+            <formula:field-instance field="field"></formula:field-instance>
+          </div>
+        </fieldset>
       </fieldset>
     </md-whiteframe>
   </li>
 </ul>
-<div class="np-formula-array-add">
-  <md-button ng-click="field.itemAdd()" class="md-fab md-mini md-primary md-hue-1" aria-label="{{ form.i18n.add[1] }}">
-    <md-icon>add</md-icon>
-  </md-button>
-</div>
