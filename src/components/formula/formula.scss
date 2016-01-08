@@ -57,6 +57,10 @@
     padding: 1em;
   }
 
+  md-input-container {
+    width: 100%;
+  }
+
   md-autocomplete[md-floating-label] md-input-container {
     padding: 2px;
   }

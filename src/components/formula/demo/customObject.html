@@ -6,6 +6,6 @@
   <div ng-repeat="field in field.fields">
     <label for="{{field.id}}">{{field.title}}</label>
     <input id="{{field.id}}" type="text" ng-model="field.value">
-    <div ng-include="'ft-validation-message.html'" class="np-validation-message"></div>
+    <div npdc:formula-validation-message class="np-validation-message"></div>
   </div>
 </div>

@@ -3,7 +3,7 @@
 /**
  * @ngInject
  */
-var formula = function ($mdDialog, npdcAppConfig, formulaAutoCompleteService) {
+var formula = function ($mdDialog, npdcAppConfig) {
   return {
     templateUrl: 'npdc-common/src/components/formula/edit.html',
     //@ngInject
@@ -38,14 +38,6 @@ var formula = function ($mdDialog, npdcAppConfig, formulaAutoCompleteService) {
           });
         }
       };
-
-      formulaAutoCompleteService.defineSourceFunction('npdcFirstName', function(persons) {
-        return persons.map(person => person.first_name);
-      });
-
-      formulaAutoCompleteService.defineSourceFunction('npdcLastName', function(persons) {
-        return persons.map(person => person.last_name);
-      });
 
       $scope.$watch('document', (newVal) => {
         if (newVal) {

@@ -1,42 +1,36 @@
 "use strict";
 
 var angular = require('angular');
-var ui = angular.module('npdcCommon');
+var common = angular.module('npdcCommon');
 require('./search');
 require('./document');
+require('./formula');
 
-ui.directive('ngFocusOut', require('./focusOutDirective'));
-ui.factory('npdcAppConfig', require('./app/npdcAppConfig'));
+common.directive('ngFocusOut', require('./focusOutDirective'));
+common.factory('npdcAppConfig', require('./app/npdcAppConfig'));
 
-ui.directive('npdcToolbar', require('./toolbar/toolbarDirective'));
-ui.directive('npdcUserMenu', require('./user-menu/userMenu'));
+common.directive('npdcToolbar', require('./toolbar/toolbarDirective'));
+common.directive('npdcUserMenu', require('./user-menu/userMenu'));
 
-ui.service('NpdcBreadcrumbs', require('./breadcrumbs/BreadcrumbsService'));
-ui.controller('NpdcBreadcrumbsController', require('./breadcrumbs/BreadcrumbsController'));
-ui.directive('npdcCrumbs', require('./breadcrumbs/breadcrumbsDirective'));
+common.service('NpdcBreadcrumbs', require('./breadcrumbs/BreadcrumbsService'));
+common.controller('NpdcBreadcrumbsController', require('./breadcrumbs/BreadcrumbsController'));
+common.directive('npdcCrumbs', require('./breadcrumbs/breadcrumbsDirective'));
 
-ui.directive('npdcBottom', require('./bottom/bottom'));
-ui.controller('NpdcBottomController', require('./bottom/BottomController'));
+common.directive('npdcBottom', require('./bottom/bottom'));
+common.controller('NpdcBottomController', require('./bottom/BottomController'));
 
-ui.directive('npdcCreateButton', require('./button/CreateButton'));
-ui.directive('npdcEditButton', require('./button/EditButton'));
-ui.directive('npdcSaveButton', require('./button/SaveButton'));
-ui.directive('npdcDeleteButton', require('./button/DeleteButton'));
-ui.controller('NpdcButtonComponent', require('./button/ButtonComponent'));
+common.directive('npdcCreateButton', require('./button/CreateButton'));
+common.directive('npdcEditButton', require('./button/EditButton'));
+common.directive('npdcSaveButton', require('./button/SaveButton'));
+common.directive('npdcDeleteButton', require('./button/DeleteButton'));
+common.controller('NpdcButtonComponent', require('./button/ButtonComponent'));
 
 
-ui.controller('NpdcAppController', require('./app/AppController'));
-ui.directive('npdcApp', require('./app/appDirective'));
+common.controller('NpdcAppController', require('./app/AppController'));
+common.directive('npdcApp', require('./app/appDirective'));
 
-ui.controller('NpdcBottomSheetController', require('./bottom-sheet/BottomSheetController'));
-ui.directive('npdcBottomSheet', require('./bottom-sheet/bottomSheetDirective'));
+common.controller('NpdcBottomSheetController', require('./bottom-sheet/BottomSheetController'));
+common.directive('npdcBottomSheet', require('./bottom-sheet/bottomSheetDirective'));
 
-ui.directive('npdcLoader', require('./loader/loaderDirective'));
-ui.directive('npdcFooter', require('./footer/footerDirective'));
-
-ui.directive('npdcFormula', require('./formula/formulaDirective'));
-ui.directive('initMdField', require('./formula/initMdFieldDirective'));
-
-ui.run(function($templateCache) {
-  $templateCache.put('formula/material.html', require('./formula/template.html'));
-});
+common.directive('npdcLoader', require('./loader/loaderDirective'));
+common.directive('npdcFooter', require('./footer/footerDirective'));
