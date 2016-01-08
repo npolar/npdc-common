@@ -1,0 +1,6 @@
+<!DOCTYPE html>
+<md-input-container>
+  <label for="{{field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title ) }}</label>
+  <div formula:field="field" ng-attr-readonly="{{field.readonly}}"></div>
+  <div npdc:formula-validation-message class="np-validation-message"></div>
+</md-input-container>
