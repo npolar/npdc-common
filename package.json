@@ -21,7 +21,7 @@
     "angular-animate": "^1.4.8",
     "angular-aria": "^1.4.8",
     "angular-marked": "^0.0.18",
-    "angular-material": "^1.0.1",
+    "angular-material": "1.0.1",
     "angular-npolar": "npolar/angular-npolar",
     "angular-route": "^1.4.8",
     "chronopic": "npolar/chronopic.js",
