@@ -9,6 +9,8 @@ var formula = function ($mdDialog, npdcAppConfig, formulaAutoCompleteService) {
     //@ngInject
     controller($scope) {
 
+      $scope.formula.template = 'material';
+
       let initBottomSheet = function () {
         $scope.bottomSheetOptions = {
           items: [],
