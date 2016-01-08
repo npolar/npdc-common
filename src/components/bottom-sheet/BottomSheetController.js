@@ -20,8 +20,8 @@ let BottomSheetController = function($scope, $mdBottomSheet) {
             }
           }
         };
-
-        $timeout(init);
+        //init();
+        //$timeout(init);
       },
       targetEvent: $event,
       parent: document.querySelector('.np-content'),
