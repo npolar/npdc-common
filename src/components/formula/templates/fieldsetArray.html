@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <ul>
-  <li ng-repeat="value in field.values" ng-if="!value.hidden">
+  <li ng-repeat="value in field.values track by value.path" ng-if="!value.hidden">
     <md-whiteframe class="md-whiteframe-z2">
       <fieldset ng-class="{ valid: value.valid }">
         <legend>
@@ -26,7 +26,7 @@
           </div>
         </legend>
         <fieldset formula:field="value" ng-show="field.visible">
-          <div ng-repeat="field in field.fields" ng-show="field.visible">
+          <div ng-repeat="field in ::field.fields track by field.path" ng-show="field.visible">
             <formula:field-instance field="field"></formula:field-instance>
           </div>
         </fieldset>

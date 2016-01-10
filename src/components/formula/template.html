@@ -1,65 +1,65 @@
 <!DOCTYPE html>
 <form name="formula" class="formula" ng-if="form.fieldsets">
-  <header ng-if="form.title">
-    {{ form.title }}
+  <header ng-if="::form.title">
+    {{ ::form.title }}
   </header>
 
   <md-tabs md-dynamic-height md-border-bottom>
-    <md-tab label="{{fieldset.title}}" ng-disabled="fieldset.disabled" ng-repeat="fieldset in form.fieldsets">
+    <md-tab label="{{fieldset.title}}" ng-disabled="fieldset.disabled" ng-repeat="fieldset in ::form.fieldsets track by fieldset.id">
       <fieldset>
-        <div formula:field-definition ng-repeat="field in fieldset.fields">
+        <div formula:field-definition ng-repeat="field in ::fieldset.fields track by field.path">
           <div init-md-field="field" ng-show="field.visible">
             <!-- input field-->
-            <div ng-if="field.typeOf('input')" layout="row" class="np-formula-field">
+            <div ng-if="::field.typeOf('input')" layout="row" class="np-formula-field">
 
               <!-- boolean -->
-              <div npdc:formula-checkbox ng-if="field.mdType === 'boolean'" class="np-formula-boolean" flex></div>
+              <div npdc:formula-checkbox ng-if="::field.mdType === 'boolean'" class="np-formula-boolean" flex></div>
 
               <!-- range -->
-              <div npdc:formula-range ng-if="field.mdType === 'range'" class="np-formula-range" flex></div>
+              <div npdc:formula-range ng-if="::field.mdType === 'range'" class="np-formula-range" flex></div>
 
               <!-- select -->
-              <div npdc:formula-select ng-if="field.mdType === 'select'" class="np-formula-select" flex></div>
+              <div npdc:formula-select ng-if="::field.mdType === 'select'" class="np-formula-select" flex></div>
 
               <!-- input -->
-              <div npdc:formula-input ng-if="field.mdType === 'input'" class="np-formula-input" flex></div>
+              <div npdc:formula-input ng-if="::field.mdType === 'input'" class="np-formula-input" flex></div>
 
               <!-- file -->
-              <div npdc:formula-file ng-if="field.mdType === 'file'" class="np-formula-file" flex></div>
+              <div npdc:formula-file ng-if="::field.mdType === 'file'" class="np-formula-file" flex></div>
 
               <!-- date -->
-              <div npdc:formula-date ng-if="field.mdType === 'date'" class="np-formula-date" flex></div>
+              <div npdc:formula-date ng-if="::field.mdType === 'date'" class="np-formula-date" flex></div>
 
               <!-- autocomplete -->
-              <div npdc:formula-autocomplete ng-if="field.mdType === 'autocomplete'" class="np-formula-autocomplete" flex></div>
+              <div npdc:formula-autocomplete ng-if="::field.mdType === 'autocomplete'" class="np-formula-autocomplete" flex></div>
 
-              <div npdc:formula-field-info class="np-field-info" ng-if="field.description"></div>
+              <div npdc:formula-field-info class="np-field-info" ng-if="::field.description"></div>
             </div>
 
             <!-- object -->
-            <div ng-if="field.typeOf('object')" class="np-formula-object">
+            <div ng-if="::field.typeOf('object')" class="np-formula-object">
               <!-- file object -->
-              <div npdc:formula-file-object ng-if="field.mdType === 'file'" class="np-formula-fileobject"></div>
+              <div npdc:formula-file-object ng-if="::field.mdType === 'file'" class="np-formula-fileobject"></div>
 
               <!-- plain object -->
-              <div npdc:formula-object ng-if="field.mdType === 'object'" class="np-formula-object"></div>
+              <div npdc:formula-object ng-if="::field.mdType === 'object'" class="np-formula-object"></div>
             </div>
 
             <!-- array -->
-            <div ng-if="field.typeOf('array')" class="np-formula-array">
+            <div ng-if="::field.typeOf('array')" class="np-formula-array">
               <md-whiteframe class="md-whiteframe-z2">
                 <fieldset ng-class="{ valid: field.valid, error: field.error }">
 
                   <legend>
-                    <div>{{ field.title }} ({{ field.nrArrayValues() || 0 }})</div>
-                    <div npdc:formula-field-info class="np-field-info" ng-if="field.description"></div>
+                    <div>{{ field.title }} ({{ field.nrArrayValues() }})</div>
+                    <div npdc:formula-field-info class="np-field-info" ng-if="::field.description"></div>
                   </legend>
 
                   <!-- fieldset -->
-                  <div npdc:formula-fieldset-array ng-if="field.typeOf('fieldset')"></div>
+                  <div npdc:formula-fieldset-array ng-if="::field.typeOf('fieldset')"></div>
 
                   <!-- field -->
-                  <div npdc:formula-field-array ng-if="field.typeOf('field')"></div>
+                  <div npdc:formula-field-array ng-if="::field.typeOf('field')"></div>
 
                   <div class="np-formula-array-add">
                     <md-button ng-click="field.itemAdd()" class="md-fab md-mini md-primary md-hue-1" aria-label="{{ form.i18n.add[1] }}">
@@ -77,7 +77,7 @@
     </md-tab>
   </md-tabs>
 
-  <div layout="row" layout-align="space-between center" ng-if="!data.hideButtons">
+  <div layout="row" layout-align="space-between center" ng-if="::!data.hideButtons">
     <span ng-if="form.errors" title="{{ form.errors.join('\n') }}">{{ form.i18n.invalid | formulaReplace : { count: form.errors.length } }}</span>
 
     <div>

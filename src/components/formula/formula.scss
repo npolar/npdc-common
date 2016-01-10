@@ -153,6 +153,8 @@
   }
 
   .multi-ctrls {
+    position: relative;
+    
     .np-formula-field {
       width: calc(100% - 30px);
     }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <ul>
-  <li ng-class="{ valid: value.valid, error: value.error }" ng-repeat="value in field.values">
-    <formula:field-instance field="value" style="position: relative;" class="multi-ctrls"></formula:field-instance>
+  <li ng-class="{ valid: value.valid, error: value.error }" ng-repeat="value in field.values track by value.path">
+    <formula:field-instance field="value" class="multi-ctrls"></formula:field-instance>
     <md-menu class="np-formula-input-ctrls remove">
       <md-button aria-label="Remove" class="md-icon-button remove" ng-click="$mdOpenMenu($event)">
         <md-icon md-menu-origin>close</md-icon>

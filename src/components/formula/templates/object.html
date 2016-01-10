@@ -2,10 +2,10 @@
 <md-whiteframe class="md-whiteframe-z2">
   <fieldset formula:field="field">
     <legend>{{ field.title }}
-      <div npdc:formula-field-info class="np-field-info" ng-if="field.description"></div>
+      <div npdc:formula-field-info class="np-field-info" ng-if="::field.description"></div>
     </legend>
 
-    <div ng-repeat="field in field.fields" ng-show="field.visible">
+    <div ng-repeat="field in ::field.fields track by field.path" ng-show="field.visible">
       <formula:field-instance field="field"></formula:field-instance>
     </div>
   </fieldset>

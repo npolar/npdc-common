@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<md-input-container flex ng-if="field.mdType === 'select'" class="np-formula-select">
-  <label for="{{field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title) }}</label>
+<md-input-container>
+  <label for="{{::field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title) }}</label>
 
   <!-- single-select -->
-  <md-select ng-model="field.value" ng-if="!field.multiple">
-    <md-option ng-repeat="val in field.values" value="{{val.id}}">{{val.label}}</md-option>
+  <md-select ng-model="field.value" ng-if="::!field.multiple">
+    <md-option ng-repeat="val in field.values" value="{{::val.id}}">{{val.label}}</md-option>
   </md-select>
 
   <!-- multi-select, ref: https://docs.angularjs.org/error/$compile/selmulti -->
-  <md-select ng-model="field.value" multiple ng-if="field.multiple">
-    <md-option ng-repeat="val in field.values" value="{{val.id}}">{{val.label}}</md-option>
+  <md-select ng-model="field.value" multiple ng-if="::field.multiple">
+    <md-option ng-repeat="val in field.values" value="{{::val.id}}">{{val.label}}</md-option>
   </md-select>
 
   <div npdc:formula-validation-message class="np-validation-message"></div>
