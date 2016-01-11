@@ -3,7 +3,7 @@
 /**
  * @ngInject
  */
-var formula = function (formulaAutoCompleteService) {
+var person = function (formulaAutoCompleteService) {
 
   var onlyUnique = function (value, index, self) {
     return self.indexOf(value) === index;
@@ -64,4 +64,4 @@ var formula = function (formulaAutoCompleteService) {
   };
 };
 
-module.exports = formula;
+module.exports = person;
