@@ -32,6 +32,12 @@ cp.directive('chronopic', function($timeout, chronopicService) {
     restrict: 'A',
     require: '?ngModel',
     link: function(scope, elem, attrs, model) {
+      if (scope.field.readonly) {
+        attrs.$set('readonly', true);
+      }
+      if (scope.field.disabled) {
+        attrs.$set('disabled', true);
+      }
       let options = chronopicService.getOptions(scope.field.path);
       let onChange = options.onChange, cp;
       delete options.onChange;
