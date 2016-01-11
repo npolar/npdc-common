@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<md-whiteframe class="md-whiteframe-z2">
-  <fieldset formula:field="field">
+<fieldset formula:field="field">
+  <md-whiteframe class="md-whiteframe-z2">
     <legend>{{ field.title }}
       <div npdc:formula-field-info class="np-field-info" ng-if="::field.description"></div>
     </legend>
@@ -8,5 +8,5 @@
     <div ng-repeat="field in ::field.fields track by field.path" ng-show="field.visible">
       <formula:field-instance field="field"></formula:field-instance>
     </div>
-  </fieldset>
-</md-whiteframe>
+  </md-whiteframe>
+</fieldset>
