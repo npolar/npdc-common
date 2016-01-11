@@ -6,6 +6,7 @@
 var formula = function ($mdDialog, npdcAppConfig) {
   return {
     templateUrl: 'npdc-common/src/components/formula/edit.html',
+    transclude: true,
     //@ngInject
     controller($scope) {
 

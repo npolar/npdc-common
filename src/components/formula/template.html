@@ -8,7 +8,7 @@
     <md-tab label="{{fieldset.title}}" ng-disabled="fieldset.disabled" ng-repeat="fieldset in ::form.fieldsets track by fieldset.id">
       <fieldset>
         <div formula:field-definition ng-repeat="field in ::fieldset.fields track by field.path">
-          <div init-md-field="field" ng-show="field.visible">
+          <div init-md-field ng-show="field.visible">
             <!-- input field-->
             <div ng-if="::field.typeOf('input')" layout="row" class="np-formula-field">
 
