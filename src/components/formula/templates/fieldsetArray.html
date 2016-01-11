@@ -26,7 +26,7 @@
           </div>
         </legend>
         <fieldset formula:field="value" ng-show="field.visible">
-          <div ng-repeat="field in ::field.fields track by field.path" ng-show="field.visible">
+          <div ng-repeat="field in ::field.fields track by field.path">
             <formula:field-instance field="field"></formula:field-instance>
           </div>
         </fieldset>
