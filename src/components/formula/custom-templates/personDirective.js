@@ -15,6 +15,8 @@ var formula = function (formulaAutoCompleteService) {
     controller($scope) {
       $scope.firstName = $scope.field.fields.find(field => field.id === 'first_name');
       $scope.lastName = $scope.field.fields.find(field => field.id === 'last_name');
+      $scope.organisation = $scope.field.fields.find(field => field.id === 'organisation');
+      $scope.email = $scope.field.fields.find(field => field.id === 'email');
 
       let matched = [];
       let overrideSource = [];
@@ -39,6 +41,8 @@ var formula = function (formulaAutoCompleteService) {
         let matches = matched.filter(person => person.first_name === value);
         if (matches.length === 1) {
           $scope.lastName.value = matches[0].last_name;
+          $scope.organisation.value = matches[0].organisation;
+          $scope.email.value = matches[0].email;
         } else {
           overrideSource = matches;
         }
@@ -48,12 +52,14 @@ var formula = function (formulaAutoCompleteService) {
         let matches = matched.filter(person => person.last_name === value);
         if (matches.length === 1) {
           $scope.firstName.value = matches[0].first_name;
+          $scope.organisation.value = matches[0].organisation;
+          $scope.email.value = matches[0].email;
         } else {
           overrideSource = matches;
         }
       });
 
-      $scope.otherFields = $scope.field.fields.filter(field => !['first_name', 'last_name'].includes(field.id));
+      $scope.otherFields = $scope.field.fields.filter(field => !['first_name', 'last_name', 'email', 'organisation'].includes(field.id));
     }
   };
 };
