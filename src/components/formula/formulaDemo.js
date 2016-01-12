@@ -16,9 +16,15 @@ angular
       templates: [
         {
           match(field) {
-            return field.id === "ref_object";
+            return field.id === "people_object";
           },
-          template: require('./demo/customObject.html')
+          template: '<npdc:formula-person></npdc:formula-person>'
+        },
+        {
+          match(field) {
+            return field.id === "gcmd";
+          },
+          template: '<p>off</p>' //'<npdc:formula-gcmd></npdc:formula-gcmd>'
         }
       ]
     };

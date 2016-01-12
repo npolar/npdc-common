@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<div ng-show="field.visible">
+  <div layout="row">
+    <div flex="50">
+      <md-autocomplete
+        md-items="item in querySearch(firstName.value, 'first_name')"
+        md-min-length="1"
+        md-search-text="firstName.value"
+        md-floating-label="{{firstName.title}}"
+        md-selected-item-change="onSelect(item)"
+        md-item-text="item.first_name"
+        md-menu-class="np-autocomplete-person">
+
+        <md-item-template>
+          <span class="np-autocomplete-person-name">
+            <span md-highlight-flags="^i" md-highlight-text="firstName.value">
+              {{item.first_name}}
+            </span>
+            <span class="shade">{{item.last_name}}</span>
+          </span>
+          <span class="np-autocomplete-person-meta">
+            <span class="shade">{{item.email}}</span>
+          </span>
+        </md-item-template>
+
+      </md-autocomplete>
+      <div npdc:formula-validation-message class="np-validation-message"></div>
+    </div>
+    <div flex="50">
+      <md-autocomplete
+        md-items="item in querySearch(lastName.value, 'last_name')"
+        md-min-length="1"
+        md-search-text="lastName.value"
+        md-floating-label="{{lastName.title}}"
+        md-selected-item-change="onSelect(item)"
+        md-item-text="item.last_name"
+        md-menu-class="np-autocomplete-person">
+
+        <md-item-template>
+          <span class="np-autocomplete-person-name">
+            <span md-highlight-flags="^i" md-highlight-text="lastName.value">
+              {{item.last_name}}
+            </span>
+            <span class="shade">, {{item.first_name}}</span>
+          </span>
+          <span class="np-autocomplete-person-meta">
+            <span class="shade">{{item.email}}</span>
+          </span>
+        </md-item-template>
+
+      </md-autocomplete>
+      <div npdc:formula-validation-message class="np-validation-message"></div>
+    </div>
+  </div>
+  <div>
+    <md-autocomplete
+      md-items="item in querySearch(email.value, 'email')"
+      md-min-length="1"
+      md-search-text="email.value"
+      md-floating-label="{{email.title}}"
+      md-selected-item-change="onSelect(item)"
+      md-item-text="item.email"
+      md-menu-class="np-autocomplete-person">
+
+      <md-item-template>
+        <span class="np-autocomplete-person-meta">
+          <span md-highlight-flags="^i" md-highlight-text="email.value">
+            {{item.email}}
+          </span>
+        </span>
+        <span class="np-autocomplete-person-name">
+          <span class="shade">{{item.first_name}}</span>
+          <span class="shade">{{item.last_name}}</span>
+        </span>
+      </md-item-template>
+
+    </md-autocomplete>
+    <div npdc:formula-validation-message class="np-validation-message"></div>
+  </div>
+  <div ng-repeat="field in otherFields" ng-show="field.visible">
+    <formula:field-instance field="field"></formula:field-instance>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+.np-autocomplete-person {
+  li {
+    border-bottom: 1px solid #ccc;
+    height: auto;
+    padding-bottom: 8px;
+    padding-top: 8px;
+    white-space: normal;
+  }
+
+  li:last-child {
+    border-bottom-width: 0;
+  }
+
+  .shade {
+    color: $color-text-grey;
+
+    span {
+      color: $color-text-grey;
+    }
+  }
+
+  .np-autocomplete-person-name,
+  .np-autocomplete-person-meta {
+    display: block;
+    line-height: 2;
+  }
+}

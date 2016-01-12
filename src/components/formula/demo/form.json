@@ -65,5 +65,11 @@
         "autocomplete": true
       }
     ]
-    }]
-}
+  },{
+    "title": "custom templates",
+    "fields": [
+      "people",
+      "gcmd"
+    ]
+  }
+]}
