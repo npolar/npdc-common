@@ -6,7 +6,6 @@ require('./search');
 require('./document');
 require('./formula');
 
-common.service('recursionService', require('./recursionService'));
 common.directive('ngFocusOut', require('./focusOutDirective'));
 common.factory('npdcAppConfig', require('./app/npdcAppConfig'));
 

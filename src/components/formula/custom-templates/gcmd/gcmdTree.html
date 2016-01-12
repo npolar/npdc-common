@@ -1,0 +1,6 @@
+<!DOCTYPE html>
+<ul ng-if="tree.visible">
+  <li ng-repeat="item in ::tree track by item.id" ng-if="item.visible">
+    <npdc:formula-gcmd-tree-item></npdc:formula-gcmd-tree-item>
+  </li>
+</ul>

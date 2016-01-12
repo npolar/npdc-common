@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<md-whiteframe class="md-whiteframe-z2">
+  <legend>{{ field.title }}
+    <div npdc:formula-field-info class="np-field-info" ng-if="::field.description"></div>
+  </legend>
+  <md-input-container>
+    <label>Filter keywords</label>
+    <input ng-model="filter.text" ng-change="filterTree(filter.text)">
+  </md-input-container>
+  <npdc:formula-gcmd-tree tree="tree" filter="filter" ng-if="tree"></npdc:formula-gcmd-tree>
+  <formula:field-instance field="locations"></formula:field-instance>
+</md-whiteframe>

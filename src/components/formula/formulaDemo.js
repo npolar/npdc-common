@@ -24,7 +24,7 @@ angular
           match(field) {
             return field.id === "gcmd";
           },
-          template: '<p>off</p>' //'<npdc:formula-gcmd></npdc:formula-gcmd>'
+          template: '<npdc:formula-gcmd></npdc:formula-gcmd>'
         }
       ]
     };
