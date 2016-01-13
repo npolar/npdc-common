@@ -19,15 +19,16 @@ ff.controller('FFUploadController', function($scope, $mdDialog, options) {
       $mdDialog.hide(ff.files);
     }
   }).on('error', file => {
-    // noop
+    ff.progressType = 'determinate';
   }).on('progress', file => {
-    // noop
+    ff.progressType = 'determinate';
+  }).on('start', file => {
+    ff.progressType = 'indeterminate';
   });
 
-  $scope.isDisabled = function() {
-    return ff.files.length === 0;
-  };
-
+  $scope.FileFunnelStatus = FileFunnel.status;
+  ff.progressType = 'determinate';
+  console.log(ff);
 });
 
 ff.service('fileFunnelService', function($mdDialog) {
@@ -36,10 +37,10 @@ ff.service('fileFunnelService', function($mdDialog) {
     accept: "*/*",
     chunked: true
   };
-  let opts = {};
 
+  let opts = {};
   let defineOptions = function (key, options) {
-    opts[key] = Object.assign({}, DEFAULTS, options);
+    opts[key] = Object.assign({}, DEFAULTS, options, {multiple:false});
   };
 
   let getOptions = function (key) {
@@ -101,7 +102,7 @@ ff.directive('filefunnel', function(fileFunnelService) {
               if ($scope.field.itemAdd) {
                 let oldItemAdd = $scope.field.itemAdd;
                 $scope.field.itemAdd.itemAdd = function (ev) {
-                  fileFunnelService.showUpload(ev, $scope.field.path, {multiple: true}).then(files => {
+                  fileFunnelService.showUpload(ev, $scope.field.path, {}).then(files => {
                     files.forEach(file => {
                       if (file.status !== fileFunnelService.status.COMPLETED) {
                         return;
