@@ -1,7 +1,7 @@
 'use strict';
 
 // @ngInject
-var SearchResultsController = function($scope, $location, $http, $rootScope,
+var SearchResultsController = function($scope, $location, $http,
     NpolarApiSecurity, npdcAppConfig) {
   let options = ($scope.options || npdcAppConfig.search.local).results;
 
