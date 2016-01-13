@@ -19,7 +19,7 @@ ff.controller('FFUploadController', function($scope, $mdDialog, options) {
       $mdDialog.hide(ff.files);
     }
   }).on('error', file => {
-    // noop
+    ff.progressType = 'determinate';
   }).on('progress', file => {
     ff.progressType = 'determinate';
   }).on('start', file => {
@@ -35,13 +35,12 @@ ff.service('fileFunnelService', function($mdDialog) {
   const DEFAULTS = {
     server: "http://apptest.data.npolar.no/_file",
     accept: "*/*",
-    chunked: true,
-    multiple: false
+    chunked: true
   };
 
   let opts = {};
   let defineOptions = function (key, options) {
-    opts[key] = Object.assign({}, DEFAULTS, options);
+    opts[key] = Object.assign({}, DEFAULTS, options, {multiple:false});
   };
 
   let getOptions = function (key) {
