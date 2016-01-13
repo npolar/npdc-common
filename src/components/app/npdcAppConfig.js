@@ -45,15 +45,11 @@ let npdcAppConfigFactory = function (NpdcAutocompleteConfigFactory, NpdcSearchCo
       name: "My applications",
       apps: [
       {
-        link: "/indicator",
-        name: "Indicators (environmental monitoring)"
-      },
-      {
         link: "/indicator/parameter",
-        name: "Parameters (environmental monitoring)"
+        name: "Parameters (indicator monitoring)"
       },{
         link: "/indicator/timeseries",
-        name: "Timeseries (environmental monitoring)"
+        name: "Timeseries (indicator monitoring)"
       },
       {
         link: "/courses",
