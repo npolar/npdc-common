@@ -20,6 +20,7 @@ ff.controller('FFUploadController', function($scope, $mdDialog, options) {
     }
   }).on('error', file => {
     ff.progressType = 'determinate';
+	$scope.$apply();
   }).on('progress', file => {
     ff.progressType = 'determinate';
   }).on('start', file => {
