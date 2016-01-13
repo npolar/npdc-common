@@ -46,7 +46,7 @@ var formula = function ($mdDialog, npdcAppConfig) {
             'New document, not yet saved';
           initBottomSheet();
         }
-      }, true);
+      });
     }
   };
 };

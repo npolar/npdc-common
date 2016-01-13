@@ -9,7 +9,7 @@ require('angular-npolar');
 require('angular-route');
 require('formula');
 require('jusas-angularjs-slider');
-require('./browser-warning');
+//require('./browser-warning');
 require('./wrappers/chronopic');
 require('./wrappers/filefunnel');
 
