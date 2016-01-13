@@ -1,4 +1,4 @@
-.np-autocomplete-person {
+.np-autocomplete-custom {
   li {
     border-bottom: 1px solid #ccc;
     height: auto;
@@ -19,8 +19,8 @@
     }
   }
 
-  .np-autocomplete-person-name,
-  .np-autocomplete-person-meta {
+  .np-autocomplete-custom-main,
+  .np-autocomplete-custom-meta {
     display: block;
     line-height: 2;
   }

@@ -1,9 +1,0 @@
-<!DOCTYPE html>
-<md-checkbox ng-model="item.selected" ng-change="select(item)" ng-if="::item.cardinality > 1" aria-label="{{::item.label}}">
-  <span ng-if="::!item.isBranch()" md-highlight-text="filter.text" md-highlight-flags="i">
-    {{ ::item.label }}
-  </span>
-</md-checkbox>
-<span ng-if="::item.isBranch()">
-  <a ng-click="toggle(item)" href="" md-highlight-text="filter.text" md-highlight-flags="i">{{ ::item.label }}</a>
-</span>

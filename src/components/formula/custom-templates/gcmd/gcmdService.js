@@ -21,12 +21,10 @@ var gcmdService = function ($q, NpolarApiResource) {
     return currentLevel.map(item => {
       item.parent = parent;
       item.isBranch = isBranch;
-      item.visible = true;
 
       if (item.child_ids && source[cardinality]) {
         let filteredChildLevel = source[cardinality].filter(child => item.child_ids.indexOf(child.id) !== -1);
         item.children = buildTree(filteredChildLevel, cardinality + 1, item, source);
-        item.children.visible = false;
       }
       return item;
     });
@@ -44,7 +42,6 @@ var gcmdService = function ($q, NpolarApiResource) {
       response.filter(item => item.cardinality === 7)
     ];
     let tree = buildTree(source[0], 1, null, source);
-    tree.visible = true;
     deferred.resolve(tree);
   }, err => { deferred.reject(); });
 
