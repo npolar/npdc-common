@@ -21,23 +21,25 @@ ff.controller('FFUploadController', function($scope, $mdDialog, options) {
   }).on('error', file => {
     // noop
   }).on('progress', file => {
-    // noop
+    ff.progressType = 'determinate';
+  }).on('start', file => {
+    ff.progressType = 'indeterminate';
   });
 
-  $scope.isDisabled = function() {
-    return ff.files.length === 0;
-  };
-
+  $scope.FileFunnelStatus = FileFunnel.status;
+  ff.progressType = 'determinate';
+  console.log(ff);
 });
 
 ff.service('fileFunnelService', function($mdDialog) {
   const DEFAULTS = {
     server: "http://apptest.data.npolar.no/_file",
     accept: "*/*",
-    chunked: true
+    chunked: true,
+    multiple: false
   };
-  let opts = {};
 
+  let opts = {};
   let defineOptions = function (key, options) {
     opts[key] = Object.assign({}, DEFAULTS, options);
   };
@@ -101,7 +103,7 @@ ff.directive('filefunnel', function(fileFunnelService) {
               if ($scope.field.itemAdd) {
                 let oldItemAdd = $scope.field.itemAdd;
                 $scope.field.itemAdd.itemAdd = function (ev) {
-                  fileFunnelService.showUpload(ev, $scope.field.path, {multiple: true}).then(files => {
+                  fileFunnelService.showUpload(ev, $scope.field.path, {}).then(files => {
                     files.forEach(file => {
                       if (file.status !== fileFunnelService.status.COMPLETED) {
                         return;
