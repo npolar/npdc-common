@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<md-whiteframe class="md-whiteframe-z2 np-formula-array">
+  <fieldset ng-class="{ valid: field.valid, error: field.error }">
+
+    <legend>
+      <div>{{ field.title }} ({{ field.nrArrayValues() }})</div>
+      <div npdc:formula-field-info class="np-field-info" ng-if="::field.description"></div>
+    </legend>
+
+    <div npdc:formula-fieldset-array ng-if="::field.typeOf('fieldset')"></div>
+
+    <div class="np-formula-array-add">
+      <md-button ng-click="field.itemAdd()" class="md-fab md-mini md-primary md-hue-1" aria-label="{{ form.i18n.add[1] }}">
+        <md-icon>add</md-icon>
+      </md-button>
+    </div>
+  </fieldset>
+</md-whiteframe>

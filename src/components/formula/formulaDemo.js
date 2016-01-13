@@ -22,9 +22,9 @@ angular
         },
         {
           match(field) {
-            return field.id === "sciencekeywords_object";
+            return field.id === "gcmd";
           },
-          template: '<npdc:formula-gcmd-keyword></npdc:formula-gcmd-keyword>'
+          template: '<npdc:formula-gcmd></npdc:formula-gcmd>'
         }
       ]
     };
