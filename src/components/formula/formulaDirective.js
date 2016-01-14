@@ -10,8 +10,6 @@ var formula = function ($mdDialog, npdcAppConfig) {
     //@ngInject
     controller($scope) {
 
-      $scope.formula.template = 'material';
-
       let initBottomSheet = function () {
         $scope.bottomSheetOptions = {
           items: [],
