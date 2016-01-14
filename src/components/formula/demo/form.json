@@ -20,7 +20,23 @@
         "id": "string_file",
         "format": "file-uri"
       },
-      "file_ref"
+      {
+        "id": "file_ref",
+        "fields": [
+          {
+            "id": "filename",
+            "disabled": true
+          },
+          {
+            "id": "filesize",
+            "disabled": true
+          },
+          {
+            "id": "mimetype",
+            "disabled": true
+          }
+        ]
+      }
     ]
   }, {
     "title": "numbers and boolean",
