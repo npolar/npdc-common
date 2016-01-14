@@ -64,9 +64,11 @@ let initMdField = function () {
   return {
     restrict: 'A',
     require: '^formula',
+    priority: -1,
+    scope: false,
     // @ngInject
-    controller ($scope) {
-      setMdType($scope.field);
+    link (scope) {
+      setMdType(scope.field);
     }
   };
 };

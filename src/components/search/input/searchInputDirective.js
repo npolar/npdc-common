@@ -19,12 +19,14 @@ var searchInputDirective = function () {
       $scope.isFiltersOpen = false;
 
       $scope.$watch('query.q', (newVal, oldVal) => {
+        console.time('watch');
         if (newVal !== oldVal) {
           let query = Object.assign({},
             $location.search(),
             {q: newVal});
           NpdcSearchService.search(query);
         }
+        console.timeEnd('watch');
       });
 
       $scope.$watch('feed', (newVal, oldVal) => {
