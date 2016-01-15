@@ -67,8 +67,8 @@ let initMdField = function () {
     priority: -1,
     scope: false,
     // @ngInject
-    link (scope) {
-      setMdType(scope.field);
+    controller ($scope) {
+      setMdType($scope.field);
     }
   };
 };

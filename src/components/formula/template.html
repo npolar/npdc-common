@@ -1,263 +1,96 @@
 <!DOCTYPE html>
+<form name="formula" class="formula" ng-if="form.fieldsets">
+  <header ng-if="::form.title">
+    {{ ::form.title }}
+  </header>
 
-<script type="text/ng-template" id="npdcFormulaAutocomplete.tmpl">
-  <md-autocomplete md-items="item in field.querySearch(field.value)" md-min-length="1" md-search-text="field.value" md-floating-label="{{field.title}}" md-selected-item-change="field.onSelect(field.value)">
+  <md-tabs md-dynamic-height md-border-bottom md-enable-disconnect>
+    <md-tab label="{{fieldset.title}}" md-active="fieldset.active"
+      ng-disabled="fieldset.disabled" md-on-select="fieldset.active = true"
+      md-on-deselect="fieldset.active = false"
+      ng-repeat="fieldset in ::form.fieldsets track by fieldset.id">
+      <fieldset ng-if="fieldset.active" class="np-formula-tab">
+        <div formula:field-definition ng-repeat="field in ::fieldset.fields track by field.path">
+          <div init-md-field ng-show="field.visible">
+            <!-- input field-->
+            <div ng-if="::field.typeOf('input')" layout="row" class="np-formula-field">
 
-    <md-item-template>
-      <span md-highlight-flags="^i" md-highlight-text="field.value" ng-if="item">{{item}}</span>
-    </md-item-template>
+              <!-- boolean -->
+              <div npdc:formula-checkbox ng-if="::field.mdType === 'boolean'" class="np-formula-boolean" flex></div>
 
-  </md-autocomplete>
-  <div ng-include="'npdcFormulaValidationMessage.tmpl'" class="np-validation-message"></div>
-</script>
+              <!-- range -->
+              <div npdc:formula-range ng-if="::field.mdType === 'range'" class="np-formula-range" flex></div>
 
-<script type="text/ng-template" id="npdcFormulaCheckbox.tmpl">
-  <md-checkbox ng-attr-id="::field.uid" ng-model="field.value" aria-label="{{ field.title }}">
-    <label for="{{::field.uid}}">{{ field.title }}</label>
-  </md-checkbox>
-  <div ng-include="'npdcFormulaValidationMessage.tmpl'" class="np-validation-message"></div>
-</script>
+              <!-- select -->
+              <div npdc:formula-select ng-if="::field.mdType === 'select'" class="np-formula-select" flex></div>
 
-<script type="text/ng-template" id="npdcFormulaDate.tmpl">
-  <md-input-container>
-    <label for="{{::field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title ) }}</label>
-    <input type="text" ng-model="field.value" chronopic>
-    <div ng-include="'npdcFormulaValidationMessage.tmpl'" class="np-validation-message"></div>
-  </md-input-container>
-</script>
+              <!-- input -->
+              <div npdc:formula-input ng-if="::field.mdType === 'input'" class="np-formula-input" flex></div>
 
-<script type="text/ng-template" id="npdcFormulaFieldArray.tmpl">
-  <ul>
-    <li ng-class="{ valid: value.valid, error: value.error }" ng-repeat="value in field.values track by value.path">
-      <formula:field-instance field="value" class="multi-ctrls"></formula:field-instance>
-      <md-menu class="np-formula-input-ctrls remove">
-        <md-button aria-label="Remove" class="md-icon-button remove" ng-click="$mdOpenMenu($event)">
-          <md-icon md-menu-origin>close</md-icon>
-        </md-button>
-        <md-menu-content>
-          <md-menu-item>
-            <md-button ng-click="field.itemRemove($index)" title="{{ form.i18n.remove[1] }}" class="md-warn">
-              <md-icon md-menu-align-target>delete</md-icon> Remove item
-            </md-button>
-          </md-menu-item>
-        </md-menu-content>
-      </md-menu>
-    </li>
-  </ul>
-</script>
+              <!-- file -->
+              <div npdc:formula-file ng-if="::field.mdType === 'file'" class="np-formula-file" flex></div>
 
-<script type="text/ng-template" id="npdcFormulaFieldInfo.tmpl">
-  <md-icon>info_outline
-    <md-tooltip md-direction="left">{{ field.description }}</md-tooltip>
-  </md-icon>
-</script>
+              <!-- date -->
+              <div npdc:formula-date ng-if="::field.mdType === 'date'" class="np-formula-date" flex></div>
 
-<script type="text/ng-template" id="npdcFormulaFieldsetArray.tmpl">
-  <ul>
-    <li ng-repeat="value in field.values track by value.path" ng-if="!value.hidden">
-      <md-whiteframe class="md-whiteframe-z2">
-        <fieldset ng-class="{ valid: value.valid }">
-          <legend>
-            <span>{{ value.title }}</span>
-            <span ng-if="!value.visible">{{ value.fields | formulaInlineValues }}</span>
-            <div class="np-formula-object-ctrls">
-              <div ng-include="'npdcFormulaFieldInfo.tmpl'" class="np-field-info" ng-init="field=value" ng-if="value.description"></div>
-              <a class="toggle" href="" ng-click="field.itemToggle($index)" title="{{ value.visible ? form.i18n.minimize[1] : form.i18n.maximize[1] }}">
-                <md-icon>{{ value.visible ? 'expand_less' : 'expand_more' }}</md-icon>
-              </a>
-              <md-menu>
-                <md-button aria-label="Remove" class="md-icon-button remove" ng-click="$mdOpenMenu($event)">
-                  <md-icon md-menu-origin>close</md-icon>
-                </md-button>
-                <md-menu-content>
-                  <md-menu-item>
-                    <md-button ng-click="field.itemRemove($index)" title="{{ form.i18n.remove[1] }}" class="md-warn">
-                      <md-icon md-menu-align-target>delete</md-icon> Remove item
+              <!-- autocomplete -->
+              <div npdc:formula-autocomplete ng-if="::field.mdType === 'autocomplete'" class="np-formula-autocomplete" flex></div>
+
+              <div npdc:formula-field-info class="np-field-info" ng-if="::field.description"></div>
+            </div>
+
+            <!-- object -->
+            <div ng-if="::field.typeOf('object')" class="np-formula-object">
+              <!-- file object -->
+              <div npdc:formula-file-object ng-if="::field.mdType === 'file'" class="np-formula-fileobject"></div>
+
+              <!-- plain object -->
+              <div npdc:formula-object ng-if="::field.mdType === 'object'" class="np-formula-object"></div>
+            </div>
+
+            <!-- array -->
+            <div ng-if="::field.typeOf('array')" class="np-formula-array">
+              <md-whiteframe class="md-whiteframe-z2">
+                <fieldset ng-class="{ valid: field.valid, error: field.error }">
+
+                  <legend>
+                    <div>{{ field.title }} ({{ field.nrArrayValues() }})</div>
+                    <div npdc:formula-field-info class="np-field-info" ng-if="::field.description"></div>
+                  </legend>
+
+                  <!-- fieldset -->
+                  <div npdc:formula-fieldset-array ng-if="::field.typeOf('fieldset')"></div>
+
+                  <!-- field -->
+                  <div npdc:formula-field-array ng-if="::field.typeOf('field')"></div>
+
+                  <div class="np-formula-array-add">
+                    <md-button ng-click="field.itemAdd()" class="md-fab md-mini md-primary md-hue-1" aria-label="{{ form.i18n.add[1] }}">
+                      <md-icon>add</md-icon>
                     </md-button>
-                  </md-menu-item>
-                </md-menu-content>
-              </md-menu>
+                  </div>
+                </fieldset>
+              </md-whiteframe>
             </div>
-          </legend>
-          <fieldset formula:field="value" ng-show="field.visible">
-            <div ng-repeat="field in ::field.fields track by field.path">
-              <formula:field-instance field="field"></formula:field-instance>
-            </div>
-          </fieldset>
-        </fieldset>
-      </md-whiteframe>
-    </li>
-  </ul>
-</script>
 
-<script type="text/ng-template" id="npdcFormulaFile.tmpl">
-  <md-input-container>
-    <label for="{{::field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title ) }}</label>
-    <input type="text" ng-model="field.value" filefunnel ng-readonly="true">
-    <div ng-include="'npdcFormulaValidationMessage.tmpl'" class="np-validation-message"></div>
-  </md-input-container>
-
-  <script type="text/ng-template" id="npdcFormulaFileObject.tmpl">
-    <md-whiteframe class="md-whiteframe-z2" filefunnel>
-      <fieldset formula:field="field">
-        <legend>{{ field.title }}
-          <div ng-include="'npdcFormulaFieldInfo.tmpl'" class="np-field-info" ng-if="field.description"></div>
-        </legend>
-
-        <div ng-repeat="field in ::field.fields track by field.path" ng-show="field.visible">
-          <formula:field-instance field="field"></formula:field-instance>
+          </div>
         </div>
       </fieldset>
-    </md-whiteframe>
-  </script>
 
-  <script type="text/ng-template" id="npdcFormulaInput.tmpl">
-    <md-input-container>
-      <label for="{{::field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title ) }}</label>
-      <div formula:field="field" ng-attr-readonly="{{::field.readonly}}"></div>
-      <div ng-include="'npdcFormulaValidationMessage.tmpl'" class="np-validation-message"></div>
-    </md-input-container>
-  </script>
+    </md-tab>
+  </md-tabs>
 
-  <script type="text/ng-template" id="npdcFormulaObject.tmpl">
-    <fieldset formula:field="field">
-      <md-whiteframe class="md-whiteframe-z2">
-        <legend>{{ field.title }}
-          <div ng-include="'npdcFormulaFieldInfo.tmpl'" class="np-field-info" ng-if="::field.description"></div>
-        </legend>
+  <div layout="row" layout-align="space-between center" ng-if="::!data.hideButtons">
+    <span ng-if="form.errors" title="{{ form.errors.join('\n') }}">{{ form.i18n.invalid | formulaReplace : { count: form.errors.length } }}</span>
 
-        <div ng-repeat="field in ::field.fields track by field.path" ng-show="field.visible">
-          <formula:field-instance field="field"></formula:field-instance>
-        </div>
-      </md-whiteframe>
-    </fieldset>
-  </script>
-
-  <script type="text/ng-template" id="npdcFormulaRange.tmpl">
-    <label for="{{::field.uid}}">{{ field.title }}:
-      <span>{{field.value}}</span>
-    </label>
-    <md-slider flex min="{{field.minimum}}" max="{{field.maximum}}" step="{{field.step}}" md-discrete ng-model="field.value" aria-label="{{field.title}}" ng-attr-id="field.uid">
-    </md-slider>
-    <div ng-include="'npdcFormulaValidationMessage.tmpl'" class="np-validation-message"></div>
-  </script>
-
-  <script type="text/ng-template" id="npdcFormulaSelect.tmpl">
-    <md-input-container>
-      <label for="{{::field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title) }}</label>
-
-      <!-- single-select -->
-      <md-select ng-model="field.value" ng-if="::!field.multiple">
-        <md-option ng-repeat="val in field.values" value="{{::val.id}}">{{val.label}}</md-option>
-      </md-select>
-
-      <!-- multi-select, ref: https://docs.angularjs.org/error/$compile/selmulti -->
-      <md-select ng-model="field.value" multiple ng-if="::field.multiple">
-        <md-option ng-repeat="val in field.values" value="{{::val.id}}">{{val.label}}</md-option>
-      </md-select>
-
-      <div ng-include="'npdcFormulaValidationMessage.tmpl'" class="np-validation-message"></div>
-    </md-input-container>
-  </script>
-
-  <script type="text/ng-template" id="npdcFormulaValidationMessage.tmpl">
-    <div class="md-caption" role="alert" ng-show="field.error">
-      {{ field.error.message }}
+    <div>
+      <md-button class="md-raised" ng-click="form.validate(true)" title="{{ form.i18n.validate[1] }}">
+        <md-icon>check</md-icon> {{ form.i18n.validate[0] }}</md-button>
+      <md-button class="md-raised md-primary" ng-click="form.save()" ng-disabled="!form.valid" title="{{ form.i18n.save[1] }}">
+        <md-icon>save</md-icon> {{ form.i18n.save[0] }}</md-button>
     </div>
-  </script>
 
+  </div>
+</form>
 
-
-
-  <form name="formula" class="formula" ng-if="form.fieldsets">
-    <header ng-if="::form.title">
-      {{ ::form.title }}
-    </header>
-
-    <md-tabs md-dynamic-height md-border-bottom md-enable-disconnect>
-      <md-tab label="{{fieldset.title}}" md-active="fieldset.active" ng-disabled="fieldset.disabled" md-on-select="fieldset.active = true" md-on-deselect="fieldset.active = false" ng-repeat="fieldset in ::form.fieldsets track by fieldset.id">
-        <fieldset ng-if="fieldset.active" class="np-formula-tab">
-          <div formula:field-definition ng-repeat="field in ::fieldset.fields track by field.path">
-            <div init-md-field ng-show="field.visible">
-              <!-- input field-->
-              <div ng-if="::field.typeOf('input')" layout="row" class="np-formula-field">
-
-                <!-- boolean -->
-                <div ng-include="'npdcFormulaCheckbox.tmpl'" ng-if="::field.mdType === 'boolean'" class="np-formula-boolean" flex></div>
-
-                <!-- range -->
-                <div ng-include="'npdcFormulaRange.tmpl'" ng-if="::field.mdType === 'range'" class="np-formula-range" flex></div>
-
-                <!-- select -->
-                <div ng-include="'npdcFormulaSelect.tmpl'" ng-if="::field.mdType === 'select'" class="np-formula-select" flex></div>
-
-                <!-- input -->
-                <div ng-include="'npdcFormulaInput.tmpl'" ng-if="::field.mdType === 'input'" class="np-formula-input" flex></div>
-
-                <!-- file -->
-                <div ng-include="'npdcFormulaFile.tmpl'" ng-if="::field.mdType === 'file'" class="np-formula-file" flex></div>
-
-                <!-- date -->
-                <div ng-include="'npdcFormulaDate.tmpl'" ng-if="::field.mdType === 'date'" class="np-formula-date" flex></div>
-
-                <!-- autocomplete -->
-                <div ng-include="'npdcFormulaAutocomplete.tmpl'" ng-if="::field.mdType === 'autocomplete'" class="np-formula-autocomplete" flex></div>
-
-                <div ng-include="'npdcFormulaFieldInfo.tmpl'" ng-if="::field.description" class="np-field-info" ></div>
-              </div>
-
-              <!-- object -->
-              <div ng-if="::field.typeOf('object')" class="np-formula-object">
-                <!-- file object -->
-                <div ng-include="'npdcFormulaFileObject.tmpl'" ng-if="::field.mdType === 'file'" class="np-formula-fileobject"></div>
-
-                <!-- plain object -->
-                <div ng-include="'npdcFormulaObject.tmpl'" ng-if="::field.mdType === 'object'" class="np-formula-object"></div>
-              </div>
-
-              <!-- array -->
-              <div ng-if="::field.typeOf('array')" class="np-formula-array">
-                <md-whiteframe class="md-whiteframe-z2">
-                  <fieldset ng-class="{ valid: field.valid, error: field.error }">
-
-                    <legend>
-                      <div>{{ field.title }} ({{ field.nrArrayValues() }})</div>
-                      <div ng-include="'npdcFormulaFieldInfo.tmpl'" class="np-field-info" ng-if="::field.description"></div>
-                    </legend>
-
-                    <!-- fieldset -->
-                    <div ng-include="'npdcFormulaFieldsetArray.tmpl'" ng-if="::field.typeOf('fieldset')"></div>
-
-                    <!-- field -->
-                    <div ng-include="'npdcFormulaFieldArray.tmpl'" ng-if="::field.typeOf('field')"></div>
-
-                    <div class="np-formula-array-add">
-                      <md-button ng-click="field.itemAdd()" class="md-fab md-mini md-primary md-hue-1" aria-label="{{ form.i18n.add[1] }}">
-                        <md-icon>add</md-icon>
-                      </md-button>
-                    </div>
-                  </fieldset>
-                </md-whiteframe>
-              </div>
-
-            </div>
-          </div>
-        </fieldset>
-
-      </md-tab>
-    </md-tabs>
-
-    <div layout="row" layout-align="space-between center" ng-if="::!data.hideButtons">
-      <span ng-if="form.errors" title="{{ form.errors.join('\n') }}">{{ form.i18n.invalid | formulaReplace : { count: form.errors.length } }}</span>
-
-      <div>
-        <md-button class="md-raised" ng-click="form.validate(true)" title="{{ form.i18n.validate[1] }}">
-          <md-icon>check</md-icon> {{ form.i18n.validate[0] }}</md-button>
-        <md-button class="md-raised md-primary" ng-click="form.save()" ng-disabled="!form.valid" title="{{ form.i18n.save[1] }}">
-          <md-icon>save</md-icon> {{ form.i18n.save[0] }}</md-button>
-      </div>
-
-    </div>
-  </form>
-
-  <npdc:loader ng-if="!form.fieldsets"></npdc:loader>
+<npdc:loader ng-if="!form.fieldsets"></npdc:loader>
