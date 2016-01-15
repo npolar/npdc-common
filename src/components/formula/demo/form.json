@@ -19,23 +19,18 @@
       {
         "id": "string_file",
         "format": "file-uri"
-      },
-      {
+      }, {
         "id": "file_ref",
-        "fields": [
-          {
-            "id": "filename",
-            "disabled": true
-          },
-          {
-            "id": "filesize",
-            "disabled": true
-          },
-          {
-            "id": "mimetype",
-            "disabled": true
-          }
-        ]
+        "fields": [{
+          "id": "filename",
+          "disabled": true
+        }, {
+          "id": "filesize",
+          "disabled": true
+        }, {
+          "id": "mimetype",
+          "disabled": true
+        }]
       }
     ]
   }, {
