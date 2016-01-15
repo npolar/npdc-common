@@ -9,7 +9,7 @@ var searchInputDirective = function () {
     },
     template: require('./searchInput.html'),
     // @ngInject
-    controller: function ($scope, $element, $location, NpdcSearchService, npdcAppConfig) {
+    controller: function ($scope, $location, NpdcSearchService, npdcAppConfig) {
       $scope.options = $scope.options || {};
       Object.assign($scope.options, npdcAppConfig.search.local,
         $scope.options, $scope.feed ? {facets: $scope.feed.facets} : {});
@@ -34,8 +34,6 @@ var searchInputDirective = function () {
       $scope.toggleFilters = function () {
         $scope.isFiltersOpen = !$scope.isFiltersOpen;
       };
-
-      $element[0].querySelector('input').focus();
     }
   };
 };
