@@ -20,35 +20,35 @@
   </md-select>
 </md-input-container>
 
-<md-input-container ng-show="!!keyword.Category.value">
+<md-input-container ng-if="!!keyword.Category.value">
   <label for="{{::keyword.Topic.uid}}">{{ keyword.Topic.title }}</label>
   <md-select ng-model="keyword.Topic.value">
     <md-option ng-repeat="val in treeValues(2)" value="{{::val.label}}">{{val.label}}</md-option>
   </md-select>
 </md-input-container>
 
-<md-input-container ng-show="!!keyword.Topic.value">
+<md-input-container ng-if="!!keyword.Topic.value">
   <label for="{{::keyword.Term.uid}}">{{ keyword.Term.title }}</label>
   <md-select ng-model="keyword.Term.value">
     <md-option ng-repeat="val in treeValues(3)" value="{{::val.label}}">{{val.label}}</md-option>
   </md-select>
 </md-input-container>
 
-<md-input-container ng-show="!!keyword.Term.value">
+<md-input-container ng-if="!!keyword.Term.value">
   <label for="{{::keyword.Variable_Level_1.uid}}">{{ keyword.Variable_Level_1.title }}</label>
   <md-select ng-model="keyword.Variable_Level_1.value">
     <md-option ng-repeat="val in treeValues(4)" value="{{::val.label}}">{{val.label}}</md-option>
   </md-select>
 </md-input-container>
 
-<md-input-container ng-show="!!keyword.Variable_Level_1.value">
+<md-input-container ng-if="!!keyword.Variable_Level_1.value">
   <label for="{{::keyword.Variable_Level_2.uid}}">{{ keyword.Variable_Level_2.title }}</label>
   <md-select ng-model="keyword.Variable_Level_2.value">
     <md-option ng-repeat="val in treeValues(5)" value="{{::val.label}}">{{val.label}}</md-option>
   </md-select>
 </md-input-container>
 
-<md-input-container ng-show="!!keyword.Variable_Level_2.value">
+<md-input-container ng-if="!!keyword.Variable_Level_2.value">
   <label for="{{::keyword.Variable_Level_3.uid}}">{{ keyword.Variable_Level_3.title }}</label>
   <md-select ng-model="keyword.Variable_Level_3.value">
     <md-option ng-repeat="val in treeValues(6)" value="{{::val.label}}">{{val.label}}</md-option>

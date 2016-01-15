@@ -12,7 +12,6 @@ let gcmd = function(npdcGcmdService) {
     controller($scope) {
       $scope.field = $scope.field.fields.find(field => field.id === 'sciencekeywords');
       $scope.field.fields[0].customTemplate = '<npdc:formula-gcmd-keyword></npdc:formula-gcmd-keyword>';
-      console.log($scope.field);
     }
   };
 };

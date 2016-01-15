@@ -35,13 +35,10 @@ angular
         string: 'timeoutfoobar',
         string_date: '2012-05-17',
         boolean: true,
-        array_object: [{
+        array_object: Array(100).fill({
           string_default: 'foo',
           number: 1
-        }, {
-          string_default: 'bar',
-          number: 2
-        }],
+        }),
         array_string_enum: ['foo', 'qux'],
         array_string: ['foobar', 'bazquz'],
         ref_object: {

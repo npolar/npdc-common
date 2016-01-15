@@ -4,14 +4,13 @@
     {{ ::form.title }}
   </header>
 
-  <md-tabs md-dynamic-height md-border-bottom md-enable-disconnect>
+  <md-tabs md-dynamic-height md-border-bottom>
     <md-tab label="{{fieldset.title}}" md-active="fieldset.active"
-      ng-disabled="fieldset.disabled" md-on-select="fieldset.active = true"
-      md-on-deselect="fieldset.active = false"
+      ng-disabled="fieldset.disabled" md-on-select="form.activate(fieldset)"
       ng-repeat="fieldset in ::form.fieldsets track by fieldset.id">
-      <fieldset ng-if="fieldset.active" class="np-formula-tab">
+      <fieldset class="np-formula-tab">
         <div formula:field-definition ng-repeat="field in ::fieldset.fields track by field.path">
-          <div init-md-field ng-show="field.visible">
+          <div init-md-field ng-if="field.visible">
             <!-- input field-->
             <div ng-if="::field.typeOf('input')" layout="row" class="np-formula-field">
 
