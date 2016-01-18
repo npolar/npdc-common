@@ -1,6 +1,6 @@
 {
   "name": "npdc-common",
-  "version": "2.1.3",
+  "version": "2.1.1",
   "description": "Common modules for NPDC apps",
   "main": "src/index.js",
   "scripts": {
@@ -24,9 +24,9 @@
     "angular-material": "^1.0.1",
     "angular-npolar": "npolar/angular-npolar#9f6bb2f30c47df53e76cdd49bb6e87a263e5ce87",
     "angular-route": "^1.4.8",
-    "chronopic": "github:npolar/chronopic.js#7282918b35efa60af36b99226b17f96c22ba6aad",
+    "chronopic": "npolar/chronopic.js#4c7a5a21f8c747b85aa470ec6c7292fad6f87965",
     "filefunnel.js": "github:npolar/filefunnel.js#24ec250e73260c346762c4151d88e8f1098cc4b7",
-    "formula": "github:npolar/formula#90d5343ac1d2dfe0413ff8281c6ec8b0909bc1af",
+    "formula": "github:npolar/formula#be5bd74c0954b4b1e6c39bd4d857109fae6b4491",
     "angularjs-slider": "^2.4.1",
     "leaflet": "^0.7.7",
     "material-design-icons": "^2.0.0",
