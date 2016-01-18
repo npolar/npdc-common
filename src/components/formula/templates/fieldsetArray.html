@@ -4,7 +4,7 @@
     <md-whiteframe class="md-whiteframe-z2">
       <fieldset ng-class="{ valid: value.valid }">
         <legend>
-          <span>{{ value.title }}</span>
+          <span class="np-formula-array-object-title">{{ value.title }}</span>
           <span ng-if="!value.visible">{{ value.fields | formulaInlineValues }}</span>
           <div class="np-formula-object-ctrls">
             <div npdc:formula-field-info class="np-field-info" ng-init="field=value" ng-if="value.description"></div>

@@ -9,8 +9,8 @@
       ng-disabled="fieldset.disabled" md-on-select="form.activate(fieldset)"
       ng-repeat="fieldset in ::form.fieldsets track by fieldset.id">
       <fieldset class="np-formula-tab">
-        <div formula:field-definition ng-repeat="field in ::fieldset.fields track by field.path">
-          <div init-md-field ng-if="field.visible">
+        <div formula:field-definition ng-repeat="field in ::fieldset.fields track by field.path" ng-if="field.visible">
+          <div init-md-field>
             <!-- input field-->
             <div ng-if="::field.typeOf('input')" layout="row" class="np-formula-field">
 
