@@ -25,6 +25,12 @@ angular
             return field.id === "gcmd";
           },
           template: '<npdc:formula-gcmd></npdc:formula-gcmd>'
+        },
+        {
+          match(field) {
+            return field.id === "placenames_object";
+          },
+          template: '<npdc:formula-placename></npdc:formula-placename>'
         }
       ]
     };

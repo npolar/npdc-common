@@ -317,6 +317,27 @@
           }
         }
       }
+    },
+    "placenames": {
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "placename": {
+            "type": "string"
+          },
+          "area": {
+            "type": "string"
+          },
+          "country": {
+            "description": "Country code like ISO 3611-1, except 'NO' for Norway, including Svalbard and Jan Mayen, Bouvetøya, and Peter I Øy. 'AQ' = Antarctica.",
+            "type": ["string", "null"],
+            "pattern": "^(([A-Z]|[a-z]){2})$"
+          }
+        }
+      }
     }
   },
   "required": [

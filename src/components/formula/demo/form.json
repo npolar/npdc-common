@@ -80,7 +80,8 @@
     "title": "custom templates",
     "fields": [
       "people",
-      "gcmd"
+      "gcmd",
+      "placenames"
     ]
   }
 ]}
