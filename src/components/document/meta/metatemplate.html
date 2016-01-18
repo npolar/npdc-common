@@ -4,7 +4,7 @@
     <h4><md-icon>access_time</md-icon><span> Created: </span></h4><span>{{document.created | date:'mediumDate'}}</span>
   </div>
   <div class="document-meta">
-    <h4><md-icon>sync</md-icon><span> Updated: </span></h4><span>{{document.created | date:'mediumDate'}}</span>
+    <h4><md-icon>sync</md-icon><span> Updated: </span></h4><span>{{document.updated | date:'mediumDate'}}</span>
   </div>
   <div class="document-meta" ng-if="document.draft === 'yes'">
     <code>DRAFT</code>

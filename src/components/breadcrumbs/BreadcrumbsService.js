@@ -26,14 +26,6 @@ var NpdcBreadcrumbs = function($location, $rootScope, $window) {
     if (i > 0) {
       self.path += '/' + crumb;
     }
-
-    if (i >= 2 && (/^\w{8}-\w{4}-/).test(crumb)) {
-      return { href: self.path, text: crumb.split("-")[0] };
-    }
-
-    //if ((/^[?|&]q=/).test(crumb)) {
-    //  crumb = `"${ $location.search().q }"`;
-    //}
     return { href: self.path, title: translate(crumb), text: decodeURIComponent(translate(crumb)) };
   };
 
