@@ -69,6 +69,7 @@ let initMdField = function () {
     // @ngInject
     controller ($scope) {
       setMdType($scope.field);
+      console.log('field', $scope.field);
     }
   };
 };

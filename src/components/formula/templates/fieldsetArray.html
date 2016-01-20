@@ -4,7 +4,7 @@
     <md-whiteframe class="md-whiteframe-z2">
       <fieldset ng-class="{ valid: value.valid }">
         <legend>
-          <span class="np-formula-array-object-title">{{ value.title }}</span>
+          <!--span class="np-formula-array-object-title">{{ value.title }}</span-->
           <span ng-if="!value.visible">{{ value.fields | formulaInlineValues }}</span>
           <div class="np-formula-object-ctrls">
             <div npdc:formula-field-info class="np-field-info" ng-init="field=value" ng-if="value.description"></div>
@@ -25,11 +25,7 @@
             </md-menu>
           </div>
         </legend>
-        <fieldset formula:field="value" class="np-formula-object" ng-if="field.visible">
-          <div ng-repeat="field in ::field.fields track by field.path">
-            <formula:field-instance field="field"></formula:field-instance>
-          </div>
-        </fieldset>
+        <formula:field-instance field="value" ng-if="value.visible" class="np-formula-array-fieldset"></formula:field-instance>
       </fieldset>
     </md-whiteframe>
   </li>

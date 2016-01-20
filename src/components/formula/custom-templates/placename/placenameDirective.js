@@ -70,8 +70,7 @@ let placename = function($q, $resource, npolarCountryService) {
       };
 
       $scope.area.values = AREAS.map(area => ({ id: area.terms[0], label: area.terms[0] }));
-
-      if ($scope.area.value && !$scope.area.values.some(val => val.toLowerCase() === $scope.area.value.toLowerCase())) {
+      if ($scope.area.value && !$scope.area.values.some(val => val.id.toLowerCase() === $scope.area.value.toLowerCase())) {
         // value is set but doesn't match any value in AREAS
         $scope.area.value = AREAS.reduce((memo, area) => {
           if (area.terms.some(term => term.toLowerCase() === $scope.area.value.toLowerCase())) {
@@ -80,6 +79,10 @@ let placename = function($q, $resource, npolarCountryService) {
             return 'Other';
           }
         });
+      }
+
+      if ($scope.country.value) {
+        $scope.selectedCountryItem = npolarCountryService.countryByCode($scope.country.value);
       }
 
       $scope.otherFields = $scope.field.fields.filter(field => !['area', 'placename', 'country'].includes(field.id));
