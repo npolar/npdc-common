@@ -91,13 +91,26 @@
     }
   }
 
-  .np-formula-object .np-formula-array > md-whiteframe {
+  // Hide array objects frames and titles
+  .np-formula-array-fieldset .formulaObject > md-whiteframe {
     box-shadow: none;
     margin: 0;
     padding: 0;
 
-    > fieldset > legend {
+    > legend {
       display: none;
+    }
+  }
+
+  // Hide object array frames
+  .formulaObject .np-formula-array > md-whiteframe {
+    box-shadow: none;
+    margin: 0;
+    padding: 0;
+
+    > fieldset > legend > .np-field-info {
+      right: 65px;
+      top: -15px;
     }
   }
 

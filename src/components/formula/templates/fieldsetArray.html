@@ -25,11 +25,7 @@
             </md-menu>
           </div>
         </legend>
-        <fieldset formula:field="value" class="np-formula-object" ng-if="field.visible">
-          <div ng-repeat="field in ::field.fields track by field.path">
-            <formula:field-instance field="field"></formula:field-instance>
-          </div>
-        </fieldset>
+        <formula:field-instance field="value" ng-if="value.visible" class="np-formula-array-fieldset"></formula:field-instance>
       </fieldset>
     </md-whiteframe>
   </li>
