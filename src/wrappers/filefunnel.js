@@ -29,7 +29,6 @@ ff.controller('FFUploadController', function($scope, $mdDialog, options) {
 
   $scope.FileFunnelStatus = FileFunnel.status;
   ff.progressType = 'determinate';
-  console.log(ff);
 });
 
 ff.service('fileFunnelService', function($mdDialog) {
