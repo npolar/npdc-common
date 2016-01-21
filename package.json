@@ -22,7 +22,7 @@
     "angular": "^1.4.9",
     "angular-marked": "^1.0.1",
     "angular-material": "^1.0.2",
-    "angular-npolar": "github:npolar/angular-npolar#v2.1.1",
+    "angular-npolar": "github:npolar/angular-npolar#v2.2.0",
     "angular": "^1.4.9",
     "angularjs-slider": "^2.4.1",
     "chronopic": "github:npolar/chronopic.js#v0.3.0",
