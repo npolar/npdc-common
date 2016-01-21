@@ -61,6 +61,7 @@ let gcmd = function(npdcGcmdService) {
         return parents;
       };
 
+      /* jshint -W083 */
       $scope.treeValues = function (cardinality) {
         let i = 0;
         let level = $scope.tree;
