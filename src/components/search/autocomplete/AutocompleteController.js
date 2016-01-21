@@ -6,11 +6,11 @@ let Entities = require('special-entities');
 var AutocompleteController = function($filter, $location, $window, $q, $scope,
   NpolarApiResource, NpdcSearchService) {
   $scope.options.q = $scope.options.q || ($location.search().q || "");
-  let appBase = () => {
+  let appBase = (() => {
     let baseElem = document.querySelector('base') || {};
     let baseParts = (baseElem.href || '/').split('/');
     return '/' + (baseParts.pop() || baseParts.pop());
-  }();
+  })();
 
   let unescape = function (text) {
     return Entities.normalizeEntities(text, 'utf-8');
