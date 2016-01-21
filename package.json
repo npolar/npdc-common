@@ -17,36 +17,37 @@
   },
   "homepage": "https://github.com/npolar/npdc-common#readme",
   "dependencies": {
-    "angular": "^1.4.8",
-    "angular-animate": "^1.4.8",
-    "angular-aria": "^1.4.8",
-    "angular-marked": "^0.0.18",
-    "angular-material": "^1.0.1",
+    "angular": "^1.4.9",
+    "angular-animate": "^1.4.9",
+    "angular-aria": "^1.4.9",
+    "angular-marked": "^1.0.1",
+    "angular-material": "^1.0.2",
     "angular-npolar": "github:npolar/angular-npolar#v2.1.1",
     "angular-route": "^1.4.8",
+    "angularjs-slider": "^2.4.1",
     "chronopic": "github:npolar/chronopic.js#v0.3.0",
     "filefunnel.js": "github:npolar/filefunnel.js#v0.6.0",
     "formula": "github:npolar/formula#v2.1.0",
-    "angularjs-slider": "^2.4.1",
     "leaflet": "^0.7.7",
     "material-design-icons": "^2.0.0",
     "special-entities": "^1.0.2"
   },
   "devDependencies": {
-    "babelify": "^6.2.0",
-    "browserify": "^11.1.0",
-    "browserify-ngannotate": "^1.0.1",
+    "babel-preset-es2015": "^6.3.13",
+    "babelify": "^7.2.0",
+    "browserify": "^13.0.0",
+    "browserify-ngannotate": "^2.0.0",
     "gulp": "^3.9.0",
     "gulp-changed": "^1.3.0",
     "npdc-gulp": "github:npolar/npdc-gulp#v3.0.1",
     "partialify": "^3.1.3",
     "q": "^1.4.1",
     "run-sequence": "^1.1.2",
-    "should": "^7.0.2"
+    "should": "^8.1.1"
   },
   "browserify": {
     "transform": [
-      "babelify",
+      ["babelify",{"presets": ["es2015"]}],
       "partialify",
       "browserify-ngannotate"
     ]
