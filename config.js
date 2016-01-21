@@ -11,7 +11,7 @@ var config = function(baseConfig) {
     deps: {
       css: [
         'node_modules/angular-material/angular-material.css',
-        'node_modules/jusas-angularjs-slider/dist/rzslider.css',
+        'node_modules/angularjs-slider/dist/rzslider.min.css',
         baseConfig.src.root + '/material-icons.css',
         'node_modules/chronopic/dist/css/chronopic-ext-md.min.css',
         'node_modules/chronopic/dist/css/chronopic.min.css'
