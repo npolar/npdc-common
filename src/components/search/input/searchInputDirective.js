@@ -4,7 +4,7 @@
 var searchInputDirective = function () {
   return {
     scope: {
-      options: '=',
+      options: '=?',
       feed: '='
     },
     template: require('./searchInput.html'),
