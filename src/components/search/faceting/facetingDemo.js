@@ -36,7 +36,7 @@ demo.controller('FacetingDemoCtrl', function ($scope, $location, $controller, Da
 
   $controller('NpolarBaseController', { $scope: $scope });
   $scope.resource = Dataset;
-  $scope.options = npdcAppConfig.search.local;
+  $scope.options = Object.assign({}, npdcAppConfig.search.local, $scope.feed ? {facets: $scope.feed.facets} : {});
   $scope.q = $location.search().q;
 
   let defaults = { limit: "50", sort: "-updated,-released", fields: 'title,id,collection,updated', facets: "topics", score: true };
@@ -51,6 +51,12 @@ demo.controller('FacetingDemoCtrl', function ($scope, $location, $controller, Da
 
   $scope.$on('$locationChangeSuccess', (event, data) => {
     search($location.search());
+  });
+
+  $scope.$watch('feed', (newVal, oldVal) => {
+    if (newVal && newVal.facets) {
+      $scope.options.facets = newVal.facets;
+    }
   });
 
   $scope.$watch('q', (newVal, oldVal) => {

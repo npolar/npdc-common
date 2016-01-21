@@ -46,7 +46,7 @@
       <!-- range -->
       <div ng-if="facet.uiType === 'range'" class="np-custom-facet np-range-facet">
         <label>{{i18n(facet.key) | t}}</label>
-        <rzslider rz-slider-floor="facet.slider.floor" rz-slider-ceil="facet.slider.ceil" rz-slider-model="facet.slider.min" rz-slider-high="facet.slider.max" rz-slider-on-end="onSliderEnd(facet)"></rzslider>
+        <rzslider rz-slider-options="facet.slider.options" rz-slider-model="facet.slider.min" rz-slider-high="facet.slider.max"></rzslider>
       </div>
 
     </div>

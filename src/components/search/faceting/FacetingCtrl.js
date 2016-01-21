@@ -10,6 +10,7 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
   let queryBuilder = new QueryBuilder();
   const UI_TYPES = ['autocomplete', 'checkbox', 'range', 'hidden'];
   let isURLParsed = false;
+  let sliders = {};
 
   let filterChangeCallback = function (filters) {
     let q = queryBuilder.build(filters);
@@ -32,6 +33,16 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
     return typeof term === 'string' ? parseInt(term.replace(/-/g, '')) : term;
   };
 
+  let onSliderEnd = function(sliderId) {
+    let facet = sliders[sliderId];
+    if (facet.slider.min === facet.slider.options.floor &&
+      facet.slider.max === facet.slider.options.ceil) {
+      filters.removeRangeFilter(facet);
+    } else {
+      filters.addRangeFilter(facet);
+    }
+  };
+
   let initRangeFacet = function (facet) {
     let floor, ceil, min, max, filter;
     facet.slider = {};
@@ -46,11 +57,16 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
       max = filter.max;
     }
     facet.slider = {
-      floor: Math.min(min, floor),
-      ceil: Math.max(max, ceil),
+      options: {
+        id: facet.key,
+        onEnd: onSliderEnd,
+        floor: Math.min(min, floor),
+        ceil: Math.max(max, ceil)
+      },
       min: min,
       max: max
     };
+    sliders[facet.key] = facet;
 
     return facet;
   };
@@ -132,8 +148,8 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
     $scope.selectedChip = -1;
     filters.remove(filter);
     if (facet && facet.slider) {
-      facet.slider.min = facet.slider.floor;
-      facet.slider.max = facet.slider.ceil;
+      facet.slider.min = facet.slider.options.floor;
+      facet.slider.max = facet.slider.options.ceil;
     }
   };
 
@@ -157,17 +173,6 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
       filters.add(item);
     } else {
       filters.remove(item);
-    }
-  };
-
-
-  // Range
-  $scope.onSliderEnd = function(facet) {
-    if (facet.slider.min === facet.slider.floor &&
-      facet.slider.max === facet.slider.ceil) {
-      filters.removeRangeFilter(facet);
-    } else {
-      filters.addRangeFilter(facet);
     }
   };
 
