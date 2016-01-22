@@ -49,8 +49,8 @@
 
             <!-- array -->
             <div ng-if="::field.typeOf('array')" class="np-formula-array">
-              <md-whiteframe class="md-whiteframe-z2">
-                <fieldset ng-class="{ valid: field.valid, error: field.error }">
+              <fieldset ng-class="{ valid: field.valid, error: field.error }" formula-field="field">
+                <md-whiteframe class="md-whiteframe-z2">
 
                   <legend>
                     <div>{{ field.title }} ({{ field.nrArrayValues() }})</div>
@@ -68,8 +68,9 @@
                       <md-icon>add</md-icon>
                     </md-button>
                   </div>
-                </fieldset>
-              </md-whiteframe>
+                  <div style="clear: both;"></div>
+                </md-whiteframe>
+              </fieldset>
             </div>
 
           </div>
