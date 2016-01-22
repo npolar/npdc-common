@@ -20,6 +20,12 @@
     }
   }
 
+  textarea[md-no-autogrow] {
+    height: inherit;
+    max-height: 500px;
+    overflow-y: scroll;
+  }
+
   fieldset {
     border: 0;
     margin: 0;
@@ -103,12 +109,12 @@
   }
 
   // Hide object array frames
-  .formulaObject:not(.formulaCustomObject) .np-formula-array > md-whiteframe {
+  .formulaObject:not(.formulaCustomObject) .np-formula-array > fieldset > md-whiteframe {
     box-shadow: none;
     margin: 0;
     padding: 0;
 
-    > fieldset > legend > .np-field-info {
+    > legend > .np-field-info {
       right: 65px;
       top: -15px;
     }
