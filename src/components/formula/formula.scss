@@ -103,7 +103,7 @@
   }
 
   // Hide object array frames
-  .formulaObject .np-formula-array > md-whiteframe {
+  .formulaObject:not(.formulaCustomObject) .np-formula-array > md-whiteframe {
     box-shadow: none;
     margin: 0;
     padding: 0;
@@ -172,6 +172,10 @@
       span {
         color: $color-text-dark;
       }
+    }
+
+    md-checkbox {
+      margin-top: 20px;
     }
   }
 
