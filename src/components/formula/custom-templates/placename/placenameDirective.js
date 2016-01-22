@@ -25,8 +25,11 @@ let placename = function($q, $resource, npolarCountryService) {
     "terms": ["Arctic", "Arktis"]
   }, {
     "terms": ["Arctic Ocean"]
+  },
+  {
+    "terms": ["Barents Sea"]
   }, {
-    "terms": ["Antarctic Ocean", "Southern Ocean"]
+    "terms": ["Southern Ocean", "Antarctic Ocean"]
   }, {
     "terms": ["Other"] // Other...
   }];
