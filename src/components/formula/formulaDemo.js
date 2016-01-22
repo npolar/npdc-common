@@ -31,6 +31,12 @@ angular
             return field.id === "placenames_object";
           },
           template: '<npdc:formula-placename></npdc:formula-placename>'
+        },
+        {
+          match(field) {
+            return field.id === "array_object";
+          },
+          template: '<npdc:formula-tabdata></npdc:formula-tabdata>'
         }
       ]
     };

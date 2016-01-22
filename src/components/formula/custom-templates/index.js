@@ -10,3 +10,6 @@ common.directive('npdcFormulaGcmd', require('./gcmd/gcmdDirective'));
 common.directive('npdcFormulaGcmdKeyword', require('./gcmd/gcmdKeywordDirective'));
 
 common.directive('npdcFormulaPlacename', require('./placename/placenameDirective'));
+
+common.service('npdcCSVService', require('./tabdata/csvService'));
+common.directive('npdcFormulaTabdata', require('./tabdata/tabdataDirective'));
