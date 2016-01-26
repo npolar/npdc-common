@@ -22,4 +22,36 @@
     position: relative;
     z-index: 1;
   }
+
+  .np-formula-td-header {
+    background-color: $color-bg-light;
+    box-sizing: border-box;
+    left: 0;
+    line-height: 26px;
+    padding-top: 2px;
+    position: absolute;
+    top: 2px;
+    width: calc(100% - 20px);
+    z-index: 2;
+
+    .header-string {
+      border-bottom: 1px solid #ddd;
+      box-sizing: border-box;
+      color: $color-text-grey;
+      padding-left: 40px;
+      position: relative;
+      white-space: pre-wrap;
+    }
+
+    .header-number {
+      box-sizing: border-box;
+      color: $color-text-grey;
+      display: inline-block;
+      padding-left: 2px;
+      padding-right: .2em;
+      position: absolute;
+      text-align: right;
+      width: 25px;
+    }
+  }
 }
