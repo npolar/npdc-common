@@ -7,18 +7,14 @@ require('chronopic/dist/js/chronopic-i18n.min.js');
 let cp = angular.module('chronopic', []);
 
 cp.service('chronopicService', function() {
-  const DEFAULTS = {
-    date: null,
-    format: "{date}"
-  };
   let opts = {};
 
   let defineOptions = function (key, options) {
-    opts[key] = Object.assign({}, DEFAULTS, options);
+    opts[key] = Object.assign({}, options);
   };
 
   let getOptions = function (key) {
-    return opts[key] || DEFAULTS;
+    return (opts[key] || {});
   };
 
   return {
@@ -51,29 +47,17 @@ cp.directive('chronopic', function($timeout, chronopicService) {
         return null;
       };
 
-      options.date = parseDate(scope.field.value);
-      options.format = `{${scope.field.format.replace('-', '')}}`;
-
       // CSS Overrides
-      if (typeof options.css === "object") {
-        Object.keys(options.css).forEach(key => {
-          elem.css(key, options.css[key]);
-        });
-      }
-
-      scope.$watch('field.value', function (n,o) {
-        if (n && n !== o) {
-          let date = parseDate(n);
-          if (date) {
-            cp.instances[0].date = date;
-            cp.instances[0].update();
-          }
-        }
+      Object.keys((options.css = Object.assign({
+        "max-width": "360px",
+      }, options.css))).forEach(key => {
+        elem.css(key, options.css[key]);
       });
 
       // Inject Chronopic instance on element
       cp = new Chronopic(elem[0], Object.assign({
         className: 'chronopic.chronopic-ext-md',
+        format: `{${scope.field.format.replace('-', '')}}`,
         onChange: function(elem, date) {
           $timeout(() => {
             let internalFormat = date.toISOString(); // ISO-8601
@@ -90,6 +74,17 @@ cp.directive('chronopic', function($timeout, chronopicService) {
           });
         }
       }, options));
+
+      if(scope.field.value) {
+        let date = parseDate(scope.field.value);
+
+        if(date) {
+          $timeout(() => {
+            cp.instances[0].date = date;
+            cp.instances[0].update();
+          });
+        }
+      }
     }
   };
 });
