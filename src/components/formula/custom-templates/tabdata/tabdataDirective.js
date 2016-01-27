@@ -42,7 +42,7 @@ let tabdata = function(npdcCSVService) {
     //@ngInject
     controller($scope) {
       let headers = Object.keys($scope.field.schema.items.properties);
-      let delimiter = ';';
+      let delimiter = '\t';
 
       // We take care of updating values outselves
       disableValueWatchers($scope.field);
@@ -64,6 +64,7 @@ let tabdata = function(npdcCSVService) {
           } else {
             $scope.field.valid = true;
             $scope.field.errors = null;
+            n = n.trim();
             model[$scope.field.id] = npdcCSVService.csvToJSON(n, {headers, delimiter}).map(item => {
               applySchemaValueType(item, $scope.field.schema.items.properties);
               Object.keys(item).forEach(prop => {
@@ -74,7 +75,8 @@ let tabdata = function(npdcCSVService) {
               return item;
             });
             $scope.field.valueFromModel(model);
-            $scope.csvData = $scope.csvData.replace(detectedDelimiter, delimiter, 'g');
+            // Uncomment to force default delimiter
+            // $scope.csvData = $scope.csvData.replace(detectedDelimiter, delimiter, 'g');
             $scope.$emit('revalidate');
           }
         }
