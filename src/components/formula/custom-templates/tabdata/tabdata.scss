@@ -1,6 +1,6 @@
 .np-formula-tabdata {
   $height: 400px;
-  height: $height;
+  min-height: $height;
 
   .line-numbers {
     border: 0;
@@ -18,6 +18,8 @@
   }
 
   .csv-textarea {
+    height: $height;
+    overflow-y: auto;
     padding-left: 40px;
     position: relative;
     z-index: 1;
@@ -53,5 +55,11 @@
       text-align: right;
       width: 25px;
     }
+  }
+
+  .np-td-delimiter {
+    color: $color-text-grey;
+    display: inline-block;
+    margin-top: 8px;
   }
 }

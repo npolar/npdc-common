@@ -31,12 +31,21 @@ let tabdata = function(npdcCSVService) {
     return item;
   };
 
+  let disableValueWatchers = function (field) {
+    field.fields[0].fields.forEach(field => {
+      field.destroyWatcher();
+    });
+  };
+
   return {
     template: require('./tabdata.html'),
     //@ngInject
     controller($scope) {
       let headers = Object.keys($scope.field.schema.items.properties);
       let delimiter = ';';
+
+      // We take care of updating values outselves
+      disableValueWatchers($scope.field);
       $scope.delimiter = DELIMITERS[delimiter];
       $scope.csvData = npdcCSVService.jsonToCSV($scope.field.value, {headers, delimiter: delimiter});
       let headerString = headers.toString();
@@ -65,9 +74,15 @@ let tabdata = function(npdcCSVService) {
               return item;
             });
             $scope.field.valueFromModel(model);
-            $scope.csvData.replace(detectedDelimiter, delimiter, 'g');
+            $scope.csvData = $scope.csvData.replace(detectedDelimiter, delimiter, 'g');
             $scope.$emit('revalidate');
           }
+        }
+      });
+
+      $scope.$watch('csvHeader', (n, o) => {
+        if (n && n !== o) {
+          $scope.csvData = $scope.csvData.replace(/^.*/, n);
         }
       });
     },
