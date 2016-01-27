@@ -1,7 +1,7 @@
 "use strict";
 
 // @ngInject
-let npdcUserMenu = function(NpolarApiSecurity) {
+let npdcUserMenu = function(NpolarApiSecurity, NpolarLang) {
   return {
     scope: {},
     restrict: 'AE',
@@ -9,6 +9,7 @@ let npdcUserMenu = function(NpolarApiSecurity) {
     controller: 'NpolarLoginController',
     link: function(scope) {
       scope.security = NpolarApiSecurity;
+      scope.lang = NpolarLang;
     }
   };
 };

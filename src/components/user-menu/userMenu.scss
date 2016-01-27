@@ -2,3 +2,29 @@
   max-width: 90vw;
   width: 400px;
 }
+
+.md-nested-menu {
+  margin: 0;
+  padding: 0;
+
+  .md-button {
+    display: inline-block;
+    border-radius: 0;
+    margin: auto 0;
+    font-size: 15px;
+    text-transform: none;
+    font-weight: 400;
+    text-align: left;
+    text-align: start;
+    height: 48px;
+    padding-left: 16px;
+    padding-right: 16px;
+    -webkit-align-items: baseline;
+    -ms-flex-align: baseline;
+    align-items: baseline;
+    -webkit-align-content: flex-start;
+    -ms-flex-line-pack: start;
+    align-content: flex-start;
+    width: 100%;
+  }
+}

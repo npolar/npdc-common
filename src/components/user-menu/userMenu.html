@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<md-menu ng-if="!security.isAuthenticated()">
+<md-menu ng-if="!security.isAuthenticated()" class="np-user-menu">
   <md-button aria-label="Open user" class="md-icon-button" ng-click="$mdOpenMenu($event)">
     <md-icon md-menu-origin>person</md-icon>
     <md-tooltip>User login</md-tooltip>
@@ -24,12 +24,28 @@
 -->     <md-button type="submit" ng-click="login(email,password)" class="md-raised md-primary">Login</md-button>
       </div>
     </form>
+    <md-divider></md-divider>
 
+    <md-menu-item>
+      <md-menu>
+        <md-button ng-click="$mdOpenMenu($event)">
+          <md-icon>language</md-icon>
+          {{ 'npdc.menu.Select_language' | t }}
+          ({{ 'npdc.currently' | t }}
+          {{ lang.getNativeName(lang.getLang()) }})
+        </md-button>
+        <md-menu-content width="6">
+          <md-menu-item ng-repeat="subtag in lang.getLanguages()">
+            <md-button ng-click="lang.setLang(subtag, lang.getLang())">{{ lang.getNativeName(subtag) }}</md-button>
+          </md-menu-item>
+        </md-menu-content>
+      </md-menu>
+    </md-menu-item>
 
   </md-menu-content>
 </md-menu>
 
-<md-menu ng-if="security.isAuthenticated()">
+<md-menu ng-if="security.isAuthenticated()" class="np-user-menu">
   <md-button aria-label="Open user" class="md-icon-button" ng-click="$mdOpenMenu($event)">
     <md-icon md-menu-origin>verified_user</md-icon>
     <md-tooltip>{{ security.getUser().name }}</md-tooltip>
@@ -41,6 +57,24 @@
         <md-icon md-menu-align-target>face</md-icon>
         {{ security.getUser().name }}
       </md-button>
+    </md-menu-item>
+
+    <md-divider></md-divider>
+
+    <md-menu-item>
+      <md-menu>
+        <md-button ng-click="$mdOpenMenu($event)">
+          <md-icon>language</md-icon>
+          {{ 'npdc.menu.Select_language' | t }}
+          ({{ 'npdc.currently' | t }}
+          {{ lang.getNativeName(lang.getLang()) }})
+        </md-button>
+        <md-menu-content width="6">
+          <md-menu-item ng-repeat="subtag in lang.getLanguages()">
+            <md-button ng-click="lang.setLang(subtag, lang.getLang())">{{ lang.getNativeName(subtag) }}</md-button>
+          </md-menu-item>
+        </md-menu-content>
+      </md-menu>
     </md-menu-item>
 
     <md-divider></md-divider>
