@@ -90,14 +90,18 @@ let tabdata = function(npdcCSVService) {
       let move = false;
       let lineNumbers = document.createElement('TEXTAREA');
       let textarea = element.find('textarea')[0];
-      let noOfLines = scope.csvData.split('\r?\n\r?').length;
+      let noOfLines = scope.csvData.split(/\r?\n\r?/g).length;
       let string = '';
-      for (let no = 0; no < Math.max(noOfLines + 500); no++) {
+      for (let no = 0; no < noOfLines + 500; no++) {
         if (string.length > 0) {
           string += '&#10;';
         }
         string += no;
       }
+
+      let fontSize = Math.min((40 / noOfLines.toString().length), 15);
+      lineNumbers.style.fontSize = fontSize + 'px';
+      element[0].querySelector('.header-number').style.fontSize = fontSize + 'px';
       lineNumbers.innerHTML = string;
       lineNumbers.className = 'line-numbers md-input';
       textarea.parentNode.insertBefore(lineNumbers, textarea.nextSibling);
