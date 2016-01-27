@@ -34,7 +34,7 @@ cp.directive('chronopic', function($timeout, chronopicService) {
       if (scope.field.disabled) {
         attrs.$set('disabled', true);
       }
-      let options = chronopicService.getOptions(scope.field.path);
+      let options = chronopicService.getOptions(scope.field.path) || chronopicService.getOptions(scope.field.id);
       let onChange = options.onChange, cp;
       delete options.onChange;
 

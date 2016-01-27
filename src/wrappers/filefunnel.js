@@ -75,7 +75,7 @@ ff.directive('filefunnel', function(fileFunnelService) {
       $scope.showUpload = function(ev, target) {
         fileFunnelService.showUpload(ev, $scope.field.path)
           .then(files => {
-            let options = fileFunnelService.getOptions($scope.field.path);
+            let options = fileFunnelService.getOptions($scope.field.path) || fileFunnelService.getOptions($scope.field.id);
             if (target[0] instanceof HTMLInputElement) {
               target[0].value = options.server + files[0].location;
             } else if ($scope.field) {

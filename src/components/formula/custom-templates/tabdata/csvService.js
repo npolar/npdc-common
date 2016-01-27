@@ -6,6 +6,7 @@
 let csvService = function() {
 
   const DEFAULT_DELIMITER = ",";
+  const NEWLINE = "\r\n";
 
   let isBoolean = function (value) {
     return ["true", "false"].indexOf(value.toLowerCase()) !== -1;
@@ -52,26 +53,33 @@ let csvService = function() {
     return values;
   };
 
-  let csvToJSON = function(csv, headers, options = { delimiter: DEFAULT_DELIMITER }) {
-    let lines = csv.split(/\r?\n\r?/);
-    if (!headers) {
-      headers = csvLineToArray(lines.shift());
+  let isMatchingHeaders = function (h1, h2) {
+    return h1 && h2 && h1.every(header => h2.indexOf(header) !== -1);
+  };
+
+  let csvToJSON = function(csv, options = { delimiter: DEFAULT_DELIMITER }) {
+    let lines = csv.split(/\r?\n\r?/).filter(line => line !== '');
+    let firstLine = csvLineToArray(lines[0], options.delimiter);
+
+    if (!options.headers || isMatchingHeaders(firstLine, options.headers)) {
+      options.headers = firstLine;
+      lines.shift();
     }
 
     return lines.map(line => {
-      let record =  csvLineToArray(line, options.delimiter).reduce((memo, item, index) => {
-        if (index < headers.length) {
-          memo[headers[index]] = parseValue(item);
+      let record = csvLineToArray(line, options.delimiter).reduce((memo, item, index) => {
+        if (index < options.headers.length) {
+          memo[options.headers[index]] = parseValue(item);
         }
         return memo;
       }, {});
 
       // fill missing values with undefined
-      for (let i = headers.length - 1; i >= 0; i--) {
-        if (record.hasOwnProperty([headers[i]])) {
+      for (let i = options.headers.length - 1; i >= 0; i--) {
+        if (record.hasOwnProperty([options.headers[i]])) {
           break;
         } else {
-          record[headers[i]] = undefined;
+          record[options.headers[i]] = undefined;
         }
       }
 
@@ -79,26 +87,41 @@ let csvService = function() {
     });
   };
 
-  let jsonToCSV = function(json, options = { delimiter: DEFAULT_DELIMITER }) {
+  let jsonToCSV = function(json, options) {
+    options = Object.assign({ delimiter: DEFAULT_DELIMITER, skipHeaders: false }, options);
+    if (!options.headers) {
+      throw "No CSV header specified";
+    }
+
     let values = (json instanceof String) ? JSON.parse(json) : json;
     let csv = '';
+
+    if (!options.skipHeaders) {
+      csv += options.headers.toString().replace(/,/g, options.delimiter) + NEWLINE;
+    }
+
     values.forEach((item, rowIndex) => {
-      Object.keys(item).forEach((key, colIndex, line) => {
-        csv += item[key];
-        if (colIndex < line.length - 1) {
-          csv += options.delimiter;
+      options.headers.forEach((header, colIndex) => {
+        if (item[header] !== undefined) {
+          csv += item[header];
+          if (colIndex < Object.keys(item).length - 1) {
+            csv += options.delimiter;
+          }
         }
       });
       if (rowIndex < values.length - 1) {
-        csv += "\r\n";
+        csv += NEWLINE;
       }
     });
+
     return csv;
   };
 
   return {
     jsonToCSV,
-    csvToJSON
+    csvToJSON,
+    csvLineToArray,
+    isMatchingHeaders
   };
 };
 

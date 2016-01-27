@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <md-input-container class="np-formula-tabdata">
-  <label for="{{::field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title ) }} as Comma separated values</label>
+  <label for="{{::field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title ) }}</label>
+  <div class="np-formula-td-header"><span class="header-number">0</span><div class="header-string">{{csvHeader}}</div></div>
   <textarea ng-model="csvData" md-no-autogrow class="csv-textarea"></textarea>
-  <div npdc:formula-validation-message class="np-validation-message"></div>
+  <div ng-show="field.errors" class="np-validation-message">
+    <div ng-repeat="error in field.errors" class="md-caption" role="alert">
+      {{ error.message }}
+    </div>
+  </div>
+  <div>Delimiter: {{delimiter}}</div>
 </md-input-container>
