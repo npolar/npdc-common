@@ -10,28 +10,12 @@
         "id": "string_textarea",
         "type": "textarea"
       },
+      "string_enum_default",
+      "string_color",
       "string_datetime",
       "string_date",
       "string_datefullyear",
-      "string_time",
-      "string_enum_default",
-      "string_color",
-      {
-        "id": "string_file",
-        "format": "file-uri"
-      }, {
-        "id": "file_ref",
-        "fields": [{
-          "id": "filename",
-          "disabled": true
-        }, {
-          "id": "filesize",
-          "disabled": true
-        }, {
-          "id": "mimetype",
-          "disabled": true
-        }]
-      }
+      "string_time"
     ]
   }, {
     "title": "numbers and boolean",
@@ -51,9 +35,7 @@
       "array_object",
       "array_string_enum",
       "array_string",
-      "ref_object",
-      "array_file",
-      "array_string:file"
+      "ref_object"
     ]
   }, {
     "title": "array hierarchy",
@@ -69,7 +51,7 @@
       },
       {
         "id": "autocomplete_url",
-        "autocomplete": "http://api.npolar.no/publication/?q=&fields=people.email&format=json&variant=array&limit=5"
+        "default": "disabled... http://api.npolar.no/publication/?q=&fields=people.email&format=json&variant=array&limit=5"
       },
       {
         "id": "autocomplete_fn",
@@ -82,6 +64,28 @@
       "people",
       "gcmd",
       "placenames"
+    ]
+  },{
+    "title": "files",
+    "fields": [
+      "array_file",
+      "array_string:file",
+      {
+        "id": "string_file",
+        "format": "file-uri"
+      }, {
+        "id": "file_ref",
+        "fields": [{
+          "id": "filename",
+          "disabled": true
+        }, {
+          "id": "filesize",
+          "disabled": true
+        }, {
+          "id": "mimetype",
+          "disabled": true
+        }]
+      }
     ]
   }
 ]}

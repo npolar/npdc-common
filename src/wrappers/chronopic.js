@@ -48,9 +48,7 @@ cp.directive('chronopic', function($timeout, chronopicService) {
       };
 
       // CSS Overrides
-      Object.keys((options.css = Object.assign({
-        "max-width": "360px",
-      }, options.css))).forEach(key => {
+      Object.keys(options.css || {}).forEach(key => {
         elem.css(key, options.css[key]);
       });
 
