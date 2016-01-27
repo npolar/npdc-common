@@ -7,6 +7,7 @@ require('angular-marked');
 require('angular-material');
 require('angular-npolar');
 require('angular-route');
+require('angular-contenteditable');
 require('formula');
 require('angularjs-slider');
 //require('./browser-warning');
@@ -22,6 +23,7 @@ var common = angular.module('npdcCommon', [
   'ngMaterial',
   'ngNpolar',
   'ngRoute',
+  'contenteditable',
   'rzModule',
   'templates'
 ]);
