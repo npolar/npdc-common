@@ -12,9 +12,10 @@
       },
       "string_enum_default",
       "string_color",
-      "string_datetime",
       "string_date",
-      "string_datefullyear",
+      "string_datetime",
+      "string_year",
+      "string_yearmonth",
       "string_time"
     ]
   }, {

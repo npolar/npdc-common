@@ -33,10 +33,15 @@
       "description": "string input with date format property set",
       "format": "date"
     },
-    "string_datefullyear": {
+    "string_year": {
       "type": "string",
-      "description": "string input with date-fullyear format property set",
-      "format": "date-fullyear"
+      "description": "string input with year format property set",
+      "format": "year"
+    },
+    "string_yearmonth": {
+      "type": "string",
+      "description": "string input with year-month format property set",
+      "format": "year-month"
     },
     "string_time": {
       "type": "string",
