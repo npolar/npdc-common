@@ -26,26 +26,14 @@
               <!-- input -->
               <div npdc:formula-input ng-if="::field.mdType === 'input'" class="np-formula-input" flex></div>
 
-              <!-- file -->
-              <div npdc:formula-file ng-if="::field.mdType === 'file'" class="np-formula-file" flex></div>
-
               <!-- date -->
               <div npdc:formula-date ng-if="::field.mdType === 'date'" class="np-formula-date" flex></div>
-
-              <!-- autocomplete -->
-              <div npdc:formula-autocomplete ng-if="::field.mdType === 'autocomplete'" class="np-formula-autocomplete" flex></div>
 
               <div npdc:formula-field-info class="np-field-info" ng-if="::field.description"></div>
             </div>
 
             <!-- object -->
-            <div ng-if="::field.typeOf('object')" class="np-formula-object">
-              <!-- file object -->
-              <div npdc:formula-file-object ng-if="::field.mdType === 'file'" class="np-formula-fileobject"></div>
-
-              <!-- plain object -->
-              <div npdc:formula-object ng-if="::field.mdType === 'object'" class="np-formula-object"></div>
-            </div>
+            <div ng-if="::field.typeOf('object')" npdc:formula-object class="np-formula-object"></div>
 
             <!-- array -->
             <div ng-if="::field.typeOf('array')" class="np-formula-array">

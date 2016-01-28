@@ -5,7 +5,7 @@ In controller:
     $scope.formulaData = {
       schema: "http://some.url.com/schema.json",
       form: "./form.json",
-      template: "template.html"
+      template: "material"
     };
 
 In template:
@@ -26,3 +26,27 @@ Or set format in the form definition:
       "id": "string_file",
       "format": "file-uri"
     }
+
+### Autocomplete
+Autocomplete is available for string fields and is configured in the form definition in any of these ways:
+
+    {
+      "id": "autocomplete_array",
+      "autocomplete": ["Dalene", "Allan"] <- static array
+    },
+    {
+      "id": "autocomplete_url",
+      "autocomplete": "//api.npolar.no/" <- GET returns array
+    },
+    {
+      "id": "autocomplete_fn",
+      "autocomplete": true <- function returns array
+    }
+
+Callback functions are defined via ```formulaAutoCompleteService``` like so:
+
+    formulaAutoCompleteService.bindSourceCallback(field.path, function (response) {
+      // return a array here
+    });
+
+If the source is an url new results will be fetched with ```?q=value``` for each input change.
