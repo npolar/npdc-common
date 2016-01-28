@@ -61,13 +61,19 @@ cp.directive('chronopic', function($timeout, chronopicService) {
         container: tabContainer,
         direction: 'auto',
         format: `{${scope.field.format.replace('-', '')}}`,
-        monthYearOnly: (scope.field.format === "monthyear"),
+        monthYearOnly: (scope.field.format === "year-month"),
         onChange: function(elem, date) {
           $timeout(() => {
             let internalFormat = date.toISOString(); // ISO-8601
 
-            if (scope.field.format !== "date-time") {
+            switch(scope.field.format) {
+            case "date":
               internalFormat = internalFormat.slice(0, 10); // yyyy-mm-dd
+              break;
+
+            case "year-month":
+              internalFormat = internalFormat.slice(0, 7); // yyyy-mm
+              break;
             }
 
             model.$viewValue = scope.field.value = internalFormat;
