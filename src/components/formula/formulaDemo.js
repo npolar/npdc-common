@@ -13,32 +13,50 @@ angular
       form: "./demo/form.json",
       template: "material",
       hideButtons: false,
-      templates: [
-        {
-          match(field) {
-            return field.id === "people_object";
-          },
-          template: '<npdc:formula-person></npdc:formula-person>'
-        },
-        {
-          match(field) {
-            return field.id === "gcmd";
-          },
-          template: '<npdc:formula-gcmd></npdc:formula-gcmd>'
-        },
-        {
-          match(field) {
-            return field.id === "placenames_object";
-          },
-          template: '<npdc:formula-placename></npdc:formula-placename>'
-        },
-        {
-          match(field) {
-            return field.id === "array_object";
-          },
-          template: '<npdc:formula-tabdata></npdc:formula-tabdata>'
-        }
-      ]
+      // templates: [
+      //   {
+      //     match(field) {
+      //       return field.id === "people_object";
+      //     },
+      //     template: '<npdc:formula-person></npdc:formula-person>'
+      //   },
+      //   {
+      //     match(field) {
+      //       return field.id === "gcmd";
+      //     },
+      //     template: '<npdc:formula-gcmd></npdc:formula-gcmd>'
+      //   },
+      //   {
+      //     match(field) {
+      //       return field.id === "placenames_object";
+      //     },
+      //     template: '<npdc:formula-placename></npdc:formula-placename>'
+      //   },
+      //   {
+      //     match(field) {
+      //       return field.id === "array_object2";
+      //     },
+      //     template: '<npdc:formula-tabdata></npdc:formula-tabdata>'
+      //   },
+      //   {
+      //     match(field) {
+      //       return field.id === "autocomplete";
+      //     },
+      //     template: '<npdc:formula-autocomplete></npdc:formula-autocomplete>'
+      //   },
+      //   {
+      //     match(field) {
+      //       return field.id === "string_file";
+      //     },
+      //     template: '<npdc:formula-file></npdc:formula-file>'
+      //   },
+      //   {
+      //     match(field) {
+      //       return field.id === "file_ref";
+      //     },
+      //     template: '<npdc:formula-file-object></npdc:formula-file-object>'
+      //   }
+      // ]
     };
 
     let updateModel = function() {
@@ -73,24 +91,15 @@ angular
       };
       console.log("timeout", $scope.formula.model.string);
     };
-    $timeout(updateModel);
+    //$timeout(updateModel);
 
     let fn = function (q) {
       return ["Dalene", "Allan", "Lecia", "Leta", "Matthew", "Marlen", "Collette", "Alfredo", "Francina", "Dorene", "Ali", "Anette", "Courtney", "Arlena", "Spring", "Suzanna", "Roseanne", "Evita", "Gaynell", "Ellena", "Lucinda", "Delisa", "Lamont", "Eloy", "Luanna", "Cyndi", "Lynn", "Clare", "Stacey", "Tameka", "Cheryll", "Jong", "Hoyt", "Marhta", "Roselia", "Gala", "Chun", "Weston", "Zola", "Luana", "Arnette", "Delorse", "Libbie", "Nenita", "Lorina", "Carolyn", "Burma", "Russell", "Beatris", "Macie"];
     };
 
-    let emailCallback = function (response) {
-      let emails = [];
-      response.forEach(entry => {
-        entry.people.forEach(person => {
-          emails.push(person.email);
-        });
-      });
-      return emails;
-    };
+    // formulaAutoCompleteService.bindSourceCallback("#/autocomplete", fn);
+    // fileFunnelService.defineOptions('#/string_file', {multiple: true});
+    // chronopicService.defineOptions('#/string_date', {locale: 'ja', format: "{YYYY} {YY} {YYYY} {MMM} {DD} {MMMM}"});
+    // chronopicService.defineOptions('#/string_datetime', {locale: 'en'});
 
-    fileFunnelService.defineOptions('#/string_file', {multiple: true});
-    chronopicService.defineOptions('#/string_date', {locale: 'ja'});
-    chronopicService.defineOptions('#/string_datetime', {locale: 'en'});
-    chronopicService.defineOptions('#/string_yearmonth', {locale: 'nn'});
   });
