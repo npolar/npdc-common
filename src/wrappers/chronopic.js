@@ -34,8 +34,11 @@ cp.directive('chronopic', function($timeout, chronopicService) {
       if (scope.field.disabled) {
         attrs.$set('disabled', true);
       }
+
+      let tabContainer = document.body.querySelector(".formula md-tabs-content-wrapper");
       let options = chronopicService.getOptions(scope.field.path) || chronopicService.getOptions(scope.field.id);
       let onChange = options.onChange, cp;
+
       delete options.onChange;
 
       let parseDate = function (date) {
@@ -55,12 +58,15 @@ cp.directive('chronopic', function($timeout, chronopicService) {
       // Inject Chronopic instance on element
       cp = new Chronopic(elem[0], Object.assign({
         className: 'chronopic.chronopic-ext-md',
+        container: tabContainer,
+        direction: 'auto',
         format: `{${scope.field.format.replace('-', '')}}`,
+        monthYearOnly: (scope.field.format === "monthyear"),
         onChange: function(elem, date) {
           $timeout(() => {
             let internalFormat = date.toISOString(); // ISO-8601
 
-            if (scope.field.format === "date") {
+            if (scope.field.format !== "date-time") {
               internalFormat = internalFormat.slice(0, 10); // yyyy-mm-dd
             }
 
