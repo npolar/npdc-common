@@ -30,15 +30,8 @@ let initMdField = function () {
   };
 
   let isDate = function (field) {
-    let formats = [ "date", "datetime", "yearmonth" ];
-
-    for(let f = 0; f < formats.length; ++f) {
-      if(field.typeOf(formats[f])) {
-        return true;
-      }
-    }
-
-    return false;
+    return [ "date", "date-time", "year-month" ]
+    .indexOf(field.format) !== -1;
   };
 
   let hasSubFields = function (field) {
