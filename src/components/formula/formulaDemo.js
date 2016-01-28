@@ -6,7 +6,7 @@ let angular = require('angular');
 
 angular
   .module('formulaDemo', ['npdcCommon', 'formula'])
-  .controller('FormulaCtrl', ($mdDialog, $scope, $compile, $timeout, formulaAutoCompleteService,
+  .controller('FormulaCtrl', ($mdDialog, $scope, $compile, $timeout,
     fileFunnelService, chronopicService) => {
     $scope.formula = {
       schema: "./demo/schema.json",
@@ -89,8 +89,6 @@ angular
       return emails;
     };
 
-    formulaAutoCompleteService.bindSourceCallback("#/autocomplete_fn", fn);
-    formulaAutoCompleteService.bindSourceCallback("#/autocomplete_url", emailCallback);
     fileFunnelService.defineOptions('#/string_file', {multiple: true});
     chronopicService.defineOptions('#/string_date', {locale: 'ja'});
     chronopicService.defineOptions('#/string_datetime', {locale: 'en'});
