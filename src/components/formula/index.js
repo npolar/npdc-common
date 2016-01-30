@@ -3,13 +3,11 @@
 var angular = require('angular');
 var common = angular.module('npdcCommon');
 
-require('./templates');
-require('./custom-templates');
+var templates = require('./templates');
+require('./directives');
 
 common.directive('npdcFormula', require('./formulaDirective'));
-common.directive('initMdField', require('./initMdFieldDirective'));
 
 common.run(function($templateCache, npolarApiConfig) {
-  $templateCache.put('formula/material.html', require('./template.html'));
-  npolarApiConfig.formula.template = 'material';
+  npolarApiConfig.formula.templates = templates.materialTemplates;
 });
