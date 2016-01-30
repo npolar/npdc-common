@@ -3,13 +3,56 @@
 var angular = require('angular');
 var common = angular.module('npdcCommon');
 
-common.directive('npdcFormulaCheckbox', () => ({ scope: false, template: require('./checkbox.html') }));
-common.directive('npdcFormulaDate', () => ({ scope: false, template: require('./date.html') }));
-common.directive('npdcFormulaFieldArray', () => ({ scope: false, template: require('./fieldArray.html') }));
 common.directive('npdcFormulaFieldInfo', () => ({ scope: false, template: require('./fieldInfo.html') }));
-common.directive('npdcFormulaFieldsetArray', () => ({ scope: false, template: require('./fieldsetArray.html') }));
-common.directive('npdcFormulaInput', () => ({ scope: false, template: require('./input.html') }));
-common.directive('npdcFormulaObject', () => ({ scope: false, template: require('./object.html') }));
-common.directive('npdcFormulaRange', () => ({ scope: false, template: require('./range.html') }));
-common.directive('npdcFormulaSelect', () => ({ scope: false, template: require('./select.html') }));
 common.directive('npdcFormulaValidationMessage', () => ({ scope: false, template: require('./validationMessage.html') }));
+
+var materialTemplates = [
+  {
+    match: 'form',
+    template: require('./form.html')
+  },
+  {
+    match: 'fieldset',
+    template: require('./fieldset.html')
+  },
+  {
+    match: 'field',
+    template: require('./field.html')
+  },
+  {
+    match: 'object',
+    template: require('./object.html')
+  },
+  {
+    match: 'array',
+    template: require('./array.html')
+  },
+  {
+    match(field) {
+      return field.typeOf('checkbox');
+    },
+    template: require('./checkbox.html')
+  },
+  {
+    match(field) {
+      return field.typeOf('date') || field.typeOf('datetime');
+    },
+    template: require('./date.html')
+  },
+  {
+    match(field) {
+      return field.typeOf('range');
+    },
+    template: require('./range.html')
+  },
+  {
+    match(field) {
+      return field.typeOf('select');
+    },
+    template: require('./select.html')
+  }
+];
+
+module.exports = {
+  materialTemplates
+};

@@ -70,7 +70,7 @@
     display: none;
   }
 
-  .np-formula-array {
+  .formulaArray {
     ul {
       list-style-type: none;
       margin: 0;
@@ -103,7 +103,7 @@
   }
 
   // Hide object array frames
-  .formulaObject:not(.formulaCustomObject) .np-formula-array > fieldset > md-whiteframe {
+  .formulaObject:not(.formulaCustomObject) .formulaArray > md-whiteframe {
     box-shadow: none;
     margin: 0;
     padding: 0;
