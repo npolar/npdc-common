@@ -40,8 +40,14 @@ ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig) {
   };
 
   let configs = formulaFieldConfig.getInstance();
-  let defineOptions = function (config) {
+  let defineOptions = function (config, formula) {
     configs.addConfig(Object.assign({}, DEFAULTS, config));
+    if (formula) {
+      formula.addTemplate({
+        match: config.match,
+        template: '<npdc:formula-file></npdc:formula-file>'
+      });
+    }
   };
 
   let getOptions = function (field) {
