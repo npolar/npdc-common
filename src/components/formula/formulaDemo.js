@@ -8,7 +8,7 @@ angular
   .module('formulaDemo', ['npdcCommon', 'formula'])
   .controller('FormulaCtrl', ($mdDialog, $scope, $compile, $timeout, formula, formulaAutoCompleteService,
     fileFunnelService, chronopicService, npolarApiConfig) => {
-    $scope.formula = new formula({
+    $scope.formula = formula.getInstance({
       schema: "./demo/schema.json",
       form: "./demo/form.json",
       templates: npolarApiConfig.formula.templates.concat(
@@ -38,6 +38,10 @@ angular
             template: '<npdc:formula-autocomplete></npdc:formula-autocomplete>'
           },
           {
+            match: "autocomplete2",
+            template: '<npdc:formula-autocomplete></npdc:formula-autocomplete>'
+          },
+          {
             match: "string_file",
             template: '<npdc:formula-file></npdc:formula-file>'
           },
@@ -46,8 +50,7 @@ angular
             template: '<npdc:formula-file-object></npdc:formula-file-object>'
           }
         ]
-      ),
-      hideButtons: false
+      )
     });
 
     let updateModel = function() {
@@ -83,12 +86,35 @@ angular
       console.log("timeout");
     };
     $timeout(updateModel);
-
-    let fn = function (q) {
-      return ["Dalene", "Allan", "Lecia", "Leta", "Matthew", "Marlen", "Collette", "Alfredo", "Francina", "Dorene", "Ali", "Anette", "Courtney", "Arlena", "Spring", "Suzanna", "Roseanne", "Evita", "Gaynell", "Ellena", "Lucinda", "Delisa", "Lamont", "Eloy", "Luanna", "Cyndi", "Lynn", "Clare", "Stacey", "Tameka", "Cheryll", "Jong", "Hoyt", "Marhta", "Roselia", "Gala", "Chun", "Weston", "Zola", "Luana", "Arnette", "Delorse", "Libbie", "Nenita", "Lorina", "Carolyn", "Burma", "Russell", "Beatris", "Macie"];
+    let acSource = ["Dalene", "Allan", "Lecia", "Leta", "Matthew", "Marlen", "Collette", "Alfredo", "Francina", "Dorene", "Ali", "Anette", "Courtney", "Arlena", "Spring", "Suzanna", "Roseanne", "Evita", "Gaynell", "Ellena", "Lucinda", "Delisa", "Lamont", "Eloy", "Luanna", "Cyndi", "Lynn", "Clare", "Stacey", "Tameka", "Cheryll", "Jong", "Hoyt", "Marhta", "Roselia", "Gala", "Chun", "Weston", "Zola", "Luana", "Arnette", "Delorse", "Libbie", "Nenita", "Lorina", "Carolyn", "Burma", "Russell", "Beatris", "Macie"];
+    let acSourceFn = function (q) {
+      return acSource.filter(item => item.toLowerCase().indexOf(q.toLowerCase()) === 0);
     };
 
-    // formulaAutoCompleteService.bindSourceCallback("#/autocomplete", fn);
+    let acSource2 = [{a: "Anders", b: "http://tjosho.com"}, {a: "Remi", b: "http://lololo.no"}];
+    let acSource2Fn = function (q) {
+      return acSource2.filter(item => item.a.toLowerCase().indexOf(q.toLowerCase()) === 0);
+    };
+
+
+    // @TODO ready, autocomplete, ac-facets
+    formulaAutoCompleteService.defineOptions({
+      match: "autocomplete",
+      querySource: acSourceFn,
+      //label: 'key',
+      //value: 'key',
+      //onSelect,
+      minLenght: 1 //(default 0)
+    });
+    formulaAutoCompleteService.defineOptions({
+      match: "autocomplete2",
+      querySource: acSource2Fn,
+      label: 'a',
+      value: 'b',
+      onSelect(item) {
+        alert('Select: ' + item.a + ': ' + item.b);
+      }
+    });
     // fileFunnelService.defineOptions('#/string_file', {multiple: true});
     // chronopicService.defineOptions('#/string_date', {locale: 'ja', format: "{YYYY} {YY} {YYYY} {MMM} {DD} {MMMM}"});
     // chronopicService.defineOptions('#/string_datetime', {locale: 'en'});

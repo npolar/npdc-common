@@ -46,6 +46,7 @@
     "title": "custom templates",
     "fields": [
       "autocomplete",
+      "autocomplete2",
       "people",
       "gcmd",
       "placenames",
