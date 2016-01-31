@@ -31,28 +31,29 @@ ff.controller('FFUploadController', function($scope, $mdDialog, options) {
   ff.progressType = 'determinate';
 });
 
-ff.service('fileFunnelService', function($mdDialog) {
+ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig) {
   const DEFAULTS = {
     server: "http://apptest.data.npolar.no/_file",
     accept: "*/*",
-    chunked: true
+    chunked: true,
+    multiple: false
   };
 
-  let opts = {};
-  let defineOptions = function (key, options) {
-    opts[key] = Object.assign({}, DEFAULTS, options, {multiple:false});
+  let configs = formulaFieldConfig.getInstance();
+  let defineOptions = function (config) {
+    configs.addConfig(Object.assign({}, DEFAULTS, config));
   };
 
-  let getOptions = function (key) {
-    return opts[key] || DEFAULTS;
+  let getOptions = function (field) {
+    return configs.getMatchingConfig(field);
   };
 
-  let showUpload = function(ev, path, options) {
+  let showUpload = function(ev, options) {
     return $mdDialog.show({
       clickOutsideToClose: true,
       controller: 'FFUploadController',
       locals: {
-        options: Object.assign({}, getOptions(path), options)
+        options: options
       },
       targetEvent: ev,
       template: require('./filefunnel.html')
@@ -72,10 +73,11 @@ ff.directive('filefunnel', function(fileFunnelService) {
     restrict: 'A',
     //@ngInject
     controller($scope, $mdDialog) {
+      let options = fileFunnelService.getOptions($scope.field);
+
       $scope.showUpload = function(ev, target) {
-        fileFunnelService.showUpload(ev, $scope.field.path)
+        fileFunnelService.showUpload(ev, options)
           .then(files => {
-            let options = fileFunnelService.getOptions($scope.field.path) || fileFunnelService.getOptions($scope.field.id);
             if (target[0] instanceof HTMLInputElement) {
               target[0].value = options.server + files[0].location;
             } else if ($scope.field) {
@@ -102,7 +104,7 @@ ff.directive('filefunnel', function(fileFunnelService) {
               if ($scope.field.itemAdd) {
                 let oldItemAdd = $scope.field.itemAdd;
                 $scope.field.itemAdd.itemAdd = function (ev) {
-                  fileFunnelService.showUpload(ev, $scope.field.path, {}).then(files => {
+                  fileFunnelService.showUpload(ev, options).then(files => {
                     files.forEach(file => {
                       if (file.status !== fileFunnelService.status.COMPLETED) {
                         return;
@@ -111,7 +113,7 @@ ff.directive('filefunnel', function(fileFunnelService) {
                       newItem.fields.forEach(field => {
                         switch (field.id) {
                           case 'uri':
-                            field.value = fileFunnelService.getOptions(field.path).server + file.location;
+                            field.value = options.server + file.location;
                             break;
                           case 'filename':
                             field.value = file.reference.name;

@@ -6,15 +6,16 @@ require('chronopic/dist/js/chronopic-i18n.min.js');
 
 let cp = angular.module('chronopic', []);
 
-cp.service('chronopicService', function() {
-  let opts = {};
+cp.service('chronopicService', function(formulaFieldConfig) {
 
-  let defineOptions = function (key, options) {
-    opts[key] = Object.assign({}, options);
+  let configs = formulaFieldConfig.getInstance();
+
+  let defineOptions = function (config) {
+    configs.addConfig(config);
   };
 
-  let getOptions = function (key) {
-    return (opts[key] || {});
+  let getOptions = function (field) {
+    return configs.getMatchingConfig(field);
   };
 
   return {
@@ -36,7 +37,7 @@ cp.directive('chronopic', function($timeout, chronopicService) {
       }
 
       let tabContainer = document.body.querySelector(".formula md-tabs-content-wrapper");
-      let options = chronopicService.getOptions(scope.field.path) || chronopicService.getOptions(scope.field.id);
+      let options = chronopicService.getOptions(scope.field);
       let onChange = options.onChange, cp;
 
       delete options.onChange;
