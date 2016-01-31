@@ -1,6 +1,6 @@
 'use strict';
 
-let autocompleteDirective = function (formulaAutoCompleteService) {
+let autocompleteDirective = function ($http, formulaAutoCompleteService) {
   'ngInject';
 
   return {
@@ -16,6 +16,19 @@ let autocompleteDirective = function (formulaAutoCompleteService) {
 
       $scope.onSelect = config.onSelect;
       $scope.querySource = config.querySource;
+      if (typeof config.querySource === 'string') {
+        $scope.querySource = function (q) {
+          var options = {
+            params: {
+              q: q || ''
+            }
+          };
+          return $http.get(config.querySource, options).then(function (response) {
+            return response.data.filter(item =>
+              $scope.value(item).toLowerCase().indexOf(q.toLowerCase()) === 0);
+          });
+        };
+      }
       $scope.minLenght = config.minLenght || 0;
 
       $scope.searchText = '';
