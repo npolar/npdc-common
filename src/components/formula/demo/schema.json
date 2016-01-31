@@ -194,6 +194,9 @@
     "autocomplete2": {
       "type": "string"
     },
+    "autocomplete3": {
+      "type": "string"
+    },
     "people": {
       "description": "People involved in creating the dataset, roles from http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml with 'editor' (meaning metadata editor) added",
       "type": "array",

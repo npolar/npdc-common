@@ -47,6 +47,7 @@
     "fields": [
       "autocomplete",
       "autocomplete2",
+      "autocomplete3",
       "people",
       "gcmd",
       "placenames",

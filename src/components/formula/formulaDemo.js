@@ -42,6 +42,10 @@ angular
             template: '<npdc:formula-autocomplete></npdc:formula-autocomplete>'
           },
           {
+            match: "autocomplete3",
+            template: '<npdc:formula-autocomplete></npdc:formula-autocomplete>'
+          },
+          {
             match: "string_file",
             template: '<npdc:formula-file></npdc:formula-file>'
           },
@@ -114,6 +118,12 @@ angular
       onSelect(item) {
         alert('Select: ' + item.a + ': ' + item.b);
       }
+    });
+    formulaAutoCompleteService.defineOptions({
+      match: "autocomplete3",
+      querySource: "//api.npolar.no/person/?fields=first_name,last_name,organisation,email&format=json&variant=array",
+      label: "first_name",
+      value: "first_name"
     });
     fileFunnelService.defineOptions({match: '#/string_file', multiple: true});
     chronopicService.defineOptions({match: '#/string_date', locale: 'ja', format: "{YYYY} {YY} {YYYY} {MMM} {DD} {MMMM}"});
