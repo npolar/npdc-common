@@ -6,8 +6,8 @@ let angular = require('angular');
 
 angular
   .module('formulaDemo', ['npdcCommon', 'formula'])
-  .controller('FormulaCtrl', ($mdDialog, $scope, $compile, $timeout, formula, formulaAutoCompleteService,
-    fileFunnelService, chronopicService, npolarApiConfig) => {
+  .controller('FormulaCtrl', ($mdDialog, $scope, $timeout, formula, formulaAutoCompleteService,
+    fileFunnelService, chronopicService, npolarApiConfig, NpolarApiResource) => {
     $scope.formula = formula.getInstance({
       schema: "./demo/schema.json",
       form: "./demo/form.json",
@@ -32,22 +32,6 @@ angular
           {
             match: "array_object2",
             template: '<npdc:formula-tabdata></npdc:formula-tabdata>'
-          },
-          {
-            match: "autocomplete",
-            template: '<npdc:formula-autocomplete></npdc:formula-autocomplete>'
-          },
-          {
-            match: "autocomplete2",
-            template: '<npdc:formula-autocomplete></npdc:formula-autocomplete>'
-          },
-          {
-            match: "autocomplete3",
-            template: '<npdc:formula-autocomplete></npdc:formula-autocomplete>'
-          },
-          {
-            match: "string_file",
-            template: '<npdc:formula-file></npdc:formula-file>'
           },
           {
             match: "file_ref",
@@ -100,8 +84,11 @@ angular
       return acSource2.filter(item => item.a.toLowerCase().indexOf(q.toLowerCase()) === 0);
     };
 
+    let Dataset = NpolarApiResource.resource({'path': '/dataset', 'resource': 'Dataset' });
+    formulaAutoCompleteService.optionsFromFacets(['organisations.gcmd_short_name', 'links.type'], Dataset, $scope.formula);
 
-    // @TODO ready, autocomplete, ac-facets
+
+    // @TODO ready
     formulaAutoCompleteService.defineOptions({
       match: "autocomplete",
       querySource: acSourceFn,
@@ -109,7 +96,7 @@ angular
       //value: 'key',
       //onSelect,
       minLenght: 1 //(default 0)
-    });
+    }, $scope.formula);
     formulaAutoCompleteService.defineOptions({
       match: "autocomplete2",
       querySource: acSource2Fn,
@@ -118,14 +105,14 @@ angular
       onSelect(item) {
         alert('Select: ' + item.a + ': ' + item.b);
       }
-    });
+    }, $scope.formula);
     formulaAutoCompleteService.defineOptions({
       match: "autocomplete3",
       querySource: "//api.npolar.no/person/?fields=first_name,last_name,organisation,email&format=json&variant=array",
       label: "first_name",
       value: "first_name"
-    });
-    fileFunnelService.defineOptions({match: '#/string_file', multiple: true});
+    }, $scope.formula);
+    fileFunnelService.defineOptions({match: '#/string_file', multiple: true}, $scope.formula);
     chronopicService.defineOptions({match: '#/string_date', locale: 'ja', format: "{YYYY} {YY} {YYYY} {MMM} {DD} {MMMM}"});
     chronopicService.defineOptions({match: '#/string_datetime', locale: 'en'});
 

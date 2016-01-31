@@ -347,6 +347,132 @@
           }
         }
       }
+    },
+    "organisations": {
+      "description": "Organisations connected to the dataset",
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "gcmd_short_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "author",
+                "originator",
+                "owner",
+                "pointOfContact",
+                "principalInvestigator",
+                "publisher",
+                "resourceProvider"
+              ]
+            }
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "additionalItems": false,
+            "format": "email"
+          },
+          "homepage": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^http(s)?://"
+          }
+        },
+        "required": [
+          "name",
+          "roles"
+        ]
+      }
+    },
+    "links": {
+      "description": "Links to data, references, project, parent, doi, related, self, alternate, etc. See IANA's registry: http://www.iana.org/assignments/link-relations/link-relations.xhtml and the Atom Format RFC: http://tools.ietf.org/html/rfc4287 and ",
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "rel": {
+            "type": "string",
+            "enum": [
+              "related",
+              "service",
+              "metadata",
+              "project",
+              "publication",
+              "datacentre",
+              "parent",
+              "internal",
+              "doi",
+              "data",
+              "via",
+              "edit",
+              "alternate"
+            ]
+          },
+          "href": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "hreflang": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "length": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "type": {
+            "type": "string"
+          },
+          "hash": {
+            "type": "array"
+          },
+          "etag": {
+            "type": "string"
+          },
+          "modified": {
+            "type": "string"
+          },
+          "acccessed": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "href"
+        ]
+      }
     }
   },
   "required": [

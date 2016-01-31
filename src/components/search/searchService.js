@@ -23,32 +23,7 @@ let SearchService = function ($location, $window, npdcAppConfig, formulaAutoComp
       } else {
         $window.location.href = '/home/search?q=' + query.q;
       }
-    },
-    injectAutocompleteFacetSources(autocompleteFacets, resource) {
-      let path = function(term) {
-        return '#/' + term.split('.').join('/');
-      };
-      let facets = autocompleteFacets.join(',');
-      
-      resource.facets({ facets, q: '' }, facets => {
-        let relevant = facets.filter(f => autocompleteFacets.includes(f.facet));
-        relevant.forEach(r => {
-    
-          // The callback function need NOT to receive any argument, or else it stops working
-          let source = () => r.terms.map(t => t.term);
-          formulaAutoCompleteService.bindSourceCallback(path(r.facet), source);
-          
-          
-        });
-    
-        
-        
-      });
-    
-    
-    
     }
-    
   };
 };
 
