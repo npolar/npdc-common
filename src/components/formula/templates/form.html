@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<form name="formula" class="formula" ng-if="form.fieldsets">
+<npdc:loader ng-if="!form.ready"></npdc:loader>
+<form name="formula" class="formula" ng-show="form.ready">
   <header ng-if="::form.title">
     {{ ::form.title }}
   </header>
@@ -22,5 +23,3 @@
 
   </div>
 </form>
-
-<npdc:loader ng-if="!form.fieldsets"></npdc:loader>
