@@ -29,7 +29,6 @@ let autocompleteSourceService = function(formulaFieldConfig) {
         let id = nodes.pop();
         let source = () => item.terms.map(t => t.term);
         let match = function(field) {
-          console.log(field.path);
           let fieldNodes = field.path.replace(/(#\/|\/\d)/g, '').split('/');
           fieldNodes.pop();
           return field.id === id && fieldNodes.every((parent, index) => {
