@@ -37,7 +37,7 @@ cp.directive('chronopic', function($timeout, chronopicService) {
       }
 
       let tabContainer = document.body.querySelector(".formula md-tabs-content-wrapper");
-      let options = chronopicService.getOptions(scope.field);
+      let options = chronopicService.getOptions(scope.field) || {};
       let onChange = options.onChange, cp;
 
       delete options.onChange;
