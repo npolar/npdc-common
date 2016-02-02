@@ -9,6 +9,8 @@ var formula = function ($mdDialog, npdcAppConfig) {
     scope: false,
     //@ngInject
     controller($scope) {
+      $scope.formula = $scope.formula || {};
+      $scope.formula.templates = require('./templates');
 
       let initBottomSheet = function () {
         $scope.bottomSheetOptions = {

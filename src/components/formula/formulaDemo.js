@@ -93,7 +93,7 @@ angular
       //label: 'key',
       //value: 'key',
       //onSelect,
-      minLenght: 1 //(default 0)
+      minLength: 1 //(default 0)
     }, $scope.formula);
     formulaAutoCompleteService.defineOptions({
       match: "autocomplete2",
