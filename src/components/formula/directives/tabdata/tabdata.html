@@ -9,7 +9,7 @@
   <div class="np-td-delimiter">Delimiter: {{delimiter}}</div>
   <div ng-show="field.errors" class="np-validation-message">
     <div ng-repeat="error in field.errors" class="md-caption" role="alert">
-      {{ error.message }}
+      {{ errorText(error) }}
     </div>
   </div>
 </md-input-container>

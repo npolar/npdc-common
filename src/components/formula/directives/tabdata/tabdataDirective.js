@@ -82,6 +82,16 @@ let tabdata = function(npdcCSVService) {
         }
       });
 
+      $scope.errorText = function (error) {
+        let text = '';
+        if (error.dataPath) {
+          let line = Number(error.dataPath.replace(/^\/(\d+).*$/,'$1')) + 1;
+          text += 'Line ' + line + ': ';
+        }
+        text += error.message;
+        return text;
+      };
+
       $scope.$watch('csvHeader', (n, o) => {
         if (n && n !== o) {
           $scope.csvData = $scope.csvData.replace(/^.*/, n);
