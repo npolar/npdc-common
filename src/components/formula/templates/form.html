@@ -8,17 +8,17 @@
   <md-tabs md-dynamic-height md-border-bottom>
       <formula:fieldsets></formula:fieldsets>
   </md-tabs>
-  <span ng-if="form.errors" title="{{ form.errors.join('\n') }}">{{ form.i18n.invalid | formulaReplace : { count: form.errors.length } }}</span>
+  <span ng-if="form.errors" title="{{ form.errors.join('\n') }}">{{ form.i18n.text.invalid | formulaReplace : { count: form.errors.length } }}</span>
 
   <!-- <div layout="row" layout-align="space-between center">
 
     <div>
-      <md-button class="md-raised" ng-click="form.validate(true)" title="{{ form.i18n.validate[1] }}">
+      <md-button class="md-raised" ng-click="form.validate(true)" title="{{ form.i18n.text.validate.tooltip }}">
         <md-icon>check</md-icon>
-        {{ form.i18n.validate[0] }}</md-button>
-      <md-button class="md-raised md-primary" ng-click="form.save()" ng-disabled="!form.valid" title="{{ form.i18n.save[1] }}">
+        {{ form.i18n.text.validate.label }}</md-button>
+      <md-button class="md-raised md-primary" ng-click="form.save()" ng-disabled="!form.valid" title="{{ form.i18n.text.save.tooltip }}">
         <md-icon>save</md-icon>
-        {{ form.i18n.save[0] }}</md-button>
+        {{ form.i18n.text.save.label }}</md-button>
     </div>
   </div> -->
 </form>

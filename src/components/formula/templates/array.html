@@ -15,7 +15,7 @@
           </md-button>
           <md-menu-content>
             <md-menu-item>
-              <md-button ng-click="field.itemRemove($index)" title="{{ form.i18n.remove[1] }}" class="md-warn">
+              <md-button ng-click="field.itemRemove($index)" title="{{ form.i18n.text.remove.tooltip }}" class="md-warn">
                 <md-icon md-menu-align-target>delete</md-icon> Remove item
               </md-button>
             </md-menu-item>
@@ -34,7 +34,7 @@
               <span ng-if="!value.visible">{{ value.fields | formulaInlineValues }}</span>
               <div class="np-formula-object-ctrls">
                 <div npdc:formula-field-info class="np-field-info" ng-if="value.description"></div>
-                <a class="toggle" href="" ng-click="value.itemToggle($index)" title="{{ value.visible ? form.i18n.minimize[1] : form.i18n.maximize[1] }}">
+                <a class="toggle" href="" ng-click="value.itemToggle($index)" title="{{ value.visible ? form.i18n.text.minimize[1] : form.i18n.text.maximize.tooltip }}">
                   <md-icon>{{ value.visible ? 'expand_less' : 'expand_more' }}</md-icon>
                 </a>
                 <md-menu>
@@ -43,7 +43,7 @@
                   </md-button>
                   <md-menu-content>
                     <md-menu-item>
-                      <md-button ng-click="field.itemRemove($index)" title="{{ form.i18n.remove[1] }}" class="md-warn">
+                      <md-button ng-click="field.itemRemove($index)" title="{{ form.i18n.text.remove.tooltip }}" class="md-warn">
                         <md-icon md-menu-align-target>delete</md-icon> Remove item
                       </md-button>
                     </md-menu-item>
@@ -58,7 +58,7 @@
     </ul>
 
     <div class="np-formula-array-add">
-      <md-button ng-click="field.itemAdd()" class="md-fab md-mini md-primary md-hue-1" aria-label="{{ form.i18n.add[1] }}">
+      <md-button ng-click="field.itemAdd()" class="md-fab md-mini md-primary md-hue-1" aria-label="{{ form.i18n.text.add.tooltip }}">
         <md-icon>add</md-icon>
       </md-button>
     </div>
