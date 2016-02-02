@@ -15,7 +15,10 @@
       "string_date",
       "string_datetime",
       "string_year",
-      "string_yearmonth",
+      {
+        "id": "string_yearmonth",
+        "format": "year-month"
+      },
       "string_time"
     ]
   }, {

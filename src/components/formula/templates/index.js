@@ -35,7 +35,7 @@ var materialTemplates = [
   },
   {
     match(field) {
-      return field.typeOf('date') || field.typeOf('datetime');
+      return field.typeOf('date') || field.typeOf('datetime') || field.format === 'year-month';
     },
     template: require('./date.html')
   },
