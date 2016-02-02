@@ -33,12 +33,24 @@ let autocompleteDirective = function ($http, formulaAutoCompleteService) {
 
       $scope.searchText = '';
 
+      let mapItem = function (item, key) {
+        let result = item;
+        if (config[key]) {
+          if (typeof config[key] === 'function') {
+            result = config[key].apply({}, item);
+          } else if (item[config[key]]) {
+            result = item[config[key]];
+          }
+        }
+        return result;
+      };
+
       $scope.value = function (item) {
-        return config.value ? item[config.value] : item;
+        return mapItem(item, 'value');
       };
 
       $scope.label = function (item) {
-        return config.label ? item[config.label] : item;
+        return mapItem(item, 'label');
       };
     }
   };
