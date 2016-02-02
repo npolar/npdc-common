@@ -7,12 +7,11 @@ let angular = require('angular');
 angular
   .module('formulaDemo', ['npdcCommon', 'formula'])
   .controller('FormulaCtrl', ($mdDialog, $scope, $timeout, formula, formulaAutoCompleteService,
-    fileFunnelService, chronopicService, npolarApiConfig, NpolarApiResource) => {
+    fileFunnelService, chronopicService, npdcAppConfig, NpolarApiResource) => {
     $scope.formula = formula.getInstance({
       schema: "./demo/schema.json",
       form: "./demo/form.json",
-      templates: npolarApiConfig.formula.templates.concat(
-        [
+      templates: npdcAppConfig.formula.templates.concat([
           {
             match: "people_object",
             template: '<npdc:formula-person></npdc:formula-person>'
@@ -37,8 +36,7 @@ angular
             match: "file_ref",
             template: '<npdc:formula-file-object></npdc:formula-file-object>'
           }
-        ]
-      )
+        ])
     });
 
     let updateModel = function() {

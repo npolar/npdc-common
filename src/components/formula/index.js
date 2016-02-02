@@ -8,6 +8,6 @@ require('./directives');
 
 common.directive('npdcFormula', require('./formulaDirective'));
 
-common.run(function($templateCache, npolarApiConfig) {
-  npolarApiConfig.formula.templates = templates.materialTemplates;
+common.run(function($templateCache, npdcAppConfig) {
+  npdcAppConfig.formula.templates = templates.materialTemplates;
 });
