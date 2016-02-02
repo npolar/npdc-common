@@ -113,6 +113,28 @@
       },
       "minItems": 1
     },
+    "array_object2": {
+      "type": "array",
+      "description": "array input with items type property set to object",
+      "items": {
+        "type": "object",
+        "properties": {
+          "string_default": {
+            "type": "string",
+            "description": "string input with default property set",
+            "default": "foobar"
+          },
+          "number": {
+            "type": "number",
+            "description": "required number input"
+          }
+        },
+        "required": [
+          "number"
+        ]
+      },
+      "minItems": 1
+    },
     "array_string_enum": {
       "type": "array",
       "description": "array input with items type and enum properties set",
@@ -133,21 +155,6 @@
         "type": "string",
         "minLength": 5,
         "description": "string with minLength 5"
-      }
-    },
-    "array_file": {
-      "type": "array",
-      "description": "array input with items type property set to string",
-      "items": {
-        "$ref": "http://api.npolar.no/_schema/ref/file"
-      }
-    },
-    "array_string:file": {
-      "type": "array",
-      "description": "array input with items type property set to string",
-      "items": {
-        "type": "string",
-        "format": "file-uri"
       }
     },
     "ref_object": {
@@ -186,16 +193,13 @@
         }
       }
     },
-    "autocomplete_array": {
+    "autocomplete": {
       "type": "string"
     },
-    "autocomplete_url": {
+    "autocomplete2": {
       "type": "string"
     },
-    "autocomplete_fn": {
-      "type": "string"
-    },
-    "autocomplete_obj": {
+    "autocomplete3": {
       "type": "string"
     },
     "people": {
@@ -342,6 +346,132 @@
             "pattern": "^(([A-Z]|[a-z]){2})$"
           }
         }
+      }
+    },
+    "organisations": {
+      "description": "Organisations connected to the dataset",
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "gcmd_short_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "author",
+                "originator",
+                "owner",
+                "pointOfContact",
+                "principalInvestigator",
+                "publisher",
+                "resourceProvider"
+              ]
+            }
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "additionalItems": false,
+            "format": "email"
+          },
+          "homepage": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^http(s)?://"
+          }
+        },
+        "required": [
+          "name",
+          "roles"
+        ]
+      }
+    },
+    "links": {
+      "description": "Links to data, references, project, parent, doi, related, self, alternate, etc. See IANA's registry: http://www.iana.org/assignments/link-relations/link-relations.xhtml and the Atom Format RFC: http://tools.ietf.org/html/rfc4287 and ",
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "rel": {
+            "type": "string",
+            "enum": [
+              "related",
+              "service",
+              "metadata",
+              "project",
+              "publication",
+              "datacentre",
+              "parent",
+              "internal",
+              "doi",
+              "data",
+              "via",
+              "edit",
+              "alternate"
+            ]
+          },
+          "href": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "hreflang": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "length": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "type": {
+            "type": "string"
+          },
+          "hash": {
+            "type": "array"
+          },
+          "etag": {
+            "type": "string"
+          },
+          "modified": {
+            "type": "string"
+          },
+          "acccessed": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "href"
+        ]
       }
     }
   },

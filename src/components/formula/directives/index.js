@@ -3,6 +3,12 @@
 var angular = require('angular');
 var common = angular.module('npdcCommon');
 
+common.service('formulaAutoCompleteService', require('./autocomplete/autocompleteSourceService'));
+common.directive('npdcFormulaAutocomplete', require('./autocomplete/autocompleteDirective'));
+
+common.directive('npdcFormulaFile', require('./file/fileDirective'));
+common.directive('npdcFormulaFileObject', require('./file/fileObjectDirective'));
+
 common.directive('npdcFormulaPerson', require('./person/personDirective'));
 
 common.service('npdcGcmdService', require('./gcmd/gcmdService'));

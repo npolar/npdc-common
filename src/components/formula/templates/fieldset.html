@@ -1,0 +1,6 @@
+<md-tab label="{{fieldset.title}}" md-active="fieldset.active"
+  ng-disabled="fieldset.disabled" md-on-select="form.activate(fieldset)">
+  <fieldset class="np-formula-tab">
+    <formula:fields fields="::fieldset.fields"></formula:fields>
+  </fieldset>
+</md-tab>

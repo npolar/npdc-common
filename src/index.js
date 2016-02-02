@@ -1,7 +1,7 @@
 'use strict';
 
 let angular = require('angular');
-require('angular-animate');
+//require('angular-animate');
 require('angular-aria');
 require('angular-marked');
 require('angular-material');
@@ -19,7 +19,7 @@ var common = angular.module('npdcCommon', [
   'filefunnel',
   'formula',
   'hc.marked',
-  'ngAnimate',
+  //'ngAnimate',
   'ngMaterial',
   'ngNpolar',
   'ngRoute',

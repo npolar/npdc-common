@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<fieldset formula:field="field">
+<fieldset>
   <md-whiteframe class="md-whiteframe-z2" filefunnel>
   <legend>{{ field.title }}
     <div npdc:formula-field-info class="np-field-info" ng-if="field.description"></div>
   </legend>
 
   <div ng-repeat="field in ::field.fields track by field.path" ng-if="field.visible">
-    <formula:field-instance field="field"></formula:field-instance>
+    <formula:field field="field"></formula:field>
   </div>
   </md-whiteframe>
 </fieldset>

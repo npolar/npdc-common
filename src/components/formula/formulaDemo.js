@@ -6,43 +6,41 @@ let angular = require('angular');
 
 angular
   .module('formulaDemo', ['npdcCommon', 'formula'])
-  .controller('FormulaCtrl', ($mdDialog, $scope, $compile, $timeout,
-    fileFunnelService, chronopicService) => {
-    $scope.formula = {
+  .controller('FormulaCtrl', ($mdDialog, $scope, $timeout, formula, formulaAutoCompleteService,
+    fileFunnelService, chronopicService, npdcAppConfig, NpolarApiResource) => {
+    $scope.formula = formula.getInstance({
       schema: "./demo/schema.json",
       form: "./demo/form.json",
-      template: "material",
-      hideButtons: false,
-      templates: [
-        {
-          match(field) {
-            return field.id === "people_object";
+      templates: npdcAppConfig.formula.templates.concat([
+          {
+            match: "people_object",
+            template: '<npdc:formula-person></npdc:formula-person>'
           },
-          template: '<npdc:formula-person></npdc:formula-person>'
-        },
-        {
-          match(field) {
-            return field.id === "gcmd";
+          {
+            match: "gcmd",
+            template: '<npdc:formula-gcmd></npdc:formula-gcmd>'
           },
-          template: '<npdc:formula-gcmd></npdc:formula-gcmd>'
-        },
-        {
-          match(field) {
-            return field.id === "placenames_object";
+          {
+            match: "sciencekeywords_object",
+            template: '<npdc:formula-gcmd-keyword></npdc:formula-gcmd-keyword>'
           },
-          template: '<npdc:formula-placename></npdc:formula-placename>'
-        },
-        {
-          match(field) {
-            return field.id === "array_object";
+          {
+            match: "placenames_object",
+            template: '<npdc:formula-placename></npdc:formula-placename>'
           },
-          template: '<npdc:formula-tabdata></npdc:formula-tabdata>'
-        }
-      ]
-    };
+          {
+            match: "array_object2",
+            template: '<npdc:formula-tabdata></npdc:formula-tabdata>'
+          },
+          {
+            match: "file_ref",
+            template: '<npdc:formula-file-object></npdc:formula-file-object>'
+          }
+        ])
+    });
 
     let updateModel = function() {
-      $scope.formula.model = {
+      $scope.formula.setModel({
         _id: 'foobarID',
         string: 'timeoutfoobar',
         string_date: '2012-05-17',
@@ -70,27 +68,48 @@ angular
             }]
           }]
         }]
-      };
-      console.log("timeout", $scope.formula.model.string);
+      });
+      console.log("timeout");
     };
     $timeout(updateModel);
-
-    let fn = function (q) {
-      return ["Dalene", "Allan", "Lecia", "Leta", "Matthew", "Marlen", "Collette", "Alfredo", "Francina", "Dorene", "Ali", "Anette", "Courtney", "Arlena", "Spring", "Suzanna", "Roseanne", "Evita", "Gaynell", "Ellena", "Lucinda", "Delisa", "Lamont", "Eloy", "Luanna", "Cyndi", "Lynn", "Clare", "Stacey", "Tameka", "Cheryll", "Jong", "Hoyt", "Marhta", "Roselia", "Gala", "Chun", "Weston", "Zola", "Luana", "Arnette", "Delorse", "Libbie", "Nenita", "Lorina", "Carolyn", "Burma", "Russell", "Beatris", "Macie"];
+    let acSource = ["Dalene", "Allan", "Lecia", "Leta", "Matthew", "Marlen", "Collette", "Alfredo", "Francina", "Dorene", "Ali", "Anette", "Courtney", "Arlena", "Spring", "Suzanna", "Roseanne", "Evita", "Gaynell", "Ellena", "Lucinda", "Delisa", "Lamont", "Eloy", "Luanna", "Cyndi", "Lynn", "Clare", "Stacey", "Tameka", "Cheryll", "Jong", "Hoyt", "Marhta", "Roselia", "Gala", "Chun", "Weston", "Zola", "Luana", "Arnette", "Delorse", "Libbie", "Nenita", "Lorina", "Carolyn", "Burma", "Russell", "Beatris", "Macie"];
+    let acSourceFn = function (q) {
+      return acSource.filter(item => item.toLowerCase().indexOf(q.toLowerCase()) === 0);
     };
 
-    let emailCallback = function (response) {
-      let emails = [];
-      response.forEach(entry => {
-        entry.people.forEach(person => {
-          emails.push(person.email);
-        });
-      });
-      return emails;
+    let acSource2 = [{a: "Anders", b: "http://tjosho.com"}, {a: "Remi", b: "http://lololo.no"}];
+    let acSource2Fn = function (q) {
+      return acSource2.filter(item => item.a.toLowerCase().indexOf(q.toLowerCase()) === 0);
     };
 
-    fileFunnelService.defineOptions('#/string_file', {multiple: true});
-    chronopicService.defineOptions('#/string_date', {locale: 'ja'});
-    chronopicService.defineOptions('#/string_datetime', {locale: 'en'});
-    chronopicService.defineOptions('#/string_yearmonth', {locale: 'nn'});
+    let Dataset = NpolarApiResource.resource({'path': '/dataset', 'resource': 'Dataset' });
+    formulaAutoCompleteService.optionsFromFacets(['organisations.gcmd_short_name', 'links.type'], Dataset, $scope.formula);
+
+    formulaAutoCompleteService.defineOptions({
+      match: "autocomplete",
+      querySource: acSourceFn,
+      //label: 'key',
+      //value: 'key',
+      //onSelect,
+      minLength: 1 //(default 0)
+    }, $scope.formula);
+    formulaAutoCompleteService.defineOptions({
+      match: "autocomplete2",
+      querySource: acSource2Fn,
+      label: 'a',
+      value: 'b',
+      onSelect(item) {
+        alert('Select: ' + item.a + ': ' + item.b);
+      }
+    }, $scope.formula);
+    formulaAutoCompleteService.defineOptions({
+      match: "autocomplete3",
+      querySource: "//api.npolar.no/person/?fields=first_name,last_name,organisation,email&format=json&variant=array",
+      label: "first_name",
+      value: "first_name"
+    }, $scope.formula);
+    fileFunnelService.defineOptions({match: '#/string_file', multiple: true}, $scope.formula);
+    chronopicService.defineOptions({match: '#/string_date', locale: 'ja', format: "{YYYY} {YY} {YYYY} {MMM} {DD} {MMMM}"});
+    chronopicService.defineOptions({match: '#/string_datetime', locale: 'en'});
+
   });

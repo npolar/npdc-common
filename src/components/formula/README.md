@@ -1,28 +1,39 @@
-# Material design template for formula
-## Usage
-In controller:
+# Material design templates for formula
 
-    $scope.formulaData = {
-      schema: "http://some.url.com/schema.json",
-      form: "./form.json",
-      template: "template.html"
-    };
+Configure templates via ```formula``` service, either at bootstrap or by ```formula.addTemplate()``` at any time.
 
-In template:
+## File uploader
+There is a file upload widget for both a text field, in which case the uri to the file will be stored,
+and for objects in which case the uri, filename, size etc. is stored. This is just a wrapper for filefunnel.
 
-    <div formula="formulaData" flex></div>
+    <npdc:formula-file></npdc:formula-file>
+    <npdc:formula-file-object></npdc:formula-file-object>
 
-## UI types
-The material template introduces some new UI types for formula.
+## Autocomplete
+Autocomplete is available for string fields and is configured via ```formulaAutoCompleteService``` in any of these ways:
 
-### File uploader
-To use file uploader for a field either reference the file scheme:
+    formulaAutoCompleteService.defineOptions({
+      match: [String, Function] (See formulas formulaFieldConfig)
+      querySource: [String (uri), Array, Function],
+      label: [String (key), Function],
+      value: [String (key), Function],
+      onSelect: [Function],
+      minLenght: [Number] (default 0)
+    }, $scope.formula);
 
-    "$ref": "url-to-file-schema"
+    formulaAutoCompleteService.optionsFromFacets(['organisations.gcmd_short_name', 'links.type'], Dataset, $scope.formula);
 
-Or set format in the form definition:
 
-    {
-      "id": "string_file",
-      "format": "file-uri"
-    }
+## Tabdata
+Delimiter separated values widget to enable easy integration with spreadsheets.
+
+
+If the source is an url new results will be fetched with ```?q=value``` for each input change.
+
+# Domain specific templates
+* GCMD
+  * gcmd object: ```<npdc:formula-gcmd></npdc:formula-gcmd>```
+    - this will only render sciencekeywords and hide all other gcmd properties.
+  * sciencekeywords: ```<npdc:formula-gcmd-keyword></npdc:formula-gcmd-keyword>```
+* persons: ```<npdc:formula-person></npdc:formula-person>```
+* placenames: ```<npdc:formula-placename></npdc:formula-placename>```

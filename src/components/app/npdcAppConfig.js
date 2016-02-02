@@ -71,7 +71,8 @@ let npdcAppConfigFactory = function (NpdcAutocompleteConfigFactory, NpdcSearchCo
         global: true,
         placeholder: "Search Norwegian Polar Data Centre"
       })
-    }
+    },
+    formula: {}
   };
 };
 

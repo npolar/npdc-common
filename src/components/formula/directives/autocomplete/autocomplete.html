@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<md-autocomplete
+  md-items="item in querySource(searchText)"
+  md-item-text="label(item)"
+  md-min-length="0"
+  md-search-text="searchText"
+  md-floating-label="{{field.title}}"
+  md-selected-item-change="onSelect(item)">
+
+  <md-item-template>
+    <span md-highlight-flags="^i" md-highlight-text="searchText">{{label(item)}}</span>
+  </md-item-template>
+
+</md-autocomplete>
+<div npdc:formula-validation-message class="np-validation-message"></div>

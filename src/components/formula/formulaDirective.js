@@ -9,7 +9,6 @@ var formula = function ($mdDialog, npdcAppConfig) {
     scope: false,
     //@ngInject
     controller($scope) {
-
       let initBottomSheet = function () {
         $scope.bottomSheetOptions = {
           items: [],
@@ -38,8 +37,9 @@ var formula = function ($mdDialog, npdcAppConfig) {
         }
       };
 
-      $scope.$watch('document', (newVal) => {
-        if (newVal) {
+      $scope.$watch('document', (newVal, oldVal) => {
+        if (newVal && newVal !== oldVal) {
+          // @TODO Set titles (i18n)
           npdcAppConfig.cardTitle = newVal._rev ? newVal.title || newVal.id.slice(0,8) :
             'New document, not yet saved';
           initBottomSheet();
