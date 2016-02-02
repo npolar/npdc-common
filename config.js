@@ -13,8 +13,8 @@ var config = function(baseConfig) {
         'node_modules/angular-material/angular-material.css',
         'node_modules/angularjs-slider/dist/rzslider.min.css',
         baseConfig.src.root + '/material-icons.css',
-        'node_modules/chronopic/dist/css/chronopic-ext-md.min.css',
-        'node_modules/chronopic/dist/css/chronopic.min.css'
+        'node_modules/chronopic.js/dist/css/chronopic-ext-md.min.css',
+        'node_modules/chronopic.js/dist/css/chronopic.min.css'
       ].concat(baseConfig.deps.css),
       sharedAssets: ['node_modules/material-design-icons/iconfont/*']
     },
