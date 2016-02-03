@@ -34,7 +34,7 @@
               <span ng-if="!value.visible">{{ value.fields | formulaInlineValues }}</span>
               <div class="np-formula-object-ctrls">
                 <div npdc:formula-field-info class="np-field-info" ng-if="value.description"></div>
-                <a class="toggle" href="" ng-click="value.itemToggle($index)" title="{{ value.visible ? form.i18n.text.minimize.tooltip : form.i18n.text.maximize.tooltip }}">
+                <a class="toggle" href="" ng-click="field.itemToggle($index)" title="{{ value.visible ? form.i18n.text.minimize.tooltip : form.i18n.text.maximize.tooltip }}">
                   <md-icon>{{ value.visible ? 'expand_less' : 'expand_more' }}</md-icon>
                 </a>
                 <md-menu>
