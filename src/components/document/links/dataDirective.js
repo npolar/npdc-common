@@ -1,7 +1,8 @@
 'use strict';
 
-// @ngInject
 var dataDirective = function() {
+  'ngInject';
+
   return {
     scope: {
       data: '=',
@@ -9,7 +10,6 @@ var dataDirective = function() {
       rights: '='
     },
     template: require('./datatemplate.html'),
-    // @ngInject
     controller: function ($scope) {
       $scope.licenceText = function (licence) {
         if (/\/by\//.test(licence)) {

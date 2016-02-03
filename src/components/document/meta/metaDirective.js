@@ -1,7 +1,8 @@
 'use strict';
 
-// @ngInject
 var metaDirective = function() {
+  'ngInject';
+  
   return {
     template: require('./metatemplate.html')
   };

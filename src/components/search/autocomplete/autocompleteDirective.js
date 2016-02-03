@@ -1,7 +1,8 @@
 'use strict';
 
-// @ngInject
 let autocompleteDirective = function () {
+  'ngInject';
+
   return {
     controller: 'NpdcAutocompleteController',
     require: '?^^npdcExpandSearch',

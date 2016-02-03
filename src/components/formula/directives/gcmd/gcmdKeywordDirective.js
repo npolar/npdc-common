@@ -34,7 +34,6 @@ let gcmd = function(npdcGcmdService) {
 
   return {
     template: require('./gcmdKeyword.html'),
-    //@ngInject
     controller($scope) {
       $scope.keyword = $scope.field.fields.reduce((memo, field) => {
         memo[field.id] = field;

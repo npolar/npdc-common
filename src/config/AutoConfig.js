@@ -1,8 +1,8 @@
 "use strict";
-/**
- * @ngInject
- */
+
 var AutoConfig = function(environment) {
+  'ngInject';
+
   this.environment = environment;
 
   var isTest = function(hostname) {

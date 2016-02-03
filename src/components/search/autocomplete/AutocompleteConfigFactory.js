@@ -1,7 +1,7 @@
 'use strict';
 
-// @ngInject
 let AutocompleteConfigFactory = function() {
+  'ngInject';
 
   let showCollections = false;
   let placeholder = "";

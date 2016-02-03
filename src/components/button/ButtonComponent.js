@@ -1,7 +1,8 @@
 'use strict';
 
-// @ngInject
 var DeleteButtonComponent = function ($scope, $mdDialog, NpolarApiSecurity) {
+  'ngInject';
+
   $scope.security = NpolarApiSecurity;
 
   $scope.confirmDelete = function (ev) {

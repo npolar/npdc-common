@@ -1,7 +1,8 @@
 'use strict';
 
-// @ngInject
 var loaderDirective = function() {
+  'ngInject';
+
   return {
     template: require('./loader.html')
   };

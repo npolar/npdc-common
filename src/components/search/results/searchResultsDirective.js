@@ -1,7 +1,8 @@
 'use strict';
 
-// @ngInject
 var searchResultsDirective = function () {
+  'ngInject';
+
   return {
     scope: {
       options: '=',

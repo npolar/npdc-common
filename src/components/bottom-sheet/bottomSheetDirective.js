@@ -1,7 +1,8 @@
 "use strict";
 
-// @ngInject
 let npdcBottomSheetDirective = function() {
+  'ngInject';
+
   return {
     restrict: 'E',
     scope: {

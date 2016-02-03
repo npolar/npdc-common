@@ -2,8 +2,9 @@
 
 let angular = require('angular');
 
-// @ngInject
 let npdcDocument = function() {
+  'ngInject';
+
   return {
     restrict: 'E',
     template: require('./document.html'),

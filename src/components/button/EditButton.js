@@ -1,8 +1,8 @@
 'use strict';
-/**
- * @ngInject
- */
+
 var EditButton = function () {
+  'ngInject';
+  
   return {
     controller: "NpdcButtonComponent",
     templateUrl: 'npdc-common/src/components/button/edit-button.html'

@@ -1,9 +1,7 @@
 'use strict';
 
-/**
- * @ngInject
- */
 let person = function ($q, NpolarApiResource) {
+  'ngInject';
 
   let Person = NpolarApiResource.resource({ path: '/person', resource: 'Person' });
   let query = { 'fields': 'first_name,last_name,organisation,email', 'variant': 'array', 'limit': 200 };
@@ -11,7 +9,6 @@ let person = function ($q, NpolarApiResource) {
 
   return {
     template: require('./person.html'),
-    //@ngInject
     controller($scope) {
       $scope.firstName = $scope.field.fields.find(field => field.id === 'first_name');
       $scope.lastName = $scope.field.fields.find(field => field.id === 'last_name');

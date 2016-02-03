@@ -10,11 +10,10 @@ Usage example for single-api autocomplete
 
 ```javascript
 'use strict';
-/**
- * @ngInject
- */
-var Controller = function ($scope, NpdcAutocompleteConfigFactory, npdcAppConfig) {
 
+var Controller = function ($scope, NpdcAutocompleteConfigFactory, npdcAppConfig) {
+  'ngInject';
+  
   $scope.options = new NpdcAutocompleteConfigFactory({});
   // See NpdcAutocompleteConfigFactory for defaults
 

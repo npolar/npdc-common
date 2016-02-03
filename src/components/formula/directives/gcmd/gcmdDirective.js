@@ -1,11 +1,10 @@
 'use strict';
 
 let gcmd = function(npdcGcmdService) {
-  "ngInject";
+  'ngInject';
 
   return {
     template: '<formula:field field="array"></formula:field>',
-    //@ngInject,
     controller($scope) {
       $scope.array = $scope.field.fields.find(field => field.id === 'sciencekeywords');
     },

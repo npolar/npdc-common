@@ -1,7 +1,8 @@
 "use strict";
 
-// @ngInject
 let AppWrapperCtrl = function($location, $scope, npolarApiConfig, npdcAppConfig, NpolarApiSecurity) {
+  'ngInject';
+
   $scope.options = npdcAppConfig;
 
   $scope.security = NpolarApiSecurity;

@@ -1,13 +1,13 @@
 'use strict';
 
-// @ngInject
 var authorsDirective = function() {
+  'ngInject';
+
   return {
     scope: {
       authors: '='
     },
     template: require('./authorstemplate.html'),
-    //@ngInject
     controller: function($scope) {
       $scope.fullnames = function (authors) {
         return authors.reduce((m, a, i) => {

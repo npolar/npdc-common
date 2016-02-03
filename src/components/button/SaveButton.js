@@ -1,8 +1,8 @@
 'use strict';
-/**
- * @ngInject
- */
+
 var SaveButton = function () {
+  'ngInject';
+  
   return {
     controller: "NpdcButtonComponent",
     templateUrl: 'npdc-common/src/components/button/save-button.html'

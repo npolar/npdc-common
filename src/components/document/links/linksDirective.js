@@ -1,14 +1,14 @@
 'use strict';
 
-// @ngInject
 var linkDirective = function() {
+  'ngInject';
+
   return {
     scope: {
       links: '=',
       related: '='
     },
     template: require('./linkstemplate.html'),
-    //@ngInject
     controller($scope) {
       $scope.title = function (collection) {
         var str = collection[0].collection;

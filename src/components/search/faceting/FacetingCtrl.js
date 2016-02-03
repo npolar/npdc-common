@@ -4,8 +4,8 @@ let FilterCollection = require('./FilterCollection');
 let QueryBuilder = require('./QueryBuilder');
 let urlFilterParser = require('./urlFilterParser');
 
-// @ngInject
 let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
+  'ngInject';
 
   let queryBuilder = new QueryBuilder();
   const UI_TYPES = ['autocomplete', 'checkbox', 'range', 'hidden'];

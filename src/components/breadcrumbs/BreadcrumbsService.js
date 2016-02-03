@@ -2,9 +2,9 @@
 
 /**
  * Angular breadcrumbs service
- * @ngInject
  */
 var NpdcBreadcrumbs = function($location, $rootScope, $window) {
+  'ngInject';
 
   var self = this;
 

@@ -1,7 +1,8 @@
 'use strict';
 
-// @ngInject
 var BreadcrumbsController = function ($scope, NpdcBreadcrumbs) {
+  'ngInject';
+
   $scope.breadcrumbs = NpdcBreadcrumbs;
 };
 

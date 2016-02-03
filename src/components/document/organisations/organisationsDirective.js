@@ -1,8 +1,9 @@
 'use strict';
 // Organisations directive
 
-// @ngInject
 var organisationsDirective = function() {
+  'ngInject';
+  
   return {
     template: require('./organisations.html')
   };

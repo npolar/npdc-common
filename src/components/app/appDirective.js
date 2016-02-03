@@ -1,8 +1,8 @@
 "use strict";
 
-// @ngInject
-
 let appWrapper = function() {
+  'ngInject';
+
   return {
     restrict: 'E',
     template: require('./app.html'),

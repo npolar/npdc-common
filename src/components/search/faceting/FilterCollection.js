@@ -1,6 +1,7 @@
 'use strict';
 
 let FilterCollection = function($scope, callback) {
+
   $scope.filterArray = $scope.filterArray || [];
   let calcCount = false;
 

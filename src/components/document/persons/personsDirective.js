@@ -1,8 +1,9 @@
 'use strict';
 // Person directive
 
-// @ngInject
 var personsDirective = function() {
+  'ngInject';
+  
   return {
     template: require('./personstemplate.html'),
   };

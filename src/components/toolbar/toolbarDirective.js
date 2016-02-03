@@ -1,7 +1,8 @@
 "use strict";
 
-// @ngInject
 let toolbar = function($mdSidenav, NpolarApiSecurity, NpolarTranslate) {
+  'ngInject';
+
   const APP_TITLE_CODE = 'npdc.app.Title';
   const SITE_TITLE_CODE = 'NPDC';
 
@@ -14,7 +15,6 @@ let toolbar = function($mdSidenav, NpolarApiSecurity, NpolarTranslate) {
     link: function(scope) {
       scope.security = NpolarApiSecurity;
     },
-    //@ngInject
     controller: function($scope, npdcAppConfig) {
       $scope.options = $scope.options || npdcAppConfig;
 

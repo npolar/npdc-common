@@ -1,7 +1,8 @@
 'use strict';
 
-// @ngInject
 let npdcAppConfigFactory = function (NpdcAutocompleteConfigFactory, NpdcSearchConfigFactory) {
+  'ngInject';
+
   return {
     toolbarTitle: "",
     toolbarMenuGroups: [{

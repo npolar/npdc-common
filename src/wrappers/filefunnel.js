@@ -5,7 +5,6 @@ let angular = require('angular');
 
 let ff = angular.module('filefunnel', ['ngMaterial']);
 
-// @ngInject
 ff.controller('FFUploadController', function($scope, $mdDialog, options) {
   let ff = new FileFunnel(null, options);
   $scope.ff = ff;
@@ -77,7 +76,6 @@ ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig) {
 ff.directive('filefunnel', function(fileFunnelService) {
   return {
     restrict: 'A',
-    //@ngInject
     controller($scope, $mdDialog) {
       let options = fileFunnelService.getOptions($scope.field);
 

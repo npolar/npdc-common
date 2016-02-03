@@ -1,7 +1,8 @@
 'use strict';
 
-//@ngInject
 module.exports = function($timeout, $rootScope, $parse) {
+  'ngInject';
+
   return {
     restrict: 'A',
     compile: function($element, attr) {

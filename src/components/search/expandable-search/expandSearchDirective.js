@@ -1,7 +1,7 @@
 "use strict";
 
-// @ngInject
 let expandSearch = function() {
+  'ngInject';
 
   return {
     restrict: 'E',
@@ -9,7 +9,6 @@ let expandSearch = function() {
       options: '='
     },
     template: require('./expandSearch.html'),
-    // @ngInject
     controller: function($scope, $element, $mdMedia, $timeout, $location, NpdcSearchService, npdcAppConfig) {
 
       $scope.$mdMedia = $mdMedia;

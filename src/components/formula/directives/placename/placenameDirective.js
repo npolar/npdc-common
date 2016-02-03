@@ -1,9 +1,7 @@
 'use strict';
 
-/**
- * @ngInject
- */
 let placename = function($q, $resource, npolarCountryService) {
+  'ngInject';
 
   let Placename = $resource('http://placenames.npolar.no/stadnamn.json', {callback: "JSON_CALLBACK"}, { array: { method: 'JSONP', isArray: true }});
   let query = { 'rows': 20, 'approved': true };
@@ -47,7 +45,6 @@ let placename = function($q, $resource, npolarCountryService) {
 
   return {
     template: require('./placename.html'),
-    //@ngInject
     controller($scope) {
       $scope.area = $scope.field.fields.find(field => field.id === 'area');
       $scope.placename = $scope.field.fields.find(field => field.id === 'placename');

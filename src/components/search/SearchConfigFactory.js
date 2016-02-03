@@ -1,7 +1,8 @@
 'use strict';
 
-// @ngInject
 let SearchConfigFactory = function($location) {
+  'ngInject';
+
   let results = {
     avatar: undefined,
     title: undefined,

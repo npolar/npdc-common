@@ -1,8 +1,9 @@
 'use strict';
 // Top: citation directive
 
-// @ngInject
 var citationDirective = function() {
+  'ngInject';
+  
   return {
     scope: {
       citation: '='

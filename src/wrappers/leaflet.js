@@ -2,14 +2,14 @@
 
 let L = require('leaflet');
 
-//@ngInject
 let mapDirective = function () {
+	'ngInject';
+
 	return {
 		scope: {
 			options: '='
 		},
 		template: '<div id="leaflet-map"></div>',
-		//@ngInject
 		controller: function ($scope) {
 			let map = L.map('leaflet-map', {maxZoom: 10, minZoom: 2, maxBounds: [[-90,180],[90,-180]]});
 			let osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';

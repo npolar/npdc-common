@@ -1,7 +1,8 @@
 'use strict';
 
-// @ngInject
 let SearchService = function ($location, $window, npdcAppConfig, formulaAutoCompleteService) {
+  'ngInject';
+
   return {
     search (query) {
       console.log('Search', query);

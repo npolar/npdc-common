@@ -8,5 +8,5 @@
   <md-tabs md-dynamic-height md-border-bottom>
       <formula:fieldsets></formula:fieldsets>
   </md-tabs>
-  <span ng-if="form.errors" title="{{ form.errors.join('\n') }}">{{ form.i18n.text.invalid | formulaReplace : { count: form.errors.length } }}</span>
+  <span ng-if="form.errors" title="{{ form.errors.join('\n') }}">{{ i18n.text.invalid | formulaReplace : { count: form.errors.length } }}</span>
 </form>

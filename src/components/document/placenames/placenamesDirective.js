@@ -1,8 +1,9 @@
 'use strict';
 // placenames directive
 
-// @ngInject
 var placenamesDirective = function() {
+  'ngInject';
+  
   return {
     template: require('./placenames.html')
   };

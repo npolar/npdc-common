@@ -1,9 +1,7 @@
 'use strict';
 
-/**
- * @ngInject
- */
 let csvService = function() {
+  'ngInject';
 
   const DEFAULT_DELIMITER = ",";
   const NEWLINE = "\r\n";

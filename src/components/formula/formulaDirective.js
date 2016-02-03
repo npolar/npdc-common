@@ -1,13 +1,11 @@
 'use strict';
 
-/**
- * @ngInject
- */
 var formula = function ($mdDialog, npdcAppConfig) {
+  'ngInject';
+
   return {
     templateUrl: 'npdc-common/src/components/formula/edit.html',
     scope: false,
-    //@ngInject
     controller($scope) {
 
       let initBottomSheet = function () {

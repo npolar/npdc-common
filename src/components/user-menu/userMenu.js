@@ -1,7 +1,8 @@
 "use strict";
 
-// @ngInject
 let npdcUserMenu = function(NpolarApiSecurity, NpolarLang) {
+  'ngInject';
+
   return {
     scope: {},
     restrict: 'AE',

@@ -1,7 +1,8 @@
 "use strict";
 
-// @ngInject
 let footer = function () {
+  'ngInject';
+
     return {
       template: require('./footer.html'),
       link(scope, element) {

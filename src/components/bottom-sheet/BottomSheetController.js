@@ -1,13 +1,13 @@
 "use strict";
 
-// @ngInject
 let BottomSheetController = function($scope, $mdBottomSheet) {
+  "ngInject";
+
   $scope.showBottomSheet = function($event) {
     $mdBottomSheet.show({
       templateUrl: 'bottom-sheet-template.tmpl',
       scope: $scope,
       preserveScope: true,
-      // @ngInject
       controller: function ($scope, $timeout) {
         let init = function () {
           let wrapper = document.querySelector('.np-content');

@@ -1,14 +1,14 @@
 'use strict';
 
-// @ngInject
 var searchInputDirective = function () {
+  'ngInject';
+
   return {
     scope: {
       options: '=?',
       feed: '='
     },
     template: require('./searchInput.html'),
-    // @ngInject
     controller: function ($scope, $location, NpdcSearchService, npdcAppConfig) {
       $scope.options = $scope.options || {};
       Object.assign($scope.options, npdcAppConfig.search.local,

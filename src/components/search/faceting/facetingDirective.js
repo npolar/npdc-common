@@ -1,7 +1,8 @@
 "use strict";
 
-// @ngInject
 let sidenav = function () {
+  'ngInject';
+
     return {
         restrict: 'E',
         template: require('./faceting.html'),
