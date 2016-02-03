@@ -1,9 +1,7 @@
 'use strict';
 
-/**
- * @ngInject
- */
 let gcmd = function(npdcGcmdService) {
+  'ngInject';
 
   const FIELDS = ['Category', 'Topic', 'Term', 'Variable_Level_1', 'Variable_Level_2', 'Variable_Level_3', 'Detailed_Variable'];
 

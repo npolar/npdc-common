@@ -1,9 +1,7 @@
 'use strict';
 
-/**
- * @ngInject
- */
 var gcmdService = function ($q, NpolarApiResource) {
+  'ngInject';
 
   let GCMD = NpolarApiResource.resource({ path: '/gcmd/concept', resource: 'GCMD' });
   let query = {
