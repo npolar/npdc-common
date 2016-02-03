@@ -26,7 +26,7 @@
 
 
     <ul ng-if="::field.typeOf('fieldset')">
-      <li ng-repeat="value in field.values track by value.path">
+      <li ng-repeat="value in field.values track by value.path" ng-if="!value.hidden">
         <md-whiteframe class="md-whiteframe-z2">
           <fieldset ng-class="{ valid: value.valid }">
             <legend>
