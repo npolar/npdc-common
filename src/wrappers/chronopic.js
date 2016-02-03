@@ -1,8 +1,8 @@
 "use strict";
 
-let Chronopic = require('chronopic/src/chronopic.js');
+let Chronopic = require('chronopic.js/src/chronopic.js');
 let angular = require('angular');
-require('chronopic/dist/js/chronopic-i18n.min.js');
+require('chronopic.js/dist/js/chronopic-i18n.min.js');
 
 let cp = angular.module('chronopic', []);
 
