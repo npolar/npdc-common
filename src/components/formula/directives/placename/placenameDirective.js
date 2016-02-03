@@ -46,6 +46,8 @@ let placename = function($q, $resource, npolarCountryService) {
   return {
     template: require('./placename.html'),
     controller($scope) {
+      'ngInject';
+
       $scope.area = $scope.field.fields.find(field => field.id === 'area');
       $scope.placename = $scope.field.fields.find(field => field.id === 'placename');
       $scope.country = $scope.field.fields.find(field => field.id === 'country');

@@ -4,9 +4,9 @@ var formula = function ($mdDialog, npdcAppConfig) {
   'ngInject';
 
   return {
-    templateUrl: 'npdc-common/src/components/formula/edit.html',
-    scope: false,
-    controller($scope) {
+    template: require('./edit.html'),
+    controller: function ($scope) {
+      'ngInject';
 
       let initBottomSheet = function () {
         $scope.bottomSheetOptions = {

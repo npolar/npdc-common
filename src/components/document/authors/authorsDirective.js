@@ -9,6 +9,8 @@ var authorsDirective = function() {
     },
     template: require('./authorstemplate.html'),
     controller: function($scope) {
+      'ngInject';
+      
       $scope.fullnames = function (authors) {
         return authors.reduce((m, a, i) => {
           return m +

@@ -40,6 +40,8 @@ let tabdata = function(npdcCSVService) {
   return {
     template: require('./tabdata.html'),
     controller($scope) {
+      'ngInject';
+
       let headers = Object.keys($scope.field.schema.items.properties);
       let delimiter = '\t';
 

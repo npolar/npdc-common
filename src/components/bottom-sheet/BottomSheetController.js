@@ -9,6 +9,8 @@ let BottomSheetController = function($scope, $mdBottomSheet) {
       scope: $scope,
       preserveScope: true,
       controller: function ($scope, $timeout) {
+        'ngInject';
+
         let init = function () {
           let wrapper = document.querySelector('.np-content');
           if (wrapper) {

@@ -16,6 +16,8 @@ let toolbar = function($mdSidenav, NpolarApiSecurity, NpolarTranslate) {
       scope.security = NpolarApiSecurity;
     },
     controller: function($scope, npdcAppConfig) {
+      'ngInject';
+      
       $scope.options = $scope.options || npdcAppConfig;
 
       $scope.appTitle = function() {

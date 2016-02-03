@@ -10,6 +10,8 @@ var searchInputDirective = function () {
     },
     template: require('./searchInput.html'),
     controller: function ($scope, $location, NpdcSearchService, npdcAppConfig) {
+      'ngInject';
+      
       $scope.options = $scope.options || {};
       Object.assign($scope.options, npdcAppConfig.search.local,
         $scope.options, $scope.feed ? {facets: $scope.feed.facets} : {});

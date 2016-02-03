@@ -5,8 +5,9 @@ let autocompleteDirective = function ($http, formulaAutoCompleteService) {
 
   return {
     template: require('./autocomplete.html'),
-    scope: false,
-    controller($scope) {
+    controller: function ($scope) {
+      'ngInject';
+
       let field = $scope.field;
       let config = formulaAutoCompleteService.getOptions(field);
 

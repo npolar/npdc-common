@@ -11,6 +11,8 @@ var dataDirective = function() {
     },
     template: require('./datatemplate.html'),
     controller: function ($scope) {
+      'ngInject';
+      
       $scope.licenceText = function (licence) {
         if (/\/by\//.test(licence)) {
           return 'CC BY';

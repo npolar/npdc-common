@@ -6,6 +6,8 @@ let gcmd = function(npdcGcmdService) {
   return {
     template: '<formula:field field="array"></formula:field>',
     controller($scope) {
+      'ngInject';
+
       $scope.array = $scope.field.fields.find(field => field.id === 'sciencekeywords');
     },
     link(scope, iElement, iAttrs) {

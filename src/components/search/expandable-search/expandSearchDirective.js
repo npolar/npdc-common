@@ -10,6 +10,7 @@ let expandSearch = function() {
     },
     template: require('./expandSearch.html'),
     controller: function($scope, $element, $mdMedia, $timeout, $location, NpdcSearchService, npdcAppConfig) {
+      'ngInject';
 
       $scope.$mdMedia = $mdMedia;
       $scope.isOpen = false;
