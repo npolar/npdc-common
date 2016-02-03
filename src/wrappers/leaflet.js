@@ -1,8 +1,10 @@
 'use strict';
 
+let angular = require('angular');
 let L = require('leaflet');
+require('leaflet-draw');
 
-let mapDirective = function () {
+angular.module('leaflet', []).directive('leaflet', function () {
 	'ngInject';
 
 	return {
@@ -12,15 +14,42 @@ let mapDirective = function () {
 		template: '<div id="leaflet-map"></div>',
 		controller: function ($scope) {
 			'ngInject';
-			
-			let map = L.map('leaflet-map', {maxZoom: 10, minZoom: 2, maxBounds: [[-90,180],[90,-180]]});
+
+			$scope.options = Object.assign({}, $scope.options);
+
+			let mapOptions = Object.assign({
+				maxZoom: 10,
+				minZoom: 2,
+				maxBounds: [[-90,180],[90,-180]]
+			});
 			let osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 			let osmAttrib = 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
 			let osm = L.tileLayer(osmUrl, {attribution: osmAttrib});
-			let covs;
-			$scope.options = Object.assign({}, $scope.options);
-			covs = $scope.options.coverage;
+			let covs = $scope.options.coverage;
+			let map = L.map('leaflet-map', mapOptions).setView([69.68, 18.94], 3);
 
+			if ($scope.options.draw) {
+				// Initialise the FeatureGroup to store editable layers
+				var drawnItems = new L.FeatureGroup();
+				map.addLayer(drawnItems);
+
+				// Initialise the draw control and pass it the FeatureGroup of editable layers
+				var drawControl = new L.Control.Draw({
+						draw: Object.assign({
+							polyline: false,
+							polygon: false,
+							rectangle: false,
+							circle: false,
+							marker: false
+						}, $scope.options.draw)
+				});
+				map.addControl(drawControl);
+
+				map.on('draw:created', e => {
+					map.addLayer(e.layer);
+					$scope.emit('mapSelect', e.layer);
+				});
+			}
 
 			if (covs) {
 				let x_max, x_min, y_min, y_max;
@@ -41,6 +70,4 @@ let mapDirective = function () {
 			map.addLayer(osm);
 		}
 	};
-};
-
-module.exports = mapDirective;
+});

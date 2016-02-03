@@ -13,7 +13,7 @@ angular
       form: "./demo/form.json",
       templates: npdcAppConfig.formula.templates.concat([
           {
-            match: "people_object",
+            match: "people_item",
             template: '<npdc:formula-person></npdc:formula-person>'
           },
           {
@@ -21,11 +21,11 @@ angular
             template: '<npdc:formula-gcmd></npdc:formula-gcmd>'
           },
           {
-            match: "sciencekeywords_object",
+            match: "sciencekeywords_item",
             template: '<npdc:formula-gcmd-keyword></npdc:formula-gcmd-keyword>'
           },
           {
-            match: "placenames_object",
+            match: "placenames_item",
             template: '<npdc:formula-placename></npdc:formula-placename>'
           },
           {

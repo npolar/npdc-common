@@ -71,13 +71,13 @@
   }
 
   .formulaArray {
-    ul {
+    .np-formula-list {
       list-style-type: none;
       margin: 0;
       padding: 0;
       position: relative;
 
-      li {
+      np-formula-list-item {
         position: relative;
       }
 

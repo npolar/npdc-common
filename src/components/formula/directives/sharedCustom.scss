@@ -25,3 +25,12 @@
     line-height: 2;
   }
 }
+
+.leaflet-container {
+  .leaflet-draw-actions {
+
+    a {
+      color: $color-text-light;
+    }
+  }
+}

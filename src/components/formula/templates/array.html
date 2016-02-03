@@ -6,8 +6,8 @@
       <div npdc:formula-field-info class="np-field-info" ng-if="::field.description"></div>
     </legend>
 
-    <ul ng-if="::field.typeOf('field')">
-      <li ng-repeat="value in field.values track by value.path" ng-class="{ valid: field.valid, error: field.error }">
+    <ul ng-if="::field.typeOf('field')" class="np-formula-list">
+      <li ng-repeat="value in field.values track by value.path" ng-class="{ valid: field.valid, error: field.error }" class="np-formula-list-item">
         <formula:field field="value" class="multi-ctrls"></formula:field>
         <md-menu class="np-formula-input-ctrls remove">
           <md-button aria-label="Remove" class="md-icon-button remove" ng-click="$mdOpenMenu($event)">
@@ -25,8 +25,8 @@
     </ul>
 
 
-    <ul ng-if="::field.typeOf('fieldset')">
-      <li ng-repeat="value in field.values track by value.path" ng-if="!value.hidden">
+    <ul ng-if="::field.typeOf('fieldset')" class="np-formula-list">
+      <li ng-repeat="value in field.values track by value.path" ng-if="!value.hidden" class="np-formula-list-item">
         <md-whiteframe class="md-whiteframe-z2">
           <fieldset ng-class="{ valid: value.valid }">
             <legend>

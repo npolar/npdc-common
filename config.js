@@ -14,9 +14,10 @@ var config = function(baseConfig) {
         'node_modules/angularjs-slider/dist/rzslider.min.css',
         baseConfig.src.root + '/material-icons.css',
         'node_modules/chronopic.js/dist/css/chronopic-ext-md.min.css',
-        'node_modules/chronopic.js/dist/css/chronopic.min.css'
+        'node_modules/chronopic.js/dist/css/chronopic.min.css',
+        'node_modules/leaflet-draw/dist/leaflet.draw.css'
       ].concat(baseConfig.deps.css),
-      sharedAssets: ['node_modules/material-design-icons/iconfont/*']
+      sharedAssets: ['node_modules/material-design-icons/iconfont/*', 'node_modules/leaflet-draw/dist/*/*']
     },
     dist: {
       approot: baseConfig.dist.root + '/demo',
