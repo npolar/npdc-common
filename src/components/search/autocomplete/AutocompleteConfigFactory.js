@@ -22,7 +22,7 @@ let AutocompleteConfigFactory = function() {
   };
 
   let query = {
-    limit: 10,
+    limit: 30,
     score: true,
     fields: 'id,_score,schema,collection,titles,names,title,name,code,platform,publication_type,journal.name,published_sort'
   };

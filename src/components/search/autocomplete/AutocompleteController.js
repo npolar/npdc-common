@@ -1,9 +1,7 @@
 'use strict';
 
-let Entities = require('special-entities');
-
-var AutocompleteController = function($filter, $location, $window, $q, $scope,
-  NpolarApiResource, NpdcSearchService) {
+var AutocompleteController = function($location, $window, $q, $scope,
+  NpolarApiResource, NpdcSearchService, npolarDocumentUtil) {
     'ngInject';
 
   $scope.options.q = $scope.options.q || ($location.search().q || "");
@@ -12,10 +10,6 @@ var AutocompleteController = function($filter, $location, $window, $q, $scope,
     let baseParts = (baseElem.href || '/').split('/');
     return '/' + (baseParts.pop() || baseParts.pop());
   })();
-
-  let unescape = function (text) {
-    return Entities.normalizeEntities(text, 'utf-8');
-  };
 
   let getPath = function (entry) {
     let path;
@@ -40,15 +34,12 @@ var AutocompleteController = function($filter, $location, $window, $q, $scope,
     }
   };
 
-  $scope.title = function (entry) {
-    let t = entry.title || entry.name || entry.code || $filter('lang')(entry.titles, 'title') || entry.id;
-    t = t.split('_').join('');
-    return unescape(t);
-  };
+  $scope.title = npolarDocumentUtil.title;
 
   // Search all collections for text q
   $scope.querySearch = function(q) {
     // Merge in default query, respect url ?
+    q = (q || '').toLocaleLowerCase();
     let query = Object.assign({},
       $scope.options.respectUrl ? $location.search() : {},
       $scope.options.query, {q});
@@ -59,7 +50,35 @@ var AutocompleteController = function($filter, $location, $window, $q, $scope,
       }
     });
     return $q.all(searchCollections.map(resource => resource.array(query).$promise))
-      .then(results => results.reduce((a, b) => a.concat(b)).sort((a, b) => a._score < b._score));
+      .then(results => results.reduce((a, b) => a.concat(b)).sort((a, b) => {
+        let aIndex = $scope.title(a).toLocaleLowerCase().indexOf(q);
+        let bIndex = $scope.title(b).toLocaleLowerCase().indexOf(q);
+
+        // sort on best title match q
+        let sort = 0;
+        if (aIndex === bIndex === -1) {
+          // sort on score
+          if (a._score < b._score) {
+            sort = -1;
+          } else if (a._score > b._score) {
+            sort = 1;
+          }
+        } else {
+          if (aIndex !== -1 && bIndex !== -1) {
+            // sort on title
+            if (aIndex < bIndex) {
+              sort = -1;
+            } else if (aIndex > bIndex) {
+              sort = 1;
+            }
+          } else {
+            // one of a and b is -1
+            sort = bIndex === -1 ? -1 : 1;
+          }
+        }
+
+        return sort;
+      }));
   };
 
   $scope.selectedItemChange = function(entry) {

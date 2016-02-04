@@ -1,6 +1,7 @@
 'use strict';
 
-var SearchResultsController = function($scope, $location, $http, NpolarApiSecurity, npdcAppConfig) {
+var SearchResultsController = function($scope, $filter, $location, $http, NpolarApiSecurity,
+  npdcAppConfig, npolarDocumentUtil) {
   'ngInject';
 
   let options = ($scope.options || npdcAppConfig.search.local).results;
@@ -43,10 +44,8 @@ var SearchResultsController = function($scope, $location, $http, NpolarApiSecuri
       title = options.title.call({}, entry);
     } else if (options.title) {
       title = valueFromPath(entry, options.title);
-    } else if (entry.titles) {
-      title = entry.titles[0].title;
     } else {
-      title = entry.title || entry.name || entry.code || entry.id;
+      title = npolarDocumentUtil.title(entry);
     }
     return title;
   };

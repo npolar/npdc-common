@@ -27,7 +27,21 @@ let autocompleteSourceService = function(formulaFieldConfig) {
       relevant.forEach(item => {
         let nodes = item.facet.split('.');
         let id = nodes.pop();
-        let source = () => item.terms.map(t => t.term);
+        let source = function (q) {
+          q = (q || '').toLocaleLowerCase();
+          return item.terms.map(t => t.term)
+            .filter(item => item.toLocaleLowerCase().indexOf(q) !== -1)
+            .sort((a, b) => {
+              let aIndex = a.toLocaleLowerCase().indexOf(q);
+              let bIndex = b.toLocaleLowerCase().indexOf(q);
+              if (aIndex < bIndex) {
+                return -1;
+              } else if (aIndex > bIndex) {
+                return 1;
+              }
+              return 0;
+            });
+        };
         let match = function(field) {
           let fieldNodes = field.path.replace(/(#\/|\/\d)/g, '').split('/');
           fieldNodes.pop();

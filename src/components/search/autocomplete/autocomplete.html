@@ -11,8 +11,7 @@
       md-floating-label="{{options.placeholder}}">
 
       <md-item-template>
-        <span md-highlight-flags="^i" md-highlight-text="options.q" ng-if="item">[{{item.collection}}]
-          {{ item.name || item.title || item.code || item.titles[0].title || item.id }}</span>
+        [{{item.collection}}]<span md-highlight-flags="^i" md-highlight-text="options.q">{{ title(item) }}</span>
       </md-item-template>
 
     </md-autocomplete>

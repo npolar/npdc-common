@@ -31,8 +31,7 @@
     "formula": "github:npolar/formula#v4.1.1",
     "leaflet": "^0.7.7",
     "leaflet-draw": "^0.2.3",
-    "material-design-icons": "^2.0.0",
-    "special-entities": "^1.0.2"
+    "material-design-icons": "^2.0.0"
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.3.13",
