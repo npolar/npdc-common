@@ -11,12 +11,9 @@ angular.module('leaflet', []).directive('leaflet', function () {
 		scope: {
 			options: '='
 		},
-		template: '<div id="leaflet-map"></div>',
-		controller: function ($scope) {
-			'ngInject';
-
-			$scope.options = Object.assign({}, $scope.options);
-
+		template: '<div class="leaflet-map"></div>',
+		link: function (scope, iElement) {
+			scope.options = Object.assign({}, scope.options);
 			let mapOptions = Object.assign({
 				maxZoom: 10,
 				minZoom: 2,
@@ -25,44 +22,84 @@ angular.module('leaflet', []).directive('leaflet', function () {
 			let osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 			let osmAttrib = 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
 			let osm = L.tileLayer(osmUrl, {attribution: osmAttrib});
-			let covs = $scope.options.coverage;
-			let map = L.map('leaflet-map', mapOptions).setView([69.68, 18.94], 3);
+			let coverage = scope.options.coverage;
+			let map = L.map(iElement.find('div')[0], mapOptions).setView([69.68, 18.94], 3);
+			let drawnItems;
 
-			if ($scope.options.draw) {
+			let addLayer = function (layer) {
+				if (drawnItems) {
+					if (drawnItems.getLayers().length > 0) {
+						drawnItems.clearLayers();
+					}
+					layer.on('click', clickEvent => {
+						console.log(clickEvent.target.editing);
+						clickEvent.target.editing._fireEdit();
+					});
+					layer.addTo(drawnItems);
+				} else {
+					layer.addTo(map);
+				}
+			};
+
+			if (scope.options.draw) {
 				// Initialise the FeatureGroup to store editable layers
-				var drawnItems = new L.FeatureGroup();
-				map.addLayer(drawnItems);
+				drawnItems = new L.FeatureGroup();
+
+				let editOptions = false;
+				if (scope.options.edit) {
+					editOptions = Object.assign({
+						featureGroup: drawnItems
+					}, {
+						edit: scope.options.edit
+					}, {
+						remove: scope.options.remove
+					});
+				}
 
 				// Initialise the draw control and pass it the FeatureGroup of editable layers
-				var drawControl = new L.Control.Draw({
+				let drawControl = new L.Control.Draw({
+						edit: editOptions,
 						draw: Object.assign({
 							polyline: false,
 							polygon: false,
 							rectangle: false,
 							circle: false,
 							marker: false
-						}, $scope.options.draw)
+						}, scope.options.draw)
 				});
 				map.addControl(drawControl);
+				map.addLayer(drawnItems);
 
 				map.on('draw:created', e => {
-					map.addLayer(e.layer);
-					$scope.emit('mapSelect', e.layer);
+					addLayer(e.layer);
+					scope.$emit('mapSelect', e.layer);
+				});
+
+				map.on('draw:edited', e => {
+					e.layers.eachLayer(layer => {
+						scope.$emit('mapSelect', layer);
+					});
 				});
 			}
 
-			if (covs) {
+			if (coverage) {
+				// cov = [[south, west], [north, east]]
 				let x_max, x_min, y_min, y_max;
-				x_max = x_min = covs[0].west;
-				y_max = y_min = covs[0].north;
+				x_max = x_min = coverage[0][1][1]; // east
+				y_max = y_min = coverage[0][1][0]; // north
 
-				covs.forEach(cov => {
-					x_max = Math.max(x_max, cov.east);
-					y_max = Math.max(y_max, cov.north);
-					x_min = Math.min(x_min, cov.west);
-					y_min = Math.min(y_min, cov.south);
-					let poly = [[cov.north, cov.west], [cov.south, cov.east]];
-					L.rectangle(poly).addTo(map);
+				coverage.forEach(cov => {
+					let south = cov[0][0];
+					let west = cov[0][1];
+					let north = cov[1][0];
+					let east = cov[1][1];
+					x_max = Math.max(x_max, east);
+					y_max = Math.max(y_max, north);
+					x_min = Math.min(x_min, south);
+					y_min = Math.min(y_min, west);
+					let poly = [[south, west], [north, east]];
+					let layer = L.rectangle(poly);
+					addLayer(layer);
 				});
 				map.fitBounds([[y_min, x_min],[y_max, x_max]], {padding: [20, 20]});
 			}

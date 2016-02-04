@@ -3,16 +3,30 @@
 @import 'layouts/**/*';
 @import 'components/**/*';
 
-a,
-a:visited,
-md-menu-item a.md-button,
-md-menu-item a.md-button:visited {
+a {
   color: $color-primary-0;
+
+  &:visited {
+    color: $color-primary-0;
+  }
+
+  &:hover,
+  &:active {
+    color: $color-primary-1;
+  }
+
+  &:focus {
+    outline: none;
+  }
 }
 
-a:hover,
-a:active {
-  color: $color-primary-1;
+md-menu-item {
+  a {
+    &.md-button,
+    &.md-button:visited {
+      color: $color-primary-0;
+    }
+  }
 }
 
 a:focus,
@@ -43,10 +57,10 @@ dl {
     font-weight: bold;
     text-align: right;
     width: 100px;
-  }
 
-  dt:after {
-    content: ':';
+    &:after {
+      content: ':';
+    }
   }
 
   dd {
@@ -54,7 +68,6 @@ dl {
     padding: 0 0 .5em;
   }
 }
-
 
 // need to raise z-index to allow leaflet an others to use bigger range
 .md-open-menu-container {
@@ -65,12 +78,10 @@ dl {
   z-index: 1050 !important;
 }
 
-#leaflet-map {
+.leaflet-map {
   min-height: 100px;
-}
 
-@media(max-width: 900px) {
-  #leaflet-map {
+  @media(max-width: 900px) {
     margin: 0 auto;
     max-width: 80%;
   }

@@ -1,10 +1,10 @@
 .formula {
-
   a {
     display: inline-block;
     height: 1em;
     text-decoration: none;
   }
+
 
   legend {
     display: block;
@@ -13,12 +13,14 @@
     position: relative;
     width: 100%;
 
+
     .np-field-info {
       position: absolute;
       right: 0;
       top: 0;
     }
   }
+
 
   fieldset {
     border: 0;
@@ -29,13 +31,21 @@
   }
 
   // Firefox needs this...
-  input[type="number"] {
-    width: 100%;
+  input {
+    [type='number'] {
+      width: 100%;
+    }
   }
 
-  body:not(:-moz-handler-blocked) fieldset {
-    display: table-cell;
+
+  body {
+    :not(:-moz-handler-blocked) {
+      fieldset {
+        display: table-cell;
+      }
+    }
   }
+
 
   md-tabs {
     height: 100%;
@@ -46,10 +56,12 @@
     max-width: none !important;
   }
 
+
   md-slider {
     padding-left: 15px;
     padding-right: 15px;
   }
+
 
   md-whiteframe {
     display: block;
@@ -57,18 +69,26 @@
     padding: 1em;
   }
 
+
   md-input-container {
     width: 100%;
   }
 
-  md-autocomplete[md-floating-label] md-input-container {
-    padding: 2px;
+
+  md-autocomplete {
+    [md-floating-label] {
+      md-input-container {
+        padding: 2px;
+      }
+    }
   }
+
 
   .md-errors-spacer {
     // we don't use material errors
     display: none;
   }
+
 
   .formulaArray {
     .np-formula-list {
@@ -77,48 +97,68 @@
       padding: 0;
       position: relative;
 
-      np-formula-list-item {
+
+      .np-formula-list-item {
         position: relative;
       }
 
-      legend span {
-        display: inline-block;
-        max-width: 80%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+      legend {
+        span {
+          display: inline-block;
+          max-width: 80%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+
+
+  .formulaObject {
+    .leaflet-map {
+      margin-top: 20px;
+    }
+
+    // Hide object array frames
+    &:not(.formulaCustomObject) {
+      .formulaArray > md-whiteframe {
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+
+
+        > legend > .np-field-info {
+          right: 65px;
+          top: -15px;
+        }
       }
     }
   }
 
   // Hide array objects frames and titles
-  .np-formula-array-fieldset .formulaObject > md-whiteframe {
-    box-shadow: none;
-    margin: 0;
-    padding: 0;
+  .np-formula-array-fieldset {
+    .formulaObject > md-whiteframe {
+      box-shadow: none;
+      margin: 0;
+      padding: 0;
 
-    > legend {
-      display: none;
+
+      > legend {
+        display: none;
+      }
     }
   }
 
-  // Hide object array frames
-  .formulaObject:not(.formulaCustomObject) .formulaArray > md-whiteframe {
-    box-shadow: none;
-    margin: 0;
-    padding: 0;
 
-    > legend > .np-field-info {
-      right: 65px;
-      top: -15px;
-    }
-  }
+
 
   .np-formula-object-ctrls {
     position: absolute;
     right: -26px;
     top: -17px;
     z-index: 15;
+
 
     .np-field-info {
       display: inline-block;
@@ -127,6 +167,7 @@
     }
   }
 
+
   .np-formula-input-ctrls {
     position: absolute;
     right: -14px;
@@ -134,20 +175,24 @@
     z-index: 15;
   }
 
+
   .np-validation-message {
     @include order(99);
     clear: left;
     padding-top: 8px;
     position: relative;
 
+
     .md-caption {
       color: $color-secondary-2;
     }
   }
 
+
   .np-formula-array-add {
     float: right;
   }
+
 
   .np-field-info {
     cursor: help;
@@ -156,6 +201,7 @@
     top: 20px;
     width: 24px;
     z-index: 15;
+
 
     md-icon {
       color: rgba(0, 0, 0, .26);
@@ -166,6 +212,7 @@
   .np-formula-boolean {
     position: relative;
 
+
     label {
       color: rgba(0, 0, 0, .54);
 
@@ -174,13 +221,16 @@
       }
     }
 
+
     md-checkbox {
       margin-top: 20px;
     }
   }
 
+
   .multi-ctrls {
     position: relative;
+
 
     .np-formula-field {
       width: calc(100% - 30px);
@@ -188,12 +238,18 @@
   }
 }
 
+
 .np-formula-field {
   position: relative;
 }
 
-md-select-menu md-option[selected] {
-  color: rgb(3, 155, 229) !important;
+
+md-select-menu {
+  md-option {
+    [selected] {
+      color: rgb(3, 155, 229) !important;
+    }
+  }
 }
 
 
@@ -203,22 +259,28 @@ md-select-menu md-option[selected] {
   max-width: 600px;
   width: 90vw;
 
+
   h2 {
     margin-top: 0;
   }
+
 
   fieldset {
     border: 0;
   }
 
+
   legend {
     display: none;
   }
 
-  input[type="button"],
-  input[type="reset"],
-  input[type="submit"] {
-    margin: 5px;
+
+  input {
+    [type='button'],
+    [type='reset'],
+    [type='submit'] {
+      margin: 5px;
+    }
   }
 
   .info {
