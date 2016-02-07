@@ -54,6 +54,10 @@
   // Fix narrow tab issue
   md-tab-item {
     max-width: none !important;
+
+    .error {
+      color: $color-np-error;
+    }
   }
 
 
