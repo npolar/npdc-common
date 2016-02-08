@@ -39,7 +39,7 @@ angular
         ]),
         languages: [{
           map: require('formula/i18n/no.json'),
-          code: 'no_NB',
+          code: 'nb_NO',
           aliases: ['no', 'nb']
         }]
     });
