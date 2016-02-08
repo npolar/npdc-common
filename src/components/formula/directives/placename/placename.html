@@ -21,7 +21,7 @@
 <div layout="row">
   <div flex="50" flex-sm="100">
     <md-input-container>
-      <label for="{{::area.uid}}">{{ (area.required ? area.title + ' (required)' : area.title) }}</label>
+      <label for="{{::area.uid}}">{{ (area.required ? area.title + ' (' + i18n.text.required + ')' : area.title) }}</label>
 
       <md-select ng-model="area.value">
         <md-option ng-repeat="val in area.values" value="{{::val.id}}">{{val.label}}</md-option>
