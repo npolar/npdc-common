@@ -10,4 +10,9 @@ common.directive('npdcFormula', require('./formulaDirective'));
 
 common.run(function($templateCache, npdcAppConfig) {
   npdcAppConfig.formula.templates = templates.materialTemplates;
+  npdcAppConfig.formula.languages = [{
+    map: require('formula/i18n/no.json'),
+    code: 'nb_NO',
+    aliases: ['no', 'nb']
+  }];
 });

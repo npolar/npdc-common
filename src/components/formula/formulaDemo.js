@@ -37,11 +37,7 @@ angular
             template: '<npdc:formula-file-object></npdc:formula-file-object>'
           }
         ]),
-        languages: [{
-          map: require('formula/i18n/no.json'),
-          code: 'nb_NO',
-          aliases: ['no', 'nb']
-        }]
+        languages: npdcAppConfig.formula.languages
     });
 
     let updateModel = function() {
