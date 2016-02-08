@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <md-input-container>
-  <label for="{{::field.uid}}">{{ (field.required ? field.title + ' (required)' : field.title) }}</label>
+  <label for="{{::field.uid}}">{{ (field.required ? field.title + ' (' + i18n.text.required + ')' : field.title) }}</label>
 
   <!-- single-select -->
   <md-select ng-model="field.value" ng-if="::!field.multiple">

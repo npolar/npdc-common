@@ -36,7 +36,12 @@ angular
             match: "file_ref",
             template: '<npdc:formula-file-object></npdc:formula-file-object>'
           }
-        ])
+        ]),
+        languages: [{
+          map: require('formula/i18n/no.json'),
+          code: 'no_NB',
+          aliases: ['no', 'nb']
+        }]
     });
 
     let updateModel = function() {
