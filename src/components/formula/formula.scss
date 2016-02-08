@@ -163,6 +163,10 @@
     top: -17px;
     z-index: 15;
 
+    > a {
+      margin: 0 8px;
+    }
+
 
     .np-field-info {
       display: inline-block;
@@ -177,6 +181,10 @@
     right: -14px;
     top: 2px;
     z-index: 15;
+
+    > a {
+      margin: 0 8px;
+    }
   }
 
 
