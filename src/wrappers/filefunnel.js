@@ -50,7 +50,7 @@ ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig) {
   };
 
   let getOptions = function (field) {
-    return configs.getMatchingConfig(field);
+    return configs.getMatchingConfig(field) || DEFAULTS;
   };
 
   let showUpload = function(ev, options) {
@@ -78,7 +78,6 @@ ff.directive('filefunnel', function(fileFunnelService) {
     restrict: 'A',
     controller($scope, $mdDialog) {
       let options = fileFunnelService.getOptions($scope.field);
-
       $scope.showUpload = function(ev, target) {
         fileFunnelService.showUpload(ev, options)
           .then(files => {
