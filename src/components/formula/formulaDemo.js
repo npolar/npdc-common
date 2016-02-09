@@ -96,7 +96,7 @@ angular
     };
 
     let Dataset = NpolarApiResource.resource({'path': '/dataset', 'resource': 'Dataset' });
-    formulaAutoCompleteService.optionsFromFacets(['organisations.gcmd_short_name', 'links.type'], Dataset, $scope.formula);
+    formulaAutoCompleteService.autocompleteFacets(['organisations.gcmd_short_name', 'links.type'], Dataset, $scope.formula);
 
     formulaAutoCompleteService.defineOptions({
       match: "autocomplete",

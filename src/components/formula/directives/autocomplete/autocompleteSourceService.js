@@ -1,4 +1,5 @@
 "use strict";
+let angular = require('angular');
 
 let autocompleteSourceService = function(formulaFieldConfig) {
   'ngInject';
@@ -19,14 +20,13 @@ let autocompleteSourceService = function(formulaFieldConfig) {
     }
   };
 
-  let optionsFromFacets = function (autocompleteFacets, resource, formula) {
+  let autocompleteFacets = function (autocompleteFacets, resource, formula) {
     let facets = autocompleteFacets.join(',');
 
     resource.facets({ facets, q: '' }, response => {
       let relevant = response.filter(item => autocompleteFacets.includes(item.facet));
       relevant.forEach(item => {
         let nodes = item.facet.split('.');
-        let id = nodes.pop();
         let source = function (q) {
           q = (q || '').toLocaleLowerCase();
           return item.terms.map(t => t.term)
@@ -44,10 +44,7 @@ let autocompleteSourceService = function(formulaFieldConfig) {
         };
         let match = function(field) {
           let fieldNodes = field.path.replace(/(#\/|\/\d)/g, '').split('/');
-          fieldNodes.pop();
-          return field.id === id && fieldNodes.every((parent, index) => {
-            return parent === nodes[index];
-          });
+          return angular.equals(nodes, fieldNodes);
         };
         defineOptions({
           match,
@@ -60,7 +57,7 @@ let autocompleteSourceService = function(formulaFieldConfig) {
   return {
     defineOptions,
     getOptions,
-    optionsFromFacets
+    autocompleteFacets
   };
 };
 
