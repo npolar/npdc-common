@@ -2,6 +2,7 @@
 
 let FileFunnel = require('filefunnel.js');
 let angular = require('angular');
+require('filefunnel.js/dist/js/filefunnel-i18n.min.js');
 
 let ff = angular.module('filefunnel', ['ngMaterial']);
 
@@ -11,6 +12,10 @@ ff.controller('FFUploadController', function($scope, $mdDialog, options) {
 
   ff._elements.fileInput.on('change', () => {
     $scope.$apply();
+  });
+
+  $scope.$on('npolar-lang', (e, lang) => {
+      ff.locale = lang.lang;
   });
 
   ff.on('success', file => {

@@ -63,6 +63,7 @@ cp.directive('chronopic', function($timeout, chronopicService) {
         direction: 'auto',
         format: `{${scope.field.format.replace('-', '')}}`,
         monthYearOnly: (scope.field.format === "year-month"),
+        min: { year: 1400 },
         onChange: function(elem, date) {
           $timeout(() => {
             let internalFormat = date.toISOString(); // ISO-8601
@@ -85,6 +86,10 @@ cp.directive('chronopic', function($timeout, chronopicService) {
           });
         }
       }, options));
+
+      scope.$on('npolar-lang', (e, lang) => {
+          cp.locale = lang.lang;
+      });
 
       if(scope.field.value) {
         let date = parseDate(scope.field.value);

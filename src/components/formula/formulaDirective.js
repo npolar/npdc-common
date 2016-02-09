@@ -36,6 +36,10 @@ var formula = function ($mdDialog, npdcAppConfig) {
         }
       };
 
+      $scope.$on('npolar-lang', (e, lang) => {
+        $scope.formula.i18n.set(lang.lang);
+      });
+
       $scope.$watch('document', (newVal, oldVal) => {
         if (newVal && newVal !== oldVal) {
           // @TODO Set titles (i18n)
