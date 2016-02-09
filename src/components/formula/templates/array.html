@@ -34,7 +34,7 @@
 
 
     <ul ng-if="::field.typeOf('fieldset')" class="np-formula-list" ng-sortable="field.sortable">
-      <li ng-repeat="value in field.values track by value.path" ng-if="!value.hidden" class="np-formula-list-item">
+      <li ng-repeat="value in field.values" ng-if="!value.hidden" class="np-formula-list-item">
         <md-whiteframe class="md-whiteframe-z2">
           <fieldset ng-class="{ valid: value.valid }">
             <legend>

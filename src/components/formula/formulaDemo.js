@@ -46,10 +46,22 @@ angular
         string: 'timeoutfoobar',
         string_date: '2012-05-17',
         boolean: true,
-        array_object: Array(100).fill({
-          string_default: 'foo',
+        array_object: [{
+          string_default: 'one',
           number: 1
-        }),
+        },
+        {
+          string_default: 'two',
+          number: 2
+        },
+        {
+          string_default: 'three',
+          number: 3
+        },
+        {
+          string_default: 'four',
+          number: 4
+        }],
         array_string_enum: ['foo', 'qux'],
         array_string: ['foobar', 'bazquz'],
         ref_object: {
