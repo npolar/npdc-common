@@ -64,6 +64,7 @@ cp.directive('chronopic', function($timeout, chronopicService) {
         format: `{${scope.field.format.replace('-', '')}}`,
         monthYearOnly: (scope.field.format === "year-month"),
         min: { year: 1400 },
+        max: { year: 2200 },
         onChange: function(elem, date) {
           $timeout(() => {
             let internalFormat = date.toISOString(); // ISO-8601
