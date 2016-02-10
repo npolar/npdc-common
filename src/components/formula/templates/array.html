@@ -39,7 +39,7 @@
           <fieldset ng-class="{ valid: value.valid }">
             <legend>
               <!--span class="np-formula-array-object-title">{{ value.title }}</span-->
-              <span ng-if="!value.visible">{{ value.fields | formulaInlineValues }}</span>
+              <span ng-if="!value.visible">{{ value.value | formulaInlineValues }}</span>
               <div class="np-formula-object-ctrls">
                 <div npdc:formula-field-info class="np-field-info" ng-if="value.description"></div>
                 <a ng-show="!$first" href="" ng-click="field.moveUp($index)" title="{{ i18n.text.moveup }}">
