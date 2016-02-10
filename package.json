@@ -1,6 +1,6 @@
 {
   "name": "npdc-common",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "Common modules for NPDC apps",
   "main": "src/index.js",
   "scripts": {
