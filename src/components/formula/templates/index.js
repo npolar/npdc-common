@@ -8,23 +8,23 @@ common.directive('npdcFormulaValidationMessage', () => ({ scope: false, template
 
 var materialTemplates = [
   {
-    match: 'form',
+    match: '@form',
     template: require('./form.html')
   },
   {
-    match: 'fieldset',
+    match: '@fieldset',
     template: require('./fieldset.html')
   },
   {
-    match: 'field',
+    match: '@field',
     template: require('./field.html')
   },
   {
-    match: 'object',
+    match: '@object',
     template: require('./object.html')
   },
   {
-    match: 'array',
+    match: '@array',
     template: require('./array.html')
   },
   {
