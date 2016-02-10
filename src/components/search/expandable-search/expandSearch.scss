@@ -9,8 +9,8 @@
 
   &:not(.open) {
     -webkit-transition: width .5s;
-    transition: width .5s;
     -webkit-transition-delay: .5s;
+    transition: width .5s;
     transition-delay: .5s;
 
     .np-es-filter {
@@ -38,18 +38,18 @@
   }
 
   //WebKit, Blink, Edge
-   ::-webkit-input-placeholder {
+  ::-webkit-input-placeholder {
     color: $color-text-grey;
   }
 
   //Mozilla Firefox 4 to 18
- :-moz-placeholder {
+  :-moz-placeholder {
     color: $color-text-grey;
     opacity: 1;
   }
 
   //Mozilla Firefox 19+
- ::-moz-placeholder {
+  ::-moz-placeholder {
     color: $color-text-grey;
     opacity: 1;
   }
@@ -68,6 +68,7 @@
   }
 
   .np-es-filter {
+    -webkit-transition: all .5s;
     background-color: $color-bg-light;
     box-shadow: 0 2px 7px -2px rgb(71, 71, 71) inset, 0 2px 7px -3px rgb(71, 71, 71);
     box-sizing: border-box;
@@ -77,7 +78,6 @@
     overflow-y: hidden;
     padding: 15px;
     position: absolute;
-    -webkit-transition: all .5s;
     transition: all .5s;
     visibility: hidden;
     width: 100%;

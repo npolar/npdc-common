@@ -9,59 +9,75 @@ let npdcAppConfigFactory = function (NpdcAutocompleteConfigFactory, NpdcSearchCo
       name: "Data",
       apps: [{
         link: "/dataset",
-        name: "Datasets"
+        name: "Datasets",
+        img: "/assets/img/menu/dataset.png"
       }, {
         link: "//api.npolar.no",
-        name: "APIs"
+        name: "APIs",
+        img: "/assets/img/menu/api.png"
       }, {
         link: "/geodata",
-        name: "Geographic services"
+        name: "Geodata",
+        img: "/assets/img/menu/geodata.png"
       }, ]
     }, {
       name: "Applications",
-      apps: [{
-        link: "/expedition",
-        name: "Expeditions"
-      }, {
+      apps: [
+        {
+          link: "/publication",
+          name: "Publications",
+          img: "/assets/img/menu/publications.png"
+        },
+      //   {
+      //   link: "/expedition",
+      //   name: "Expeditions",
+      //   img: "/assets/img/menu/expeditions.png"
+      // },
+      {
         link: "/vessel",
-        name: "Historic Vessels"
+        name: "Historic Vessels",
+        img: "/assets/img/menu/vessels.png"
       }, {
         link: "/map/archive",
-        name: "Map archive"
+        name: "Map archive",
+        img: "/assets/img/menu/map_archive.png"
       }, {
         link: "/people",
-        name: "People"
+        name: "People",
+        img: "/assets/img/menu/people.png"
       }, {
         link: "http://placenames.npolar.no",
-        name: "Placenames"
-      }, {
-        link: "/project",
-        name: "Projects"
-      }, {
-        link: "/publication",
-        name: "Publications"
-      }]
-    }],
-    toolbarInternalApps: [{
-      name: "My applications",
-      apps: [
-      {
-        link: "/indicator/parameter",
-        name: "Parameters (indicator monitoring)"
-      },{
-        link: "/indicator/timeseries",
-        name: "Timeseries (indicator monitoring)"
+        name: "Placenames",
+        img: "/assets/img/menu/placenames.png"
       },
       {
+        link: "/indicator/timeseries",
+        name: "Timeseries",
+        img: "/assets/img/menu/timeseries.png"
+      }
+      // {
+      //   link: "/project",
+      //   name: "Projects",
+      //   img: "/assets/img/menu/projects.png"
+      // },
+      ]
+    }],
+    toolbarInternalApps: [{
+      name: "Internal",
+      apps: [
+      {
         link: "/courses",
-        name: "Courses"
+        name: "Courses",
+        img: "/assets/img/menu/courses.png"
       },
       {
         link: "/marine/biology",
-        name: "Marine Biology"
+        name: "Marine Biology",
+        img: "/assets/img/menu/marine_biology.png"
       }, {
         link: "/user",
-        name: "Users"
+        name: "Users",
+        img: "/assets/img/menu/users.png"
       }]
     }],
     cardTitle: "Norwegian Polar Data Centre",

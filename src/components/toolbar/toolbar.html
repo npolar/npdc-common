@@ -2,55 +2,55 @@
 <md-toolbar class="np-toolbar">
   <div class="md-toolbar-tools np-toolbar-content">
     <a ng-href="/" class="np-toolbar-logo">
-      <img src="/assets/img/NPI-logo-hvit-no.png" width="50px" height="50px" />
+      <img src="/assets/img/NPI-logo-hvit-no.png" width="50px" height="50px"/>
     </a>
 
-    <a href="."><strong>{{ appTitle() }}</strong></a>
-    <a href="/"><span class="np-toolbar-title">{{ siteTitle() }}</span></a>
+    <a href=".">
+      <strong>{{ appTitle() }}</strong>
+    </a>
+    <a href="/">
+      <span class="np-toolbar-title">{{ siteTitle() }}</span>
+    </a>
 
     <span class="flex">
       <!-- This span is used to push the other content to the right -->
     </span>
 
-    <!-- Application menu -->
-    <md-menu>
+    <md-menu class="np-app-menu">
       <md-button class="md-icon-button" ng-click="$mdOpenMenu($event)">
         <md-icon md-menu-origin>apps</md-icon>
         <md-tooltip>Quick navigation</md-tooltip>
       </md-button>
-      <md-menu-content width="6">
+      <md-menu-content width="6" class="np-app-menu-content">
         <div ng-repeat="group in options.toolbarMenuGroups">
-          <md-subheader class="md-sticky">{{group.name}}</md-subheader>
-          <div ng-repeat="app in group.apps">
-            <md-menu-item>
-              <md-button ng-href="{{app.link}}">{{app.name}}</md-button>
-            </md-menu-item>
-            <div ng-if="$last">
-              <md-divider></md-divider>
-            </div>
-          </div>
+          <md-subheader>{{group.name}}</md-subheader>
+          <md-grid-list md-cols="3" md-row-height="80px" md-gutter="10px">
+            <md-grid-tile ng-repeat="app in group.apps">
+              <a ng-href="{{app.link}}" class="np-app-icon">
+                <img ng-src="{{app.img}}"/>
+                <div>{{app.name}}</div>
+              </a>
+            </md-grid-tile>
+          </md-grid-list>
+          <md-divider></md-divider>
         </div>
-      </md-menu-content>
-    </md-menu>
 
-    <!-- User applications menu -->
-    <md-menu ng-show="security.isAuthenticated()">
-      <md-button class="md-icon-button" ng-click="$mdOpenMenu($event)">
-        <md-icon md-menu-origin>flash_on</md-icon>
-        <md-tooltip>User applications</md-tooltip>
-      </md-button>
-      <md-menu-content width="6">
-        <div ng-repeat="group in options.toolbarInternalApps">
-          <md-subheader class="md-sticky">{{group.name}}</md-subheader>
-          <div ng-repeat="app in group.apps">
-            <md-menu-item ng-if="security.hasSystem(app.link)">
-              <md-button ng-href="{{app.link}}">{{app.name}} </md-button>
-            </md-menu-item>
-            <div ng-if="$last">
-              <md-divider></md-divider>
-            </div>
+        <!-- User applications menu -->
+        <div ng-show="security.isAuthenticated()">
+          <div ng-repeat="group in options.toolbarInternalApps">
+            <md-subheader>{{group.name}}</md-subheader>
+            <md-grid-list md-cols="3" md-row-height="80px" md-gutter="10px">
+              <md-grid-tile ng-repeat="app in group.apps">
+                <a ng-href="{{app.link}}" class="np-app-icon">
+                  <img ng-src="{{app.img}}"/>
+                  <div>{{app.name}}</div>
+                </a>
+              </md-grid-tile>
+            </md-grid-list>
+            <md-divider></md-divider>
           </div>
         </div>
+
       </md-menu-content>
     </md-menu>
 

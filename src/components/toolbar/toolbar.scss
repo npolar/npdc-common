@@ -41,3 +41,37 @@
     visibility: hidden;
   }
 }
+
+.np-app-menu-content {
+  max-height: 700px;
+}
+
+.np-app-icon {
+  border: 1px $color-bg-light solid;
+  box-sizing: border-box;
+  color: $color-text-grey;
+  display: block;
+  font-size: 13px;
+  height: 100%;
+  text-align: center;
+  text-decoration: none;
+  width: 100%;
+
+  &:hover {
+    border-color: $color-bg-dark;
+    color: $color-text-grey;
+  }
+
+  img {
+    margin: 0 auto;
+    width: 48px;
+  }
+
+  div {
+    overflow: hidden;
+    padding: 0 3px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+}
