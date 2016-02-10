@@ -6,35 +6,34 @@
     <section>
       <npdc:loader ng-if="!feed.entries"></npdc:loader>
 
-      <div ng-repeat="e in feed.entries | filter:entryfilter">
-        <md-content class="np-layout-list">
-          <a ng-href="{{ entryHref(e.id) }}">
-            <md-list>
-              <md-list-item class="md-2-line">
-                <div class="np-search-icon md-avatar" title="ID: {{ e.id }}">
-                  <span>{{ avatar(e) }}</span>
-                </div>
-                <div class="md-list-item-text">
-                  <h3 class="md-headline">
-                    <span md-highlight-text="q()" md-highlight-flags="ig">{{title(e)}}</span>
-                    <em ng-if="subtitle(e)">
-                      「{{ subtitle(e) }}」
-                    </em>
-                  </h3>
-                  <h4>{{ detail(e) }}</h4>
-                </div>
-              </md-list-item>
-            </md-list>
-            <md-divider></md-divider>
-          </a>
-
-        </md-content>
+      <div class="np-layout-list">
+        <md-list>
+          <md-list-item class="md-2-line" ng-repeat="e in feed.entries | filter:entryfilter" ng-href="{{ entryHref(e.id) }}">
+            <div class="np-search-icon md-avatar" title="ID: {{ e.id }}">
+              <span>{{ avatar(e) }}</span>
+            </div>
+            <div class="md-list-item-text">
+              <h3 class="md-headline">
+                <span md-highlight-text="q()" md-highlight-flags="ig">{{title(e)}}</span>
+                <em ng-if="subtitle(e)">
+                  「{{ subtitle(e) }}」
+                </em>
+              </h3>
+              <h4>{{ detail(e) }}</h4>
+            </div>
+          </md-list-item>
+        </md-list>
+        <md-divider></md-divider>
       </div>
 
       <div layout-padding>
         <div ng-if="feed.opensearch.totalResults > 0" layout layout-align="space-between center">
-          <div style="line-height: 48px;">{{feed.opensearch.totalResults}} results, displaying {{ feed.entries.length}}</div>
-          <div><md-button class="md-raised md-primary" ng-if="showNext()" ng-click="next()">More ...</md-button></div>
+          <div style="line-height: 48px;">{{feed.opensearch.totalResults}}
+            results, displaying
+            {{ feed.entries.length}}</div>
+          <div>
+            <md-button class="md-raised md-primary" ng-if="showNext()" ng-click="next()">More ...</md-button>
+          </div>
         </div>
         <div ng-if="feed.opensearch.totalResults == 0">No results when searching for "{{q()}}"</div>
       </div>

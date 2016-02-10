@@ -10,40 +10,44 @@
   }
 
   md-list {
-    md-list-item.md-2-line .md-list-item-text h3 {
-      font-size: 18px;
-      font-weight: bold;
 
-      em {
-        color: $color-primary-1;
-        font-size: 15px;
-        margin-left: 1em;
+    md-list-item.md-2-line {
+
+      > a {
+        margin: 0;
+      }
+
+      .md-list-item-text h3 {
+        font-size: 18px;
+        font-weight: bold;
+
+        em {
+          color: $color-primary-1;
+          font-size: 15px;
+          margin-left: 1em;
+        }
+      }
+
+      .md-list-item-text h4 {
+        color: $color-text-grey;
+        font-size: 12px;
+      }
+
+      .np-search-icon {
+        background-color: $color-primary-1;
+        color: $color-text-light;
+        min-width: 40px;
+        text-align: center;
+
+        span {
+          display: inline-block;
+          font-size: 12px;
+          font-weight: bold;
+          line-height: 40px;
+          vertical-align: middle;
+        }
       }
     }
-
-    md-list-item.md-2-line .md-list-item-text h4 {
-      color: $color-text-grey;
-      font-size: 12px;
-    }
-  }
-
-  .np-search-icon {
-    background-color: $color-primary-1;
-    color: $color-text-light;
-    position: relative;
-    text-align: center;
-
-    span {
-      display: inline-block;
-      font-size: 12px;
-      font-weight: bold;
-      line-height: 40px;
-      vertical-align: middle;
-    }
-  }
-
-  .np-layout-list:hover {
-    background-color: rgba(100, 100, 100, .1);
   }
 
   @media(max-width: 900px) {
