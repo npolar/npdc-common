@@ -4,21 +4,21 @@ let AutocompleteConfigFactory = function() {
   'ngInject';
 
   let showCollections = false;
-  let placeholder = "";
+  let floatingLabel = true;
+  let placeholder = "Search";
 
   let collections = {
     '/dataset': true,
-    '/expedition': true,
-    '/indicator': true,
+    // '/expedition': true,
     '/publication': true,
-    '/project': true,
-    '/indicator/parameter': false,
-    '/map/archive': false,
-    '/person': false,
-    '/placename': false,
-    '/tracking/deployment': false,
-    '/service': false,
-    '/vessel': false
+    // '/project': true,
+    '/indicator/timeseries': true,
+    '/map/archive': true,
+    '/person': true,
+    '/placename': true,
+    '/tracking/deployment': true,
+    '/service': true,
+    '/vessel': true,
   };
 
   let query = {
@@ -36,6 +36,7 @@ let AutocompleteConfigFactory = function() {
       query,
       global: false,
       location: undefined,
+      floatingLabel,
     }, options);
   };
 

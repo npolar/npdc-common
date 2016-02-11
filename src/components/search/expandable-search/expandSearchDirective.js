@@ -65,7 +65,7 @@ let expandSearch = function() {
         let query = Object.assign({},
           $location.search(),
           q || {q: $scope.options.q});
-        NpdcSearchService.search(query);
+        NpdcSearchService.globalSearch(query);
       };
 
       $scope.toggleFilters = function () {

@@ -1,14 +1,30 @@
 <!DOCTYPE html>
 <div ng-keyup="keyup($event);">
-    <md-autocomplete
+    <md-autocomplete ng-if="options.floatingLabel"
+      md-floating-label="{{options.placeholder}}"
+      md-item-text="title(item)"
+      md-items="item in querySearch(options.q)"
+      md-min-length="1"
+      md-no-cache="false"
+      md-search-text="options.q"
+      md-selected-item-change="selectedItemChange(item)"
+      md-selected-item="selectedItem">
+
+      <md-item-template>
+        [{{item.collection}}] <span md-highlight-flags="^i" md-highlight-text="options.q">{{ title(item) }}</span>
+      </md-item-template>
+
+    </md-autocomplete>
+
+    <md-autocomplete ng-if="!options.floatingLabel"
+      placeholder="{{options.placeholder}}"
       md-item-text="title(item)"
       md-items="item in querySearch(options.q)"
       md-min-length="1"
       md-no-cache="true"
       md-search-text="options.q"
       md-selected-item-change="selectedItemChange(item)"
-      md-selected-item="selectedItem"
-      md-floating-label="{{options.placeholder}}">
+      md-selected-item="selectedItem">
 
       <md-item-template>
         [{{item.collection}}] <span md-highlight-flags="^i" md-highlight-text="options.q">{{ title(item) }}</span>
