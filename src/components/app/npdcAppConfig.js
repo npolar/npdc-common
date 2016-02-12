@@ -10,15 +10,15 @@ let npdcAppConfigFactory = function (NpdcAutocompleteConfigFactory, NpdcSearchCo
       apps: [{
         link: "/dataset",
         name: "Datasets",
-        img: "/assets/img/menu/dataset.png"
+        img: "/assets/img/menu/48/dataset.png"
       }, {
         link: "//api.npolar.no",
         name: "APIs",
-        img: "/assets/img/menu/api.png"
+        img: "/assets/img/menu/48/api.png"
       }, {
         link: "/geodata",
         name: "Geodata",
-        img: "/assets/img/menu/geodata.png"
+        img: "/assets/img/menu/48/geodata.png"
       }, ]
     }, {
       name: "Applications",
@@ -26,39 +26,39 @@ let npdcAppConfigFactory = function (NpdcAutocompleteConfigFactory, NpdcSearchCo
         {
           link: "/publication",
           name: "Publications",
-          img: "/assets/img/menu/publications.png"
+          img: "/assets/img/menu/48/publications.png"
         },
       //   {
       //   link: "/expedition",
       //   name: "Expeditions",
-      //   img: "/assets/img/menu/expeditions.png"
+      //   img: "/assets/img/menu/48/expeditions.png"
       // },
       {
         link: "/vessel",
         name: "Historic Vessels",
-        img: "/assets/img/menu/vessels.png"
+        img: "/assets/img/menu/48/vessels.png"
       }, {
         link: "/map/archive",
         name: "Map archive",
-        img: "/assets/img/menu/map_archive.png"
+        img: "/assets/img/menu/48/map_archive.png"
       }, {
         link: "/people",
         name: "People",
-        img: "/assets/img/menu/people.png"
+        img: "/assets/img/menu/48/people.png"
       }, {
         link: "http://placenames.npolar.no",
         name: "Placenames",
-        img: "/assets/img/menu/placenames.png"
+        img: "/assets/img/menu/48/placenames.png"
       },
       {
         link: "/indicator/timeseries",
         name: "Timeseries",
-        img: "/assets/img/menu/timeseries.png"
+        img: "/assets/img/menu/48/timeseries.png"
       }
       // {
       //   link: "/project",
       //   name: "Projects",
-      //   img: "/assets/img/menu/projects.png"
+      //   img: "/assets/img/menu/48/projects.png"
       // },
       ]
     }],
@@ -68,16 +68,16 @@ let npdcAppConfigFactory = function (NpdcAutocompleteConfigFactory, NpdcSearchCo
       {
         link: "/courses",
         name: "Courses",
-        img: "/assets/img/menu/courses.png"
+        img: "/assets/img/menu/48/courses.png"
       },
       {
         link: "/marine/biology",
         name: "Marine Biology",
-        img: "/assets/img/menu/marine_biology.png"
+        img: "/assets/img/menu/48/marine_biology.png"
       }, {
         link: "/user",
         name: "Users",
-        img: "/assets/img/menu/users.png"
+        img: "/assets/img/menu/48/users.png"
       }]
     }],
     cardTitle: "Norwegian Polar Data Centre",

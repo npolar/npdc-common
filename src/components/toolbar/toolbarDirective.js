@@ -9,7 +9,7 @@ let toolbar = function($mdSidenav, NpolarApiSecurity, NpolarTranslate) {
   return {
     restrict: 'E',
     scope: {
-      options: '='
+      options: '=?'
     },
     template: require('./toolbar.html'),
     link: function(scope) {
@@ -17,7 +17,7 @@ let toolbar = function($mdSidenav, NpolarApiSecurity, NpolarTranslate) {
     },
     controller: function($scope, npdcAppConfig) {
       'ngInject';
-      
+
       $scope.options = $scope.options || npdcAppConfig;
 
       $scope.appTitle = function() {
