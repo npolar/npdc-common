@@ -46,7 +46,8 @@ common.config(function($mdThemingProvider) {
   $mdThemingProvider.theme('white').primaryPalette('npdcPrimary').accentPalette('grey');
 });
 
-common.run(($http, NpolarTranslate, $templateCache) => {
+common.run(($http, $window, NpolarTranslate, $templateCache) => {
+  // Convenience for debugging missing templates
   let og = $templateCache.get;
   $templateCache.get = function () {
     let o = og.apply(this, arguments);
@@ -55,10 +56,18 @@ common.run(($http, NpolarTranslate, $templateCache) => {
     }
     return o;
   };
+
   // Load text dictionary
   $http.get('//api.npolar.no/text/?q=&filter-bundle=npolar|npdc&format=json&variant=array&limit=all').then(response => {
     NpolarTranslate.appendToDictionary(response.data);
   });
+
+  // Check if app has update anf update 
+  if (window.applicationCache) {
+    applicationCache.addEventListener('updateready', function() {
+      $window.location.reload();
+    });
+  }
 });
 
 require('./components');
