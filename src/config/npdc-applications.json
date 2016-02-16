@@ -1,0 +1,46 @@
+[{ "link": "/dataset",
+      "name": "Dataset catalogue",
+      "img": "/assets/img/menu/96/dataset.png",
+      "description": "Datasets across a varient of fields spanning from the 1900 to present day."
+    }, {
+      "link": "/geodata",
+      "name": "Geodata",
+      "img": "/assets/img/menu/96/geodata.png",
+      "description": "Map services for svalbard, the arctic and antarctica."
+    }, {
+      "link": "/publication",
+      "name": "Publications",
+      "img": "/assets/img/menu/96/publications.png",
+      "description": "Publication published by scientists at the Norwegian Polar Institute."
+    },
+    { "link": "/tracking",
+      "name": "Tracking",
+      "img": "/assets/img/menu/96/expeditions.png"
+    },
+    {
+      "link": "/vessel",
+      "name": "Historic Vessels",
+      "img": "/assets/img/menu/96/vessels.png",
+      "description": "Historic record of ships used in polar exploration."
+    }, {
+      "link": "/map/archive",
+      "name": "Map archive",
+      "img": "/assets/img/menu/96/map_archive.png",
+      "description": "Historic record of maps from the polar regions."
+    }, {
+      "link": "/people",
+      "name": "People",
+      "img": "/assets/img/menu/96/people.png",
+      "description": "Browse employees at the institue."
+    }, {
+      "link": "http://placenames.npolar.no",
+      "name": "Placenames",
+      "img": "/assets/img/menu/96/placenames.png",
+      "description": "Official placename database for the polar regions."
+    }, {
+      "link": "/indicator/timeseries",
+      "name": "Timeseries",
+      "img": "/assets/img/menu/96/timeseries.png",
+      "description": "Long-term environmental monitoring timeseries."
+    }
+  ]
