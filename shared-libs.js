@@ -33,8 +33,20 @@ var task = function (gulp, config) {
 
       bundler.require([{file: './' + app, expose: 'npdc-common'}, 'angular']);
 
+      var fullVersion = function () {
+        return config.pkgname + '-' + config.version() + '.js';
+      }
+
+      var minorVersion = function () {
+        return config.pkgname + '-' + config.version().split('.').slice(0,2).join('.') + '.js';
+      }
+
+      var majorVersion = function () {
+        return config.pkgname + '-' + config.version().split('.')[0] + '.js';
+      }
+
       bundle = function (ids) {
-          var bundleName = config.pkgname + '-' + config.version().split('.')[0] + '.js';
+          var bundleName = fullVersion();
           gutil.log('Bundling', ids instanceof Array ? ids : '');
 
           // Browseriy
@@ -45,6 +57,12 @@ var task = function (gulp, config) {
             .pipe(buffer())
             .pipe(sourcemaps.init({loadMaps: true}))
             .pipe(gulpif(global.isProd, uglify({ compress: { drop_console: true } })))
+            .pipe(sourcemaps.write('./'))
+            .pipe(gulp.dest(config.dist.sharedAssets)) // FULL VERSION
+            .pipe(rename(minorVersion()))
+            .pipe(sourcemaps.write('./'))
+            .pipe(gulp.dest(config.dist.sharedAssets))
+            .pipe(rename(majorVersion()))
             .pipe(sourcemaps.write('./'))
             .pipe(gulp.dest(config.dist.sharedAssets))
             .pipe(rename(config.pkgname + '-' + global.ref + '-latest.js'))
