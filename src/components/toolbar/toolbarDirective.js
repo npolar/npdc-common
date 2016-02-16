@@ -32,7 +32,7 @@ let toolbar = function($mdSidenav, NpolarApiSecurity, NpolarTranslate) {
 
       $scope.icon48 = function (app) {
         return app.icons.find(icon => icon.size === 48).src;
-      }
+      };
     }
   };
 };

@@ -42,12 +42,12 @@
   "name": "Publications",
   "icons": [{
     "size": 96,
-    "src": "/assets/img/app-icons/96/publications.png"
+    "src": "/assets/img/app-icons/96/publication.png"
   }, {
     "size": 48,
-    "src": "/assets/img/app-icons/48/publications.png"
+    "src": "/assets/img/app-icons/48/publication.png"
   }],
-  "screenshots": ["/assets/img/screenshots/publications.png"],
+  "screenshots": ["/assets/img/screenshots/publication.png"],
   "description": "Publication published by scientists at the Norwegian Polar Institute.",
   "category": "public"
 }, {
@@ -107,10 +107,10 @@
   "name": "Placenames",
   "icons": [{
     "size": 96,
-    "src": "/assets/img/app-icons/96/placenames.png"
+    "src": "/assets/img/app-icons/96/placename.png"
   }, {
     "size": 48,
-    "src": "/assets/img/app-icons/48/placenames.png"
+    "src": "/assets/img/app-icons/48/placename.png"
   }],
   "screenshots": [],
   "description": "Official placename database for the polar regions.",
