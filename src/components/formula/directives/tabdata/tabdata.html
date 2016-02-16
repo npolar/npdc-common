@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<md-input-container class="np-formula-tabdata" ng-if="field.visible">
+<md-input-container class="np-formula-tabdata" ng-show="field.visible">
   <label for="{{::field.uid}}">{{ (field.required ? field.title + ' (' + i18n.text.required + ')' : field.title ) }}</label>
   <div class="np-formula-td-header">
     <span class="header-number">0</span>
