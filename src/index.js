@@ -46,6 +46,9 @@ common.config(function($mdThemingProvider) {
   $mdThemingProvider.theme('white').primaryPalette('npdcPrimary').accentPalette('grey');
 });
 
+common.factory('npdcAppConfig', require('./config/npdcAppConfig'));
+common.value('NpdcApplications', require('./config/npdc-applications.json'));
+
 common.run(($http, $window, NpolarTranslate, $templateCache) => {
   // Convenience for debugging missing templates
   let og = $templateCache.get;
@@ -62,7 +65,7 @@ common.run(($http, $window, NpolarTranslate, $templateCache) => {
     NpolarTranslate.appendToDictionary(response.data);
   });
 
-  // Check if app has update anf update 
+  // Check if app has update anf update
   if (window.applicationCache) {
     applicationCache.addEventListener('updateready', function() {
       $window.location.reload();

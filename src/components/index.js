@@ -7,7 +7,6 @@ require('./document');
 require('./formula');
 
 common.directive('ngFocusOut', require('./focusOutDirective'));
-common.factory('npdcAppConfig', require('./app/npdcAppConfig'));
 
 common.directive('npdcToolbar', require('./toolbar/toolbarDirective'));
 common.directive('npdcUserMenu', require('./user-menu/userMenu'));
