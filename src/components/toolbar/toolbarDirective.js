@@ -29,6 +29,10 @@ let toolbar = function($mdSidenav, NpolarApiSecurity, NpolarTranslate) {
         var i18nTitle = NpolarTranslate.translate(SITE_TITLE_CODE);
         return i18nTitle === SITE_TITLE_CODE ? 'Norwegian Polar Data Centre' : i18nTitle;
       };
+
+      $scope.icon48 = function (app) {
+        return app.icons.find(icon => icon.size === 48).src;
+      }
     }
   };
 };

@@ -1,46 +1,170 @@
-[{ "link": "/dataset",
-      "name": "Dataset catalogue",
-      "img": "/assets/img/menu/96/dataset.png",
-      "description": "Datasets across a varient of fields spanning from the 1900 to present day."
-    }, {
-      "link": "/geodata",
-      "name": "Geodata",
-      "img": "/assets/img/menu/96/geodata.png",
-      "description": "Map services for svalbard, the arctic and antarctica."
-    }, {
-      "link": "/publication",
-      "name": "Publications",
-      "img": "/assets/img/menu/96/publications.png",
-      "description": "Publication published by scientists at the Norwegian Polar Institute."
-    },
-    { "link": "/tracking",
-      "name": "Tracking",
-      "img": "/assets/img/menu/96/expeditions.png"
-    },
-    {
-      "link": "/vessel",
-      "name": "Historic Vessels",
-      "img": "/assets/img/menu/96/vessels.png",
-      "description": "Historic record of ships used in polar exploration."
-    }, {
-      "link": "/map/archive",
-      "name": "Map archive",
-      "img": "/assets/img/menu/96/map_archive.png",
-      "description": "Historic record of maps from the polar regions."
-    }, {
-      "link": "/people",
-      "name": "People",
-      "img": "/assets/img/menu/96/people.png",
-      "description": "Browse employees at the institue."
-    }, {
-      "link": "http://placenames.npolar.no",
-      "name": "Placenames",
-      "img": "/assets/img/menu/96/placenames.png",
-      "description": "Official placename database for the polar regions."
-    }, {
-      "link": "/indicator/timeseries",
-      "name": "Timeseries",
-      "img": "/assets/img/menu/96/timeseries.png",
-      "description": "Long-term environmental monitoring timeseries."
-    }
-  ]
+[{
+  "link": "/dataset",
+  "name": "Dataset catalogue",
+  "icons": [{
+    "size": 96,
+    "src": "/assets/img/app-icons/96/dataset.png"
+  }, {
+    "size": 48,
+    "src": "/assets/img/app-icons/48/dataset.png"
+  }],
+  "screenshots": ["/assets/img/screenshots/dataset.png"],
+  "description": "Datasets across a varient of fields spanning from the 1900 to present day.",
+  "category": "public"
+}, {
+  "link": "//api.npolar.no",
+  "name": "APIs",
+  "icons": [{
+    "size": 96,
+    "src": "/assets/img/app-icons/96/api.png"
+  }, {
+    "size": 48,
+    "src": "/assets/img/app-icons/48/api.png"
+  }],
+  "screenshots": [],
+  "description": "api.npolar.no API reference.",
+  "category": "public"
+}, {
+  "link": "/geodata",
+  "name": "Geodata",
+  "icons": [{
+    "size": 96,
+    "src": "/assets/img/app-icons/96/geodata.png"
+  }, {
+    "size": 48,
+    "src": "/assets/img/app-icons/48/geodata.png"
+  }],
+  "screenshots": [],
+  "description": "Map services for svalbard, the arctic and antarctica.",
+  "category": "public"
+}, {
+  "link": "/publication",
+  "name": "Publications",
+  "icons": [{
+    "size": 96,
+    "src": "/assets/img/app-icons/96/publications.png"
+  }, {
+    "size": 48,
+    "src": "/assets/img/app-icons/48/publications.png"
+  }],
+  "screenshots": ["/assets/img/screenshots/publications.png"],
+  "description": "Publication published by scientists at the Norwegian Polar Institute.",
+  "category": "public"
+}, {
+  "link": "/tracking",
+  "name": "Tracking",
+  "icons": [{
+    "size": 96,
+    "src": "/assets/img/app-icons/96/tracking.png"
+  }, {
+    "size": 48,
+    "src": "/assets/img/app-icons/48/tracking.png"
+  }],
+  "screenshots": ["/assets/img/screenshots/tracking.png"],
+  "description": "Tracking stuff.",
+  "category": "public"
+}, {
+  "link": "/vessel",
+  "name": "Historic Vessels",
+  "icons": [{
+    "size": 96,
+    "src": "/assets/img/app-icons/96/vessels.png"
+  }, {
+    "size": 48,
+    "src": "/assets/img/app-icons/48/vessels.png"
+  }],
+  "screenshots": [],
+  "description": "Historic record of ships used in polar exploration.",
+  "category": "public"
+}, {
+  "link": "/map/archive",
+  "name": "Map archive",
+  "icons": [{
+    "size": 96,
+    "src": "/assets/img/app-icons/96/map_archive.png"
+  }, {
+    "size": 48,
+    "src": "/assets/img/app-icons/48/map_archive.png"
+  }],
+  "screenshots": [],
+  "description": "Historic record of maps from the polar regions.",
+  "category": "public"
+}, {
+  "link": "/people",
+  "name": "People",
+  "icons": [{
+    "size": 96,
+    "src": "/assets/img/app-icons/96/people.png"
+  }, {
+    "size": 48,
+    "src": "/assets/img/app-icons/48/people.png"
+  }],
+  "screenshots": [],
+  "description": "Browse employees at the institue.",
+  "category": "public"
+}, {
+  "link": "http://placenames.npolar.no",
+  "name": "Placenames",
+  "icons": [{
+    "size": 96,
+    "src": "/assets/img/app-icons/96/placenames.png"
+  }, {
+    "size": 48,
+    "src": "/assets/img/app-icons/48/placenames.png"
+  }],
+  "screenshots": [],
+  "description": "Official placename database for the polar regions.",
+  "category": "public"
+}, {
+  "link": "/indicator/timeseries",
+  "name": "Timeseries",
+  "icons": [{
+    "size": 96,
+    "src": "/assets/img/app-icons/96/timeseries.png"
+  }, {
+    "size": 48,
+    "src": "/assets/img/app-icons/48/timeseries.png"
+  }],
+  "screenshots": [],
+  "description": "Long-term environmental monitoring timeseries.",
+  "category": "public"
+}, {
+  "link": "/courses",
+  "name": "Courses",
+  "icons": [{
+    "size": 96,
+    "src": "/assets/img/app-icons/96/courses.png"
+  }, {
+    "size": 48,
+    "src": "/assets/img/app-icons/48/courses.png"
+  }],
+  "screenshots": [],
+  "description": "Npolar courses",
+  "category": "internal"
+}, {
+  "link": "/marine/biology",
+  "name": "Marine Biology",
+  "icons": [{
+    "size": 96,
+    "src": "/assets/img/app-icons/96/marine_biology.png"
+  }, {
+    "size": 48,
+    "src": "/assets/img/app-icons/48/marine_biology.png"
+  }],
+  "screenshots": [],
+  "description": "Marine biology",
+  "category": "disabled"
+}, {
+  "link": "/user",
+  "name": "Users",
+  "icons": [{
+    "size": 96,
+    "src": "/assets/img/app-icons/96/users.png"
+  }, {
+    "size": 48,
+    "src": "/assets/img/app-icons/48/users.png"
+  }],
+  "screenshots": [],
+  "description": "User administration.",
+  "category": "internal"
+}]

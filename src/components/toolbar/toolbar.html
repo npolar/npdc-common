@@ -27,7 +27,7 @@
           <md-grid-list md-cols="3" md-row-height="80px" md-gutter="10px">
             <md-grid-tile ng-repeat="app in group.apps">
               <a ng-href="{{app.link}}" class="np-app-icon">
-                <img ng-src="{{app.img}}"/>
+                <img ng-src="{{icon48(app)}}"/>
                 <div>{{app.name}}</div>
               </a>
             </md-grid-tile>
@@ -42,7 +42,7 @@
             <md-grid-list md-cols="3" md-row-height="80px" md-gutter="10px">
               <md-grid-tile ng-repeat="app in group.apps">
                 <a ng-href="{{app.link}}" class="np-app-icon">
-                  <img ng-src="{{app.img}}"/>
+                  <img ng-src="{{icon48(app)}}"/>
                   <div>{{app.name}}</div>
                 </a>
               </md-grid-tile>
