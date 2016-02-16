@@ -10,7 +10,8 @@
   }],
   "screenshots": ["/assets/img/screenshots/dataset.png"],
   "description": "Datasets across a varient of fields spanning from the 1900 to present day.",
-  "category": "public"
+  "category": "public",
+  "promote": true
 }, {
   "link": "//api.npolar.no",
   "name": "APIs",
@@ -23,7 +24,8 @@
   }],
   "screenshots": [],
   "description": "api.npolar.no API reference.",
-  "category": "public"
+  "category": "public",
+  "promote": true
 }, {
   "link": "/geodata",
   "name": "Geodata",
@@ -36,7 +38,8 @@
   }],
   "screenshots": [],
   "description": "Map services for svalbard, the arctic and antarctica.",
-  "category": "public"
+  "category": "public",
+  "promote": true
 }, {
   "link": "/publication",
   "name": "Publications",
@@ -49,7 +52,8 @@
   }],
   "screenshots": ["/assets/img/screenshots/publication.png"],
   "description": "Publication published by scientists at the Norwegian Polar Institute.",
-  "category": "public"
+  "category": "public",
+  "promote": true
 }, {
   "link": "/tracking",
   "name": "Tracking",
@@ -62,7 +66,8 @@
   }],
   "screenshots": ["/assets/img/screenshots/tracking.png"],
   "description": "Tracking stuff.",
-  "category": "public"
+  "category": "public",
+  "promote": true
 }, {
   "link": "/vessel",
   "name": "Historic Vessels",
@@ -75,7 +80,8 @@
   }],
   "screenshots": [],
   "description": "Historic record of ships used in polar exploration.",
-  "category": "public"
+  "category": "public",
+  "promote": true
 }, {
   "link": "/map/archive",
   "name": "Map archive",
@@ -88,7 +94,8 @@
   }],
   "screenshots": [],
   "description": "Historic record of maps from the polar regions.",
-  "category": "public"
+  "category": "public",
+  "promote": true
 }, {
   "link": "/people",
   "name": "People",
@@ -101,7 +108,8 @@
   }],
   "screenshots": [],
   "description": "Browse employees at the institue.",
-  "category": "public"
+  "category": "public",
+  "promote": true
 }, {
   "link": "http://placenames.npolar.no",
   "name": "Placenames",
@@ -114,7 +122,8 @@
   }],
   "screenshots": [],
   "description": "Official placename database for the polar regions.",
-  "category": "public"
+  "category": "public",
+  "promote": true
 }, {
   "link": "/indicator/timeseries",
   "name": "Timeseries",
@@ -127,7 +136,8 @@
   }],
   "screenshots": [],
   "description": "Long-term environmental monitoring timeseries.",
-  "category": "public"
+  "category": "public",
+  "promote": true
 }, {
   "link": "/courses",
   "name": "Courses",
