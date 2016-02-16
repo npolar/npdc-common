@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<label for="{{::field.uid}}">{{ field.title }}:
-  <span>{{field.value}}</span>
-</label>
-<md-slider flex min="{{field.minimum}}" max="{{field.maximum}}" step="{{field.step}}" md-discrete ng-model="field.value" aria-label="{{field.title}}" ng-attr-id="field.uid">
-</md-slider>
-<div npdc:formula-validation-message class="np-validation-message"></div>
+<div ng-if="field.visible">
+  <label for="{{::field.uid}}">{{ field.title }}:
+    <span>{{field.value}}</span>
+  </label>
+  <md-slider flex min="{{field.minimum}}" max="{{field.maximum}}" step="{{field.step}}" md-discrete ng-model="field.value" aria-label="{{field.title}}" ng-attr-id="field.uid">
+  </md-slider>
+  <div npdc:formula-validation-message class="np-validation-message"></div>
+</div>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<fieldset>
+<fieldset ng-if="field.visible">
   <md-whiteframe class="md-whiteframe-z2">
     <legend>{{ field.title }}
       <div npdc:formula-field-info class="np-field-info" ng-if="::field.description"></div>

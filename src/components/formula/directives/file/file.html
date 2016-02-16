@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<md-input-container>
+<md-input-container ng-if="field.visible">
   <label for="{{::field.uid}}">{{ (field.required ? field.title + ' (' + i18n.text.required + ')' : field.title ) }}</label>
   <input type="text" ng-model="field.value" filefunnel ng-readonly="true">
   <div npdc:formula-validation-message class="np-validation-message"></div>

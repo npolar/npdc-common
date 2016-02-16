@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<div ng-if="tree">
+<div ng-if="tree && field.visible">
   <md-autocomplete md-items="item in querySearch(filter.text)" md-min-length="1" md-search-text="filter.text" md-floating-label="Find keyword" md-selected-item-change="onSelect(item)" md-item-text="item.label" md-menu-class="np-autocomplete-custom">
 
     <md-item-template>

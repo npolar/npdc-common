@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<md-checkbox ng-attr-id="::field.uid" ng-model="field.value" ng-disabled="field.disabled" aria-label="{{ field.title }}">
+<md-checkbox ng-attr-id="::field.uid" ng-model="field.value" ng-disabled="field.disabled" aria-label="{{ field.title }}"  ng-if="field.visible">
   <label for="{{::field.uid}}">{{ field.title }}</label>
 </md-checkbox>
 <div npdc:formula-validation-message class="np-validation-message"></div>

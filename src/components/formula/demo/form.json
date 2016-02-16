@@ -8,7 +8,8 @@
       "string_minlength_maxlength",
       {
         "id": "string_textarea",
-        "type": "textarea"
+        "type": "textarea",
+        "condition": ["string=='foo'"]
       },
       "string_enum_default",
       "string_color",
