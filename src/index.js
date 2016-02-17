@@ -49,7 +49,7 @@ common.config(function($mdThemingProvider) {
 common.factory('npdcAppConfig', require('./config/npdcAppConfig'));
 common.value('NpdcApplications', require('./config/npdc-applications.json'));
 
-common.run(($http, $window, NpolarTranslate, $templateCache) => {
+common.run(($http, $window, NpolarTranslate, $templateCache, NpdcApplications, NpolarLang, npdcAppConfig) => {
   // Convenience for debugging missing templates
   let og = $templateCache.get;
   $templateCache.get = function () {
@@ -65,7 +65,16 @@ common.run(($http, $window, NpolarTranslate, $templateCache) => {
     NpolarTranslate.appendToDictionary(response.data);
   });
 
-  // Check if app has update anf update
+  // Add application texts
+  NpdcApplications.forEach(app => {
+    NpolarTranslate.dictionary[app.link] = app.name;
+    NpolarTranslate.dictionary[app.link + '.description'] = app.description;
+  });
+
+  // Set default languages
+  NpolarLang.setLanguages(npdcAppConfig.i18n.languages);
+
+  // Check if app has update and update
   if (window.applicationCache) {
     applicationCache.addEventListener('updateready', function() {
       $window.location.reload();

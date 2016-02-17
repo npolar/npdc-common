@@ -1,6 +1,15 @@
 [{
   "link": "/dataset",
-  "name": "Dataset catalogue",
+  "name": [
+    {
+      "@language": "en",
+      "@value": "Dataset"
+    },
+    {
+      "@language": "no",
+      "@value": "Datasett"
+    }
+  ],
   "icons": [{
     "size": 96,
     "src": "/assets/img/app-icons/96/dataset.png"
@@ -9,12 +18,30 @@
     "src": "/assets/img/app-icons/48/dataset.png"
   }],
   "screenshots": ["/assets/img/screenshots/dataset.png"],
-  "description": "Datasets across a varient of fields spanning from the 1900 to present day.",
+  "description": [
+    {
+      "@language": "en",
+      "@value": "Datasets across a varient of fields spanning from the 1900 to present day."
+    },
+    {
+      "@language": "no",
+      "@value": "Datasett på tvers av en rekke felt som spenner fra 1900 til i dag."
+    }
+  ],
   "category": "public",
   "promote": true
 }, {
   "link": "//api.npolar.no",
-  "name": "APIs",
+  "name": [
+    {
+      "@language": "en",
+      "@value": "APIs"
+    },
+    {
+      "@language": "no",
+      "@value": "APIer"
+    }
+  ],
   "icons": [{
     "size": 96,
     "src": "/assets/img/app-icons/96/api.png"
@@ -23,12 +50,30 @@
     "src": "/assets/img/app-icons/48/api.png"
   }],
   "screenshots": [],
-  "description": "api.npolar.no API reference.",
+  "description": [
+    {
+      "@language": "en",
+      "@value": "Browse our API's and API documentation."
+    },
+    {
+      "@language": "no",
+      "@value": "Bla gjennom våre APIer og API dokumentasjon."
+    }
+  ],
   "category": "public",
   "promote": true
 }, {
   "link": "/geodata",
-  "name": "Geodata",
+  "name": [
+    {
+      "@language": "en",
+      "@value": "Geodata"
+    },
+    {
+      "@language": "no",
+      "@value": "Geodata"
+    }
+  ],
   "icons": [{
     "size": 96,
     "src": "/assets/img/app-icons/96/geodata.png"
@@ -37,12 +82,30 @@
     "src": "/assets/img/app-icons/48/geodata.png"
   }],
   "screenshots": [],
-  "description": "Map services for svalbard, the arctic and antarctica.",
+  "description": [
+    {
+      "@language": "en",
+      "@value": "Map data and services for the Norwegian polar land areas."
+    },
+    {
+      "@language": "no",
+      "@value": "Kartdata og tjenester for de norske polarlandområdene."
+    }
+  ],
   "category": "public",
   "promote": true
 }, {
   "link": "/publication",
-  "name": "Publications",
+  "name": [
+    {
+      "@language": "en",
+      "@value": "Publications"
+    },
+    {
+      "@language": "no",
+      "@value": "Publikasjoner"
+    }
+  ],
   "icons": [{
     "size": 96,
     "src": "/assets/img/app-icons/96/publication.png"
@@ -51,12 +114,31 @@
     "src": "/assets/img/app-icons/48/publication.png"
   }],
   "screenshots": ["/assets/img/screenshots/publication.png"],
-  "description": "Publication published by scientists at the Norwegian Polar Institute.",
+  "description": [
+    {
+      "@language": "en",
+      "@value": "Search for scientific articles, papers and other publications."
+    },
+    {
+      "@language": "no",
+      "@value": "Søk i våre vitenskapelige artikler, rapporter, og andre skrifter."
+    }
+  ],
   "category": "public",
   "promote": true
 }, {
   "link": "/tracking",
   "name": "Tracking",
+  "name": [
+    {
+      "@language": "en",
+      "@value": "Tracking"
+    },
+    {
+      "@language": "no",
+      "@value": "Sporing"
+    }
+  ],
   "icons": [{
     "size": 96,
     "src": "/assets/img/app-icons/96/tracking.png"
@@ -65,12 +147,30 @@
     "src": "/assets/img/app-icons/48/tracking.png"
   }],
   "screenshots": ["/assets/img/screenshots/tracking.png"],
-  "description": "Tracking stuff.",
+  "description": [
+    {
+      "@language": "en",
+      "@value": "Tracking data for wildlife in Norwegian polar areas."
+    },
+    {
+      "@language": "no",
+      "@value": "Sporingsdata for dyr i norske polarområder."
+    }
+  ],
   "category": "public",
   "promote": true
 }, {
   "link": "/vessel",
-  "name": "Historic Vessels",
+  "name": [
+    {
+      "@language": "en",
+      "@value": "Historic Vessels"
+    },
+    {
+      "@language": "no",
+      "@value": "Historiske skip"
+    }
+  ],
   "icons": [{
     "size": 96,
     "src": "/assets/img/app-icons/96/vessels.png"
@@ -79,12 +179,30 @@
     "src": "/assets/img/app-icons/48/vessels.png"
   }],
   "screenshots": [],
-  "description": "Historic record of ships used in polar exploration.",
+  "description": [
+    {
+      "@language": "en",
+      "@value": "Historical record of ships used in polar exploration."
+    },
+    {
+      "@language": "no",
+      "@value": "Historisk databas av skip som benyttes i polarforskning."
+    }
+  ],
   "category": "public",
   "promote": true
 }, {
   "link": "/map/archive",
-  "name": "Map archive",
+  "name": [
+    {
+      "@language": "en",
+      "@value": "Map archive"
+    },
+    {
+      "@language": "no",
+      "@value": "Kartarkiv"
+    }
+  ],
   "icons": [{
     "size": 96,
     "src": "/assets/img/app-icons/96/map_archive.png"
@@ -93,12 +211,30 @@
     "src": "/assets/img/app-icons/48/map_archive.png"
   }],
   "screenshots": [],
-  "description": "Historic record of maps from the polar regions.",
+  "description": [
+    {
+      "@language": "en",
+      "@value": "Historical record of maps from the polar regions."
+    },
+    {
+      "@language": "no",
+      "@value": "Historisk databas av kart fra polarområdene."
+    }
+  ],
   "category": "public",
   "promote": true
 }, {
   "link": "/people",
-  "name": "People",
+  "name": [
+    {
+      "@language": "en",
+      "@value": "People"
+    },
+    {
+      "@language": "no",
+      "@value": "Personer"
+    }
+  ],
   "icons": [{
     "size": 96,
     "src": "/assets/img/app-icons/96/people.png"
@@ -107,12 +243,30 @@
     "src": "/assets/img/app-icons/48/people.png"
   }],
   "screenshots": [],
-  "description": "Browse employees at the institue.",
+  "description": [
+    {
+      "@language": "en",
+      "@value": "Browse employees at the institue."
+    },
+    {
+      "@language": "no",
+      "@value": "Search for employees at the Norwegian Polar Institute"
+    }
+  ],
   "category": "public",
   "promote": true
 }, {
   "link": "http://placenames.npolar.no",
-  "name": "Placenames",
+  "name": [
+    {
+      "@language": "en",
+      "@value": "Placenames"
+    },
+    {
+      "@language": "no",
+      "@value": "Stedsnavn"
+    }
+  ],
   "icons": [{
     "size": 96,
     "src": "/assets/img/app-icons/96/placename.png"
@@ -121,12 +275,30 @@
     "src": "/assets/img/app-icons/48/placename.png"
   }],
   "screenshots": [],
-  "description": "Official placename database for the polar regions.",
+  "description": [
+    {
+      "@language": "en",
+      "@value": "Official placename database for the Norwegian polar regions."
+    },
+    {
+      "@language": "no",
+      "@value": "Offisielle stedsnavn i dei norske polarområda."
+    }
+  ],
   "category": "public",
   "promote": true
 }, {
   "link": "/indicator/timeseries",
-  "name": "Timeseries",
+  "name": [
+    {
+      "@language": "en",
+      "@value": "Timeseries"
+    },
+    {
+      "@language": "no",
+      "@value": "Tidsserier"
+    }
+  ],
   "icons": [{
     "size": 96,
     "src": "/assets/img/app-icons/96/timeseries.png"
@@ -135,12 +307,30 @@
     "src": "/assets/img/app-icons/48/timeseries.png"
   }],
   "screenshots": [],
-  "description": "Long-term environmental monitoring timeseries.",
+  "description": [
+    {
+      "@language": "en",
+      "@value": "Long-term environmental monitoring timeseries."
+    },
+    {
+      "@language": "no",
+      "@value": "Tidsserier for langsiktig miljøovervåking."
+    }
+  ],
   "category": "public",
   "promote": true
 }, {
   "link": "/courses",
-  "name": "Courses",
+  "name": [
+    {
+      "@language": "en",
+      "@value": "Courses"
+    },
+    {
+      "@language": "no",
+      "@value": "Kurser"
+    }
+  ],
   "icons": [{
     "size": 96,
     "src": "/assets/img/app-icons/96/courses.png"
@@ -149,11 +339,29 @@
     "src": "/assets/img/app-icons/48/courses.png"
   }],
   "screenshots": [],
-  "description": "Npolar courses",
+  "description": [
+    {
+      "@language": "en",
+      "@value": "Courses available at the institute."
+    },
+    {
+      "@language": "no",
+      "@value": "Instituttes interne kurser."
+    }
+  ],
   "category": "internal"
 }, {
   "link": "/marine/biology",
-  "name": "Marine Biology",
+  "name": [
+    {
+      "@language": "en",
+      "@value": "Marine Biology"
+    },
+    {
+      "@language": "no",
+      "@value": "Marinbiologi"
+    }
+  ],
   "icons": [{
     "size": 96,
     "src": "/assets/img/app-icons/96/marine_biology.png"
@@ -162,11 +370,29 @@
     "src": "/assets/img/app-icons/48/marine_biology.png"
   }],
   "screenshots": [],
-  "description": "Marine biology",
+  "description": [
+    {
+      "@language": "en",
+      "@value": "Sample database for nutrients, lipids and plankton."
+    },
+    {
+      "@language": "no",
+      "@value": "Database for næringsstoffer, lipider og plankton."
+    }
+  ],
   "category": "disabled"
 }, {
   "link": "/user",
-  "name": "Users",
+  "name": [
+    {
+      "@language": "en",
+      "@value": "Users"
+    },
+    {
+      "@language": "no",
+      "@value": "Brukere"
+    }
+  ],
   "icons": [{
     "size": 96,
     "src": "/assets/img/app-icons/96/users.png"
@@ -175,6 +401,15 @@
     "src": "/assets/img/app-icons/48/users.png"
   }],
   "screenshots": [],
-  "description": "User administration.",
+  "description": [
+    {
+      "@language": "en",
+      "@value": "User administration."
+    },
+    {
+      "@language": "no",
+      "@value": "Brukeradministrasjon."
+    }
+  ],
   "category": "internal"
 }]
