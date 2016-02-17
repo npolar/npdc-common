@@ -1,11 +1,11 @@
 'use strict';
 
-let AutocompleteConfigFactory = function() {
+let AutocompleteConfigFactory = function(NpolarTranslate) {
   'ngInject';
 
   let showCollections = false;
   let floatingLabel = true;
-  let placeholder = "Search";
+  let placeholder = NpolarTranslate.translate('search');
 
   let collections = {
     '/dataset': true,

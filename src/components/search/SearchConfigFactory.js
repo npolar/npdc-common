@@ -1,6 +1,6 @@
 'use strict';
 
-let SearchConfigFactory = function($location) {
+let SearchConfigFactory = function($location, NpolarTranslate) {
   'ngInject';
 
   let results = {
@@ -14,7 +14,7 @@ let SearchConfigFactory = function($location) {
         type: 'range' // 'autocomplete', 'checkbox', 'hidden'
       }
     };
-  let placeholder = 'Search';
+  let placeholder = NpolarTranslate.translate('search');
 
   let constructor = function (options) {
     return Object.assign({

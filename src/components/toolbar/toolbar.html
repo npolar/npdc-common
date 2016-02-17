@@ -19,7 +19,7 @@
     <md-menu class="np-app-menu">
       <md-button class="md-icon-button" ng-click="$mdOpenMenu($event)">
         <md-icon md-menu-origin>apps</md-icon>
-        <md-tooltip>Quick navigation</md-tooltip>
+        <md-tooltip>{{ 'npdc.menu.quicknav' | t }}</md-tooltip>
       </md-button>
       <md-menu-content width="6" class="np-app-menu-content">
         <div ng-repeat="group in options.toolbarMenuGroups">

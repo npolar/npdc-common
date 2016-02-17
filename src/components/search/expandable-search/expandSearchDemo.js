@@ -3,11 +3,12 @@
 require('../../');
 let angular = require('angular');
 
-angular.module('expandSearchDemo', ['npdcCommon']).controller('ExpandSearchDemoCtrl', function($scope, NpdcAutocompleteConfigFactory) {
+angular.module('expandSearchDemo', ['npdcCommon']).controller('ExpandSearchDemoCtrl',
+  function($scope, NpdcAutocompleteConfigFactory, NpolarTranslate) {
   $scope.options = new NpdcAutocompleteConfigFactory({
     showCollections: true,
     global: true,
-    placeholder: "Search Norwegian Polar Data Centre"
+    placeholder: NpolarTranslate.translate('search') + ' ' + NpolarTranslate.translate('NPDC')
   });
 
 });

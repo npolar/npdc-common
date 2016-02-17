@@ -9,7 +9,7 @@ let expandSearch = function() {
       options: '='
     },
     template: require('./expandSearch.html'),
-    controller: function($scope, $element, $mdMedia, $timeout, $location, NpdcSearchService, npdcAppConfig) {
+    controller: function($scope, $element, $mdMedia, $timeout, $location, NpdcSearchService, npdcAppConfig, NpolarTranslate) {
       'ngInject';
 
       $scope.$mdMedia = $mdMedia;
@@ -21,7 +21,7 @@ let expandSearch = function() {
         q: $location.search().q
       });
 
-      $scope.placeholder = $scope.options.placeholder || 'Search ' + npdcAppConfig.toolbarTitle;
+      $scope.placeholder = $scope.options.placeholder || NpolarTranslate.translate('search') + ' ' + npdcAppConfig.toolbarTitle;
 
       $scope.blockEvent = function($event) {
         $event.stopImmediatePropagation();
