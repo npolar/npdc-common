@@ -2,7 +2,7 @@
 <div>
   <md-button class="md-icon-button np-bottom-sheet-toggle" ng-click="showBottomSheet($event)">
     <md-icon>menu</md-icon>
-    <md-tooltip>More actions</md-tooltip>
+    <md-tooltip>{{ 'edit.actions' | t }}</md-tooltip>
   </md-button>
   <div ng-if="options.alwaysShow" ng-include="'bottom-sheet-template.tmpl'"></div>
 </div>

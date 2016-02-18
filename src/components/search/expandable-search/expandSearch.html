@@ -4,6 +4,7 @@
     <md-fab-trigger>
       <md-button aria-label="search" class="md-fab md-mini" ng-focus-out="blockEvent($event);" ng-click="open($event);">
         <md-icon>search</md-icon>
+        <md-tooltip>{{ 'search' | t }}</md-tooltip>
       </md-button>
     </md-fab-trigger>
 
@@ -15,9 +16,11 @@
           </div>
           <md-button class="md-icon-button" ng-click="toggleFilters();">
             <md-icon>settings</md-icon>
+            <md-tooltip>{{ 'search.filter' | t }}</md-tooltip>
           </md-button>
           <md-button class="md-icon-button" ng-click="search();">
             <md-icon>search</md-icon>
+            <md-tooltip>{{ 'search' | t }}</md-tooltip>
           </md-button>
         </div>
       </md-fab-actions>

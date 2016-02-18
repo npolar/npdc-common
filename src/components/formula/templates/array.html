@@ -12,13 +12,16 @@
         <div class="np-formula-input-ctrls">
           <a ng-show="!$first" href="" ng-click="field.moveUp($index)" ng-attr-title="{{ i18n.text.moveup }}" class="drag-handle">
             <md-icon>arrow_upward</md-icon>
+            <md-tooltip>{{ i18n.text.moveup }}</md-tooltip>
           </a>
           <a ng-show="!$last" href="" ng-click="field.moveDown($index)" ng-attr-title="{{ i18n.text.movedown }}" class="drag-handle">
             <md-icon>arrow_downward</md-icon>
+            <md-tooltip>{{ i18n.text.movedown }}</md-tooltip>
           </a>
           <md-menu class="remove">
             <md-button aria-label="Remove" class="md-icon-button remove" ng-click="$mdOpenMenu($event)">
               <md-icon md-menu-origin>close</md-icon>
+              <md-tooltip>{{ i18n.text.remove.tooltip }}</md-tooltip>
             </md-button>
             <md-menu-content>
               <md-menu-item>
@@ -42,18 +45,22 @@
               <span ng-if="!value.visible">{{ value.value | formulaInlineValues }}</span>
               <div class="np-formula-object-ctrls">
                 <div npdc:formula-field-info class="np-field-info" ng-if="value.description"></div>
-                <a ng-show="!$first" href="" ng-click="field.moveUp($index)" ng-attr-title="{{ i18n.text.moveup }}" class="drag-handle">
+                <a ng-show="!$first" href="" ng-click="field.moveUp($index)" class="drag-handle">
                   <md-icon>arrow_upward</md-icon>
+                  <md-tooltip>{{ i18n.text.moveup }}</md-tooltip>
                 </a>
-                <a ng-show="!$last" href="" ng-click="field.moveDown($index)" ng-attr-title="{{ i18n.text.movedown }}" class="drag-handle">
+                <a ng-show="!$last" href="" ng-click="field.moveDown($index)" class="drag-handle">
                   <md-icon>arrow_downward</md-icon>
+                  <md-tooltip>{{ i18n.text.movedown }}</md-tooltip>
                 </a>
-                <a href="" ng-click="field.itemToggle($index)" ng-attr-title="{{ value.visible ? i18n.text.minimize.tooltip : i18n.text.maximize.tooltip }}">
+                <a href="" ng-click="field.itemToggle($index)">
                   <md-icon>{{ value.visible ? 'expand_less' : 'expand_more' }}</md-icon>
+                  <md-tooltip>{{ value.visible ? i18n.text.minimize.tooltip : i18n.text.maximize.tooltip }}</md-tooltip>
                 </a>
                 <md-menu>
                   <md-button aria-label="Remove" class="md-icon-button remove" ng-click="$mdOpenMenu($event)">
                     <md-icon md-menu-origin>close</md-icon>
+                    <md-tooltip>{{ i18n.text.remove.tooltip }}</md-tooltip>
                   </md-button>
                   <md-menu-content>
                     <md-menu-item>
@@ -74,6 +81,7 @@
     <div class="np-formula-array-add">
       <md-button ng-click="field.itemAdd()" class="md-fab md-mini md-primary md-hue-1" aria-label="{{ i18n.text.add.tooltip }}">
         <md-icon>add</md-icon>
+        <md-tooltip>{{ i18n.text.add.tooltip }}</md-tooltip>
       </md-button>
     </div>
     <div style="clear: both;"></div>
