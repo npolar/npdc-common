@@ -3,6 +3,10 @@
 @import 'layouts/**/*';
 @import 'components/**/*';
 
+body {
+  overflow-x: hidden;
+}
+
 a {
   color: $color-primary-0;
 

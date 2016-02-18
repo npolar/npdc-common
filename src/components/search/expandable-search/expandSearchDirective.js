@@ -39,6 +39,10 @@ let expandSearch = function() {
           $scope.isOpen = true;
         }, 1);
 
+        $timeout(() => {
+          $scope.isOpenDelay = true;
+        }, 200);
+
         return false;
       };
 
@@ -58,7 +62,7 @@ let expandSearch = function() {
       };
 
       $scope.close = function () {
-        $scope.isOpen = false;
+        $scope.isOpen = $scope.isOpenDelay = false;
       };
 
       $scope.search = function(q) {

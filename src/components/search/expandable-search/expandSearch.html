@@ -14,13 +14,13 @@
           <div flex layout>
             <npdc:autocomplete flex options="options"></npdc:autocomplete>
           </div>
-          <md-button class="md-icon-button" ng-click="toggleFilters();">
+          <md-button class="md-icon-button" ng-click="toggleFilters();" aria-label="{{ 'search.filter' | t }}">
             <md-icon>settings</md-icon>
-            <md-tooltip>{{ 'search.filter' | t }}</md-tooltip>
+            <md-tooltip ng-if="isOpenDelay">{{ 'search.filter' | t }}</md-tooltip>
           </md-button>
-          <md-button class="md-icon-button" ng-click="search();">
+          <md-button class="md-icon-button" ng-click="search();" aria-label="{{ 'search' | t }}">
             <md-icon>search</md-icon>
-            <md-tooltip>{{ 'search' | t }}</md-tooltip>
+            <md-tooltip ng-if="isOpenDelay">{{ 'search' | t }}</md-tooltip>
           </md-button>
         </div>
       </md-fab-actions>
