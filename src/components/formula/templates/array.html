@@ -10,10 +10,10 @@
       <li ng-repeat="value in field.values" ng-class="{ valid: field.valid, error: field.error }" class="np-formula-list-item">
         <formula:field field="value" class="multi-ctrls"></formula:field>
         <div class="np-formula-input-ctrls">
-          <a ng-show="!$first" href="" ng-click="field.moveUp($index)" title="{{ i18n.text.moveup }}">
+          <a ng-show="!$first" href="" ng-click="field.moveUp($index)" ng-attr-title="{{ i18n.text.moveup }}" class="drag-handle">
             <md-icon>arrow_upward</md-icon>
           </a>
-          <a ng-show="!$last" href="" ng-click="field.moveDown($index)" title="{{ i18n.text.movedown }}">
+          <a ng-show="!$last" href="" ng-click="field.moveDown($index)" ng-attr-title="{{ i18n.text.movedown }}" class="drag-handle">
             <md-icon>arrow_downward</md-icon>
           </a>
           <md-menu class="remove">
@@ -22,7 +22,7 @@
             </md-button>
             <md-menu-content>
               <md-menu-item>
-                <md-button ng-click="field.itemRemove($index)" title="{{ i18n.text.remove.tooltip }}" class="md-warn">
+                <md-button ng-click="field.itemRemove($index)" ng-attr-title="{{ i18n.text.remove.tooltip }}" class="md-warn">
                   <md-icon md-menu-align-target>delete</md-icon> Remove item
                 </md-button>
               </md-menu-item>
@@ -42,13 +42,13 @@
               <span ng-if="!value.visible">{{ value.value | formulaInlineValues }}</span>
               <div class="np-formula-object-ctrls">
                 <div npdc:formula-field-info class="np-field-info" ng-if="value.description"></div>
-                <a ng-show="!$first" href="" ng-click="field.moveUp($index)" title="{{ i18n.text.moveup }}">
+                <a ng-show="!$first" href="" ng-click="field.moveUp($index)" ng-attr-title="{{ i18n.text.moveup }}" class="drag-handle">
                   <md-icon>arrow_upward</md-icon>
                 </a>
-                <a ng-show="!$last" href="" ng-click="field.moveDown($index)" title="{{ i18n.text.movedown }}">
+                <a ng-show="!$last" href="" ng-click="field.moveDown($index)" ng-attr-title="{{ i18n.text.movedown }}" class="drag-handle">
                   <md-icon>arrow_downward</md-icon>
                 </a>
-                <a href="" ng-click="field.itemToggle($index)" title="{{ value.visible ? i18n.text.minimize.tooltip : i18n.text.maximize.tooltip }}">
+                <a href="" ng-click="field.itemToggle($index)" ng-attr-title="{{ value.visible ? i18n.text.minimize.tooltip : i18n.text.maximize.tooltip }}">
                   <md-icon>{{ value.visible ? 'expand_less' : 'expand_more' }}</md-icon>
                 </a>
                 <md-menu>
@@ -57,7 +57,7 @@
                   </md-button>
                   <md-menu-content>
                     <md-menu-item>
-                      <md-button ng-click="field.itemRemove($index)" title="{{ i18n.text.remove.tooltip }}" class="md-warn">
+                      <md-button ng-click="field.itemRemove($index)" ng-attr-title="{{ i18n.text.remove.tooltip }}" class="md-warn">
                         <md-icon md-menu-align-target>delete</md-icon> Remove item
                       </md-button>
                     </md-menu-item>
