@@ -1,6 +1,29 @@
 <!DOCTYPE html>
-<md-input-container ng-if="field.visible">
-  <label for="{{::field.uid}}">{{ (field.required ? field.title + ' (' + i18n.text.required + ')' : field.title ) }}</label>
-  <input type="text" ng-model="field.value" filefunnel ng-readonly="true">
+<md-whiteframe class="md-whiteframe-z2 np-formula-file" ng-if="field.visible">
+  <div>{{ (field.required ? field.title + ' (' + i18n.text.required + ')' : field.title ) }}</div>
+    <md-list>
+      <md-list-item ng-repeat="file in files">
+        <span><md-icon class="md-avatar">attachment</md-icon></span>
+        <div class="md-list-item-text">
+          <p>{{file.filename}}</p>
+          <md-menu class="remove">
+            <md-button aria-label="Remove" class="md-icon-button remove" ng-click="$mdOpenMenu($event)">
+              <md-icon md-menu-origin>close</md-icon>
+              <md-tooltip>{{ i18n.text.remove.tooltip }}</md-tooltip>
+            </md-button>
+            <md-menu-content>
+              <md-menu-item>
+                <md-button ng-click="removeFile($index);" ng-attr-title="{{ i18n.text.remove.tooltip }}" class="md-warn">
+                  <md-icon md-menu-align-target>delete</md-icon> Remove item
+                </md-button>
+              </md-menu-item>
+            </md-menu-content>
+          </md-menu>
+        </div>
+      </md-list-item>
+    </md-list>
+  <div layout="column" layout-align="space-between end">
+    <md-button class="md-raised md-primary" ng-click="showUpload($event);"><md-icon>backup</md-icon> Upload file</md-button>
+  </div>
   <div npdc:formula-validation-message class="np-validation-message"></div>
-</md-input-container>
+</md-whiteframe>

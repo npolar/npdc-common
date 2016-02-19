@@ -125,8 +125,8 @@
     }
 
     // Hide object array frames
-    &:not(.formulaCustomObject) {
-      .formulaArray > md-whiteframe {
+    :not(.formulaCustomObject) {
+      .formulaArray > fieldset > md-whiteframe {
         box-shadow: none;
         margin: 0;
         padding: 0;
@@ -142,7 +142,7 @@
 
   // Hide array objects frames and titles
   .np-formula-array-fieldset {
-    .formulaObject > md-whiteframe {
+    > fieldset > md-whiteframe {
       box-shadow: none;
       margin: 0;
       padding: 0;

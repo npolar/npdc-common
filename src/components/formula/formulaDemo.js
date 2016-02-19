@@ -34,7 +34,7 @@ angular
           },
           {
             match: "file_ref",
-            template: '<npdc:formula-file-object></npdc:formula-file-object>'
+            template: '<npdc:formula-file></npdc:formula-file>'
           }
         ]),
         languages: npdcAppConfig.formula.languages
@@ -121,7 +121,18 @@ angular
       label: "first_name",
       value: "first_name"
     }, $scope.formula);
-    fileFunnelService.defineOptions({match: '#/string_file', multiple: true}, $scope.formula);
+    var successCallback = function (file) {
+      return {
+        rel: 'data',
+        href: file.url,
+        title: file.filename,
+        length: file.file_size,
+        hash: file.md5sum,
+        type: file.content_type
+      };
+    };
+    fileFunnelService.defineOptions({match: '#/string_file', server: 'https://dbtest.data.npolar.no/dumpster'}, $scope.formula);
+    fileFunnelService.defineOptions({match: '#/links', server: 'https://dbtest.data.npolar.no/dumpster', successCallback}, $scope.formula);
     chronopicService.defineOptions({match: '#/string_date', locale: 'ja', format: "{YYYY} {YY} {YYYY} {MMM} {DD} {MMMM}"});
     chronopicService.defineOptions({match: '#/string_datetime', locale: 'en'});
 

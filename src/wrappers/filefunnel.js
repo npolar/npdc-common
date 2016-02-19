@@ -37,28 +37,49 @@ ff.controller('FFUploadController', function($scope, $mdDialog, options) {
 
 ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig) {
   const DEFAULTS = {
-    server: "http://apptest.data.npolar.no/_file",
     accept: "*/*",
-    chunked: true,
+    chunked: false,
     multiple: false
   };
 
   let configs = formulaFieldConfig.getInstance();
   let defineOptions = function (config, formula) {
-    configs.addConfig(Object.assign({}, DEFAULTS, config));
+    var options = Object.assign({}, DEFAULTS, config);
+    if (!options.server) {
+      throw "You must set a server!";
+    }
+    configs.addConfig(options);
     if (formula) {
-      formula.addTemplate({
-        match: config.match,
-        template: '<npdc:formula-file></npdc:formula-file>'
+      formula.getFields().then(fields => {
+        var field = fields.find(field => configs.isMatch(field, config));
+        if (field.typeOf('array') || field.typeOf('object')) {
+          if (!config.successCallback) {
+            throw "You really need a successCallback to do something useful...";
+          }
+        } else {
+          if (!config.successCallback) {
+            config.successCallback = function (file) {
+              return file.url;
+            };
+          }
+        }
+
+        formula.addTemplate({
+          match: config.match,
+          template: '<npdc:formula-file></npdc:formula-file>'
+        });
       });
     }
   };
 
   let getOptions = function (field) {
-    return configs.getMatchingConfig(field) || DEFAULTS;
+    return configs.getMatchingConfig(field);
   };
 
-  let showUpload = function(ev, options) {
+  let showUpload = function(ev, field, options) {
+    if (!options || !options.server) {
+      throw "You must set a server in options!";
+    }
     return $mdDialog.show({
       clickOutsideToClose: true,
       controller: 'FFUploadController',
@@ -67,6 +88,24 @@ ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig) {
       },
       targetEvent: ev,
       template: require('./filefunnel.html')
+    }).then(files => {
+      let response = JSON.parse(files.xhr.response)[0];
+      if (typeof options.successCallback === "function") {
+        let fieldValues = options.successCallback.call({}, response);
+        if (field.typeOf('array') || field.typeOf('object')) {
+          if (typeof fieldValues !== 'object') {
+            throw "successCallback should return object with keys matching the fields you want to set file data to";
+          }
+          let theField = field.typeOf('array') ? field.itemAdd() : field;
+
+          theField.fields.forEach(field => {
+            field.value = fieldValues[field.id] || field.value;
+          });
+        } else if (field.typeOf('field')) {
+          field.value = fieldValues || field.value;
+        }
+      }
+      return response;
     });
   };
 
@@ -75,80 +114,5 @@ ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig) {
     getOptions,
     showUpload,
     status: FileFunnel.status
-  };
-});
-
-ff.directive('filefunnel', function(fileFunnelService) {
-  return {
-    restrict: 'A',
-    controller($scope, $mdDialog) {
-      let options = fileFunnelService.getOptions($scope.field);
-      $scope.showUpload = function(ev, target) {
-        fileFunnelService.showUpload(ev, options)
-          .then(files => {
-            if (target[0] instanceof HTMLInputElement) {
-              target[0].value = options.server + files[0].location;
-            } else if ($scope.field) {
-              $scope.field.fields.forEach(field => {
-                switch (field.id) {
-                  case 'uri':
-                    field.value = options.server + files[0].location;
-                    break;
-                  case 'filename':
-                    field.value = files[0].reference.name;
-                    break;
-                  case 'filesize':
-                    field.value = files[0].reference.size;
-                    break;
-                  case 'mimetype':
-                    field.value = files[0].reference.type;
-                    break;
-                  default:
-                    // noop
-                }
-                field.readonly = true;
-              });
-
-              if ($scope.field.itemAdd) {
-                let oldItemAdd = $scope.field.itemAdd;
-                $scope.field.itemAdd.itemAdd = function (ev) {
-                  fileFunnelService.showUpload(ev, options).then(files => {
-                    files.forEach(file => {
-                      if (file.status !== fileFunnelService.status.COMPLETED) {
-                        return;
-                      }
-                      let newItem = oldItemAdd.call($scope.field);
-                      newItem.fields.forEach(field => {
-                        switch (field.id) {
-                          case 'uri':
-                            field.value = options.server + file.location;
-                            break;
-                          case 'filename':
-                            field.value = file.reference.name;
-                            break;
-                          case 'filesize':
-                            field.value = file.reference.size;
-                            break;
-                          case 'mimetype':
-                            field.value = file.reference.type;
-                            break;
-                          default:
-                            // noop
-                        }
-                        field.readonly = true;
-                      });
-                    });
-                  });
-                };
-              }
-            }
-          });
-      };
-    },
-    link(scope, element, attrs) {
-      element.bind('click', function(ev) {
-        scope.showUpload(ev, element);
-      });
-    }
   };
 });

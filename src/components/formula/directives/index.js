@@ -7,7 +7,6 @@ common.service('formulaAutoCompleteService', require('./autocomplete/autocomplet
 common.directive('npdcFormulaAutocomplete', require('./autocomplete/autocompleteDirective'));
 
 common.directive('npdcFormulaFile', require('./file/fileDirective'));
-common.directive('npdcFormulaFileObject', require('./file/fileObjectDirective'));
 
 common.directive('npdcFormulaPerson', require('./person/personDirective'));
 
