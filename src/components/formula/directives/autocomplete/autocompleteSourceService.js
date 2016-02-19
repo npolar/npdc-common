@@ -10,7 +10,7 @@ let autocompleteSourceService = function(formulaFieldConfig) {
     return configs.getMatchingConfig(field);
   };
 
-  let defineOptions = function (config, formula) {
+  let autocomplete = function (config, formula) {
     configs.addConfig(config);
     if (formula) {
       formula.addTemplate({
@@ -46,7 +46,7 @@ let autocompleteSourceService = function(formulaFieldConfig) {
           let fieldNodes = field.path.replace(/(#\/|\/\d)/g, '').split('/');
           return angular.equals(nodes, fieldNodes);
         };
-        defineOptions({
+        autocomplete({
           match,
           querySource: source
         }, formula);
@@ -55,7 +55,7 @@ let autocompleteSourceService = function(formulaFieldConfig) {
   };
 
   return {
-    defineOptions,
+    autocomplete,
     getOptions,
     autocompleteFacets
   };

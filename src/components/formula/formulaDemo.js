@@ -98,7 +98,7 @@ angular
     let Dataset = NpolarApiResource.resource({'path': '/dataset', 'resource': 'Dataset' });
     formulaAutoCompleteService.autocompleteFacets(['organisations.gcmd_short_name', 'links.type'], Dataset, $scope.formula);
 
-    formulaAutoCompleteService.defineOptions({
+    formulaAutoCompleteService.autocomplete({
       match: "autocomplete",
       querySource: acSourceFn,
       //label: 'key',
@@ -106,7 +106,7 @@ angular
       //onSelect,
       minLength: 1 //(default 0)
     }, $scope.formula);
-    formulaAutoCompleteService.defineOptions({
+    formulaAutoCompleteService.autocomplete({
       match: "autocomplete2",
       querySource: acSource2Fn,
       label: 'a',
@@ -115,12 +115,13 @@ angular
         alert('Select: ' + item.a + ': ' + item.b);
       }
     }, $scope.formula);
-    formulaAutoCompleteService.defineOptions({
+    formulaAutoCompleteService.autocomplete({
       match: "autocomplete3",
       querySource: "//api.npolar.no/person/?fields=first_name,last_name,organisation,email&format=json&variant=array",
       label: "first_name",
       value: "first_name"
     }, $scope.formula);
+    
     var successCallback = function (file) {
       return {
         rel: 'data',
@@ -131,8 +132,8 @@ angular
         type: file.content_type
       };
     };
-    fileFunnelService.defineOptions({match: '#/string_file', server: 'https://dbtest.data.npolar.no/dumpster'}, $scope.formula);
-    fileFunnelService.defineOptions({match: '#/links', server: 'https://dbtest.data.npolar.no/dumpster', successCallback}, $scope.formula);
+    fileFunnelService.fileUploader({match: '#/string_file', server: 'https://dbtest.data.npolar.no/dumpster'}, $scope.formula);
+    fileFunnelService.fileUploader({match: '#/links', server: 'https://dbtest.data.npolar.no/dumpster', successCallback}, $scope.formula);
     chronopicService.defineOptions({match: '#/string_date', locale: 'ja', format: "{YYYY} {YY} {YYYY} {MMM} {DD} {MMMM}"});
     chronopicService.defineOptions({match: '#/string_datetime', locale: 'en'});
 

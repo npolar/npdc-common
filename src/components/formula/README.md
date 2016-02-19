@@ -7,12 +7,11 @@ There is a file upload widget for both a text field, in which case the uri to th
 and for objects in which case the uri, filename, size etc. is stored. This is just a wrapper for filefunnel.
 
     <npdc:formula-file></npdc:formula-file>
-    <npdc:formula-file-object></npdc:formula-file-object>
 
 ## Autocomplete
 Autocomplete is available for string fields and is configured via ```formulaAutoCompleteService``` in any of these ways:
 
-    formulaAutoCompleteService.defineOptions({
+    formulaAutoCompleteService.autocomplete({
       match: [String, Function] (See formulas formulaFieldConfig)
       querySource: [String (uri), Array, Function],
       label: [String (key), Function],
@@ -21,7 +20,7 @@ Autocomplete is available for string fields and is configured via ```formulaAuto
       minLenght: [Number] (default 0)
     }, $scope.formula);
 
-    formulaAutoCompleteService.optionsFromFacets(['organisations.gcmd_short_name', 'links.type'], Dataset, $scope.formula);
+    formulaAutoCompleteService.autocompleteFacets(['organisations.gcmd_short_name', 'links.type'], Dataset, $scope.formula);
 
 
 ## Tabdata

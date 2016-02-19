@@ -43,7 +43,7 @@ ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig) {
   };
 
   let configs = formulaFieldConfig.getInstance();
-  let defineOptions = function (config, formula) {
+  let fileUploader = function (config, formula) {
     var options = Object.assign({}, DEFAULTS, config);
     if (!options.server) {
       throw "You must set a server!";
@@ -110,7 +110,7 @@ ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig) {
   };
 
   return {
-    defineOptions,
+    fileUploader,
     getOptions,
     showUpload,
     status: FileFunnel.status
