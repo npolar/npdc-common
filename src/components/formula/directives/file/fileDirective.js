@@ -19,9 +19,37 @@ let fileDirective = function($http, fileFunnelService) {
       //   status: 409,
       //   url: "https://dbtest.data.npolar.no/dumpster/54a4ce4d-b0f5-f103-c7f1-309529ecf81c",
       // };
-      $scope.files = [];
 
       let options = fileFunnelService.getOptions($scope.field);
+      $scope.files = [];
+
+      let addFile = function (field) {
+        let pass = true;
+        if (typeof options.filterValues === "function") {
+          pass = options.filterValues.call({}, field.value);
+        }
+
+        if (pass) {
+          if (field.typeOf('object')) {
+            $scope.files.push({
+              filename: field.value.title
+            });
+          } else {
+            $scope.files.push({
+              filename: field.value
+            });
+          }
+        }
+      };
+
+      if ($scope.field.typeOf('array')) {
+        $scope.field.values.forEach(value => {
+          addFile(value);
+        });
+      } else {
+        addFile($scope.field);
+      }
+
       $scope.showUpload = function(ev) {
         fileFunnelService.showUpload(ev, $scope.field, options)
           .then(file => {
