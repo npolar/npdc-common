@@ -3,6 +3,7 @@
   <md-dialog-content>
     <div class="md-dialog-content">
       <h2 class="md-title">Upload attachments</h2>
+
       <md-list>
         <md-list-item class="md-3-line" ng-repeat="file in ff.files">
           <md-icon class="md-avatar">attachment</md-icon>
@@ -12,7 +13,12 @@
             <span class="{{file.elements.info.dom.className}}">{{file.elements.info.value}}</span>
           </div>
         </md-list-item>
+        <md-list-item ng-if="askForScope && ff.files.length">
+          <p>Public access</p>
+          <md-checkbox class="md-secondary" ng-model="access.data"></md-checkbox>
+        </md-list-item>
       </md-list>
+
     </div>
   </md-dialog-content>
   <md-dialog-actions>

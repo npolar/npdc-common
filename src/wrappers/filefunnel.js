@@ -10,6 +10,29 @@ ff.controller('FFUploadController', function($scope, $mdDialog, options) {
   let ff = new FileFunnel(null, options);
   $scope.ff = ff;
 
+  if (!Object.keys(options).includes('restricted')) {
+    $scope.askForScope = true;
+    $scope.access = {
+      data: true
+    };
+    $scope.$watch('access.data', access => {
+      if (access) {
+        ff.server = ff.server.replace('/restricted/', '/');
+      } else {
+        ff.server = ff.server.replace(/\/$/, '') + '/restricted/';
+      }
+    });
+  }
+
+  if (/:id/.test(options.server)) {
+    if (options.formula) {
+      let model = options.formula.getModel();
+      ff.server = ff.server.replace(':id', model.id || model._id);
+    } else {
+      throw "Server needs a document id to be able to upload files.";
+    }
+  }
+
   ff._elements.fileInput.on('change', () => {
     $scope.$apply();
   });
@@ -44,7 +67,7 @@ ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig) {
 
   let configs = formulaFieldConfig.getInstance();
   let fileUploader = function (config, formula) {
-    var options = Object.assign({}, DEFAULTS, config);
+    var options = Object.assign({}, DEFAULTS, config, {formula});
     if (!options.server) {
       throw "You must set a server!";
     }
@@ -76,10 +99,18 @@ ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig) {
     return configs.getMatchingConfig(field);
   };
 
-  let showUpload = function(ev, field, options) {
+  let handleOptions = function (options) {
     if (!options || !options.server) {
       throw "You must set a server in options!";
     }
+
+    if (options.restricted) {
+      options.server += '/restricted';
+    }
+  };
+
+  let showUpload = function(ev, field, options) {
+    handleOptions(options);
     return $mdDialog.show({
       clickOutsideToClose: true,
       controller: 'FFUploadController',
