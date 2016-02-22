@@ -15,7 +15,7 @@ let AppWrapperCtrl = function($location, $scope, npolarApiConfig, npdcAppConfig,
   };
 
   if ("production" === npolarApiConfig.environment) {
-    if ("data.npolar.no" !== window.location.hostname) {
+    if ("app2.data.npolar.no" !== window.location.hostname) {
       $scope.warning = true;
     }
   }

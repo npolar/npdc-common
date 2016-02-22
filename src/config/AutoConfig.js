@@ -26,7 +26,7 @@ var AutoConfig = function(environment) {
     if ("development" === environment) {
       base = "//localhost:9393";
     } else if ("test" === environment) {
-      base = "//apptest.data.npolar.no";
+      base = "https://apptest.data.npolar.no:3000";
     } else if ("production" === environment || undefined === environment || null === environment) {
       base = "//api.npolar.no";
     } else {
