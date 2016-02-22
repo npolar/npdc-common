@@ -2,5 +2,6 @@
 <npdc:bottom-sheet options="bottomSheetOptions"></npdc:bottom-sheet>
 <md-content ng-class="{ 'np-bottom-sheet-static': bottomSheetOptions.alwaysShow }">
   <formula options="formula._cfg"></formula>
+  <npdc:loader ng-if="!formula._cfg.form.ready"></npdc:loader>
 </md-content>
   <npdc:save-button class="np-primary-control" ng-show="formula._cfg.form.ready"></npdc:save-button>

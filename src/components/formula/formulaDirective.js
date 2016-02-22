@@ -5,6 +5,7 @@ var formula = function ($mdDialog, npdcAppConfig) {
 
   return {
     template: require('./edit.html'),
+    scope: false,
     controller: function ($scope) {
       'ngInject';
 

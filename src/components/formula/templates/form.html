@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<npdc:loader ng-if="!form.ready"></npdc:loader>
-<form name="formula" class="formula" ng-show="form.ready">
-  <header ng-if="::form.title">
-    {{ ::form.title }}
-  </header>
+<div>
+  <form name="formula" class="formula" ng-show="form.ready">
+    <header ng-if="::form.title">
+      {{ ::form.title }}
+    </header>
 
-  <md-tabs md-dynamic-height md-border-bottom>
-      <formula:fieldsets></formula:fieldsets>
-  </md-tabs>
-  <div class="np-padding">
-    <span ng-if="form.errors" title="{{ form.errors.join('\n') }}">{{ i18n.text.invalid | formulaReplace : { count: form.errors.length } }}</span>
-  </div>
-</form>
+    <md-tabs md-dynamic-height md-border-bottom>
+        <formula:fieldsets></formula:fieldsets>
+    </md-tabs>
+    <div class="np-padding">
+      <span ng-if="form.errors" title="{{ form.errors.join('\n') }}">{{ i18n.text.invalid | formulaReplace : { count: form.errors.length } }}</span>
+    </div>
+  </form>
+</div>
