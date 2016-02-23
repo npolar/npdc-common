@@ -4,7 +4,7 @@ let FileFunnel = require('filefunnel.js');
 let angular = require('angular');
 require('filefunnel.js/dist/js/filefunnel-i18n.min.js');
 
-let ff = angular.module('filefunnel', ['ngMaterial']);
+let ff = angular.module('filefunnel', ['ngMaterial', 'ngNpolar']);
 
 ff.controller('FFUploadController', function($scope, $mdDialog, options) {
   let ff = new FileFunnel(null, options);
@@ -58,11 +58,12 @@ ff.controller('FFUploadController', function($scope, $mdDialog, options) {
   ff.progressType = 'determinate';
 });
 
-ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig) {
+ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig, NpolarApiSecurity) {
   const DEFAULTS = {
     accept: "*/*",
     chunked: false,
-    multiple: false
+    multiple: false,
+    auth: NpolarApiSecurity.authorization()
   };
 
   let configs = formulaFieldConfig.getInstance();

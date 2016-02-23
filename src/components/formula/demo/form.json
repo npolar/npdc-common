@@ -13,16 +13,16 @@
       },
       "string_enum_default",
       "string_color",
-      "string_date",
       "string_datetime",
       "string_year",
       {
         "id": "string_yearmonth",
         "format": "year-month"
       },
-      "string_time"
+      "string_time",
+      "string_date"
     ]
-  }, {
+  }, { "title": "dadada", "fields": ["string_date"]}, {
     "title": "numbers and boolean",
     "fields": [
       "integer_maximum",
