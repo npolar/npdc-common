@@ -35,15 +35,15 @@ var task = function (gulp, config) {
 
       var fullVersion = function () {
         return config.pkgname + '-' + config.version() + '.js';
-      }
+      };
 
       var minorVersion = function () {
         return config.pkgname + '-' + config.version().split('.').slice(0,2).join('.') + '.js';
-      }
+      };
 
       var majorVersion = function () {
         return config.pkgname + '-' + config.version().split('.')[0] + '.js';
-      }
+      };
 
       bundle = function (ids) {
           var bundleName = fullVersion();
@@ -60,13 +60,10 @@ var task = function (gulp, config) {
             .pipe(sourcemaps.write('./'))
             .pipe(gulp.dest(config.dist.sharedAssets)) // FULL VERSION
             .pipe(rename(minorVersion()))
-            .pipe(sourcemaps.write('./'))
             .pipe(gulp.dest(config.dist.sharedAssets))
             .pipe(rename(majorVersion()))
-            .pipe(sourcemaps.write('./'))
             .pipe(gulp.dest(config.dist.sharedAssets))
             .pipe(rename(config.pkgname + '-' + global.ref + '-latest.js'))
-            .pipe(sourcemaps.write('./'))
             .pipe(gulp.dest(config.dist.sharedAssets));
       };
 
