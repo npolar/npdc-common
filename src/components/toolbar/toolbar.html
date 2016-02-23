@@ -43,7 +43,7 @@
               <md-grid-tile ng-repeat="app in group.apps">
                 <a ng-href="{{app.link}}" class="np-app-icon">
                   <img ng-src="{{icon48(app)}}"/>
-                  <div>{{app.name}}</div>
+                  <div>{{ app.link | t }}</div>
                 </a>
               </md-grid-tile>
             </md-grid-list>
