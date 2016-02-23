@@ -13,6 +13,6 @@ common.run(function($templateCache, npdcAppConfig) {
   npdcAppConfig.formula.languages = [{
     map: require('formula/i18n/no.json'),
     code: 'nb_NO',
-    aliases: ['no', 'nb']
+    aliases: ['no', 'nb', 'nn']
   }];
 });
