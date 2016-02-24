@@ -3,7 +3,7 @@
   <md-autocomplete
     md-items="item in querySource(searchText)"
     md-item-text="label(item)"
-    md-min-length="0"
+    md-min-length="minLength"
     md-search-text="searchText"
     md-floating-label="{{field.title}}"
     md-selected-item-change="onSelect(item)">

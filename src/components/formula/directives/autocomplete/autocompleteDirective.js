@@ -30,9 +30,7 @@ let autocompleteDirective = function ($http, formulaAutoCompleteService) {
           });
         };
       }
-      $scope.minLenght = config.minLenght || 0;
-
-      $scope.searchText = '';
+      $scope.minLength = config.minLength || 0;
 
       let mapItem = function (item, key) {
         let result = item;

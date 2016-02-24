@@ -102,7 +102,8 @@ angular
 
     let acSource2 = [{a: "Anders", b: "http://tjosho.com"}, {a: "Remi", b: "http://lololo.no"}];
     let acSource2Fn = function (q) {
-      return acSource2.filter(item => item.a.toLowerCase().indexOf(q.toLowerCase()) === 0);
+      console.log('query', q);
+      return acSource2; //.filter(item => item.a.toLowerCase().indexOf(q.toLowerCase()) === 0);
     };
 
     let Dataset = NpolarApiResource.resource({'path': '/dataset', 'resource': 'Dataset' });
