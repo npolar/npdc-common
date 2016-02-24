@@ -1,9 +1,6 @@
 
 npdc\:app {
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-  position: relative;
+  display: block;
 }
 
 $offset: 9%;
@@ -11,7 +8,6 @@ $offset: 9%;
 .np-content-wrapper {
   background-color: $color-bg-dark;
   min-height: calc(100vh - 215px); // subtract footer!
-  overflow: visible;
 
   .np-content-card {
     margin: 0 $offset;

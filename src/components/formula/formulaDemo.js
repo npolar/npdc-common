@@ -31,13 +31,23 @@ angular
           {
             match: "array_object2",
             template: '<npdc:formula-tabdata></npdc:formula-tabdata>'
-          },
-          {
-            match: "file_ref",
-            template: '<npdc:formula-file></npdc:formula-file>'
           }
         ]),
-        languages: npdcAppConfig.formula.languages
+        languages: npdcAppConfig.formula.languages.concat([{
+          map: {
+            fields: {
+              string: {
+                title: "Hoooooyoyo"
+              },
+              array_string_enum: {
+                values: [
+                  "heeeest", "katt"
+                ]
+              }
+            }
+          },
+          code: 'en'
+        }])
     });
 
     let updateModel = function() {
@@ -121,7 +131,7 @@ angular
       label: "first_name",
       value: "first_name"
     }, $scope.formula);
-    
+
     var successCallback = function (file) {
       return {
         rel: 'data',
