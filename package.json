@@ -28,7 +28,7 @@
     "angularjs-slider": "^2.4.1",
     "chronopic.js": "github:npolar/chronopic.js#v0.4.3",
     "filefunnel.js": "github:npolar/filefunnel.js#v0.8.1",
-    "formula": "github:npolar/formula#v4.3.0",
+    "formula": "github:npolar/formula#v4.3.1",
     "leaflet": "^0.7.7",
     "leaflet-draw": "^0.2.3",
     "material-design-icons": "^2.0.0"
