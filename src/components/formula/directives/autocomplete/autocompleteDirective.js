@@ -15,7 +15,10 @@ let autocompleteDirective = function ($http, formulaAutoCompleteService) {
         throw "Missing autocomplete config for "+field.path;
       }
 
-      $scope.onSelect = config.onSelect;
+      $scope.onSelect = config.onSelect || function (item) {
+        field.value = $scope.value(item);
+      };
+
       $scope.querySource = config.querySource;
       if (typeof config.querySource === 'string') {
         $scope.querySource = function (q) {

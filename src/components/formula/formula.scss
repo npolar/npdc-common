@@ -83,11 +83,9 @@
   }
 
 
-  md-autocomplete {
-    [md-floating-label] {
-      md-input-container {
-        padding: 2px;
-      }
+  md-autocomplete[md-floating-label] {
+    md-input-container {
+      padding: 2px;
     }
   }
 
