@@ -29,7 +29,7 @@ let fileDirective = function($http, fileFunnelService) {
           pass = options.filterValues.call({}, field.value);
         }
 
-        if (pass) {
+        if (pass && field.value) {
           if (field.typeOf('object')) {
             $scope.files.push({
               filename: field.value.title

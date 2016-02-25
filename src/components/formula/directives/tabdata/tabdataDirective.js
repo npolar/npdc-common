@@ -32,7 +32,7 @@ let tabdata = function(npdcCSVService) {
   };
 
   let disableValueWatchers = function (field) {
-    field.fields[0].fields.forEach(field => {
+    field.items[0].fields.forEach(field => {
       field.destroyWatcher();
     });
   };
