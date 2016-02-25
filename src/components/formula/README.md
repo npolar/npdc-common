@@ -1,3 +1,6 @@
+# Material tabs performance issue
+https://github.com/angular/material/issues/5681
+
 # Material design templates for formula
 
 Configure templates via ```formula``` service, either at bootstrap or by ```formula.addTemplate()``` at any time.

@@ -1,0 +1,13 @@
+{
+  "title": "Formula Test Form",
+  "fieldsets": [{
+    "title": "instance",
+    "fields": [
+      {
+        "id": "links",
+        "instance": "data"
+      },
+      "links"
+    ]
+  }
+]}

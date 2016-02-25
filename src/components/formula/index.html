@@ -13,8 +13,11 @@
 </head>
 
 <body class="np-content-wrapper">
-  <md-content layout="row" layout-padding ng-controller="FormulaCtrl" class="np-content">
+  <md-content layout="column" layout-padding ng-controller="FormulaCtrl" class="np-content">
     <npdc:formula style="width: 100%"></npdc:formula>
+    <md-button class="md-raised md-primary" ng-click="formula.save();">Save</md-button>
+    <md-button class="md-raised md-primary" ng-click="demo2();">Demo2</md-button>
+
   </md-content>
   <script src="/demo/demos.js"></script>
 </body>

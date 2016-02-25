@@ -45,7 +45,11 @@
   }, {
     "title": "array hierarchy",
     "fields": [
-      "array_hierarchy"
+      "array_hierarchy",
+      {
+        "id": "links",
+        "instance": "data"
+      }
     ]
   },{
     "title": "custom templates",

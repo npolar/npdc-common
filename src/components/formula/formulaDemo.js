@@ -102,8 +102,7 @@ angular
 
     let acSource2 = [{a: "Anders", b: "http://tjosho.com"}, {a: "Remi", b: "http://lololo.no"}];
     let acSource2Fn = function (q) {
-      console.log('query', q);
-      return acSource2; //.filter(item => item.a.toLowerCase().indexOf(q.toLowerCase()) === 0);
+      return acSource2.filter(item => item.a.toLowerCase().indexOf(q.toLowerCase()) === 0);
     };
 
     let Dataset = NpolarApiResource.resource({'path': '/dataset', 'resource': 'Dataset' });
@@ -144,8 +143,11 @@ angular
       };
     };
     fileFunnelService.fileUploader({match: '#/string_file', server: 'https://dbtest.data.npolar.no/dumpster'}, $scope.formula);
-    fileFunnelService.fileUploader({match: '#/links', server: 'https://dbtest.data.npolar.no/dumpster', successCallback}, $scope.formula);
+    fileFunnelService.fileUploader({match(field) { return field.id === "links" && field.instance === "data";}, server: 'https://dbtest.data.npolar.no/dumpster', successCallback}, $scope.formula);
     chronopicService.defineOptions({match: '#/string_date', locale: 'ja', format: "{YYYY} {YY} {YYYY} {MMM} {DD} {MMMM}"});
     chronopicService.defineOptions({match: '#/string_datetime', locale: 'en'});
 
+    $scope.demo2 = function () {
+      $scope.formula.setForm('./demo/form2.json');
+    };
   });

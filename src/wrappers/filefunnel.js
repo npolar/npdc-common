@@ -37,6 +37,11 @@ ff.controller('FFUploadController', function($scope, $mdDialog, options) {
     $scope.$apply();
   });
 
+  $scope.abort = function () {
+    ff.abort();
+    $mdDialog.hide();
+  };
+
   $scope.$on('npolar-lang', (e, lang) => {
       ff.locale = lang.lang;
   });
@@ -62,13 +67,12 @@ ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig, NpolarAp
   const DEFAULTS = {
     accept: "*/*",
     chunked: false,
-    multiple: false,
-    auth: NpolarApiSecurity.authorization()
+    multiple: false
   };
 
   let configs = formulaFieldConfig.getInstance();
   let fileUploader = function (config, formula) {
-    var options = Object.assign({}, DEFAULTS, config, {formula});
+    var options = Object.assign({}, DEFAULTS, config, {formula, auth: NpolarApiSecurity.authorization()});
     if (!options.server) {
       throw "You must set a server!";
     }
@@ -129,11 +133,10 @@ ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig, NpolarAp
             throw "successCallback should return object with keys matching the fields you want to set file data to";
           }
           let theField = field.typeOf('array') ? field.itemAdd() : field;
-
           theField.fields.forEach(field => {
-            field.value = fieldValues[field.id] || field.value;
+            field.value = fieldValues[field.id];
           });
-        } else if (field.typeOf('field')) {
+        } else {
           field.value = fieldValues || field.value;
         }
       }

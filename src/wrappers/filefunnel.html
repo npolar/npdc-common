@@ -26,7 +26,7 @@
       <md-button class="md-raised md-primary" ng-disabled="ff.status == FileFunnelStatus.UPLOADING" ng-click="ff.browse()" >Choose File</md-button>
 
       <md-button class="md-raised md-primary" ng-if="ff.status != FileFunnelStatus.UPLOADING" ng-disabled="ff.status == FileFunnelStatus.NONE" ng-click="ff.upload()">Upload</md-button>
-      <md-button class="md-raised md-primary" ng-if="ff.status == FileFunnelStatus.UPLOADING" ng-click="ff.abort()">Cancel</md-button>
+      <md-button class="md-raised md-primary" ng-if="ff.status == FileFunnelStatus.UPLOADING" ng-click="abort();">Cancel</md-button>
     </div>
   </md-dialog-actions>
 </md-dialog>

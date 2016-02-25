@@ -22,10 +22,9 @@ let autocompleteDirective = function ($http, formulaAutoCompleteService) {
       $scope.querySource = config.querySource;
       if (typeof config.querySource === 'string') {
         $scope.querySource = function (q) {
+          q = q || '';
           var options = {
-            params: {
-              q: q || ''
-            }
+            params: {q}
           };
           return $http.get(config.querySource, options).then(function (response) {
             return response.data.filter(item =>
