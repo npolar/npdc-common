@@ -97,12 +97,12 @@ angular
     $timeout(updateModel);
     let acSource = ["Dalene", "Allan", "Lecia", "Leta", "Matthew", "Marlen", "Collette", "Alfredo", "Francina", "Dorene", "Ali", "Anette", "Courtney", "Arlena", "Spring", "Suzanna", "Roseanne", "Evita", "Gaynell", "Ellena", "Lucinda", "Delisa", "Lamont", "Eloy", "Luanna", "Cyndi", "Lynn", "Clare", "Stacey", "Tameka", "Cheryll", "Jong", "Hoyt", "Marhta", "Roselia", "Gala", "Chun", "Weston", "Zola", "Luana", "Arnette", "Delorse", "Libbie", "Nenita", "Lorina", "Carolyn", "Burma", "Russell", "Beatris", "Macie"];
     let acSourceFn = function (q) {
-      return acSource.filter(item => item.toLowerCase().indexOf(q.toLowerCase()) === 0);
+      return acSource.filter(item => item.toLowerCase().indexOf((q || '').toLowerCase()) === 0);
     };
 
     let acSource2 = [{a: "Anders", b: "http://tjosho.com"}, {a: "Remi", b: "http://lololo.no"}];
     let acSource2Fn = function (q) {
-      return acSource2.filter(item => item.a.toLowerCase().indexOf(q.toLowerCase()) === 0);
+      return acSource2.filter(item => item.a.toLowerCase().indexOf((q || '').toLowerCase()) === 0);
     };
 
     let Dataset = NpolarApiResource.resource({'path': '/dataset', 'resource': 'Dataset' });
@@ -138,7 +138,7 @@ angular
         href: file.url,
         title: file.filename,
         length: file.file_size,
-        hash: file.md5sum,
+        hash: [file.md5sum],
         type: file.content_type
       };
     };

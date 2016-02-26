@@ -53,6 +53,13 @@ let autocompleteDirective = function ($http, formulaAutoCompleteService) {
       $scope.label = function (item) {
         return mapItem(item, 'label');
       };
+
+      $scope.searchText = field.value;
+      $scope.searchChange = function(searchText) {
+        if (searchText) {
+          field.value = searchText;
+        }
+      };
     }
   };
 };

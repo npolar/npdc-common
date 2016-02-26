@@ -53,7 +53,9 @@ let fileDirective = function($http, fileFunnelService) {
       $scope.showUpload = function(ev) {
         fileFunnelService.showUpload(ev, $scope.field, options)
           .then(file => {
-            $scope.files.push(file);
+            if (file) {
+              $scope.files.push(file);
+            }
           });
       };
 

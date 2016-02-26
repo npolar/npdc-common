@@ -52,7 +52,7 @@ ff.controller('FFUploadController', function($scope, $mdDialog, options) {
     }
   }).on('error', file => {
     ff.progressType = 'determinate';
-	$scope.$apply();
+	   $scope.$apply();
   }).on('progress', file => {
     ff.progressType = 'determinate';
   }).on('start', file => {
@@ -125,17 +125,22 @@ ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig, NpolarAp
       targetEvent: ev,
       template: require('./filefunnel.html')
     }).then(files => {
+      if (!files) {
+        return;
+      }
       let response = JSON.parse(files.xhr.response)[0];
+
       if (typeof options.successCallback === "function") {
         let fieldValues = options.successCallback.call({}, response);
         if (field.typeOf('array') || field.typeOf('object')) {
           if (typeof fieldValues !== 'object') {
             throw "successCallback should return object with keys matching the fields you want to set file data to";
           }
-          let theField = field.typeOf('array') ? field.itemAdd() : field;
-          theField.fields.forEach(field => {
-            field.value = fieldValues[field.id];
-          });
+          let theField = field.typeOf('array') ? field.itemAdd(/* preventValidation */ true) : field;
+          let valueModel = {};
+          valueModel[theField.id] = fieldValues;
+          theField.valueFromModel(valueModel);
+          field.itemChange();
         } else {
           field.value = fieldValues || field.value;
         }

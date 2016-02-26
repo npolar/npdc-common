@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <div ng-if="field.visible">
   <md-autocomplete
-    md-items="item in querySource(field.value)"
+    md-items="item in querySource(searchText)"
     md-item-text="label(item)"
     md-min-length="minLength"
-    md-search-text="field.value"
+    md-search-text="searchText"
     md-floating-label="{{field.title}}"
     md-selected-item-change="onSelect(item)"
-    md-select-on-match="true">
+    md-select-on-match="true"
+    md-search-text-change="searchChange(searchText)">
 
     <md-item-template>
       <span md-highlight-flags="^i" md-highlight-text="searchText">{{label(item)}}</span>
