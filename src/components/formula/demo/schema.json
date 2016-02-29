@@ -68,9 +68,6 @@
       "type": "string",
       "description": "string input (file ref)"
     },
-    "file_ref": {
-      "$ref": "http://api.npolar.no/_schema/ref/file"
-    },
     "integer_maximum": {
       "type": "integer",
       "description": "integer input with maximum property set",
@@ -156,9 +153,6 @@
         "minLength": 5,
         "description": "string with minLength 5"
       }
-    },
-    "ref_object": {
-      "$ref": "http://api.npolar.no/schema/user"
     },
     "array_hierarchy": {
       "type": "array",

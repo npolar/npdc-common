@@ -1,11 +1,3 @@
-<md-tab md-active="fieldset.active"
-  ng-disabled="fieldset.disabled" md-on-select="form.activate(fieldset)">
-  <md-tab-label>
-    <span ng-class="{ error: !fieldset.valid }">{{fieldset.title}}</span>
-  </md-tab-label>
-  <md-tab-body>
-    <fieldset class="np-formula-tab">
-      <formula:fields fields="::fieldset.fields"></formula:fields>
-    </fieldset>
-  </md-tab-body>
-</md-tab>
+<fieldset class="np-formula-tab" ng-show="fieldset.active" ng-class="{ 'active': fieldset.active }">
+  <formula:fields fields="::fieldset.fields"></formula:fields>
+</fieldset>

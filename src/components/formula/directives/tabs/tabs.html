@@ -1,0 +1,7 @@
+<nav ng-if="::form.fieldsets.length > 1" class="np-formula-nav" layout="row">
+  <a class="np-nav-scroll" ng-click="back();"><md-icon>navigate_before</md-icon></a>
+  <md-virtual-repeat-container md-orient-horizontal flex>
+    <a md-virtual-repeat="fieldset in ::form.fieldsets" flex href="" md-ink-ripple class="np-formula-nav-item" ng-class="{ active: fieldset.active, error: !fieldset.valid }" ng-click="go($event, fieldset)">{{ fieldset.title }}</a>
+  </md-virtual-repeat-container>
+  <a class="np-nav-scroll" ng-click="next();"><md-icon>navigate_next</md-icon></a>
+</nav>

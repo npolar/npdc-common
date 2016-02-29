@@ -16,3 +16,5 @@ common.run(function($templateCache, npdcAppConfig) {
     aliases: ['no', 'nb', 'nn']
   }];
 });
+
+// @TODO angular-npolar facet transformResponse, null check
