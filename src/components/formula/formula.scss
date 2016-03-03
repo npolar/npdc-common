@@ -30,7 +30,7 @@
       font-weight: 500;
       height: 48px;
       line-height: 48px;
-      padding: 0 15px;
+      padding: 0 24px;
       position: relative;
       text-transform: uppercase;
       white-space: nowrap;
@@ -155,6 +155,15 @@
 
       .np-formula-list-item {
         position: relative;
+
+        .np-formula-collapsed-item {
+          bottom: 0;
+          left: 0;
+          position: absolute;
+          right: 0;
+          top: 0;
+          z-index: 3;
+        }
       }
 
       legend {

@@ -132,7 +132,7 @@ angular
       value: "first_name"
     }, $scope.formula);
 
-    var successCallback = function (file) {
+    let fileToValueMapper = function (file) {
       return {
         rel: 'data',
         href: file.url,
@@ -142,8 +142,20 @@ angular
         type: file.content_type
       };
     };
-    fileFunnelService.fileUploader({match: '#/string_file', server: 'https://dbtest.data.npolar.no/dumpster'}, $scope.formula);
-    fileFunnelService.fileUploader({match(field) { return field.id === "links" && field.instance === "data";}, server: 'https://dbtest.data.npolar.no/dumpster', successCallback}, $scope.formula);
+
+    let valueToFileMapper = function (value) {
+      if (value.rel !== 'data') {
+        return null;
+      }
+      return {
+        filename: value.title,
+        file_size: value.length,
+        url: value.href
+      };
+    };
+
+
+    fileFunnelService.fileUploader({match(field) { return field.id === "links" && field.instance === "data";}, multiple: true, server: 'https://dbtest.data.npolar.no/dumpster', fileToValueMapper, valueToFileMapper, fields: ['rel']}, $scope.formula);
     chronopicService.defineOptions({match: '#/string_date', locale: 'ja', format: "{YYYY} {YY} {YYYY} {MMM} {DD} {MMMM}"});
     chronopicService.defineOptions({match: '#/string_datetime', locale: 'en'});
 

@@ -1,29 +1,62 @@
 <!DOCTYPE html>
-<md-whiteframe class="md-whiteframe-z2 np-formula-file" ng-if="field.visible">
-  <div>{{ (field.required ? field.title + ' (' + i18n.text.required + ')' : field.title ) }}</div>
-    <md-list>
-      <md-list-item ng-repeat="file in files">
-        <span><md-icon class="md-avatar">attachment</md-icon></span>
-        <div class="md-list-item-text">
-          <p>{{file.filename}}</p>
-          <md-menu class="remove">
-            <md-button aria-label="Remove" class="md-icon-button remove" ng-click="$mdOpenMenu($event)">
-              <md-icon md-menu-origin>close</md-icon>
-              <md-tooltip>{{ i18n.text.remove.tooltip }}</md-tooltip>
-            </md-button>
-            <md-menu-content>
-              <md-menu-item>
-                <md-button ng-click="removeFile($index);" ng-attr-title="{{ i18n.text.remove.tooltip }}" class="md-warn">
-                  <md-icon md-menu-align-target>delete</md-icon> {{ i18n.text.remove.label }}
-                </md-button>
-              </md-menu-item>
-            </md-menu-content>
-          </md-menu>
-        </div>
-      </md-list-item>
-    </md-list>
-  <div layout="column" layout-align="space-between end">
-    <md-button class="md-raised md-primary" ng-click="showUpload($event);"><md-icon>backup</md-icon> Upload file</md-button>
-  </div>
-  <div npdc:formula-validation-message class="np-validation-message"></div>
-</md-whiteframe>
+<fieldset ng-class="{ valid: field.valid, error: field.error }" ng-if="field.visible">
+  <md-whiteframe class="md-whiteframe-z2 np-formula-file">
+
+    <legend>
+      <div>{{ field.title }} ({{ nrFiles() }})</div>
+      <div npdc:formula-field-info class="np-field-info" ng-if="::field.description"></div>
+    </legend>
+
+
+    <ul class="np-formula-list" ng-sortable="field.sortable">
+      <li ng-repeat="value in field.values | filter:isFile" class="np-formula-list-item">
+        <div class="np-formula-collapsed-item" ng-if="!value.visible" ng-click="field.itemToggle($index)"></div>
+        <md-whiteframe class="md-whiteframe-z2">
+          <fieldset>
+            <legend>
+              <!--span class="np-formula-array-object-title">{{ value.title }}</span-->
+              <div>
+                <span><md-icon class="md-avatar">{{::files[$index].icon || 'attachment'}}</md-icon></span>
+                <span>{{::files[$index].filename}}</span>&nbsp;<span>{{::files[$index].file_size | bytes}}</span>
+              </div>
+              <div class="np-formula-object-ctrls">
+                <div npdc:formula-field-info class="np-field-info" ng-if="value.description"></div>
+                <a ng-show="!$first" href="" ng-click="field.moveUp($index)" class="drag-handle">
+                  <md-icon>arrow_upward</md-icon>
+                  <md-tooltip>{{ i18n.text.moveup }}</md-tooltip>
+                </a>
+                <a ng-show="!$last" href="" ng-click="field.moveDown($index)" class="drag-handle">
+                  <md-icon>arrow_downward</md-icon>
+                  <md-tooltip>{{ i18n.text.movedown }}</md-tooltip>
+                </a>
+                <a href="" ng-click="field.itemToggle($index)">
+                  <md-icon>{{ value.visible ? 'expand_less' : 'expand_more' }}</md-icon>
+                  <md-tooltip>{{ value.visible ? i18n.text.minimize.tooltip : i18n.text.maximize.tooltip }}</md-tooltip>
+                </a>
+                <md-menu>
+                  <md-button aria-label="Remove" class="md-icon-button remove" ng-click="$mdOpenMenu($event)">
+                    <md-icon md-menu-origin>close</md-icon>
+                    <md-tooltip>{{ i18n.text.remove.tooltip }}</md-tooltip>
+                  </md-button>
+                  <md-menu-content>
+                    <md-menu-item>
+                      <md-button ng-click="removeFile($index)" ng-attr-title="{{ i18n.text.remove.tooltip }}" class="md-warn">
+                        <md-icon md-menu-align-target>delete</md-icon> {{ i18n.text.remove.label }}
+                      </md-button>
+                    </md-menu-item>
+                  </md-menu-content>
+                </md-menu>
+              </div>
+            </legend>
+
+            <formula:fields fields="files[$index].extras" ng-if="value.visible"></formula:fields>
+          </fieldset>
+        </md-whiteframe>
+      </li>
+    </ul>
+    <div layout="column" layout-align="space-between end">
+      <md-button class="md-raised md-primary" ng-click="showUpload($event);"><md-icon>backup</md-icon> Upload file</md-button>
+    </div>
+    <div npdc:formula-validation-message class="np-validation-message"></div>
+  </md-whiteframe>
+</fieldset>

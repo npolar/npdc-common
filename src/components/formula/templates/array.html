@@ -38,6 +38,7 @@
 
     <ul ng-if="::field.typeOf('fieldset')" class="np-formula-list" ng-sortable="field.sortable">
       <li ng-repeat="value in field.values" ng-if="!value.hidden" class="np-formula-list-item">
+        <div class="np-formula-collapsed-item" ng-if="!value.visible" ng-click="field.itemToggle($index)"></div>
         <md-whiteframe class="md-whiteframe-z2">
           <fieldset ng-class="{ valid: value.valid }">
             <legend>

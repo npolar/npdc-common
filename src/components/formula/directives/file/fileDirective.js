@@ -20,52 +20,52 @@ let fileDirective = function($http, fileFunnelService) {
       //   url: "https://dbtest.data.npolar.no/dumpster/54a4ce4d-b0f5-f103-c7f1-309529ecf81c",
       // };
 
-      let options = fileFunnelService.getOptions($scope.field);
       $scope.files = [];
+      let options = fileFunnelService.getOptions($scope.field);
 
-      let addFile = function (field) {
-        let pass = true;
-        if (typeof options.filterValues === "function") {
-          pass = options.filterValues.call({}, field.value);
+      let mapFile = function(value) {
+        let file = Object.assign({},value.value);
+        if (typeof options.valueToFileMapper === "function") {
+          file = options.valueToFileMapper(file);
         }
 
-        if (pass && field.value) {
-          if (field.typeOf('object')) {
-            $scope.files.push({
-              filename: field.value.title
-            });
-          } else {
-            $scope.files.push({
-              filename: field.value
-            });
+        if (file) {
+          if (!file.filename || !file.url) {
+            throw "File should be object with keys filename, url, [file_size, icon, extras].";
           }
+          file.extras = value.fields.filter(field => (options.fields || []).includes(field.id));
         }
+        return file;
       };
 
-      if ($scope.field.typeOf('array')) {
-        $scope.field.values.forEach(value => {
-          addFile(value);
-        });
-      } else {
-        addFile($scope.field);
-      }
+      $scope.field.values.forEach(value => {
+        let file = mapFile(value);
+        $scope.files.push(file);
+      });
+
+      $scope.isFile = function(value, index, array) {
+        return !!$scope.files[index];
+      };
 
       $scope.showUpload = function(ev) {
-        fileFunnelService.showUpload(ev, $scope.field, options)
-          .then(file => {
-            if (file) {
-              $scope.files.push(file);
-            }
+        fileFunnelService.showUpload(ev, $scope.field, options).then(files => {
+          files.forEach(file => {
+            let length = $scope.files.push(file);
+            file.extras = $scope.field.values[length - 1].fields.filter(field => (options.fields || []).includes(field.id));
           });
+        });
       };
 
-      $scope.removeFile = function (index) {
-        let file = $scope.files.splice(index, 1)[0];
-        if ($scope.field.typeOf('array')) {
-          $scope.field.itemRemove(index);
+      $scope.removeFile = function(index) {
+        let file = $scope.field.itemRemove(index);
+        if (typeof options.valueToFileMapper === "function") {
+          file = options.valueToFileMapper(file);
         }
-
         $http.delete(file.url);
+      };
+
+      $scope.nrFiles = function () {
+        return $scope.files.filter(f => !!f).length;
       };
     }
   };
