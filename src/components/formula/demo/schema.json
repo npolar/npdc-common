@@ -64,10 +64,6 @@
       "description": "string input with color format property set",
       "format": "color"
     },
-    "string_file": {
-      "type": "string",
-      "description": "string input (file ref)"
-    },
     "integer_maximum": {
       "type": "integer",
       "description": "integer input with maximum property set",

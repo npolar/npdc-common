@@ -43,7 +43,7 @@ let autocompleteDirective = function ($http, formulaAutoCompleteService) {
             result = item[config[key]];
           }
         }
-        return result;
+        return String(result);
       };
 
       $scope.value = function (item) {

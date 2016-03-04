@@ -29,7 +29,7 @@ let autocompleteSourceService = function(formulaFieldConfig) {
         let nodes = item.facet.split('.');
         let source = function (q) {
           q = (q || '').toLocaleLowerCase();
-          return item.terms.map(t => t.term)
+          return item.terms.map(t => String(t.term))
             .filter(item => item.toLocaleLowerCase().indexOf(q) !== -1)
             .sort((a, b) => {
               let aIndex = a.toLocaleLowerCase().indexOf(q);
