@@ -7,19 +7,7 @@ let AutocompleteConfigFactory = function(NpolarTranslate) {
   let floatingLabel = true;
   let placeholder = NpolarTranslate.translate('search');
 
-  let collections = {
-    '/dataset': true,
-    // '/expedition': true,
-    '/publication': true,
-    // '/project': true,
-    '/indicator/timeseries': true,
-    '/map/archive': true,
-    '/person': true,
-    '/placename': true,
-    '/tracking/deployment': true,
-    '/service': true,
-    '/vessel': true,
-  };
+  let collections = [];
 
   let query = {
     limit: 30,

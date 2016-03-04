@@ -29,7 +29,9 @@
 
   <div ng-show="isFiltersOpen && isOpen" class="np-es-filter" ng-class="{ open: isFiltersOpen && isOpen }">
     <div ng-if="options.showCollections" layout layout-wrap layout-align="space-between center">
-      <md-checkbox flex="25" ng-model="options.collections[collection]" ng-repeat="(collection, value) in options.collections">{{ collection }}</md-checkbox>
+      <span flex="25" ng-repeat="collection in options.collections">
+        <md-checkbox ng-model="collection.enabled">{{ collection.name }}</md-checkbox>
+      </span>
     </div>
   </div>
 </div>

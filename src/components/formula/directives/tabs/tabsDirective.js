@@ -65,9 +65,6 @@ let tabsDirective = function() {
         }
         let tabWidth = tabFieldset.offsetWidth;
         fieldsetContainer.style.left = (tabWidth * -i) + 'px';
-        console.log('item', i, 'scrolling to', (tabWidth * -i) + 'px');
-
-
       };
     }
   };

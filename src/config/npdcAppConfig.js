@@ -19,7 +19,49 @@ let npdcAppConfigFactory = function (NpdcAutocompleteConfigFactory, NpdcSearchCo
       global: new NpdcAutocompleteConfigFactory({
         showCollections: true,
         global: true,
-        placeholder: "Search Norwegian Polar Data Centre"
+        placeholder: "Search Norwegian Polar Data Centre",
+        collections: [
+          {
+            name: 'dataset',
+            path: '/dataset',
+            enabled: true
+          },
+          {
+            name: 'publication',
+            path: '/publication',
+            enabled: true
+          },
+          {
+            name: 'timeseries',
+            path: '/indicator/timeseries',
+            enabled: true
+          },
+          {
+            name: 'map-archive',
+            path: '/map/archive',
+            enabled: true
+          },
+          {
+            name: 'person',
+            path: '/person',
+            enabled: true
+          },
+          {
+            name: 'service',
+            path: '/service',
+            enabled: true
+          },
+          {
+            name: 'vessel',
+            path: '/vessel',
+            enabled: true
+          },
+          {
+            name: 'dataset',
+            path: '/dataset',
+            enabled: true
+          }
+        ]
       })
     },
     formula: {},
