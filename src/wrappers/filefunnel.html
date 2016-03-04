@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<md-dialog aria-label="File upload" class="filefunnel">
+<md-dialog aria-label="{{ 'upload.title' | t }}" class="filefunnel">
   <md-dialog-content>
     <div class="md-dialog-content">
-      <h2 class="md-title">Upload attachments</h2>
+      <h2 class="md-title">{{ 'upload.title' | t }}</h2>
 
       <md-list>
         <md-list-item class="md-3-line" ng-repeat="file in ff.files">
@@ -14,7 +14,7 @@
           </div>
         </md-list-item>
         <md-list-item ng-if="askForScope && ff.files.length">
-          <p>Public access</p>
+          <p>{{ 'upload.restrict' | t }}</p>
           <md-checkbox class="md-secondary" ng-model="access.data"></md-checkbox>
         </md-list-item>
       </md-list>
@@ -23,10 +23,13 @@
   </md-dialog-content>
   <md-dialog-actions>
     <div flex layout="row" layout-align="space-between center">
-      <md-button class="md-raised md-primary" ng-disabled="ff.status == FileFunnelStatus.UPLOADING" ng-click="ff.browse()" >Choose File</md-button>
+      <md-button class="md-raised md-primary" ng-disabled="ff.status == FileFunnelStatus.UPLOADING"
+        ng-click="ff.browse()" >{{ 'upload.choose' | t }}</md-button>
 
-      <md-button class="md-raised md-primary" ng-if="ff.status != FileFunnelStatus.UPLOADING" ng-disabled="ff.status == FileFunnelStatus.NONE" ng-click="ff.upload()">Upload</md-button>
-      <md-button class="md-raised md-primary" ng-if="ff.status == FileFunnelStatus.UPLOADING" ng-click="abort();">Cancel</md-button>
+      <md-button class="md-raised md-primary" ng-if="ff.status != FileFunnelStatus.UPLOADING"
+        ng-disabled="ff.status == FileFunnelStatus.NONE" ng-click="ff.upload()">{{ 'upload.action' | t }}</md-button>
+      <md-button class="md-raised md-primary" ng-if="ff.status == FileFunnelStatus.UPLOADING"
+        ng-click="abort();">{{ 'cancel' | t }}</md-button>
     </div>
   </md-dialog-actions>
 </md-dialog>
