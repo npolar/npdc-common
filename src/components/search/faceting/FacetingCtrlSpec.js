@@ -52,7 +52,7 @@ describe('FacetingCtrl', function() {
       let result;
 
       topics.searchText = '';
-      result = scopeMock.querySearch(topics);
+      result = topics.querySearch(topics.searchText);
       result.length.should.eql(topics.topics.length);
     });
 
@@ -61,7 +61,7 @@ describe('FacetingCtrl', function() {
       let result;
 
       topics.searchText = 'a';
-      result = scopeMock.querySearch(topics);
+      result = topics.querySearch(topics.searchText);
       result.length.should.eql(topics.topics.filter(item => item.term.indexOf('a') === 0).length);
     });
   });

@@ -98,7 +98,11 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
       }
 
       if (facet.uiType === 'autocomplete') {
-        facet.searchText = "";
+        facet.querySearch = function(q) {
+          q = q || '';
+          return facet[facet.key].filter(item =>
+            item.term.toString().toLowerCase().indexOf(q.toLowerCase()) === 0);
+        };
       }
 
       return facet;
@@ -159,11 +163,6 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
     if (item) {
       filters.add(item);
     }
-  };
-
-  $scope.querySearch = function(facet) {
-    return facet[facet.key].filter(item =>
-      item.term.toString().toLowerCase().indexOf(facet.searchText.toLowerCase()) === 0);
   };
 
 

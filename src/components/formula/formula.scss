@@ -132,10 +132,8 @@
 
 
   md-autocomplete[md-floating-label] {
-    md-input-container {
-      //padding: 2px;
-      margin-bottom: -8px;
-    }
+    height: 78px;
+    overflow: visible;
   }
 
 
