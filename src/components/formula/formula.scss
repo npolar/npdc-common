@@ -46,6 +46,25 @@
     }
   }
 
+  .np-formula-fieldsets {
+    position: relative;
+    transition: left .5s cubic-bezier(.35, 0, .25, 1);
+    white-space: nowrap;
+
+    .np-formula-tab {
+      display: inline-block;
+      transition: visibility linear .5s;
+      vertical-align: top;
+      visibility: hidden;
+      white-space: normal;
+      width: 100%;
+
+      &.active {
+        visibility: visible;
+      }
+    }
+  }
+
 
   a {
     display: inline-block;

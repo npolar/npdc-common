@@ -57,6 +57,17 @@ let tabsDirective = function() {
 
         scope.form.activate(fieldset);
 
+        let fieldsetContainer = document.querySelector('.np-formula-fieldsets');
+        let tabFieldset = document.querySelector('.np-formula-tab');
+        let i = -2, child = ev.target; // FIXME why -2 ??
+        while ((child = child.previousSibling)) {
+          i++;
+        }
+        let tabWidth = tabFieldset.offsetWidth;
+        fieldsetContainer.style.left = (tabWidth * -i) + 'px';
+        console.log('item', i, 'scrolling to', (tabWidth * -i) + 'px');
+
+
       };
     }
   };
