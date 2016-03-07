@@ -1,6 +1,6 @@
 'use strict';
 
-let fileDirective = function($http, fileFunnelService) {
+let fileDirective = function($http, $routeParams, fileFunnelService) {
   'ngInject';
 
   return {
@@ -38,9 +38,32 @@ let fileDirective = function($http, fileFunnelService) {
         return file;
       };
 
-      $scope.field.values.forEach(value => {
-        let file = mapFile(value);
-        $scope.files.push(file);
+      // sync file meta data
+      // FIXME This really should not be implemented on the client side.
+      let fileUri = options.server.replace(':id', $routeParams.id);
+      $http.get(fileUri).then(response => {
+        if (response && response.data && response.data.files) {
+          response.data.files.forEach(responseFile => {
+            let item = ($scope.values || []).find(val => {
+              let valueFile = options.valueToFileMapper(val.value);
+              return valueFile.md5sum === responseFile.md5sum || valueFile.filename === responseFile.filename;
+            });
+
+            if (!item) {
+              item = $scope.field.itemAdd( /* preventValidation */ true);
+            }
+
+            let valueModel = {};
+            valueModel[item.id] = options.fileToValueMapper(responseFile);
+            item.valueFromModel(valueModel);
+            $scope.field.itemChange();
+          });
+        }
+      }).finally(() => {
+        $scope.field.values.forEach(value => {
+          let file = mapFile(value);
+          $scope.files.push(file);
+        });
       });
 
       $scope.isFile = function(value, index, array) {

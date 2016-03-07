@@ -150,7 +150,8 @@ angular
       return {
         filename: value.title,
         file_size: value.length,
-        url: value.href
+        url: value.href,
+        md5sum: value.hash[0]
       };
     };
 

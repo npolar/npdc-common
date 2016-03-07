@@ -37,13 +37,13 @@ ff.controller('FFUploadController', function($scope, $mdDialog, options) {
     $scope.$apply();
   });
 
-  $scope.abort = function () {
+  $scope.abort = function() {
     ff.abort();
     $mdDialog.hide();
   };
 
   $scope.$on('npolar-lang', (e, lang) => {
-      ff.locale = lang.lang;
+    ff.locale = lang.lang;
   });
 
   ff.on('success', file => {
@@ -52,7 +52,7 @@ ff.controller('FFUploadController', function($scope, $mdDialog, options) {
     }
   }).on('error', file => {
     ff.progressType = 'determinate';
-	   $scope.$apply();
+    $scope.$apply();
   }).on('progress', file => {
     ff.progressType = 'determinate';
   }).on('start', file => {
@@ -71,50 +71,40 @@ ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig, NpolarAp
   };
 
   let configs = formulaFieldConfig.getInstance();
-  let fileUploader = function (config, formula) {
-    var options = Object.assign({}, DEFAULTS, config, {formula, auth: NpolarApiSecurity.authorization()});
+  let fileUploader = function(config, formula) {
+    var options = Object.assign({}, DEFAULTS, config, {
+      formula,
+      auth: NpolarApiSecurity.authorization()
+    });
     if (!options.server) {
       throw "You must set a server!";
     }
-    configs.addConfig(options);
-    if (formula) {
-      formula.getFields().then(fields => {
-        var field = fields.find(field => configs.isMatch(field, config));
-        if (field.typeOf('array') || field.typeOf('object')) {
-          if (!config.fileToValueMapper) {
-            throw "You really need a fileToValueMapper to do something useful...";
-          }
-        } else {
-          if (!config.fileToValueMapper) {
-            config.fileToValueMapper = function (file) {
-              return file.url;
-            };
-          }
-        }
-
-        formula.addTemplate({
-          match: config.match,
-          template: '<npdc:formula-file></npdc:formula-file>'
-        });
-      });
+    if (!options.fileToValueMapper) {
+      options.fileToValueMapper = function (file) {return file; };
     }
+    if (!options.valueToFileMapper) {
+      options.valueToFileMapper = function (value) {return value; };
+    }
+
+    configs.addConfig(options);
+    formula.addTemplate({
+      match: options.match,
+      template: '<npdc:formula-file></npdc:formula-file>'
+    });
+
   };
 
-  let getOptions = function (field) {
+  let getOptions = function(field) {
     return configs.getMatchingConfig(field);
   };
 
-  let handleOptions = function (options) {
-    if (!options || !options.server) {
-      throw "You must set a server in options!";
-    }
-
+  let handleOptions = function(options) {
     if (options.restricted) {
       let restricted = options.restricted;
       if (typeof options.restricted === "function") {
         restricted = options.restricted();
       }
-      options.server += restricted ? '/restricted': '';
+      options.server += restricted ? '/restricted' : '';
     }
   };
 
@@ -137,19 +127,16 @@ ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig, NpolarAp
       responses.forEach(response => {
 
         if (response.status !== 409) {
-          let fieldValues = options.fileToValueMapper(response);
-          if (field.typeOf('array') || field.typeOf('object')) {
-            if (typeof fieldValues !== 'object') {
-              throw "fileToValueMapper should return object with keys matching the fields you want to set file data to";
-            }
-            let theField = field.typeOf('array') ? field.itemAdd(/* preventValidation */ true) : field;
-            let valueModel = {};
-            valueModel[theField.id] = fieldValues;
-            theField.valueFromModel(valueModel);
-  //          field.itemChange();
-          } else {
-            field.value = fieldValues || field.value;
+          let value = options.fileToValueMapper(response);
+          if (typeof value !== 'object') {
+            throw "fileToValueMapper should return object with keys matching the fields you want to set file data to";
           }
+          let item = field.itemAdd( /* preventValidation */ true);
+          let valueModel = {};
+          valueModel[item.id] = value;
+          item.valueFromModel(valueModel);
+          field.itemChange();
+
         } else {
           NpolarMessage.info("Attachment: " + response.filename + " allready exists");
         }
