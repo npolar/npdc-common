@@ -56,7 +56,8 @@ let tabsDirective = function() {
         }
 
         scope.form.activate(fieldset);
-
+        
+        // slide fieldset into view
         let fieldsetContainer = document.querySelector('.np-formula-fieldsets');
         let i = -2, child = ev.target; // FIXME why -2 ??
         while ((child = child.previousSibling)) {

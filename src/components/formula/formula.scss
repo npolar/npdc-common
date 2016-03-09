@@ -47,6 +47,8 @@
   }
 
   .np-formula-fieldsets {
+    display: block;
+    left: 0;
     position: relative;
     transition: left .5s cubic-bezier(.35, 0, .25, 1);
     white-space: nowrap;
@@ -54,8 +56,7 @@
     .np-formula-tab {
       display: inline-block;
       height: 500px; // Wierd bug if smaller, tabs would change width for some reason...
-      overflow: hidden;
-      transition: visibility linear .2s, height linear .2s;
+      transition: visibility .2s .2s;
       vertical-align: top;
       visibility: hidden;
       white-space: normal;

@@ -1,6 +1,6 @@
 'use strict';
 
-var formula = function($mdDialog, $location, npdcAppConfig) {
+var formula = function($mdDialog, $location, npdcAppConfig, npolarDocumentUtil, NpolarTranslate) {
   'ngInject';
 
   return {
@@ -16,17 +16,17 @@ var formula = function($mdDialog, $location, npdcAppConfig) {
         };
         if ($scope.security.isAuthorized('delete', $scope.resource.path) && $scope.document._rev) {
           $scope.bottomSheetOptions.items.push({
-            name: 'Delete',
+            name: NpolarTranslate.translate('Delete'),
             icon: 'delete',
             classes: 'md-warn',
             action: function(ev) {
               // Appending dialog to document.body to cover sidenav in docs app
               var confirm = $mdDialog.confirm()
-                .title('DELETE')
-                .textContent('Are you sure you want to delete?')
+                .title(NpolarTranslate.translate('Delete'))
+                .textContent(NpolarTranslate.translate('delete.confirm'))
                 .targetEvent(ev)
-                .ok('Delete')
-                .cancel('Cancel');
+                .ok(NpolarTranslate.translate('Delete'))
+                .cancel(NpolarTranslate.translate('Cancel'));
               $mdDialog.show(confirm).then(function() {
                 $scope.delete();
               }, function() {
@@ -43,22 +43,22 @@ var formula = function($mdDialog, $location, npdcAppConfig) {
 
       $scope.formula.setConfirmDirtyNavigate((navigate) => {
         let confirmNavigate = $mdDialog.confirm()
-          .title('Confirm navigation')
-          .textContent('You have unsaved changes, are you sure you want to leave this veiw?')
-          .ok('Yes')
-          .cancel('No');
+          .title(NpolarTranslate.translate('navigation.confirm.title'))
+          .textContent(NpolarTranslate.translate('navigation.confirm.text'))
+          .ok(NpolarTranslate.translate('Yes'))
+          .cancel(NpolarTranslate.translate('No'));
         $mdDialog.show(confirmNavigate).then(function() {
           navigate();
         });
       });
 
       $scope.$watch('document', (newVal, oldVal) => {
-        if (newVal && newVal !== oldVal) {
-          // @TODO Set titles (i18n)
-          npdcAppConfig.cardTitle = newVal._rev ? newVal.title || newVal.id.slice(0, 8) :
-            'New document, not yet saved';
+        if (newVal) {
+          npdcAppConfig.cardTitle = newVal._rev ? npolarDocumentUtil.title(newVal) :
+            NpolarTranslate.translate('document.new');
           initBottomSheet();
         }
+        console.log('doc', newVal, npdcAppConfig.cardTitle);
       });
     }
   };
