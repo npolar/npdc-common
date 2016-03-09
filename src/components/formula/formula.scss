@@ -53,13 +53,16 @@
 
     .np-formula-tab {
       display: inline-block;
-      transition: visibility linear .5s;
+      height: 500px; // Wierd bug if smaller, tabs would change width for some reason...
+      overflow: hidden;
+      transition: visibility linear .2s, height linear .2s;
       vertical-align: top;
       visibility: hidden;
       white-space: normal;
       width: 100%;
 
       &.active {
+        height: auto;
         visibility: visible;
       }
     }
