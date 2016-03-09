@@ -5,9 +5,49 @@ let AutocompleteConfigFactory = function(NpolarTranslate) {
 
   let showCollections = false;
   let floatingLabel = true;
-  let placeholder = NpolarTranslate.translate('search');
 
-  let collections = [];
+  let collections = [
+    {
+      name: 'dataset',
+      path: '/dataset',
+      enabled: true
+    },
+    {
+      name: 'publication',
+      path: '/publication',
+      enabled: true
+    },
+    {
+      name: 'timeseries',
+      path: '/indicator/timeseries',
+      enabled: true
+    },
+    {
+      name: 'map-archive',
+      path: '/map/archive',
+      enabled: true
+    },
+    {
+      name: 'person',
+      path: '/person',
+      enabled: true
+    },
+    {
+      name: 'service',
+      path: '/service',
+      enabled: true
+    },
+    {
+      name: 'vessel',
+      path: '/vessel',
+      enabled: true
+    },
+    {
+      name: 'dataset',
+      path: '/dataset',
+      enabled: true
+    }
+  ];
 
   let query = {
     limit: 30,
@@ -20,7 +60,7 @@ let AutocompleteConfigFactory = function(NpolarTranslate) {
     return Object.assign({
       collections,
       showCollections,
-      placeholder,
+      placeholder: NpolarTranslate.translate('search'),
       query,
       global: false,
       location: undefined,

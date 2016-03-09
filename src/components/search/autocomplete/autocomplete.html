@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <div ng-keyup="keyup($event);">
     <md-autocomplete ng-if="options.floatingLabel"
-      md-floating-label="{{options.placeholder}}"
+      md-floating-label="{{options.placeholder | t}}"
       md-item-text="title(item)"
       md-items="item in querySearch(options.q)"
       md-min-length="1"
@@ -18,7 +18,7 @@
     </md-autocomplete>
 
     <md-autocomplete ng-if="!options.floatingLabel"
-      placeholder="{{options.placeholder}}"
+      placeholder="{{options.placeholder | t}}"
       md-item-text="title(item)"
       md-items="item in querySearch(options.q)"
       md-min-length="1"
