@@ -2,52 +2,53 @@
 <md-menu ng-if="!security.isAuthenticated()" class="np-user-menu">
   <md-button aria-label="Open user" class="md-icon-button" ng-click="$mdOpenMenu($event)">
     <md-icon md-menu-origin>person</md-icon>
-    <md-tooltip>{{ 'user.login' | t }}</md-tooltip>
+    <md-tooltip>{{ 'user.Login_and_language' | t }}</md-tooltip>
   </md-button>
   <md-menu-content width="6">
-
+    
     <form ng-if="true" role="form" class="np-login np-padding">
       <div layout="column">
         <md-input-container>
           <label for="username" class="md-no-float">{{ 'user.username' | t }}</label>
-          <input type="text" ng-model="email" id="username">
+          <input type="text" ng-model="email" id="username" placeholder="Enter your email address">
         </md-input-container>
-        <md-input-container>
+        <md-input-container ng-show="true">
           <label for="password" class="md-no-float">{{ 'user.password' | t }}</label>
-          <input type="password" id="password" ng-trim="true" ng-model="password">
+          <input type="password" id="password" ng-trim="true" ng-model="password" placeholder="Enter password (or 1-time code)">
         </md-input-container>
       </div>
       <div layout="row" layout-align="space-between center">
-        <a ng-href="/user/reset?username={{user.username}}" ng-click="$mdMenu.hide();">{{ 'user.forgot_password' | t }}</a>
-        <a href="/user/register" ng-click="$mdMenu.hide();">Sign up</a>
-<!--        <md-button type="submit" ng-click="gouncer.onetime(email)" class="md-raised md-primary">1-time password</md-button>
--->     <md-button type="submit" ng-click="login(email,password)" class="md-raised md-primary">{{ 'user.login' | t }}</md-button>
+        <md-button ng-disabled="!email || password" type="submit" ng-click="gouncer.onetime(email)" class="md-raised md-primary">Email code</md-button>
+        <md-button ng-disabled="!email || !password" type="submit" ng-click="login(email,password)" class="md-raised md-primary">{{ 'user.login' | t }}</md-button>
       </div>
     </form>
+    
+    
     <md-divider></md-divider>
 
+
+    
     <md-menu-item>
       <md-menu>
         <md-button ng-click="$mdOpenMenu($event)">
           <md-icon>language</md-icon>
-          {{ 'npdc.menu.Select_language' | t }}
-          ({{ 'npdc.currently' | t }}
-          {{ lang.getNativeName(lang.getLang()) }})
+          {{ lang.getNativeName(lang.getLang()) }}
         </md-button>
         <md-menu-content width="6">
           <md-menu-item ng-repeat="subtag in lang.getLanguages()">
-            <md-button ng-click="lang.setLang(subtag, lang.getLang())">{{ lang.getNativeName(subtag) }}</md-button>
+            <md-button ng-disabled="subtag == lang.getLang()" ng-click="lang.setLang(subtag, lang.getLang())">{{ lang.getNativeName(subtag) }}<span ng-show="subtag==lang.getLang()"> ({{ 'npdc.current_language' | t }})</span></md-button>
           </md-menu-item>
         </md-menu-content>
       </md-menu>
     </md-menu-item>
+
 
   </md-menu-content>
 </md-menu>
 
 <md-menu ng-if="security.isAuthenticated()" class="np-user-menu">
   <md-button aria-label="Open user" class="md-icon-button" ng-click="$mdOpenMenu($event)">
-    <md-icon md-menu-origin>verified_user</md-icon>
+    <md-icon md-menu-origin>account_box</md-icon>
     <md-tooltip>{{ security.getUser().name }}</md-tooltip>
   </md-button>
   <md-menu-content width="6">
@@ -60,30 +61,27 @@
     </md-menu-item>
 
     <md-divider></md-divider>
-
-    <md-menu-item>
-      <md-menu>
-        <md-button ng-click="$mdOpenMenu($event)">
-          <md-icon>language</md-icon>
-          {{ 'npdc.menu.Select_language' | t }}
-          ({{ 'npdc.currently' | t }}
-          {{ lang.getNativeName(lang.getLang()) }})
-        </md-button>
-        <md-menu-content width="6">
-          <md-menu-item ng-repeat="subtag in lang.getLanguages()">
-            <md-button ng-click="lang.setLang(subtag, lang.getLang())">{{ lang.getNativeName(subtag) }}</md-button>
-          </md-menu-item>
-        </md-menu-content>
-      </md-menu>
-    </md-menu-item>
-
-    <md-divider></md-divider>
-
     <md-menu-item>
       <md-button ng-click="logout()">
         <span>{{ 'user.logout' | t }}</span>
       </md-button>
     </md-menu-item>
+    
+    <md-divider></md-divider>
+    <md-menu-item>
+      <md-menu>
+        <md-button ng-click="$mdOpenMenu($event)">
+          <md-icon>language</md-icon>
+          {{ lang.getNativeName(lang.getLang()) }}
+        </md-button>
+        <md-menu-content width="6">
+          <md-menu-item ng-repeat="subtag in lang.getLanguages()">
+            <md-button ng-disabled="subtag == lang.getLang()" ng-click="lang.setLang(subtag, lang.getLang())">{{ lang.getNativeName(subtag) }}<span ng-show="subtag==lang.getLang()"> ({{ 'npdc.current_language' | t }})</span></md-button>
+          </md-menu-item>
+        </md-menu-content>
+      </md-menu>
+    </md-menu-item>
+
 
   </md-menu-content>
 </md-menu>

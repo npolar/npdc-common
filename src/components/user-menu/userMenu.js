@@ -1,6 +1,6 @@
 "use strict";
 
-let npdcUserMenu = function(NpolarApiSecurity, NpolarLang) {
+let npdcUserMenu = function(NpolarApiSecurity, NpolarLang, Gouncer) {
   'ngInject';
 
   return {
@@ -11,6 +11,7 @@ let npdcUserMenu = function(NpolarApiSecurity, NpolarLang) {
     link: function(scope) {
       scope.security = NpolarApiSecurity;
       scope.lang = NpolarLang;
+      scope.gouncer = Gouncer;
     }
   };
 };
