@@ -1,15 +1,15 @@
 'use strict';
 
-var formula = function ($mdDialog, npdcAppConfig) {
+var formula = function($mdDialog, $location, npdcAppConfig) {
   'ngInject';
 
   return {
     template: require('./edit.html'),
     scope: false,
-    controller: function ($scope) {
+    controller: function($scope) {
       'ngInject';
 
-      let initBottomSheet = function () {
+      let initBottomSheet = function() {
         $scope.bottomSheetOptions = {
           items: [],
           alwaysShow: false
@@ -19,7 +19,7 @@ var formula = function ($mdDialog, npdcAppConfig) {
             name: 'Delete',
             icon: 'delete',
             classes: 'md-warn',
-            action: function (ev) {
+            action: function(ev) {
               // Appending dialog to document.body to cover sidenav in docs app
               var confirm = $mdDialog.confirm()
                 .title('DELETE')
@@ -41,10 +41,21 @@ var formula = function ($mdDialog, npdcAppConfig) {
         $scope.formula.i18n.set(lang.lang);
       });
 
+      $scope.formula.setConfirmDirtyNavigate((navigate) => {
+        let confirmNavigate = $mdDialog.confirm()
+          .title('Confirm navigation')
+          .textContent('You have unsaved changes, are you sure you want to leave this veiw?')
+          .ok('Yes')
+          .cancel('No');
+        $mdDialog.show(confirmNavigate).then(function() {
+          navigate();
+        });
+      });
+
       $scope.$watch('document', (newVal, oldVal) => {
         if (newVal && newVal !== oldVal) {
           // @TODO Set titles (i18n)
-          npdcAppConfig.cardTitle = newVal._rev ? newVal.title || newVal.id.slice(0,8) :
+          npdcAppConfig.cardTitle = newVal._rev ? newVal.title || newVal.id.slice(0, 8) :
             'New document, not yet saved';
           initBottomSheet();
         }

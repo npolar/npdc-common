@@ -61,9 +61,7 @@ common.run(($http, $window, NpolarTranslate, $templateCache, NpdcApplications, N
   };
 
   // Load text dictionary
-  $http.get('//api.npolar.no/text/?q=&filter-bundle=npolar|npdc&format=json&variant=array&limit=all').then(response => {
-    NpolarTranslate.appendToDictionary(response.data);
-  });
+  NpolarTranslate.loadBundles(['npolar', 'npdc']);
 
   // Add application texts
   NpdcApplications.forEach(app => {
