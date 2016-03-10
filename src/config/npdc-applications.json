@@ -411,4 +411,36 @@
     }
   ],
   "category": "internal"
+},
+{
+  "link": "/service",
+  "name": [
+    {
+      "@language": "en",
+      "@value": "Services"
+    },
+    {
+      "@language": "no",
+      "@value": "Tjenster"
+    }
+  ],
+  "icons": [{
+    "size": 96,
+    "src": "/assets/img/app-icons/96/service.png"
+  }, {
+    "size": 48,
+    "src": "/assets/img/app-icons/48/service.png"
+  }],
+  "screenshots": [],
+  "description": [
+    {
+      "@language": "en",
+      "@value": "NPDC services."
+    },
+    {
+      "@language": "no",
+      "@value": "NPDC tjenster."
+    }
+  ],
+  "category": "disabled"
 }]
