@@ -11,7 +11,7 @@ let person = function ($q, NpolarApiResource) {
     template: require('./person.html'),
     controller($scope) {
       'ngInject';
-      
+
       $scope.firstName = $scope.field.fields.find(field => field.id === 'first_name');
       $scope.lastName = $scope.field.fields.find(field => field.id === 'last_name');
       $scope.organisation = $scope.field.fields.find(field => field.id === 'organisation');

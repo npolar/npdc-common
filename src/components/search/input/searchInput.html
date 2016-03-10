@@ -4,7 +4,7 @@
     <div layout="row">
       <md-input-container flex md-no-float md-autofocus class="np-search-input-input md-icon-left">
         <md-icon>search</md-icon>
-        <input ng-model="query.q" placeholder="{{options.placeholder}}" type="text" md-autofocus>
+        <input ng-model="query.q" placeholder="{{options.placeholder | t}}" type="text" md-autofocus>
       </md-input-container>
       <md-button class="md-icon-button" ng-click="toggleFilters();">
         <md-icon>build</md-icon>
