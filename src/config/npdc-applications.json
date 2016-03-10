@@ -157,7 +157,7 @@
     }
   ],
   "category": "public",
-  "promote": true
+  "promote": false
 }, {
   "link": "/vessel",
   "name": [
@@ -223,7 +223,7 @@
   "category": "public",
   "promote": true
 }, {
-  "link": "/people",
+  "link": "/person",
   "name": [
     {
       "@language": "en",

@@ -29,9 +29,9 @@ let SearchService = function($location, $window, $q, npolarDocumentUtil, npdcApp
     },
     globalSearch(query) {
       console.log('Global search', query);
-      if (/^\/home\/search/.test($location.path())) {
+      if (/^\/home\/search/.test(location.pathname)) {
         $location.search(query);
-      } else if (/^\/home/.test($location.path())) {
+      } else if (/^\/home/.test(location.pathname)) {
         $location.$$search = query;
         $location.$$path = '/search/';
         $location.$$compose();
@@ -54,7 +54,7 @@ let SearchService = function($location, $window, $q, npolarDocumentUtil, npdcApp
         collections = options.collections;
         searchResources = buildResources(collections);
       }
-
+      console.log('q', query);
       return $q.all(searchResources.map(resource => resource.array(query).$promise))
         .then(results => results.reduce((memo, result, index) => {
             // Get collection name from options (if not set in document)

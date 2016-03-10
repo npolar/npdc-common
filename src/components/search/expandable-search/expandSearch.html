@@ -10,7 +10,7 @@
 
     <md-toolbar ng-focus-out="blockEvent($event);" ng-click="blockEvent($event);">
       <md-fab-actions class="md-toolbar-tools">
-        <div class="np-es-input" ng-class="{open : isFiltersOpen}" layout>
+        <form class="np-es-input" ng-class="{open : isFiltersOpen}" ng-submit="search();" layout>
           <div flex layout>
             <npdc:autocomplete flex options="options"></npdc:autocomplete>
           </div>
@@ -18,11 +18,11 @@
             <md-icon>settings</md-icon>
             <md-tooltip ng-if="isOpenDelay">{{ 'search.filter' | t }}</md-tooltip>
           </md-button>
-          <md-button class="md-icon-button" ng-click="search();" aria-label="{{ 'search' | t }}">
+          <md-button class="md-icon-button" type="submit" aria-label="{{ 'search' | t }}">
             <md-icon>search</md-icon>
             <md-tooltip ng-if="isOpenDelay">{{ 'search' | t }}</md-tooltip>
           </md-button>
-        </div>
+        </form>
       </md-fab-actions>
     </md-toolbar>
   </md-fab-toolbar>

@@ -61,6 +61,7 @@ var NpdcBreadcrumbs = function($location, $rootScope, $window) {
     self.path = "";
   };
 
+  buildCrumbs(null, $location.absUrl());
   $rootScope.$on('$locationChangeSuccess', buildCrumbs);
 
   return this;

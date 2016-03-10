@@ -2,10 +2,10 @@
 <md-menu ng-if="!security.isAuthenticated()" class="np-user-menu">
   <md-button aria-label="Open user" class="md-icon-button" ng-click="$mdOpenMenu($event)">
     <md-icon md-menu-origin>person</md-icon>
-    <md-tooltip>{{ 'user.Login_and_language' | t }}</md-tooltip>
+    <md-tooltip>{{ 'npdc.menu.user' | t }}</md-tooltip>
   </md-button>
   <md-menu-content width="6">
-    
+
     <form ng-if="true" role="form" class="np-login np-padding">
       <div layout="column">
         <md-input-container>
@@ -22,12 +22,12 @@
         <md-button ng-disabled="!email || !password" type="submit" ng-click="login(email,password)" class="md-raised md-primary">{{ 'user.login' | t }}</md-button>
       </div>
     </form>
-    
-    
+
+
     <md-divider></md-divider>
 
 
-    
+
     <md-menu-item>
       <md-menu>
         <md-button ng-click="$mdOpenMenu($event)">
@@ -66,7 +66,7 @@
         <span>{{ 'user.logout' | t }}</span>
       </md-button>
     </md-menu-item>
-    
+
     <md-divider></md-divider>
     <md-menu-item>
       <md-menu>
