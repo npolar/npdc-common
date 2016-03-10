@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <section ng-if="document.organisations">
-  <h3 class="headline">Organisations</h3>
+  <h3 class="headline">'Organisations' | t</h3>
   <md-divider></md-divider>
   <md-list>
     <md-list-item class="md-2-line" ng-repeat="o in document.organisations">
       <md-icon>business</md-icon>
       <div class="md-list-item-text">
         <h3>{{ o.name }}</h3>
-        <p>{{o.role}}</p>
+        <p ng-if="o.role">{{o.role | t }}</p>
+        <p ng-if="o.roles"><span ng-repeat="r in o.roles">{{ r | t }}<span ng-if="!$last">, </span></span></p>
+        <a ng-href="{{o.homepage}}">{{o.homepage}}</a>
       </div>
     </md-list-item>
   </md-list>
