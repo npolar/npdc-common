@@ -7,6 +7,8 @@
       <md-icon class="md-avatar-icon">person</md-icon>
         <div class="md-list-item-text">
           <h3> {{ person.first_name }} {{ person.last_name }} </h3>
+          <p ng-if="person.role">{{ ''+person.role|t}}</p>
+          <p ng-if="person.roles"><span ng-repeat="r in person.roles">{{ 'role.'+r | t }}<span ng-if="!$last">, </span></span></p>
           <p><a href="mailto:{{person.email}}">{{ person.email }}</a></p>
         </div>
       </md-list-item>
