@@ -1,6 +1,6 @@
 'use strict';
 
-let tabsDirective = function() {
+let tabsDirective = function($timeout) {
   'ngInject';
 
   return {
@@ -55,16 +55,18 @@ let tabsDirective = function() {
           animateHorizontalScroll(scrollContainer, offset - width + elemWidth);
         }
 
+        let active = document.querySelector('.np-formula-tab.active');
         scope.form.activate(fieldset);
-        
+
         // slide fieldset into view
         let fieldsetContainer = document.querySelector('.np-formula-fieldsets');
-        let i = -2, child = ev.target; // FIXME why -2 ??
-        while ((child = child.previousSibling)) {
+        let i = 0, child = ev.target;
+        while ((child = child.previousElementSibling)) {
           i++;
         }
-        let tabFieldset = document.querySelectorAll('.np-formula-tab')[i];
-        fieldsetContainer.style.left = -tabFieldset.offsetLeft + 'px';
+        $timeout(() => {
+          fieldsetContainer.style.left = -(active.clientWidth * i) + 'px';
+        });
       };
     }
   };
