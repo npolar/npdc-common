@@ -13,7 +13,6 @@ let npdcAppConfigFactory = function (NpdcAutocompleteConfigFactory, NpdcSearchCo
       name: "Internal",
       apps: NpdcApplications.filter(app => app.category === "internal")
     }],
-    cardTitle: "Norwegian Polar Data Centre",
     search: {
       local: new NpdcSearchConfigFactory(),
       global: new NpdcAutocompleteConfigFactory({

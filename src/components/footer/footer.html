@@ -26,14 +26,6 @@
         <i class="github-icon"></i>
         <md-tooltip>Open source @ Github</md-tooltip>
       </md-button>
-      <!-- <md-button class="md-icon-button" href="http://www.facebook.com/NorskPolarinstitutt">
-        <i class="facebook-icon"></i>
-        <md-tooltip>NorskPolarinstitutt @ facebook</md-tooltip>
-      </md-button>
-      <md-button class="md-icon-button" href="http://twitter.com/NorskPolar">
-        <i class="twitter-icon"></i>
-        <md-tooltip>NorskPolar @ twitter</md-tooltip>
-      </md-button> -->
     </div>
   </div>
 
@@ -42,3 +34,28 @@
     <md-tooltip md-direction="left">Scroll to top</md-tooltip>
   </a>
 </footer>
+
+
+<script>
+  // Google Analytics
+  // https://developers.google.com/analytics/devguides/collection/analyticsjs/
+  window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+  ga('create', 'UA-770196-26', 'auto');
+  ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+<script>
+  //https://support.google.com/analytics/answer/1136920?hl=en
+  /**
+  * Function that tracks a click on an outbound link in Google Analytics.
+  * For this to work the outbound link needs a onclick="trackOutboundLink(uri); return false;" like:
+  * [a href="http://api.npolar.no/oceanography/?q=&amp;format=json" onclick="trackOutboundLink('http://api.npolar.no/oceanography/?q=&amp;format=json'); return false;" target="_blank"]Oceanography API[/a]
+  */
+  var trackOutboundLink = function(url) {
+     ga('send', 'event', 'outbound', 'click', url, {'hitCallback':
+       function () {
+       document.location = url;
+       }
+     });
+  };
+</script>

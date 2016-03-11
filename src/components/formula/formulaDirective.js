@@ -52,13 +52,14 @@ var formula = function($mdDialog, $location, npdcAppConfig, npolarDocumentUtil, 
         });
       });
 
+      $scope.title = "";
+
       $scope.$watch('document', (newVal, oldVal) => {
         if (newVal) {
-          npdcAppConfig.cardTitle = newVal._rev ? npolarDocumentUtil.title(newVal) :
+          $scope.title = newVal._rev ? npolarDocumentUtil.title(newVal) :
             NpolarTranslate.translate('document.new');
           initBottomSheet();
         }
-        console.log('doc', newVal, npdcAppConfig.cardTitle);
       });
     }
   };

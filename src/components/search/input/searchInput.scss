@@ -1,6 +1,7 @@
 .np-search-input {
   display: block;
   margin-bottom: 3px;
+  padding-top: 20px;
 
   .np-search-input-input {
     margin: 15px 15px 0;
@@ -12,7 +13,6 @@
     max-height: 0;
     opacity: 0;
     padding: 0;
-    -webkit-transition: all .5s;
     transition: all .5s;
     visibility: hidden;
   }
@@ -22,6 +22,10 @@
     opacity: 1;
     padding: 8px 15px;
     visibility: visible;
+  }
+
+  .np-search-input-filters {
+    margin-top: 8px;
   }
 
   .filter-icon {
