@@ -380,11 +380,11 @@
   "description": [
     {
       "@language": "en",
-      "@value": "Sample database for nutrients, lipids and plankton."
+      "@value": "Sample database for nutrients, lipids and plankton"
     },
     {
       "@language": "no",
-      "@value": "Database for næringsstoffer, lipider og plankton."
+      "@value": "Database for næringsstoffer, lipider og plankton"
     }
   ],
   "category": "disabled"
@@ -411,11 +411,11 @@
   "description": [
     {
       "@language": "en",
-      "@value": "User administration."
+      "@value": "User administration"
     },
     {
       "@language": "no",
-      "@value": "Brukeradministrasjon."
+      "@value": "Brukeradministrasjon"
     }
   ],
   "category": "internal"
@@ -443,11 +443,11 @@
   "description": [
     {
       "@language": "en",
-      "@value": "NPDC services."
+      "@value": "NPDC services"
     },
     {
       "@language": "no",
-      "@value": "NPDC tjenster."
+      "@value": "NPDC tjenster"
     }
   ],
   "category": "disabled"
