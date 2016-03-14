@@ -55,7 +55,6 @@ let tabsDirective = function($timeout) {
           animateHorizontalScroll(scrollContainer, offset - width + elemWidth);
         }
 
-        let active = document.querySelector('.np-formula-tab.active');
         scope.form.activate(fieldset);
 
         // slide fieldset into view
@@ -65,7 +64,9 @@ let tabsDirective = function($timeout) {
           i++;
         }
         $timeout(() => {
+          let active = document.querySelector('.np-formula-tab.active');
           fieldsetContainer.style.left = -(active.clientWidth * i) + 'px';
+          active.style.maxHeight = active.clientHeight + 'px';
         });
       };
     }
