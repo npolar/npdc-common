@@ -7,7 +7,6 @@ require('angular-marked');
 require('angular-material');
 require('angular-npolar');
 require('angular-route');
-require('angular-contenteditable');
 require('formula');
 require('angularjs-slider');
 //require('./browser-warning');
@@ -19,11 +18,10 @@ var common = angular.module('npdcCommon', [
   'filefunnel',
   'formula',
   'hc.marked',
-  //'ngAnimate',
+  'ngAnimate',
   'ngMaterial',
   'ngNpolar',
   'ngRoute',
-  'contenteditable',
   'rzModule',
   'templates'
 ]);
