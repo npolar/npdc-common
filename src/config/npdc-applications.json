@@ -3,11 +3,11 @@
   "name": [
     {
       "@language": "en",
-      "@value": "Dataset"
+      "@value": "Dataset catalogue"
     },
     {
       "@language": "no",
-      "@value": "Datasett"
+      "@value": "Datasett-katalog"
     }
   ],
   "icons": [{
@@ -20,12 +20,12 @@
   "screenshots": ["/assets/img/screenshots/dataset.png"],
   "description": [
     {
-      "@language": "en",
-      "@value": "Datasets across a varient of fields spanning from the 1900 to present day."
+      "@language": "no",
+      "@value": "Alle publiserte og ikke-publiserte datasett som forvaltes av Norsk Polarinstitutt"
     },
     {
-      "@language": "no",
-      "@value": "Datasett på tvers av en rekke felt som spenner fra 1900 til i dag."
+      "@language": "en",
+      "@value": "All published and non-published datasets curated by the Norwegian Polar Institute"
     }
   ],
   "category": "public",
@@ -35,11 +35,11 @@
   "name": [
     {
       "@language": "en",
-      "@value": "APIs"
+      "@value": "REST APIs"
     },
     {
       "@language": "no",
-      "@value": "APIer"
+      "@value": "REST API"
     }
   ],
   "icons": [{
@@ -53,25 +53,29 @@
   "description": [
     {
       "@language": "en",
-      "@value": "Browse our API's and API documentation."
+      "@value": "Machine readable data"
     },
     {
       "@language": "no",
-      "@value": "Bla gjennom våre APIer og API dokumentasjon."
+      "@value": "Maskinlesbare data"
     }
   ],
   "category": "public",
   "promote": true
 }, {
-  "link": "/geodata",
+  "link": "https://geodata.data.npolar",
   "name": [
     {
       "@language": "en",
-      "@value": "Geodata"
+      "@value": "Map services"
     },
     {
-      "@language": "no",
-      "@value": "Geodata"
+      "@language": "nb",
+      "@value": "Kart-tjenester"
+    },
+    {
+      "@language": "nn",
+      "@value": "Kart-tenestar"
     }
   ],
   "icons": [{
@@ -85,11 +89,11 @@
   "description": [
     {
       "@language": "en",
-      "@value": "Map data and services for the Norwegian polar land areas."
+      "@value": "Map data and services for Svalbard and other polar areas"
     },
     {
       "@language": "no",
-      "@value": "Kartdata og tjenester for de norske polarlandområdene."
+      "@value": "Kartdata og -tjenester for Svalbard og andre polarområder"
     }
   ],
   "category": "public",
@@ -117,11 +121,11 @@
   "description": [
     {
       "@language": "en",
-      "@value": "Search for scientific articles, papers and other publications."
+      "@value": "Scientific articles and other publications by Norwegian Polar Institute staff, since 1977"
     },
     {
       "@language": "no",
-      "@value": "Søk i våre vitenskapelige artikler, rapporter, og andre skrifter."
+      "@value": "Alle vitenskapelige artikler og andre publikasjoner av ansatte ved Norsk Polarinstitutt, fra 1977"
     }
   ],
   "category": "public",
@@ -149,12 +153,12 @@
   "description": [
     {
       "@language": "en",
-      "@value": "Tracking data for wildlife in Norwegian polar areas."
+      "@value": "Animal positions and sensor data"
     },
     {
       "@language": "no",
-      "@value": "Sporingsdata for dyr i norske polarområder."
-    }
+      "@value": "Sporing av dyr: posisjoner og sensordata"
+    }  
   ],
   "category": "public",
   "promote": false
@@ -163,11 +167,11 @@
   "name": [
     {
       "@language": "en",
-      "@value": "Historic Vessels"
+      "@value": "Ships archive"
     },
     {
       "@language": "no",
-      "@value": "Historiske skip"
+      "@value": "Skutearkiv"
     }
   ],
   "icons": [{
@@ -181,11 +185,15 @@
   "description": [
     {
       "@language": "en",
-      "@value": "Historical record of ships used in polar exploration."
+      "@value": "The life history of ships sailing in the Arctic, built before 1940"
     },
     {
-      "@language": "no",
-      "@value": "Historisk databas av skip som benyttes i polarforskning."
+      "@language": "nb",
+      "@value": "Livshistorien til arktiske skuter bygget før 1940"
+    },
+    {
+      "@language": "nn",
+      "@value": "Historia til arktiske skuter bygd før 1940"
     }
   ],
   "category": "public",
@@ -213,11 +221,11 @@
   "description": [
     {
       "@language": "en",
-      "@value": "Historical record of maps from the polar regions."
+      "@value": "The map collection of the Norwegian Polar Institute"
     },
     {
       "@language": "no",
-      "@value": "Historisk databas av kart fra polarområdene."
+      "@value": "Kartsamlinga til Norsk Polarinstitutt"
     }
   ],
   "category": "public",
@@ -245,11 +253,11 @@
   "description": [
     {
       "@language": "en",
-      "@value": "Browse employees at the institue."
+      "@value": "Browse employees at the institue"
     },
     {
       "@language": "no",
-      "@value": "Search for employees at the Norwegian Polar Institute"
+      "@value": "Ansatte ved Norsk Polarinstitutt"
     }
   ],
   "category": "public",
@@ -263,7 +271,7 @@
     },
     {
       "@language": "no",
-      "@value": "Stedsnavn"
+      "@value": "Stadnamn"
     }
   ],
   "icons": [{
@@ -277,11 +285,11 @@
   "description": [
     {
       "@language": "en",
-      "@value": "Official placename database for the Norwegian polar regions."
+      "@value": "Official place names database for the Norwegian polar regions"
     },
     {
       "@language": "no",
-      "@value": "Offisielle stedsnavn i dei norske polarområda."
+      "@value": "Offisielle stedsnavn i dei norske polarområda"
     }
   ],
   "category": "public",
@@ -372,11 +380,11 @@
   "description": [
     {
       "@language": "en",
-      "@value": "Sample database for nutrients, lipids and plankton."
+      "@value": "Sample database for nutrients, lipids and plankton"
     },
     {
       "@language": "no",
-      "@value": "Database for næringsstoffer, lipider og plankton."
+      "@value": "Database for næringsstoffer, lipider og plankton"
     }
   ],
   "category": "disabled"
@@ -403,11 +411,11 @@
   "description": [
     {
       "@language": "en",
-      "@value": "User administration."
+      "@value": "User administration"
     },
     {
       "@language": "no",
-      "@value": "Brukeradministrasjon."
+      "@value": "Brukeradministrasjon"
     }
   ],
   "category": "internal"
@@ -435,11 +443,11 @@
   "description": [
     {
       "@language": "en",
-      "@value": "NPDC services."
+      "@value": "NPDC services"
     },
     {
       "@language": "no",
-      "@value": "NPDC tjenster."
+      "@value": "NPDC tjenster"
     }
   ],
   "category": "disabled"
