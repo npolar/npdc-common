@@ -7,9 +7,10 @@
     color: $color-text-grey;
     height: $height - 4px;
     left: 0;
-    line-height: 28px;
+    line-height: 26px;
     overflow: hidden;
     padding-right: .2em;
+    padding-top: 26px;
     position: absolute;
     text-align: right;
     top: 2px;
@@ -19,9 +20,12 @@
   }
 
   .csv-textarea {
+    font-family: monospace;
     height: $height;
+    line-height: 26px;
     overflow-y: auto;
     padding-left: 40px;
+    padding-top: 26px;
     position: relative;
     z-index: 1;
   }
@@ -29,6 +33,7 @@
   .np-formula-td-header {
     background-color: $color-bg-light;
     box-sizing: border-box;
+    font-family: monospace;
     left: 0;
     line-height: 26px;
     padding-top: 2px;

@@ -55,7 +55,7 @@ let tabdata = function(npdcCSVService) {
         if (n && n !== o) {
           let model = {};
           let headerLine = n.split(/\r?\n\r?/)[0];
-          let detectedDelimiter = /([\t\s,;|])/.exec(headerLine)[1];
+          let detectedDelimiter = /([\s,;|])/.exec(headerLine)[1];
           $scope.csvHeader = headerLine;
           $scope.delimiter = DELIMITERS[detectedDelimiter];
 
@@ -65,8 +65,7 @@ let tabdata = function(npdcCSVService) {
           } else {
             $scope.field.valid = true;
             $scope.field.errors = null;
-            n = n.trim();
-            model[$scope.field.id] = npdcCSVService.csvToJSON(n, {headers, delimiter}).map(item => {
+            model[$scope.field.id] = npdcCSVService.csvToJSON(n.trim(), {headers, delimiter}).map(item => {
               applySchemaValueType(item, $scope.field.schema.items.properties);
               Object.keys(item).forEach(prop => {
                 if (item[prop] === undefined) {
@@ -75,10 +74,9 @@ let tabdata = function(npdcCSVService) {
               });
               return item;
             });
-            $scope.field.valueFromModel(model);
+            $scope.field.valueFromModel(model, true);
             // Uncomment to force default delimiter
             // $scope.csvData = $scope.csvData.replace(detectedDelimiter, delimiter, 'g');
-            $scope.$emit('revalidate');
           }
         }
       });

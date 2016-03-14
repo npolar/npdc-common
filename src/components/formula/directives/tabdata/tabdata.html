@@ -2,8 +2,8 @@
 <md-input-container class="np-formula-tabdata" ng-show="field.visible">
   <label for="{{::field.uid}}">{{ (field.required ? field.title + ' (' + i18n.text.required + ')' : field.title ) }}</label>
   <div class="np-formula-td-header">
-    <span class="header-number">0</span>
-    <div contenteditable ng-model="csvHeader" class="header-string">{{csvHeader}}</div>
+    <span class="header-number"></span>
+    <div class="header-string">{{csvHeader}}</div>
   </div>
   <textarea ng-model="csvData" md-no-autogrow class="csv-textarea"></textarea>
   <div class="np-td-delimiter">Delimiter: {{delimiter}}</div>
