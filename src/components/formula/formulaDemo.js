@@ -94,7 +94,6 @@ angular
       });
       console.log("timeout");
     };
-    $timeout(updateModel);
     let acSource = ["Dalene", "Allan", "Lecia", "Leta", "Matthew", "Marlen", "Collette", "Alfredo", "Francina", "Dorene", "Ali", "Anette", "Courtney", "Arlena", "Spring", "Suzanna", "Roseanne", "Evita", "Gaynell", "Ellena", "Lucinda", "Delisa", "Lamont", "Eloy", "Luanna", "Cyndi", "Lynn", "Clare", "Stacey", "Tameka", "Cheryll", "Jong", "Hoyt", "Marhta", "Roselia", "Gala", "Chun", "Weston", "Zola", "Luana", "Arnette", "Delorse", "Libbie", "Nenita", "Lorina", "Carolyn", "Burma", "Russell", "Beatris", "Macie"];
     let acSourceFn = function (q) {
       return acSource.filter(item => item.toLowerCase().indexOf((q || '').toLowerCase()) === 0);
@@ -163,4 +162,6 @@ angular
     $scope.demo2 = function () {
       $scope.formula.setForm('./demo/form2.json');
     };
+
+    $scope.updateModel = updateModel;
   });
