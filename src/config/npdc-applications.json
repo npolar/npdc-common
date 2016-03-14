@@ -20,12 +20,12 @@
   "screenshots": ["/assets/img/screenshots/dataset.png"],
   "description": [
     {
-      "@language": "en",
-      "@value": "Datasets across a varient of fields spanning from the 1900 to present day."
+      "@language": "no",
+      "@value": "Datasettkatalog med alle publiserte og ikke-publiserte datasett som forvaltes av Norsk Polarinstitutt"
     },
     {
       "@language": "no",
-      "@value": "Datasett på tvers av en rekke felt som spenner fra 1900 til i dag."
+      "@value": "Dataset catalogue of all published and non-published datasets curated by the Norwegian Polar Institute"
     }
   ],
   "category": "public",
@@ -117,11 +117,11 @@
   "description": [
     {
       "@language": "en",
-      "@value": "Search for scientific articles, papers and other publications."
+      "@value": "A complete record of scientific articles and other publications by NPI staff since 1977"
     },
     {
       "@language": "no",
-      "@value": "Søk i våre vitenskapelige artikler, rapporter, og andre skrifter."
+      "@value": "En komplett samling av alle vitenskapelige artikler og andre publikasjoner av NP-ansatte, fra 1977"
     }
   ],
   "category": "public",
