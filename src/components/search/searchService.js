@@ -54,7 +54,7 @@ let SearchService = function($location, $window, $q, npolarDocumentUtil, npdcApp
         collections = options.collections;
         searchResources = buildResources(collections);
       }
-      console.log('q', query);
+
       return $q.all(searchResources.map(resource => resource.array(query).$promise))
         .then(results => results.reduce((memo, result, index) => {
             // Get collection name from options (if not set in document)

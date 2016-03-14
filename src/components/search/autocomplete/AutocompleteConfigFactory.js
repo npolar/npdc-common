@@ -8,11 +8,6 @@ let AutocompleteConfigFactory = function(NpolarTranslate) {
 
   let collections = [
     {
-      name: 'dataset',
-      path: '/dataset',
-      enabled: true
-    },
-    {
       name: 'publication',
       path: '/publication',
       enabled: true
