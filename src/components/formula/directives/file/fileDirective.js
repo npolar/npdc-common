@@ -45,12 +45,18 @@ let fileDirective = function($http, $routeParams, fileFunnelService) {
       $http.get(fileUri).then(response => {
         if (response && response.data && response.data.files) {
           let model = {};
+          
           model[$scope.field.id] = [];
+          
+          console.debug(response.data.files);
+          
           response.data.files.forEach(responseFile => {
             let item = ($scope.values || []).find(val => {
               let valueFile = options.valueToFileMapper(val.value);
               return valueFile.md5sum === responseFile.md5sum || valueFile.filename === responseFile.filename;
             });
+            
+            console.log(model);
 
             model[$scope.field.id].push(Object.assign({}, item ? item.value : {}, options.fileToValueMapper(responseFile)));
           });
