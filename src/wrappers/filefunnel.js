@@ -6,7 +6,7 @@ require('filefunnel.js/dist/js/filefunnel-i18n.min.js');
 
 let ff = angular.module('filefunnel', ['ngMaterial', 'ngNpolar']);
 
-ff.controller('FFUploadController', function($scope, $mdDialog, options) {
+ff.controller('FFUploadController', function($scope, $mdDialog, options, NpolarApiSecurity) {
   let ff = new FileFunnel(null, options);
   $scope.ff = ff;
 
@@ -41,6 +41,12 @@ ff.controller('FFUploadController', function($scope, $mdDialog, options) {
     ff.abort();
     $mdDialog.hide();
   };
+  
+  $scope.upload = function() {
+    ff.auth = NpolarApiSecurity.authorization();
+    ff.upload();
+    //$mdDialog.hide();
+  };
 
   $scope.$on('npolar-lang', (e, lang) => {
     ff.locale = lang.lang;
@@ -63,7 +69,7 @@ ff.controller('FFUploadController', function($scope, $mdDialog, options) {
   ff.progressType = 'determinate';
 });
 
-ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig, NpolarApiSecurity, NpolarMessage) {
+ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig, NpolarMessage) {
   const DEFAULTS = {
     accept: "*/*",
     chunked: false,
@@ -73,8 +79,9 @@ ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig, NpolarAp
   let configs = formulaFieldConfig.getInstance();
   let fileUploader = function(config, formula) {
     var options = Object.assign({}, DEFAULTS, config, {
-      formula,
-      auth: NpolarApiSecurity.authorization()
+      formula
+      //,
+      //auth: NpolarApiSecurity.authorization()
     });
     if (!options.server) {
       throw "You must set a server!";

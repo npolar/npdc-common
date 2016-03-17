@@ -1,6 +1,6 @@
 'use strict';
 
-var formula = function($mdDialog, $location, npdcAppConfig, npolarDocumentUtil, NpolarTranslate) {
+var formula = function($mdDialog, $location, $routeParams, npdcAppConfig, npolarDocumentUtil, NpolarTranslate) {
   'ngInject';
 
   return {
@@ -53,6 +53,8 @@ var formula = function($mdDialog, $location, npdcAppConfig, npolarDocumentUtil, 
       });
 
       $scope.title = "";
+      
+      $scope.id = $routeParams.id;
 
       $scope.$watch('document', (newVal, oldVal) => {
         if (newVal) {
