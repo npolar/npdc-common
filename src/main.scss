@@ -3,6 +3,10 @@
 @import 'layouts/**/*';
 @import 'components/**/*';
 
+body {
+  overflow-y: scroll;
+}
+
 a {
   color: $color-primary-0;
 

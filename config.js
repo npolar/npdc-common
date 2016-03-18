@@ -15,9 +15,15 @@ var config = function(baseConfig) {
         baseConfig.src.root + '/material-icons.css',
         'node_modules/chronopic.js/dist/css/chronopic-ext-md.min.css',
         'node_modules/chronopic.js/dist/css/chronopic.min.css',
-        'node_modules/leaflet-draw/dist/leaflet.draw.css'
+        'node_modules/leaflet/dist/leaflet.css',
+        'node_modules/leaflet-draw/dist/leaflet.draw.css',
+        'node_modules/leaflet-fullscreen/dist/leaflet.fullscreen.css'
       ].concat(baseConfig.deps.css),
-      sharedAssets: ['node_modules/material-design-icons/iconfont/*', 'node_modules/leaflet-draw/dist/*/*']
+      sharedAssets: [
+        'node_modules/material-design-icons/iconfont/*',
+        'node_modules/leaflet-draw/dist/*/*',
+        'node_modules/leaflet-fullscreen/dist/*.png'
+      ]
     },
     dist: {
       approot: baseConfig.dist.root + '/demo',

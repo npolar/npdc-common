@@ -118,6 +118,7 @@ md-toast {
 
 // Leaflet uses z.index up to 1000, so bumping some others...
 .md-virtual-repeat-container.md-autocomplete-suggestions-container,
-md-tooltip {
+md-tooltip,
+md-toast {
   z-index: 1100;
 }

@@ -53,8 +53,14 @@ var formula = function($mdDialog, $location, $routeParams, npdcAppConfig, npolar
       });
 
       $scope.title = "";
-      
+
       $scope.id = $routeParams.id;
+
+      $scope.href = function (id) {
+        console.log('id', id);
+        console.dir($scope.resource);
+        return $scope.resource.href(id);
+      };
 
       $scope.$watch('document', (newVal, oldVal) => {
         if (newVal) {
