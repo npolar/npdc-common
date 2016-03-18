@@ -21,15 +21,29 @@ let autocompleteDirective = function ($http, formulaAutoCompleteService) {
 
       $scope.querySource = config.querySource;
       if (typeof config.querySource === 'string') {
-        $scope.querySource = function (q) {
-          q = q || '';
-          var options = {
-            params: {q}
+        $scope.querySource = function (q = '') {
+          let options = {
+            params: {
+              q,
+              variant: 'array',
+              limit: 100,
+              fields: '*'
+            },
+            headers: {
+              Accept: 'application/json, application/vnd.geo+json'
+            },
+            isArray: true,
+            cache: true
           };
           return $http.get(config.querySource, options).then(function (response) {
-            return response.data.filter(item =>
-              $scope.value(item).toLowerCase().indexOf(q.toLowerCase()) === 0);
+            return response.data;
           });
+        };
+      } else if (config.querySource instanceof Array) {
+        $scope.querySource = function (q) {
+          q = q || '';
+          return config.querySource.filter(item =>
+            $scope.label(item).toLowerCase().indexOf(q.toLowerCase()) === 0);
         };
       }
       $scope.minLength = config.minLength || 0;
@@ -46,6 +60,7 @@ let autocompleteDirective = function ($http, formulaAutoCompleteService) {
         return String(result);
       };
 
+      $scope.search = {};
       $scope.value = function (item) {
         return mapItem(item, 'value');
       };
@@ -54,7 +69,16 @@ let autocompleteDirective = function ($http, formulaAutoCompleteService) {
         return mapItem(item, 'label');
       };
 
-      $scope.searchText = field.value;
+      let matchingItems = $scope.querySource(field.value);
+
+      if (matchingItems.$$state) {
+        matchingItems.then(items => {
+          let item = items.find(item => $scope.value(item) === field.value);
+          $scope.search.text = item ? $scope.label(item) : field.value;
+        });
+      } else {
+        $scope.search.text = matchingItems.length === 1 ? $scope.label(matchingItems[0]) : undefined;
+      }
       $scope.searchChange = function(searchText) {
         if (searchText) {
           field.value = searchText;

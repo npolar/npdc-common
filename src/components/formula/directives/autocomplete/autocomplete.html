@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <div ng-if="field.visible">
   <md-autocomplete
-    md-items="item in querySource(searchText)"
+    md-items="item in querySource(search.text)"
     md-item-text="label(item)"
     md-min-length="minLength"
-    md-search-text="searchText"
+    md-search-text="search.text"
     md-floating-label="{{field.title}}"
     md-selected-item-change="onSelect(item)"
     md-select-on-match="true"
-    md-search-text-change="searchChange(searchText)">
+    md-search-text-change="searchChange(search.text)">
 
     <md-item-template>
-      <span md-highlight-flags="^i" md-highlight-text="searchText">{{label(item)}}</span>
+      <span md-highlight-flags="^i" md-highlight-text="search.text">{{label(item)}}</span>
     </md-item-template>
 
   <div npdc:formula-validation-message class="np-validation-message"></div>
