@@ -1,7 +1,7 @@
 'use strict';
 
 var SearchResultsController = function($scope, $filter, $location, $http, NpolarApiSecurity,
-  npdcAppConfig, npolarDocumentUtil) {
+  npdcAppConfig, npolarDocumentUtil, NpdcApplications) {
   'ngInject';
 
   let options = ($scope.options || npdcAppConfig.search.local).results;
@@ -13,18 +13,7 @@ var SearchResultsController = function($scope, $filter, $location, $http, Npolar
   };
 
   $scope.entryHref = function(id) {
-    // Get relative path of entry by removing hostname + appname from request URI
-    let segments = $location.absUrl().split("//")[1].split("?")[0].split("/").filter(s => {
-      return s !== "";
-    }).slice(2);
-
-    if (segments.length === 0) {
-      // For apps at /something, we just need to link to the id
-      return id;
-    } else {
-      // For apps at /cat, but with show/edit at /cat/lynx we link to `lynx/${id}`
-      return segments.join("/") + '/' + id;
-    }
+    return $scope.resource.href(id);
   };
 
   $scope.avatar = (entry) => {
@@ -36,6 +25,15 @@ var SearchResultsController = function($scope, $filter, $location, $http, Npolar
     }
 
     return entry.id.substr(0,3);
+  };
+
+  $scope.icon = function () {
+    let app = NpdcApplications.find(app => {
+      return new RegExp(app.link).test($scope.resource.path);
+    });
+    if (app) {
+      return app.icons.find(icon => icon.size === 48).src;
+    }
   };
 
   $scope.title = (entry) => {

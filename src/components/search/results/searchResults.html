@@ -9,9 +9,11 @@
       <div class="np-layout-list">
         <md-list>
           <md-list-item class="md-2-line" ng-repeat="e in feed.entries" ng-href="{{ entryHref(e.id) }}">
-            <div class="np-search-icon md-avatar" title="ID: {{ e.id }}">
+            <img class="md-avatar" ng-src={{icon(e)}} title="ID: {{ e.id }}" />
+
+            <!-- <div class="np-search-icon md-avatar" title="ID: {{ e.id }}">
               <span>{{ avatar(e) }}</span>
-            </div>
+            </div> -->
             <div class="md-list-item-text">
               <h3 class="md-headline">
                 <span md-highlight-text="q()" md-highlight-flags="ig">{{title(e)}}</span>
