@@ -29,7 +29,7 @@ var SearchResultsController = function($scope, $filter, $location, $http, Npolar
 
   $scope.icon = function () {
     let app = NpdcApplications.find(app => {
-      return new RegExp(app.link).test($scope.resource.path);
+      return new RegExp(app.link).test($scope.resource.uiBase);
     });
     if (app) {
       return app.icons.find(icon => icon.size === 48).src;
