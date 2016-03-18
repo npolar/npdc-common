@@ -66,7 +66,6 @@ let tabsDirective = function($timeout) {
         $timeout(() => {
           let active = document.querySelector('.np-formula-tab.active');
           fieldsetContainer.style.left = -(active.clientWidth * i) + 'px';
-          active.style.maxHeight = active.clientHeight + 'px';
         });
       };
     }
