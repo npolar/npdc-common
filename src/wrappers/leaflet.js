@@ -5,7 +5,7 @@ let L = require('leaflet');
 require('leaflet-draw');
 require('leaflet-fullscreen');
 
-angular.module('leaflet', []).directive('leaflet', function($compile) {
+angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) {
   'ngInject';
 
   L.Icon.Default.imagePath = '/assets/images';
@@ -150,6 +150,9 @@ angular.module('leaflet', []).directive('leaflet', function($compile) {
       });
 
       map.addLayer(osm);
+      $timeout(() => {
+        map.invalidateSize();
+      });
       scope.$emit('map:move', map.getBounds());
     }
   };
