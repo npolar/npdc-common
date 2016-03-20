@@ -3,6 +3,10 @@
   position: relative;
   text-overflow: ellipsis;
 
+  a {
+    text-decoration: none;
+  }
+
   md-virtual-repeat-container {
     height: 48px;
     width: 100%;
