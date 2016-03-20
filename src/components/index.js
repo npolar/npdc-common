@@ -33,3 +33,4 @@ common.directive('npdcBottomSheet', require('./bottom-sheet/bottomSheetDirective
 
 common.directive('npdcLoader', require('./loader/loaderDirective'));
 common.directive('npdcFooter', require('./footer/footerDirective'));
+common.directive('npdcTabs', require('./tabs/tabsDirective'));

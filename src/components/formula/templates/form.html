@@ -5,9 +5,8 @@
       {{ form.title }}
     </header>
 
-    <npdc:tabs></npdc:tabs>
-
-    <formula:fieldsets class="np-formula-fieldsets"></formula:fieldsets>
+    <npdc:tabs tabs="form.fieldsets" onactivate="form.activate"></npdc:tabs>
+    <formula:fieldsets class="np-tabs np-formula-fieldsets"></formula:fieldsets>
 
     <div class="np-padding">
       <span ng-if="form.errors" title="{{ form.errors.join('\n') }}">{{ i18n.text.invalid | formulaReplace : { count: form.errors.length } }}</span>

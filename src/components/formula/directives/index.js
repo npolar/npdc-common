@@ -18,5 +18,3 @@ common.directive('npdcFormulaPlacename', require('./placename/placenameDirective
 
 common.service('npdcCSVService', require('./tabdata/csvService'));
 common.directive('npdcFormulaTabdata', require('./tabdata/tabdataDirective'));
-
-common.directive('npdcTabs', require('./tabs/tabsDirective'));

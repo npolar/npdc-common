@@ -22,6 +22,7 @@ var config = function(baseConfig) {
       sharedAssets: [
         'node_modules/material-design-icons/iconfont/*',
         'node_modules/leaflet-draw/dist/*/*',
+        'node_modules/leaflet/dist/*/*',
         'node_modules/leaflet-fullscreen/dist/*.png'
       ]
     },

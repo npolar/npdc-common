@@ -16,9 +16,15 @@
   <md-content layout="column" layout-padding ng-controller="FormulaCtrl" class="np-content">
     <npdc:formula></npdc:formula>
     <div layout>
-      <md-button class="md-raised md-primary" ng-click="formula.save();" flex="33">Save</md-button>
-      <md-button class="md-raised md-primary" ng-click="updateModel();" flex="33">Update model</md-button>
-      <md-button class="md-raised md-primary" ng-click="demo2();" flex="33">Demo2</md-button>
+      <div flex="33">
+        <md-button class="md-raised md-primary" ng-click="formula.save();">Save</md-button>
+      </div>
+      <div flex="33">
+        <md-button class="md-raised md-primary" ng-click="updateModel();">Update model</md-button>
+      </div>
+      <div flex="33">
+        <md-button class="md-raised md-primary" ng-click="demo2();">Demo2</md-button>
+      </div>
     </div>
     <npolar-message></npolar-message>
   </md-content>

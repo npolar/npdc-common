@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html ng-app="mapSearchDemo">
+  <head>
+    <title>NPDC Application</title>
+    <link href="/assets/npdc-common.css" rel="stylesheet">
+    <meta name="viewport" content="initial-scale=1" />
+  </head>
+
+  <body ng-controller="MapSearchDemoCtrl">
+    <npdc:toolbar></npdc:toolbar>
+
+    <!-- Content wrapper -->
+    <md-content class="np-content-wrapper">
+      <!-- Subheader bar -->
+      <div class="np-sub-toolbar"></div>
+      <div class="np-content-card">
+        <main class="np-content md-whiteframe-12dp" layout="column">
+          <div layout="column" flex autoscroll="true">
+            <leaflet class="map-search" options="options"></leaflet>
+          </div>
+        </main>
+      </div>
+    </md-content>
+
+    <npdc:footer></npdc:footer>
+
+
+  </body>
+  <script src="/demo/demos.js"></script>
+</html>

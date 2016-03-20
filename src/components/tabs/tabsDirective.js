@@ -1,12 +1,19 @@
 'use strict';
 
+let angular = require('angular');
+
 let tabsDirective = function($timeout) {
   'ngInject';
 
   return {
     template: require('./tabs.html'),
+    scope: {
+      tabs: '=',
+      onactivate: '=?'
+    },
     link(scope, element) {
       let duration = 250;
+      let fieldsetContainer = document.querySelector('.np-tabs');
 
       let animateHorizontalScroll = function (elem, stop) {
         let step = 25;
@@ -42,7 +49,7 @@ let tabsDirective = function($timeout) {
         animateHorizontalScroll(scrollContainer, scroll - 180);
       };
 
-      scope.go = function (ev, fieldset) {
+      scope.go = function (ev, tab) {
         let tabsContainer = element[0].querySelector('md-virtual-repeat-container');
         let scrollContainer = element[0].querySelector('.md-virtual-repeat-scroller');
         let scrollPos = scrollContainer.scrollLeft;
@@ -55,19 +62,40 @@ let tabsDirective = function($timeout) {
           animateHorizontalScroll(scrollContainer, offset - width + elemWidth);
         }
 
-        scope.form.activate(fieldset);
-
-        // slide fieldset into view
-        let fieldsetContainer = document.querySelector('.np-formula-fieldsets');
+        let fieldsetContainer = document.querySelector('.np-tabs');
         let i = 0, child = ev.target;
         while ((child = child.previousElementSibling)) {
           i++;
         }
+
+        scope.onactivate(tab);
+
+        // slide tab into view
         $timeout(() => {
-          let active = document.querySelector('.np-formula-tab.active');
+          let active = document.querySelector('.np-tab.active');
           fieldsetContainer.style.left = -(active.clientWidth * i) + 'px';
         });
       };
+
+      if (typeof scope.onactivate !== 'function') {
+        scope.onactivate = function(tab) {
+          let tabNodes = fieldsetContainer.querySelectorAll('.np-tab');
+          scope.tabs.forEach(function(t, i) {
+            let $tab = angular.element(tabNodes[i]);
+            if (typeof tab === 'object' || typeof tab === 'number') {
+              if ((typeof tab === 'object') ? (t === tab) : (i === tab)) {
+                t.active = true;
+                $tab.addClass('active');
+              } else {
+                t.active = false;
+                $tab.removeClass('active');
+              }
+            }
+          });
+
+        };
+      }
+      scope.onactivate(scope.tabs[0]);
     }
   };
 };

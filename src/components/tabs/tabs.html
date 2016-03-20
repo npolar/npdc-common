@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<nav ng-if="::tabs.length > 1" class="np-tabs-nav" layout="row">
+  <a class="np-nav-scroll" ng-click="back();"><md-icon>navigate_before</md-icon></a>
+  <md-virtual-repeat-container md-orient-horizontal flex>
+    <a md-virtual-repeat="tab in ::tabs" flex href="" md-ink-ripple class="np-nav-item" ng-class="{ active: tab.active, error: tab.valid === false}" ng-click="go($event, tab)">{{ tab.title }}</a>
+  </md-virtual-repeat-container>
+  <a class="np-nav-scroll" ng-click="next();"><md-icon>navigate_next</md-icon></a>
+</nav>

@@ -5,8 +5,10 @@ let L = require('leaflet');
 require('leaflet-draw');
 require('leaflet-fullscreen');
 
-angular.module('leaflet', []).directive('leaflet', function() {
+angular.module('leaflet', []).directive('leaflet', function($compile) {
   'ngInject';
+
+  L.Icon.Default.imagePath = '/assets/images';
 
   return {
     scope: {
@@ -14,7 +16,6 @@ angular.module('leaflet', []).directive('leaflet', function() {
     },
     template: '<div class="leaflet-map"></div>',
     link: function(scope, iElement) {
-      scope.options = Object.assign({}, scope.options);
       let mapOptions = Object.assign({
         maxZoom: 10,
         minZoom: 2,
@@ -33,13 +34,16 @@ angular.module('leaflet', []).directive('leaflet', function() {
       let map = L.map(iElement.find('div')[0], mapOptions).setView([69.68, 18.94], 3);
       let drawnItems;
 
+      map.on('moveend', e => {
+        scope.$emit('map:move', map.getBounds());
+      });
+
       let addLayer = function(layer) {
         if (drawnItems) {
           if (drawnItems.getLayers().length > 0) {
             drawnItems.clearLayers();
           }
           layer.on('click', clickEvent => {
-            console.log(clickEvent.target.editing);
             clickEvent.target.editing._fireEdit();
           });
           layer.addTo(drawnItems);
@@ -120,8 +124,33 @@ angular.module('leaflet', []).directive('leaflet', function() {
         });
       }
 
-      map.addLayer(osm);
-    }
+      let pointsGroup;
+      scope.$watchCollection('options.points', points => {
+        if (points) {
+          if (pointsGroup) {
+            pointsGroup.clearLayers();
+            map.removeLayer(pointsGroup);
+          }
+          pointsGroup = L.layerGroup();
+          pointsGroup.addTo(map);
 
+          points.forEach(point => {
+            let popup = document.createElement('div');
+            popup.innerHTML = point.popup;
+            let layer = L.marker(point.point, {riseOnHover: true})
+              .bindPopup($compile(popup)(point.scope || {})[0], {
+                autoPan: false
+              })
+              .on('mouseover', e => {
+                e.target.openPopup();
+              });
+            pointsGroup.addLayer(layer);
+          });
+        }
+      });
+
+      map.addLayer(osm);
+      scope.$emit('map:move', map.getBounds());
+    }
   };
 });
