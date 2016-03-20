@@ -15,6 +15,25 @@ let tabsDirective = function($timeout) {
       let duration = 250;
       let fieldsetContainer = document.querySelector('.np-tabs');
 
+      let activate = function (tab) {
+        let tabNodes = fieldsetContainer.querySelectorAll('.np-tab');
+        scope.tabs.forEach(function(t, i) {
+          let $tab = angular.element(tabNodes[i]);
+          if (typeof tab === 'object' || typeof tab === 'number') {
+            if ((typeof tab === 'object') ? (t === tab) : (i === tab)) {
+              t.active = true;
+              $tab.addClass('active');
+            } else {
+              t.active = false;
+              $tab.removeClass('active');
+            }
+          }
+        });
+        if (typeof scope.onactivate === 'function') {
+          scope.onactivate(tab);
+        }
+      };
+
       let animateHorizontalScroll = function (elem, stop) {
         let step = 25;
         let steps = duration / step;
@@ -68,7 +87,7 @@ let tabsDirective = function($timeout) {
           i++;
         }
 
-        scope.onactivate(tab);
+        activate(tab);
 
         // slide tab into view
         $timeout(() => {
@@ -77,25 +96,7 @@ let tabsDirective = function($timeout) {
         });
       };
 
-      if (typeof scope.onactivate !== 'function') {
-        scope.onactivate = function(tab) {
-          let tabNodes = fieldsetContainer.querySelectorAll('.np-tab');
-          scope.tabs.forEach(function(t, i) {
-            let $tab = angular.element(tabNodes[i]);
-            if (typeof tab === 'object' || typeof tab === 'number') {
-              if ((typeof tab === 'object') ? (t === tab) : (i === tab)) {
-                t.active = true;
-                $tab.addClass('active');
-              } else {
-                t.active = false;
-                $tab.removeClass('active');
-              }
-            }
-          });
-
-        };
-      }
-      scope.onactivate(scope.tabs[0]);
+      activate(scope.tabs[0]);
     }
   };
 };
