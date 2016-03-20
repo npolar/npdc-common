@@ -14,7 +14,7 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
     scope: {
       options: '='
     },
-    template: '<div class="leaflet-map"></div>',
+    template: '<div class="leaflet-map"><div class="map-scroller"></div></div>',
     link: function(scope, iElement) {
       let mapOptions = Object.assign({
         maxZoom: 10,

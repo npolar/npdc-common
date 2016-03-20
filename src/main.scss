@@ -84,10 +84,11 @@ dl {
 }
 
 .leaflet-map {
-  min-height: 100px;
+  min-height: 300px;
 
   @media(max-width: 900px) {
     margin: 0 auto;
-    max-width: 80%;
+    max-width: 94%;
+    overflow-x: visible;
   }
 }

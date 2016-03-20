@@ -1,6 +1,6 @@
 .map-search {
   display: block;
-  height: 600px;
+  height: calc(100vh - 220px);
 
   .leaflet-map {
     height: 100%;
