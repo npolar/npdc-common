@@ -1,0 +1,19 @@
+.np-licences {
+  height: 32px;
+  margin: 8px;
+
+  a {
+    display: inline-block;
+    height: 100%;
+    line-height: 32px;
+    padding: 0 8px;
+    text-align: center;
+    vertical-align: top;
+  }
+
+  .cc-by {
+    background-image: url('/assets/img/cc-by.png');
+    background-size: auto 100px;
+    width: 72px;
+  }
+}

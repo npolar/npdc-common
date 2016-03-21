@@ -13,3 +13,5 @@ ui.directive('npdcData', require('./links/dataDirective'));
 ui.directive('npdcDocumentMeta', require('./meta/metaDirective'));
 ui.directive('npdcAuthors', require('./authors/authorsDirective'));
 ui.directive('npdcPlacenames', require('./placenames/placenamesDirective'));
+ui.directive('npdcCollection', require('./collection/collectionDirective'));
+ui.directive('npdcLicences', require('./licences/licencesDirective'));
