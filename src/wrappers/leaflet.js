@@ -14,7 +14,7 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
     scope: {
       options: '='
     },
-    template: '<div class="leaflet-map"><div class="map-scroller"></div></div>',
+    template: '<div class="leaflet-map"></div>',
     link: function(scope, iElement) {
       let mapOptions = Object.assign({
         maxZoom: 10,
@@ -152,7 +152,7 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
       map.addLayer(osm);
       $timeout(() => {
         map.invalidateSize();
-      });
+      },10);
       scope.$emit('map:move', map.getBounds());
     }
   };
