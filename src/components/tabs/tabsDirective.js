@@ -91,8 +91,9 @@ let tabsDirective = function($timeout) {
 
         // slide tab into view
         $timeout(() => {
-          let active = document.querySelector('.np-tab.active');
-          fieldsetContainer.style.left = -(active.clientWidth * i) + 'px';
+          let active = fieldsetContainer.querySelector('.np-tab.active');
+          let move = active.getBoundingClientRect().left - fieldsetContainer.getBoundingClientRect().left;
+          fieldsetContainer.style.left = -move + 'px';
         });
       };
 

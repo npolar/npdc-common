@@ -51,6 +51,7 @@
 }
 
 .np-tabs {
+  box-sizing: border-box;
   display: block;
   left: 0;
   position: relative;
@@ -58,8 +59,10 @@
   white-space: nowrap;
 
   .np-tab {
+    box-sizing: border-box;
     display: inline-block;
     height: 1px;
+    max-width: 100%;
     transition: visibility .2s .2s;
     vertical-align: top;
     visibility: hidden;
