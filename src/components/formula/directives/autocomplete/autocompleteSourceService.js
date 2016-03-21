@@ -1,7 +1,7 @@
 "use strict";
 let angular = require('angular');
 
-let autocompleteSourceService = function(formulaFieldConfig) {
+let autocompleteSourceService = function($q, formulaFieldConfig) {
   'ngInject';
 
   let configs = formulaFieldConfig.getInstance();
@@ -23,10 +23,20 @@ let autocompleteSourceService = function(formulaFieldConfig) {
   let autocompleteFacets = function (autocompleteFacets, resource, formula) {
     let facets = autocompleteFacets.join(',');
 
-    resource.facets({ facets, q: '' }, response => {
-      let relevant = response.filter(item => autocompleteFacets.includes(item.facet));
-      relevant.forEach(item => {
+    $q.all([resource.facets({ facets, q: '' }).$promise, formula.getFields()]).then(responses => {
+      autocompleteFacets.forEach(facet => {
+        let item = responses[0].find(r => r.facet === facet);
         let nodes = item.facet.split('.');
+        let field = responses[1].find(field => {
+          let parts = nodes.slice();
+
+          return field.id === parts.pop() &&
+            field.parents.map(p => p.id).filter(p => !/_item/.test(p))
+            .every(p => p === parts.pop());
+        });
+        if (field.typeOf('array')) {
+          nodes.push(field.id + '_item');
+        }
         let source = function (q) {
           q = (q || '').toLocaleLowerCase();
           return item.terms.map(t => String(t.term))
@@ -43,7 +53,7 @@ let autocompleteSourceService = function(formulaFieldConfig) {
             });
         };
         let match = function(field) {
-          let fieldNodes = field.path.replace(/(#\/|\/\d)/g, '').split('/');
+          let fieldNodes = field.path.replace(/^#\//, '').replace(/\/\d$/, '/'+field.id).split('/');
           return angular.equals(nodes, fieldNodes);
         };
         autocomplete({

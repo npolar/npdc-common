@@ -77,7 +77,7 @@ let autocompleteDirective = function ($http, formulaAutoCompleteService) {
           $scope.search.text = item ? $scope.label(item) : field.value;
         });
       } else {
-        $scope.search.text = matchingItems.length === 1 ? $scope.label(matchingItems[0]) : undefined;
+        $scope.search.text = matchingItems.length === 1 ? $scope.label(matchingItems[0]) : field.value;
       }
       $scope.searchChange = function(searchText) {
         if (searchText) {
