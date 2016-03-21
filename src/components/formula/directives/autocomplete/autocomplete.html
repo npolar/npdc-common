@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <div ng-if="field.visible">
   <md-autocomplete
-    md-items="item in querySource(search.text)"
+    md-items="item in items"
     md-item-text="label(item)"
     md-min-length="minLength"
     md-search-text="search.text"
