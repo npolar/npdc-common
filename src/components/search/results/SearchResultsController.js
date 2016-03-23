@@ -4,7 +4,7 @@ var SearchResultsController = function($scope, $filter, $location, $http, Npolar
   npdcAppConfig, npolarDocumentUtil, NpdcApplications) {
   'ngInject';
 
-  let options = ($scope.options || npdcAppConfig.search.local).results;
+  let options = Object.assign({}, npdcAppConfig.search.local.results, $scope.options ? $scope.options.results : {});
 
   $scope.security = NpolarApiSecurity;
 
@@ -66,7 +66,7 @@ var SearchResultsController = function($scope, $filter, $location, $http, Npolar
       return valueFromPath(entry, options.detail);
     }
 
-    return entry.updated.split("T")[0];
+    return entry.updated ? entry.updated.split("T")[0]: undefined;
   };
 
   $scope.showNext = function() {

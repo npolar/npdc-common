@@ -158,7 +158,7 @@
     {
       "@language": "no",
       "@value": "Sporing av dyr: posisjoner og sensordata"
-    }  
+    }
   ],
   "category": "public",
   "promote": false
@@ -448,6 +448,30 @@
     {
       "@language": "no",
       "@value": "NPDC tjenster"
+    }
+  ],
+  "category": "disabled"
+},
+{
+  "link": "/text",
+  "name": [
+    {
+      "@language": "en",
+      "@value": "Texts"
+    }
+  ],
+  "icons": [{
+    "size": 96,
+    "src": "/assets/img/app-icons/96/text.png"
+  }, {
+    "size": 48,
+    "src": "/assets/img/app-icons/48/text.png"
+  }],
+  "screenshots": [],
+  "description": [
+    {
+      "@language": "en",
+      "@value": "i18n texts"
     }
   ],
   "category": "disabled"
