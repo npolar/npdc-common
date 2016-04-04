@@ -86,8 +86,11 @@ let autocompleteDirective = function ($http, formulaAutoCompleteService) {
       }
       $scope.searchChange = function(searchText) {
         if (searchText) {
-          field.value = searchText;
           $scope.items = querySource(searchText);
+
+          if (!$scope.items.length) {
+            field.value = searchText;
+          }
         }
       };
     }

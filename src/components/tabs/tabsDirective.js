@@ -56,6 +56,12 @@ let tabsDirective = function($timeout) {
         }
       };
 
+      let slideIntoView = function () {
+        let active = fieldsetContainer.querySelector('.np-tab.active');
+        let move = active.getBoundingClientRect().left - fieldsetContainer.getBoundingClientRect().left;
+        fieldsetContainer.style.left = -move + 'px';
+      };
+
       scope.next = function () {
         let scrollContainer = element[0].querySelector('.md-virtual-repeat-scroller');
         let scroll = scrollContainer.scrollLeft;
@@ -81,7 +87,6 @@ let tabsDirective = function($timeout) {
           animateHorizontalScroll(scrollContainer, offset - width + elemWidth);
         }
 
-        let fieldsetContainer = document.querySelector('.np-tabs');
         let i = 0, child = ev.target;
         while ((child = child.previousElementSibling)) {
           i++;
@@ -89,15 +94,39 @@ let tabsDirective = function($timeout) {
 
         activate(tab);
 
-        // slide tab into view
-        $timeout(() => {
-          let active = fieldsetContainer.querySelector('.np-tab.active');
-          let move = active.getBoundingClientRect().left - fieldsetContainer.getBoundingClientRect().left;
-          fieldsetContainer.style.left = -move + 'px';
-        });
+        slideIntoView();
       };
 
       activate(scope.tabs[0]);
+
+      // recalc slide if window is resized
+      addEventListener('resize', slideIntoView);
+
+
+      // Hack to dected if scrollbars are added
+      // Demo: http://jsfiddle.net/pFaSx/
+      // Create an invisible iframe
+      var iframe = document.createElement('iframe');
+      iframe.id = "hacky-scrollbar-resize-listener";
+      iframe.style.cssText = 'height: 0; background-color: transparent; margin: 0; padding: 0; overflow: hidden; border-width: 0; position: absolute; width: 100%;';
+
+      // Register our event when the iframe loads
+      iframe.onload = function() {
+        // The trick here is that because this iframe has 100% width
+        // it should fire a window resize event when anything causes it to
+        // resize (even scrollbars on the outer document)
+        iframe.contentWindow.addEventListener('resize', function() {
+          try {
+            var evt = document.createEvent('UIEvents');
+            evt.initUIEvent('resize', true, false, window, 0);
+            window.dispatchEvent(evt);
+          } catch(e) {}
+        });
+      };
+
+      // Stick the iframe somewhere out of the way
+      document.body.appendChild(iframe);
+
     }
   };
 };
