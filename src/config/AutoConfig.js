@@ -21,13 +21,14 @@ var AutoConfig = function(environment) {
     return environment;
   };
 
+  // jshint -W116
   var base = function(environment) {
     var base;
     if ("development" === environment) {
       base = "//localhost:9393";
     } else if ("test" === environment) {
       base = "https://apptest.data.npolar.no:3000";
-    } else if ("production" === environment || undefined === environment || null === environment) {
+    } else if ("production" === environment || null == environment) {
       base = "//api.npolar.no";
     } else {
       throw "Unknown environment";
@@ -36,8 +37,9 @@ var AutoConfig = function(environment) {
   };
 
 
-  // Auto-detect environment - only allow overriding on localhost
-  if ("localhost" === window.location.hostname && (typeof this.environment === 'string' || this.environment instanceof String)) {
+  // Auto-detect environment - only allow overriding on localhost/vm
+  if (("localhost" === window.location.hostname || "10.0.2.2" === window.location.hostname) &&
+    typeof this.environment === 'string') {
     console.warn("Environment:", this.environment, "[localhost override]");
   } else {
     this.environment = detectEnvironment(window.location.hostname);

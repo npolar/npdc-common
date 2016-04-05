@@ -9,7 +9,7 @@ let tabsDirective = function($timeout) {
     template: require('./tabs.html'),
     scope: {
       tabs: '=',
-      onactivate: '=?'
+      tabactivate: '=?'
     },
     link(scope, element) {
       let duration = 250;
@@ -29,8 +29,8 @@ let tabsDirective = function($timeout) {
             }
           }
         });
-        if (typeof scope.onactivate === 'function') {
-          scope.onactivate(tab);
+        if (typeof scope.tabactivate === 'function') {
+          scope.tabactivate.call({}, tab);
         }
       };
 
