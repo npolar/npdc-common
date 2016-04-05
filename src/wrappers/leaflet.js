@@ -2,22 +2,84 @@
 
 let angular = require('angular');
 let L = require('leaflet');
+let EsriLeaflet = require('esri-leaflet');
+let Proj4Leaflet = require('proj4leaflet');
+let map;
+
+L.esri = EsriLeaflet;
+L.Proj = Proj4Leaflet;
+
 require('leaflet-draw');
 require('leaflet-fullscreen');
 
 angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) {
   'ngInject';
-
+  
+  console.debug('leaflet', L);
+  
+  const base = '//geodata.npolar.no/arcgis/rest/services';
   L.Icon.Default.imagePath = '/assets/images';
-
+ 
+  function isSvalbard(config) {
+    let s = false;
+    if (config.bbox) {
+      if ( (config.bbox[1] > 74) && (config.bbox[0] > 0) && (config.bbox[2] < 60.0) ) {
+        s = true;
+      }
+    }
+    return s;
+  }
+  
+  function crsFactory(config) {
+    return new L.Proj.CRS('EPSG:25833', '+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs', {
+      transformation: new L.Transformation(1, 5120900, -1, 9998100),
+      resolutions: [2709.3387520108377,
+        1354.6693760054188,
+        677.3346880027094,
+        338.6673440013547,
+        169.33367200067735,
+        84.66683600033868,
+        42.33341800016934,
+        21.16670900008467,
+        10.583354500042335,
+        5.291677250021167,
+        2.6458386250105836,
+        1.3229193125052918,
+        0.6614596562526459,
+        0.33072982812632296,
+        0.16536491406316148]
+    });
+  }
+  
+  function tileLayerFactory(map, options) {
+    if (isSvalbard(options)) {
+      let esriBase = `//${base}/Basisdata_Intern/NP_Nordomraadene_WMTS_25833/MapServer`;
+      return new L.esri.tiledMapLayer({
+        url: esriBase,
+        continuousWorld: true,
+        attribution: `<a href="http://npolar.no">Norsk Polarinstitutt</a>`,
+      });
+    }
+    
+    // OSM
+    /* return L.tileLayer('//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
+    */
+    // Esri sat images
+    return L.tileLayer('//services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}/', { 
+      attribution: 'Esmapri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AEX, Getmapping, Aerogrid, IGN, IGP, swisstopo, and the GIS User Community'
+    });
+  }
+  
   return {
     scope: {
       options: '='
     },
     template: '<div class="leaflet-map"></div>',
     link: function(scope, iElement) {
+      
       let mapOptions = Object.assign({
-        maxZoom: 10,
         minZoom: 2,
         maxBounds: [
           [-90, 180],
@@ -25,20 +87,22 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
         ],
         fullscreenControl: true
       });
-      let osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-      let osmAttrib = 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
-      let osm = L.tileLayer(osmUrl, {
-        attribution: osmAttrib
-      });
       let coverage = scope.options.coverage;
-      let map = L.map(iElement.find('div')[0], mapOptions).setView([69.68, 18.94], 3);
+      
+      let tileLayer = tileLayerFactory(map, scope.options);
+      
+      if (isSvalbard(scope.options)) {        
+        mapOptions.crs = crsFactory(map, scope.options);
+      } 
+      let map = L.map(iElement.find('div')[0], mapOptions).setView([69.68, 18.94], 4);
+     
       let drawnItems;
 
       map.on('moveend', e => {
         scope.$emit('map:move', map.getBounds());
       });
 
-      let addLayer = function(layer) {
+      function addLayer(layer) {
         if (drawnItems) {
           if (drawnItems.getLayers().length > 0) {
             drawnItems.clearLayers();
@@ -50,8 +114,14 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
         } else {
           layer.addTo(map);
         }
-      };
-
+      }
+      
+      function addImageOverlay(imageUri, bbox) {
+        // @todo use bbox
+        let imageBounds = scope.options.coverage[0];
+        L.imageOverlay(imageUri, imageBounds).addTo(map);
+      }
+      
       if (scope.options.draw) {
         // Initialise the FeatureGroup to store editable layers
         drawnItems = new L.FeatureGroup();
@@ -113,14 +183,17 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
             [north, east]
           ];
           let layer = L.rectangle(poly);
+          if (scope.options.bbox !== false) {
+            addLayer(layer);
+          }
           addLayer(layer);
         });
         map.fitBounds([
           [y_min, x_min],
           [y_max, x_max]
         ], {
-          padding: [20, 20],
-          maxZoom: 5
+          padding: [50, 50],
+          //maxZoom: 5
         });
       }
 
@@ -149,7 +222,13 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
         }
       });
 
-      map.addLayer(osm);
+      addLayer(tileLayer);
+       
+      if (scope.options.images) {
+        // @todo loop...
+        addImageOverlay(scope.options.images[0]);
+      }
+      
       $timeout(() => {
         map.invalidateSize();
       },10);
