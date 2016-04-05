@@ -7,7 +7,7 @@
     },
     {
       "@language": "no",
-      "@value": "Datasett-katalog"
+      "@value": "Datasettkatalog"
     }
   ],
   "icons": [{
@@ -39,7 +39,7 @@
     },
     {
       "@language": "no",
-      "@value": "REST API"
+      "@value": "REST APIer"
     }
   ],
   "icons": [{
@@ -71,11 +71,11 @@
     },
     {
       "@language": "nb",
-      "@value": "Kart-tjenester"
+      "@value": "Karttjenester"
     },
     {
       "@language": "nn",
-      "@value": "Kart-tenestar"
+      "@value": "Karttenestar"
     }
   ],
   "icons": [{
@@ -189,7 +189,7 @@
     },
     {
       "@language": "nb",
-      "@value": "Livshistorien til arktiske skuter bygget før 1940"
+      "@value": "Historien til arktiske skuter bygget før 1940"
     },
     {
       "@language": "nn",
@@ -269,8 +269,12 @@
       "@language": "en",
       "@value": "Placenames"
     },
+	{
+      "@language": "nb",
+	  "@value": "Stedsnavn"
+	},
     {
-      "@language": "no",
+      "@language": "nn",
       "@value": "Stadnamn"
     }
   ],
@@ -288,8 +292,8 @@
       "@value": "Official place names database for the Norwegian polar regions"
     },
     {
-      "@language": "no",
-      "@value": "Offisielle stedsnavn i dei norske polarområda"
+      "@language": "nb",
+      "@value": "Offisielle stedsnavn i de norske polarområdene"
     }
   ],
   "category": "public",
