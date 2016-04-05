@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<div class="np-faceting" layout="column">
-  <div class="np-faceting-active-filters np-center-content" flex ng-show="activeFilters()">
+<div class="np-faceting">
+  <div class="np-faceting-active-filters np-center-content" ng-show="activeFilters()">
     <span>Active filters: </span>
     <div class="md-chips">
       <div ng-repeat="filter in filters()" ng-class="{'md-focused': selectedChip === $index}" class="md-chip md-default-theme">
