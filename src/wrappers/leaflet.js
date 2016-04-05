@@ -4,7 +4,6 @@ let angular = require('angular');
 let L = require('leaflet');
 let EsriLeaflet = require('esri-leaflet');
 let Proj4Leaflet = require('proj4leaflet');
-let map;
 
 L.esri = EsriLeaflet;
 L.Proj = Proj4Leaflet;
@@ -14,12 +13,12 @@ require('leaflet-fullscreen');
 
 angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) {
   'ngInject';
-  
+
   console.debug('leaflet', L);
-  
+
   const base = '//geodata.npolar.no/arcgis/rest/services';
   L.Icon.Default.imagePath = '/assets/images';
- 
+
   function isSvalbard(config) {
     let s = false;
     if (config.bbox) {
@@ -29,8 +28,8 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
     }
     return s;
   }
-  
-  function crsFactory(config) {
+
+  function crsFactory() {
     return new L.Proj.CRS('EPSG:25833', '+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs', {
       transformation: new L.Transformation(1, 5120900, -1, 9998100),
       resolutions: [2709.3387520108377,
@@ -50,8 +49,8 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
         0.16536491406316148]
     });
   }
-  
-  function tileLayerFactory(map, options) {
+
+  function tileLayerFactory(options) {
     if (isSvalbard(options)) {
       let esriBase = `//${base}/Basisdata_Intern/NP_Nordomraadene_WMTS_25833/MapServer`;
       return new L.esri.tiledMapLayer({
@@ -60,25 +59,25 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
         attribution: `<a href="http://npolar.no">Norsk Polarinstitutt</a>`,
       });
     }
-    
+
     // OSM
     /* return L.tileLayer('//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     });
     */
     // Esri sat images
-    return L.tileLayer('//services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}/', { 
+    return L.tileLayer('//services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}/', {
       attribution: 'Esmapri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AEX, Getmapping, Aerogrid, IGN, IGP, swisstopo, and the GIS User Community'
     });
   }
-  
+
   return {
     scope: {
       options: '='
     },
     template: '<div class="leaflet-map"></div>',
     link: function(scope, iElement) {
-      
+
       let mapOptions = Object.assign({
         minZoom: 2,
         maxBounds: [
@@ -88,14 +87,14 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
         fullscreenControl: true
       });
       let coverage = scope.options.coverage;
-      
-      let tileLayer = tileLayerFactory(map, scope.options);
-      
-      if (isSvalbard(scope.options)) {        
-        mapOptions.crs = crsFactory(map, scope.options);
-      } 
+
+      let tileLayer = tileLayerFactory(scope.options);
+
+      if (isSvalbard(scope.options)) {
+        mapOptions.crs = crsFactory();
+      }
       let map = L.map(iElement.find('div')[0], mapOptions).setView([69.68, 18.94], 4);
-     
+
       let drawnItems;
 
       map.on('moveend', e => {
@@ -115,13 +114,13 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
           layer.addTo(map);
         }
       }
-      
+
       function addImageOverlay(imageUri, bbox) {
         // @todo use bbox
         let imageBounds = scope.options.coverage[0];
         L.imageOverlay(imageUri, imageBounds).addTo(map);
       }
-      
+
       if (scope.options.draw) {
         // Initialise the FeatureGroup to store editable layers
         drawnItems = new L.FeatureGroup();
@@ -223,12 +222,12 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
       });
 
       addLayer(tileLayer);
-       
+
       if (scope.options.images) {
         // @todo loop...
         addImageOverlay(scope.options.images[0]);
       }
-      
+
       $timeout(() => {
         map.invalidateSize();
       },10);
