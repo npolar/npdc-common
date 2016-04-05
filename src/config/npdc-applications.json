@@ -335,7 +335,7 @@
     },
     {
       "@language": "no",
-      "@value": "Kurser"
+      "@value": "Kurs"
     }
   ],
   "icons": [{
@@ -353,7 +353,7 @@
     },
     {
       "@language": "no",
-      "@value": "Instituttes interne kurser."
+      "@value": "Instituttes interne kurs."
     }
   ],
   "category": "internal"
