@@ -27,16 +27,18 @@ let autocompleteSourceService = function($q, formulaFieldConfig) {
       autocompleteFacets.forEach(facet => {
         let item = responses[0].find(r => r.facet === facet);
         let nodes = item.facet.split('.');
-        let field = responses[1].find(field => {
+        let fields = responses[1].filter(field => {
           let parts = nodes.slice();
 
           return field.id === parts.pop() &&
             field.parents.map(p => p.id).filter(p => !/_item/.test(p))
             .every(p => p === parts.pop());
         });
-        if (field.typeOf('array')) {
-          nodes.push(field.id + '_item');
+        if (!fields.length) {
+          console.error("No field matching facet " + facet);
+          return;
         }
+        console.log('Found fields', JSON.stringify(fields.map(f => f.path)), 'for', facet);
         let source = function (q) {
           q = (q || '').toLocaleLowerCase();
           return item.terms.map(t => String(t.term))
@@ -52,14 +54,23 @@ let autocompleteSourceService = function($q, formulaFieldConfig) {
               return 0;
             });
         };
-        let match = function(field) {
-          let fieldNodes = field.path.replace(/^#\//, '').replace(/\/\d$/, '/'+field.id).split('/');
-          return angular.equals(nodes, fieldNodes);
-        };
-        autocomplete({
-          match,
-          querySource: source
-        }, formula);
+
+        fields.forEach(field => {
+          let fNodes = nodes.slice();
+          if (field.typeOf('array')) {
+            fNodes.push(field.id + '_item');
+          }
+          let match = function(field) {
+            let fieldNodes = field.path.replace(/^#\//, '').replace(/\/\d$/, '/'+field.id).replace(/\/\d+\//g, '').split('/');
+            console.log('adding matching fn', fNodes, fieldNodes);
+            return angular.equals(fNodes, fieldNodes);
+          };
+          autocomplete({
+            match,
+            querySource: source
+          }, formula);
+        });
+
       });
     });
   };
