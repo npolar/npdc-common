@@ -59,8 +59,10 @@ let tabsDirective = function($timeout) {
       let slideIntoView = function () {
         let fieldsetContainer = document.querySelector('.np-tabs');
         let active = fieldsetContainer.querySelector('.np-tab.active');
-        let move = active.getBoundingClientRect().left - fieldsetContainer.getBoundingClientRect().left;
-        fieldsetContainer.style.left = -move + 'px';
+        if (active) {
+          let move = active.getBoundingClientRect().left - fieldsetContainer.getBoundingClientRect().left;
+          fieldsetContainer.style.left = -move + 'px';
+        }
       };
 
       scope.next = function () {
