@@ -94,6 +94,7 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
         mapOptions.crs = crsFactory();
       }
       let map = L.map(iElement.find('div')[0], mapOptions).setView([69.68, 18.94], 4);
+      tileLayer.addTo(map);
 
       let drawnItems;
 
@@ -101,7 +102,7 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
         scope.$emit('map:move', map.getBounds());
       });
 
-      function addLayer(layer) {
+      function addDrawnItemsLayer(layer) {
         if (drawnItems) {
           if (drawnItems.getLayers().length > 0) {
             drawnItems.clearLayers();
@@ -151,7 +152,7 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
         map.addLayer(drawnItems);
 
         map.on('draw:created', e => {
-          addLayer(e.layer);
+          addDrawnItemsLayer(e.layer);
           scope.$emit('mapSelect', e.layer);
         });
 
@@ -182,17 +183,14 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
             [north, east]
           ];
           let layer = L.rectangle(poly);
-          if (scope.options.bbox !== false) {
-            addLayer(layer);
-          }
-          addLayer(layer);
+          addDrawnItemsLayer(layer);
         });
         map.fitBounds([
           [y_min, x_min],
           [y_max, x_max]
         ], {
-          padding: [50, 50],
-          //maxZoom: 5
+          padding: [20, 20],
+          maxZoom: 5
         });
       }
 
@@ -220,8 +218,6 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
           });
         }
       });
-
-      addLayer(tileLayer);
 
       if (scope.options.images) {
         // @todo loop...
