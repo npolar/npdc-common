@@ -8,7 +8,7 @@
 
       <div class="np-layout-list">
         <md-list>
-          <md-list-item class="md-2-line" ng-repeat="e in feed.entries" ng-href="{{ entryHref(e.id) }}">
+          <md-list-item class="md-2-line" ng-repeat="e in feed.entries" ng-href="{{ entryHref(e) }}">
             <img class="md-avatar" ng-src={{icon(e)}} title="ID: {{ e.id }}" />
 
             <!-- <div class="np-search-icon md-avatar" title="ID: {{ e.id }}">

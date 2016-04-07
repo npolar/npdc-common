@@ -12,8 +12,15 @@ var SearchResultsController = function($scope, $filter, $location, $http, Npolar
     return $location.search().q || "";
   };
 
-  $scope.entryHref = function(id) {
-    return $scope.resource.href(id);
+  $scope.entryHref = function(entry) {
+    if (typeof options.href === 'function') {
+      return options.href.call({}, entry);
+    }
+    if (options.href) {
+      return valueFromPath(entry, options.href);
+    }
+
+    return $scope.resource.href(entry.id);
   };
 
   $scope.avatar = (entry) => {
