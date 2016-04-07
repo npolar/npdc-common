@@ -37,7 +37,6 @@ let fileDirective = function($http, $routeParams, fileFunnelService) {
         }
         return file;
       };
-      console.log('links', $scope.field.value);
       // sync file meta data
       // FIXME This really should not be implemented on the client side
       let fileUri = options.server.replace(':id', $routeParams.id);
