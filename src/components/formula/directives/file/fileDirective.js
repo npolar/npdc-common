@@ -44,9 +44,9 @@ let fileDirective = function($http, $routeParams, fileFunnelService) {
       $http.get(fileUri).then(response => {
         if (response && response.data && response.data.files) {
           let model = {};
-          
+
           model[$scope.field.id] = [];
-          
+
           response.data.files.forEach(responseFile => {
             let item = ($scope.values || []).find(val => {
               let valueFile = options.valueToFileMapper(val.value);
@@ -54,7 +54,7 @@ let fileDirective = function($http, $routeParams, fileFunnelService) {
             });
             model[$scope.field.id].push(Object.assign({}, item ? item.value : {}, options.fileToValueMapper(responseFile)));
           });
-          
+
           $scope.field.valueFromModel(model, true);
         }
       }).finally(() => {
@@ -70,10 +70,12 @@ let fileDirective = function($http, $routeParams, fileFunnelService) {
 
       $scope.showUpload = function(ev) {
         fileFunnelService.showUpload(ev, $scope.field, options).then(files => {
-          files.forEach(file => {
-            let length = $scope.files.push(file);
-            file.extras = $scope.field.values[length - 1].fields.filter(field => (options.fields || []).includes(field.id));
-          });
+          if (files) {
+            files.forEach(file => {
+              let length = $scope.files.push(file);
+              file.extras = $scope.field.values[length - 1].fields.filter(field => (options.fields || []).includes(field.id));
+            });
+          }
         });
       };
 

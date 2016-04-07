@@ -62,7 +62,17 @@
       "placenames",
       "array_object2",
       "organisations",
-      "links"
+      {
+        "id": "links",
+        "items": {
+          "fields": [
+            "!modified",
+            "!acccessed",
+            "!etag",
+            "!hreflang"
+          ]
+        }
+      }
     ]
   }
 ]}
