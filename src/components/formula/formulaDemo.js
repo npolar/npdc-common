@@ -91,7 +91,23 @@ angular
             }]
           }]
         }],
-        autocomplete2: 'http://tjosho.com'
+        autocomplete2: 'http://tjosho.com',
+        links: [{
+          rel: 'data',
+          href: 'http://tjosho.com',
+          title: 'Test file',
+          length: 10,
+          hash: ['hash'],
+          type: 'mime/type'
+        },
+        {
+          rel: 'other',
+          href: 'http://tjosho22.com',
+          title: 'Test link',
+          length: 100,
+          hash: ['hash2'],
+          type: 'mime/type2'
+        }]
       });
       console.log("timeout");
     };

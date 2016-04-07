@@ -37,7 +37,7 @@ let fileDirective = function($http, $routeParams, fileFunnelService) {
         }
         return file;
       };
-
+      console.log('links', $scope.field.value);
       // sync file meta data
       // FIXME This really should not be implemented on the client side
       let fileUri = options.server.replace(':id', $routeParams.id);
@@ -48,14 +48,21 @@ let fileDirective = function($http, $routeParams, fileFunnelService) {
           model[$scope.field.id] = [];
 
           response.data.files.forEach(responseFile => {
-            let item = ($scope.values || []).find(val => {
+            let fileValue = options.fileToValueMapper(responseFile);
+            let item = ($scope.field.values || []).find(val => {
               let valueFile = options.valueToFileMapper(val.value);
               return valueFile.md5sum === responseFile.md5sum || valueFile.filename === responseFile.filename;
             });
-            model[$scope.field.id].push(Object.assign({}, item ? item.value : {}, options.fileToValueMapper(responseFile)));
+            let valueModel = {};
+            if (item) {
+              valueModel[item.id] = fileValue;
+            } else {
+              item = $scope.field.itemAdd( /* preventValidation */ true);
+              valueModel[item.id] = fileValue;
+            }
+            item.valueFromModel(valueModel);
+            $scope.field.itemChange();
           });
-
-          $scope.field.valueFromModel(model, true);
         }
       }).finally(() => {
         $scope.field.values.forEach(value => {
