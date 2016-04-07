@@ -8,7 +8,8 @@
     md-floating-label="{{field.title}}"
     md-selected-item-change="onSelect(item)"
     md-select-on-match="true"
-    md-search-text-change="searchChange(search.text)">
+    md-search-text-change="searchChange(search.text)"
+    md-match-case-insensitive="true">
 
     <md-item-template>
       <span md-highlight-flags="^i" md-highlight-text="search.text">{{label(item)}}</span>

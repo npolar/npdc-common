@@ -90,7 +90,8 @@ angular
               obj_1_1_2: 4
             }]
           }]
-        }]
+        }],
+        autocomplete2: 'http://tjosho.com'
       });
       console.log("timeout");
     };
@@ -101,7 +102,7 @@ angular
 
     let acSource2 = [{a: "Anders", b: "http://tjosho.com"}, {a: "Remi", b: "http://lololo.no"}];
     let acSource2Fn = function (q) {
-      return acSource2.filter(item => item.a.toLowerCase().indexOf((q || '').toLowerCase()) === 0);
+      return acSource2.filter(item => JSON.stringify(item).toLowerCase().indexOf((q || '').toLowerCase()) !== -1);
     };
 
     let Dataset = NpolarApiResource.resource({'path': '/dataset', 'resource': 'Dataset' });
