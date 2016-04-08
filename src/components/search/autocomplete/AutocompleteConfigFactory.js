@@ -35,7 +35,7 @@ let AutocompleteConfigFactory = function(NpolarTranslate) {
     {
       name: 'vessel',
       path: '/vessel',
-      enabled: true
+      enabled: false,
     },
     {
       name: 'dataset',
