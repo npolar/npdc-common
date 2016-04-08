@@ -23,53 +23,27 @@ let fileDirective = function($http, $routeParams, fileFunnelService) {
       $scope.files = [];
       let options = fileFunnelService.getOptions($scope.field);
 
-      let mapFile = function(value) {
-        let file = Object.assign({},value.value);
+      let mapFile = function(link_field) {
+        let file = Object.assign({},link_field.value);
+        
         if (typeof options.valueToFileMapper === "function") {
+          console.log(options.valueToFileMapper);
           file = options.valueToFileMapper(file);
         }
 
         if (file) {
           if (!file.filename || !file.url) {
-            throw "File should be object with keys filename, url, [file_size, icon, extras].";
+            throw "The hashi file mapper should be an object with keys filename, url, [file_size, icon, extras].";
           }
-          file.extras = value.fields.filter(field => (options.fields || []).includes(field.id));
+          file.extras = link_field.fields.filter(field => (options.fields || []).includes(field.id));
         }
         return file;
       };
-      // sync file meta data
-      // FIXME This really should not be implemented on the client side
-      let fileUri = options.server.replace(':id', $routeParams.id);
-      $http.get(fileUri).then(response => {
-        if (response && response.data && response.data.files) {
-          let model = {};
-
-          model[$scope.field.id] = [];
-
-          response.data.files.forEach(responseFile => {
-            let fileValue = options.fileToValueMapper(responseFile);
-            let item = ($scope.field.values || []).find(val => {
-              let valueFile = options.valueToFileMapper(val.value);
-              return valueFile.md5sum === responseFile.md5sum || valueFile.filename === responseFile.filename;
-            });
-            let valueModel = {};
-            if (item) {
-              valueModel[item.id] = fileValue;
-            } else {
-              item = $scope.field.itemAdd( /* preventValidation */ true);
-              valueModel[item.id] = fileValue;
-            }
-            item.valueFromModel(valueModel);
-            $scope.field.itemChange();
-          });
-        }
-      }).finally(() => {
-        $scope.field.values.forEach(value => {
-          let file = mapFile(value);
-          $scope.files.push(file);
-        });
+      $scope.field.values.forEach(value => {
+        let file = mapFile(value);
+        $scope.files.push(file);
       });
-
+      
       $scope.isFile = function(value, index, array) {
         return !!$scope.files[index];
       };

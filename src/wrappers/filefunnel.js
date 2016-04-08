@@ -145,7 +145,7 @@ ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig, NpolarMe
           field.itemChange();
 
         } else {
-          NpolarMessage.info("Attachment: " + response.filename + " allready exists");
+          NpolarMessage.info("Attachment: " + response.filename + " already exists");
         }
       });
 
