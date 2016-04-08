@@ -41,7 +41,7 @@ ff.controller('FFUploadController', function($scope, $mdDialog, options, NpolarA
     ff.abort();
     $mdDialog.hide();
   };
-  
+
   $scope.upload = function() {
     ff.auth = NpolarApiSecurity.authorization();
     ff.upload();
@@ -133,7 +133,8 @@ ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig, NpolarMe
       let responses = JSON.parse(files.xhr.response);
       responses.forEach(response => {
 
-        if (response.status !== 409) {
+        // @TODO Handle out of sync metadata in backend
+        //if (response.status !== 409) {
           let value = options.fileToValueMapper(response);
           if (typeof value !== 'object') {
             throw "fileToValueMapper should return object with keys matching the fields you want to set file data to";
@@ -144,9 +145,9 @@ ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig, NpolarMe
           item.valueFromModel(valueModel);
           field.itemChange();
 
-        } else {
-          NpolarMessage.info("Attachment: " + response.filename + " already exists");
-        }
+        // } else {
+        //   NpolarMessage.info("Attachment: " + response.filename + " already exists");
+        // }
       });
 
       return responses;
