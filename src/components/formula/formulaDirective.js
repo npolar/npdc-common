@@ -41,16 +41,17 @@ var formula = function($mdDialog, $location, $routeParams, npdcAppConfig, npolar
         $scope.formula.i18n.set(lang.lang);
       });
 
-      $scope.formula.setConfirmDirtyNavigate((navigate) => {
-        let confirmNavigate = $mdDialog.confirm()
-          .title(NpolarTranslate.translate('navigation.confirm.title'))
-          .textContent(NpolarTranslate.translate('navigation.confirm.text'))
-          .ok(NpolarTranslate.translate('Yes'))
-          .cancel(NpolarTranslate.translate('No'));
-        $mdDialog.show(confirmNavigate).then(function() {
-          navigate();
-        });
-      });
+      // @FIXME Sometimes goes bananas and spams dialogs...
+      // $scope.formula.setConfirmDirtyNavigate((navigate) => {
+      //   let confirmNavigate = $mdDialog.confirm()
+      //     .title(NpolarTranslate.translate('navigation.confirm.title'))
+      //     .textContent(NpolarTranslate.translate('navigation.confirm.text'))
+      //     .ok(NpolarTranslate.translate('Yes'))
+      //     .cancel(NpolarTranslate.translate('No'));
+      //   $mdDialog.show(confirmNavigate).then(function() {
+      //     navigate();
+      //   });
+      // });
 
       $scope.title = "";
       $scope.id = $routeParams.id;
