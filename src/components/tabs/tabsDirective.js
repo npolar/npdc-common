@@ -30,7 +30,7 @@ let tabsDirective = function($timeout) {
           }
         });
         if (typeof scope.tabactivate === 'function') {
-          scope.tabactivate.call({}, tab);
+          scope.tabactivate(tab);
         }
       };
 

@@ -67,7 +67,9 @@ let autocompleteDirective = function ($http, $q, formulaAutoCompleteService) {
         return String(result);
       };
 
-      $scope.search = {};
+      $scope.search = {
+        text: ''
+      };
 
       $scope.value = function (item) {
         return mapItem(item, 'value');
@@ -81,7 +83,7 @@ let autocompleteDirective = function ($http, $q, formulaAutoCompleteService) {
 
       $scope.items.then(items => {
         let item = items.find(item => $scope.value(item) === field.value);
-        $scope.search.text = item ? $scope.label(item) : field.value;
+        $scope.search.text = item ? $scope.label(item) : field.value || '';
       });
 
       let isExactMatch = function (item, searchText = '') {

@@ -227,6 +227,10 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
       $timeout(() => {
         map.invalidateSize();
       },10);
+
+      scope.$on('activate:fieldset', () => {
+        map.invalidateSize();
+      });
       scope.$emit('map:move', map.getBounds());
     }
   };
