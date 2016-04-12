@@ -227,6 +227,12 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
       $timeout(() => {
         map.invalidateSize();
       },10);
+
+      // Update mapsize when switching formula tab. Lazily doing it on all tabs for now...
+      // we could check if fs is our parent if neccessary
+      scope.$on('activate:fieldset', (fieldset) => {
+        map.invalidateSize();
+      });
       scope.$emit('map:move', map.getBounds());
     }
   };

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<div class="npdc-doc-attribs">
+  <a class="license" ng-if="license" ng-href="{{ licenseHref }}">
+    <img ng-src="{{ licenseImg }}" height="31px">
+  </a>
+
+  <a ng-if="openAccess" ng-href="//en.wikipedia.org/wiki/Open_access">
+    <img src="/assets/img/oa.png" height="31px" title="Open access">
+  </a>
+
+  <a ng-if="doi" ng-href="//doi.org/{{ doi }}">
+    <img src="/assets/img/doi.png" height="31px" title="Digital Object Identifier">
+  </a>
+</div>

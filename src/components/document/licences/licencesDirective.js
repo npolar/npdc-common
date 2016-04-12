@@ -19,7 +19,7 @@ var licencesDirective = function() {
           href: l
         };
         if (cc.test(l)) {
-          licence.class = 'cc-by';
+          licence.class = 'cc';
         } else if (nlod.test(l)) {
           licence.class = 'nlod';
           licence.text = 'NLOD 1.0';

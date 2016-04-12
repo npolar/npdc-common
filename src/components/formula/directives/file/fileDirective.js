@@ -25,9 +25,8 @@ let fileDirective = function($http, $routeParams, fileFunnelService) {
 
       let mapFile = function(link_field) {
         let file = Object.assign({},link_field.value);
-        
+
         if (typeof options.valueToFileMapper === "function") {
-          console.log(options.valueToFileMapper);
           file = options.valueToFileMapper(file);
         }
 
@@ -43,7 +42,7 @@ let fileDirective = function($http, $routeParams, fileFunnelService) {
         let file = mapFile(value);
         $scope.files.push(file);
       });
-      
+
       $scope.isFile = function(value, index, array) {
         return !!$scope.files[index];
       };

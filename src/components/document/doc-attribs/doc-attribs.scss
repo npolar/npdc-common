@@ -1,0 +1,20 @@
+.npdc-doc-attribs {
+  text-align: right;
+
+  a {
+    text-decoration: none;
+    margin-left: 5px;
+
+    & img {
+      filter: grayscale(100%);
+      -webkit-filter: grayscale(100%);
+      opacity: 0.6;
+
+      &:hover {
+        filter: none;
+        -webkit-filter: none;
+        opacity: 1.0;
+      }
+    }
+  }
+}

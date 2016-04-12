@@ -14,8 +14,13 @@ let tabsDirective = function($timeout) {
     link(scope, element) {
       let duration = 250;
 
+      console.log('tabs', scope.tabs);
+
       let activate = function (tab) {
         let fieldsetContainer = document.querySelector('.np-tabs');
+        if (!fieldsetContainer) {
+          return;
+        }
         let tabNodes = fieldsetContainer.querySelectorAll('.np-tab');
         scope.tabs.forEach(function(t, i) {
           let $tab = angular.element(tabNodes[i]);
@@ -30,7 +35,7 @@ let tabsDirective = function($timeout) {
           }
         });
         if (typeof scope.tabactivate === 'function') {
-          scope.tabactivate.call({}, tab);
+          scope.tabactivate(tab);
         }
       };
 
