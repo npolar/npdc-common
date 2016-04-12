@@ -3,11 +3,11 @@
   "name": [
     {
       "@language": "en",
-      "@value": "Dataset catalogue"
+      "@value": "Datasets"
     },
     {
       "@language": "no",
-      "@value": "Datasettkatalog"
+      "@value": "Datasett"
     }
   ],
   "icons": [{
@@ -39,7 +39,7 @@
     },
     {
       "@language": "no",
-      "@value": "REST APIer"
+      "@value": "REST API"
     }
   ],
   "icons": [{
@@ -71,11 +71,11 @@
     },
     {
       "@language": "nb",
-      "@value": "Karttjenester"
+      "@value": "Kartdata og -tjenester"
     },
     {
       "@language": "nn",
-      "@value": "Karttenestar"
+      "@value": "Kartdata og -tenestar"
     }
   ],
   "icons": [{
@@ -89,11 +89,15 @@
   "description": [
     {
       "@language": "en",
-      "@value": "Map data and services for Svalbard and other polar areas"
+      "@value": "Map data and services"
     },
     {
       "@language": "no",
-      "@value": "Kartdata og -tjenester for Svalbard og andre polarområder"
+      "@value": "Kartdata og -tjenester"
+    },
+    {
+      "@language": "nn",
+      "@value": "Kartdata og -tenestar"
     }
   ],
   "category": "public",
@@ -167,11 +171,11 @@
   "name": [
     {
       "@language": "en",
-      "@value": "Ships archive"
+      "@value": "Vessels"
     },
     {
       "@language": "no",
-      "@value": "Skutearkiv"
+      "@value": "Skuter"
     }
   ],
   "icons": [{
@@ -203,11 +207,11 @@
   "name": [
     {
       "@language": "en",
-      "@value": "Map archive"
+      "@value": "Maps"
     },
     {
       "@language": "no",
-      "@value": "Kartarkiv"
+      "@value": "Kart"
     }
   ],
   "icons": [{
@@ -293,7 +297,11 @@
     },
     {
       "@language": "nb",
-      "@value": "Offisielle stedsnavn i de norske polarområdene"
+      "@value": "Offisielle stedsnavn i norske polarområder"
+    },
+    {
+      "@language": "nn",
+      "@value": "Offisielle stadnamn i norske polarområde"
     }
   ],
   "category": "public",
@@ -321,11 +329,11 @@
   "description": [
     {
       "@language": "en",
-      "@value": "Long-term environmental monitoring timeseries."
+      "@value": "Long-term environmental monitoring"
     },
     {
       "@language": "no",
-      "@value": "Tidsserier for langsiktig miljøovervåking."
+      "@value": "Langsiktig miljøovervåking"
     }
   ],
   "category": "public",
@@ -353,11 +361,11 @@
   "description": [
     {
       "@language": "en",
-      "@value": "Courses available at the institute."
+      "@value": "Courses available at the institute"
     },
     {
       "@language": "no",
-      "@value": "Kurs tilgjengelig ved instituttet."
+      "@value": "Kurs tilgjengelig ved instituttet"
     }
   ],
   "category": "internal"
@@ -478,5 +486,5 @@
       "@value": "i18n texts"
     }
   ],
-  "category": "disabled"
+  "category": "internal"
 }]
