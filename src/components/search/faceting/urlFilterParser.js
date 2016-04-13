@@ -5,6 +5,11 @@ const RANGE_SEPARATOR = '..';
 
 
 let parseUrl = function($scope, filters, query) {
+  console.debug('parseUrl', filters, query);
+  if (filters === undefined) {
+    return;
+  }
+  
   let parseRangeFilter = function(facet, terms) {
     let range = terms[0].split(RANGE_SEPARATOR);
     let min = parseInt(range[0].split('-')[0]);

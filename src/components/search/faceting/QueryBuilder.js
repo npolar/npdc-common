@@ -5,6 +5,9 @@ const QueryBuilder = function () {
   const RANGE_SEPARATOR = '..';
 
   let filterKey = function (filter) {
+    if (filter === undefined) {
+      return;
+    }
     let key = 'filter-';
     if (filter.type === 'date') {
       key += filter.facet.replace(/^year-/, '');
@@ -23,8 +26,11 @@ const QueryBuilder = function () {
   };
 
   let build = function (filters) {
+    if (filters === undefined) {
+      return;
+    }
     let query = {};
-
+    console.debug('QueryBuilder.build()', filters);
     filters.forEach(filter => {
       let key = filterKey(filter);
       let val = query[key] ? query[key] + ',' : '';
