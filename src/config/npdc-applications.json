@@ -102,7 +102,40 @@
   ],
   "category": "public",
   "promote": true
-}, {
+},
+{
+  "link": "/expedition",
+  "name": [
+    {
+      "@language": "en",
+      "@value": "Expeditions"
+    },
+    {
+      "@language": "no",
+      "@value": "Ekspedisjoner"
+    }
+  ],
+  "icons": [{
+    "size": 96,
+    "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAKIElEQVR4Xu1dTW4byRX+XlMORiSC2CewdILYuyCxECmzSqhgpBOMHCmbbMw5wdAniLTJJmIsn8ASIiKriWjICbKz5gSWTjASAlGDmOQLqrtJNZvdXa+qq9kU0L0U6/d976/ee1UiVF+pFKBSZ68mRwVAyUxQAVABUDIFSp6+koAKAHsK8C/xTPWmf+PCfpRyez5oCeA1HPkAnGOnXDLaz/5gAeB1PMYQP/hbr+EJ9XBtT4byej5cAF6gDcK3PukYr+kD2uWR0X7mhwvAGj4BWAm3fknnWLUnQ3k9HyQAvIYtAO9iZNumcxyXR0q7mRcegJ1/3K0c/Xb5Mro9foEzENantszo0QdsRP+W1NeOTMX1WjgAFNFqI/4KwDqY14lwcNhsTPQ7/wIreOSrn9nvM1bpP5iAtde9bTPjFYh6AHrD+vLbow1aKGO9MADsnt59DeItgq9eJt/Ao9WoBISu59cpPPk26pIqMJdGPAUWA8dgOu5sLr8tjq/lI5cKwM4ZP17q//iKwTt0b1Anq2fmt53NxsTHD11PRdDHKVu8Rg2rUZd09/T2iIhmAGPgkkBHg/oXB2VKRWkA7Hb7r8DcJqI0YgIj2jj8/bJSH4G3ueYfuN5o+OslnQcHNPXt/f1uHR6fpfVh5mvAa5UlEXMHQBGEPX6TxPFThpb5+85mww81RACIup5pNJ1xSXdPby+I6OdZwPkSMaKXUcDlisS+5dwA8NXN7d23ILQkyx2BXv6tuTzhZH6BdRBSOXlqTMYGfcBEcv7QvdvxwDrJCcUM+4PG8ut5qaW5ABAYw9E7gKY4Oh0IvhnU6ytRIvCa7+Mr70jyndD5vTEPbE3/EqCfSToDfDHwvO24+yvra9aqcAB8lUOjd5m6PrZmBg46zfpEUjJdz7T9xlzS3W5/n4BXUvIo20DsbRetkgoFwEj0I5SZcT2jcR8xBafjQ0kuqWSouCqU9DFpUxgAdsTnGzC1Dzfr+zHjq6Ke6d5S8o6v6RxPoj/tnfZbIG7LVVHQu0gQCgHAhvhK7Qzry+248RO6nmlMN+WSqkbKHtT6d20TdVQkCM4B+GP3f88Yg48GYvh+4NFOmsHjF/gICjJfxh/jgj7geVK/UCUpL+vXknGVTfDo0cZfmz9xmn1zCoAfxxmOPsoNLr+OxnnihPBTjjWYgDlLyyGeZ6UsVbwIoCCvoPkUCMOa99yld+QUgL3u7UeZq8k3hEfrOm7SxH109Br/PhUfSuoUnJZHxzLbwBeHzUaiVEkXFG3nDAC5myckfjTlaLOzaB9ByjJQnZ97EhDibnKe5TkBQBdvGS+QgSsPS1s6zlft2cb1TKOEMGVpAkI8TmULghsARKpn9nSbtWieTjna7m/cT5yyDE/tF3pJcKOKcgMgNmKxyKaG+Ekpx7wgiFOWUol2cT7IBYDvU9/2P2m9HsY38cNVJgBJKce85E9IWWYNKWEs3ytq1FfzBO5yASBZJICTw2Z9KsuVSfyslGNeEGLxId1we92+iqhqzgnZrrRujlwA7J7e/qDj/nhcR7cgR65n2jRalzTaURI/UnmETrNuXRJjDYAs3GDGHYKU4z19GFeT3AJjH4SnOnABzKQsdX0k7nUeW2ANwN5pf7Y0ZGo3Zl6P73rKUo6qEu4AS2iPc78+cAO/Uk4Sbp6JD2WBIMolMHqHm/WpkhgdsOPfrQCQiCZgxv0hANkpR8b3GGEnLbTghy48HIGQlX4Uu6RjIkls3aC+/MTGGFsBIFE/xro/O+V4gxHa9C9MhalTz12/QgueXyuanAGLpSx13CphOFs1ZAXAXrevSw8aeT4h96eNeYLPaEULrnQE88cLvCkFWFIacyplKRlP4BEZ71nNawsAZy3alBsSU46hkc1b7+nXkSYZaUOXVCf16kzQ2WxMJYAkwBoDIIn3m+rDmbhPzMhKNpJ5tkgy0sL40HjcwBjfBfcRUj7C0nNJnCva3RiAIK2HP6fq34R6Hh0Bec2/aPEYGiOrG0f3e8xIz6Qsdf13u/1LQrq7ayr5VipI5xHEywl1mwpdz30TI6sbU/c73xvpVrSKTtcvrczxvp+552cuAZrjuSkX+OpngCNTI6sjlu533+4sYcfkZo3ODgB4f9isT5fNaxaSCsDqX/6baWh1G4z//ulPPzUG23QOl+3ntf8KgBTUKgBcsrPFWBUAFkRz2aUCwCU1LcaqALAgmssuFQAuqWkxVgWABdFcdikdgLTN6KKCpgcxl0QreixdGMY0/11MKCJ2uaJoosxzfH16cg6hCP1x3E3B0jwJK51LV/tqI/3G4YEiwtFSApTZbmHC0YoIe93b66zSPSbe7vyu8eAezsgCWCD5N4fNhuktHuuMmPOUZJncLZm7iDSslRH2JUCTlFFtTLNiEiKU1UaifmBYfjnei7ENUB0lVQI2ZSllEVg3ry4JlYfhrAAI7EB2ZYSLwlUdYebxu7AA2aoiwloFqY56o6RamfvF8yCqyRwS7rdxP3OpoHFnXZK6iEttJsTL21Zy6VDd+uk06+O364yntFZBoTuqvWGoHkjqNOvbxitbgA76+lf/xUajuw/xbeUCQFS46muifIssAwuJpweYFyA7BUDqkgbGxrxoqQzCqzklp31/bQ4YK5cETGyB5EGkAi45FwGQIv6IP5/pLp6wRQFa0nqdACC91Oa/w1Ovb9iUcRdB7PiYoUo9E102N7h0mLV2JwCoCfSh2vEy+ILw6KVpDWXRAIR3hN9IiL9wF7VNVJGvOgt6+MIWJKnaCdc+85ad7byBbXT4yS85B5My0Oo06wcmS9ClCk0r8NTrjQTZxQ/f6/G8Zwv7WMe9ByF7cyEE4Xjo0TfSTbkCwGeWIb+ZeQI5lRtkb1yYMJNzCRhPLgtT3C/Vf5+NvH3JI6p5AZg8Fsujls7TiRIzT7hhLkY4PokpCGPboAPCFgBbwqt1FUX8wiRgWhJG+/qHL2Z5ZPzG87DxxUnUbTUBIIhk/vhV0pvUMlXBNyN4rej7pbJ+8lZOjXDStEZPwKTr3wsw9Zhw+c+rYeZNyd88rbWIsQLidYlLmU6qYnR+fL7CAVAThlHFY93zwRK++e5qmNnsy6c1yTCZbdQpd1jztqSOQZ4J5wLAeIHyw1r6looGwOUhSwLMXAFQCwpf0t23lYaiAFBcT+y1in4ptxQVlMQJto+ougcg+bFYCfe6aDN3CYguOgx+tRik/oGD5LUTuAJAZbKI/ZfSj8oMDpYKQBSM8NygHnbKfCHdAQAnI9Bxka6liWQsDADjRYchgq0gROC7klMPbpgDwDcA9cDolc3tScAsHADxRapzxBDDZx5GKwCtf3c1zHxC7MuntfcA90bwLmuoXSxa2HthjLCJmEbbmpyEbeeYZ7+Fl4A4MSoA5skeCXNVAFQAOKVApYKcktN8sAoAc5o57fHgAHC6+wUYrAKgZBAqACoASqZAydNXElABUDIFSp7+/58UN6xCez4sAAAAAElFTkSuQmCC"
+  }, {
+    "size": 48,
+    "src": "data:image/png;base64,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"
+  }],
+  "screenshots": ["/assets/img/screenshots/publication.png"],
+  "description": [
+    {
+      "@language": "en",
+      "@value": "Scientific articles and other publications by Norwegian Polar Institute staff, since 1977"
+    },
+    {
+      "@language": "no",
+      "@value": "Alle vitenskapelige artikler og andre publikasjoner av ansatte ved Norsk Polarinstitutt, fra 1977"
+    }
+  ],
+  "category": "public",
+  "promote": true
+},{
   "link": "/publication",
   "name": [
     {
@@ -408,8 +441,12 @@
       "@value": "Users"
     },
     {
-      "@language": "no",
+      "@language": "nb",
       "@value": "Brukere"
+    },
+    {
+      "@language": "nn",
+      "@value": "Brukarar"
     }
   ],
   "icons": [{
@@ -433,15 +470,15 @@
   "category": "internal"
 },
 {
-  "link": "/service",
+  "link": "/project",
   "name": [
     {
       "@language": "en",
-      "@value": "Services"
+      "@value": "Projects"
     },
     {
       "@language": "no",
-      "@value": "Tjenster"
+      "@value": "Prosjekter"
     }
   ],
   "icons": [{
@@ -455,14 +492,14 @@
   "description": [
     {
       "@language": "en",
-      "@value": "NPDC services"
+      "@value": "Project catalogue"
     },
     {
       "@language": "no",
-      "@value": "NPDC tjenster"
+      "@value": "Prosjektkatalog"
     }
   ],
-  "category": "disabled"
+  "category": "public"
 },
 {
   "link": "/text",
@@ -470,6 +507,14 @@
     {
       "@language": "en",
       "@value": "Texts"
+    },
+    {
+      "@language": "nb",
+      "@value": "Tekster"
+    },
+    {
+      "@language": "nn",
+      "@value": "Tekstar"
     }
   ],
   "icons": [{
