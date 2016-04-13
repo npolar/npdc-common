@@ -126,15 +126,15 @@
   "description": [
     {
       "@language": "en",
-      "@value": "Scientific articles and other publications by Norwegian Polar Institute staff, since 1977"
+      "@value": "Cruises and field campaigns"
     },
     {
       "@language": "no",
-      "@value": "Alle vitenskapelige artikler og andre publikasjoner av ansatte ved Norsk Polarinstitutt, fra 1977"
+      "@value": "Tokt og felt"
     }
   ],
   "category": "public",
-  "promote": true
+  "promote": false
 },{
   "link": "/publication",
   "name": [
