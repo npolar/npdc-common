@@ -13,22 +13,25 @@
           <md-menu>
             <md-button aria-label="Actions" class="md-icon-button" ng-click="$mdOpenMenu($event)">
               <md-icon md-menu-origin>menu</md-icon>
-              <md-tooltip>{{ i18n.text.actions.tooltip }}</md-tooltip>
+              <md-tooltip md-direction="left">{{ i18n.text.actions.tooltip }}</md-tooltip>
             </md-button>
             <md-menu-content>
               <md-menu-item ng-show="!$first">
-                <md-button ng-click="field.moveUp($index)" ng-attr-title="{{ i18n.text.moveup.tooltip }}">
+                <md-button ng-click="field.moveUp($index)">
                   <md-icon md-menu-align-target>arrow_upward</md-icon> {{ i18n.text.moveup.label }}
+                  <md-tooltip md-direction="left">{{ i18n.text.moveup.tooltip }}</md-tooltip>
                 </md-button>
               </md-menu-item>
               <md-menu-item ng-show="!$last">
-                <md-button ng-click="field.moveDown($index)" ng-attr-title="{{ i18n.text.movedown.tooltip }}">
+                <md-button ng-click="field.moveDown($index)">
                   <md-icon md-menu-align-target>arrow_downward</md-icon> {{ i18n.text.movedown.label }}
+                  <md-tooltip md-direction="left">{{ i18n.text.movedown.tooltip }}</md-tooltip>
                 </md-button>
               </md-menu-item>
               <md-menu-item>
-                <md-button ng-click="field.itemRemove($index)" ng-attr-title="{{ i18n.text.remove.tooltip }}" class="md-warn">
+                <md-button ng-click="field.itemRemove($index)" class="md-warn">
                   <md-icon md-menu-align-target>delete</md-icon> {{ i18n.text.remove.label }}
+                  <md-tooltip md-direction="left">{{ i18n.text.remove.tooltip }}</md-tooltip>
                 </md-button>
               </md-menu-item>
             </md-menu-content>
@@ -36,7 +39,6 @@
         </div>
       </li>
     </ul>
-
 
     <ul ng-if="::field.typeOf('fieldset')" class="np-formula-list">
       <li ng-repeat="value in field.values" ng-if="!value.hidden" class="np-formula-list-item">
@@ -55,22 +57,25 @@
                 <md-menu>
                   <md-button aria-label="Actions" class="md-icon-button" ng-click="$mdOpenMenu($event)">
                     <md-icon md-menu-origin>menu</md-icon>
-                    <md-tooltip>{{ i18n.text.actions.tooltip }}</md-tooltip>
+                    <md-tooltip md-direction="left">{{ i18n.text.actions.tooltip }}</md-tooltip>
                   </md-button>
                   <md-menu-content>
                     <md-menu-item ng-show="!$first">
-                      <md-button ng-click="field.moveUp($index)" ng-attr-title="{{ i18n.text.moveup.tooltip }}">
+                      <md-button ng-click="field.moveUp($index)">
                         <md-icon md-menu-align-target>arrow_upward</md-icon> {{ i18n.text.moveup.label }}
+                        <md-tooltip md-direction="left">{{ i18n.text.moveup.tooltip }}</md-tooltip>
                       </md-button>
                     </md-menu-item>
                     <md-menu-item ng-show="!$last">
-                      <md-button ng-click="field.moveDown($index)" ng-attr-title="{{ i18n.text.movedown.tooltip }}">
+                      <md-button ng-click="field.moveDown($index)">
                         <md-icon md-menu-align-target>arrow_downward</md-icon> {{ i18n.text.movedown.label }}
+                        <md-tooltip md-direction="left">{{ i18n.text.movedown.tooltip }}</md-tooltip>
                       </md-button>
                     </md-menu-item>
                     <md-menu-item>
-                      <md-button ng-click="field.itemRemove($index)" ng-attr-title="{{ i18n.text.remove.tooltip }}" class="md-warn">
+                      <md-button ng-click="field.itemRemove($index)" class="md-warn">
                         <md-icon md-menu-align-target>delete</md-icon> {{ i18n.text.remove.label }}
+                        <md-tooltip md-direction="left">{{ i18n.text.remove.tooltip }}</md-tooltip>
                       </md-button>
                     </md-menu-item>
                   </md-menu-content>
