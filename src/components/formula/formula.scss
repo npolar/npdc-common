@@ -79,6 +79,11 @@
 
   md-input-container {
     width: 100%;
+
+    label {
+      color: rgba(0, 0, 0, 0.5);
+      font-size: 1.1em;
+    }
   }
 
 
