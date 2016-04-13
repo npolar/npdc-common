@@ -8,7 +8,7 @@
     </legend>
 
 
-    <ul class="np-formula-list" ng-sortable="field.sortable">
+    <ul class="np-formula-list">
       <li ng-repeat="value in field.values | filter:isFile" class="np-formula-list-item">
         <div class="np-formula-collapsed-item" ng-if="!value.visible" ng-click="field.itemToggle($index)"></div>
         <md-whiteframe class="md-whiteframe-z2">
@@ -21,11 +21,11 @@
               </div>
               <div class="np-formula-object-ctrls">
                 <div npdc:formula-field-info class="np-field-info" ng-if="value.description"></div>
-                <a ng-show="!$first" href="" ng-click="field.moveUp($index)" class="drag-handle">
+                <a ng-show="!$first" href="" ng-click="field.moveUp($index)">
                   <md-icon>arrow_upward</md-icon>
                   <md-tooltip>{{ i18n.text.moveup }}</md-tooltip>
                 </a>
-                <a ng-show="!$last" href="" ng-click="field.moveDown($index)" class="drag-handle">
+                <a ng-show="!$last" href="" ng-click="field.moveDown($index)">
                   <md-icon>arrow_downward</md-icon>
                   <md-tooltip>{{ i18n.text.movedown }}</md-tooltip>
                 </a>

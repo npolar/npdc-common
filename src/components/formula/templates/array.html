@@ -6,15 +6,15 @@
       <div npdc:formula-field-info class="np-field-info" ng-if="::field.description"></div>
     </legend>
 
-    <ul ng-if="::field.typeOf('field')" class="np-formula-list" ng-sortable="field.sortable">
+    <ul ng-if="::field.typeOf('field')" class="np-formula-list">
       <li ng-repeat="value in field.values" ng-class="{ valid: field.valid, error: field.error }" class="np-formula-list-item">
         <formula:field field="value" class="multi-ctrls"></formula:field>
         <div class="np-formula-input-ctrls">
-          <a ng-show="!$first" href="" ng-click="field.moveUp($index)" ng-attr-title="{{ i18n.text.moveup }}" class="drag-handle">
+          <a ng-show="!$first" href="" ng-click="field.moveUp($index)" ng-attr-title="{{ i18n.text.moveup }}">
             <md-icon>arrow_upward</md-icon>
             <md-tooltip>{{ i18n.text.moveup }}</md-tooltip>
           </a>
-          <a ng-show="!$last" href="" ng-click="field.moveDown($index)" ng-attr-title="{{ i18n.text.movedown }}" class="drag-handle">
+          <a ng-show="!$last" href="" ng-click="field.moveDown($index)" ng-attr-title="{{ i18n.text.movedown }}">
             <md-icon>arrow_downward</md-icon>
             <md-tooltip>{{ i18n.text.movedown }}</md-tooltip>
           </a>
@@ -36,7 +36,7 @@
     </ul>
 
 
-    <ul ng-if="::field.typeOf('fieldset')" class="np-formula-list" ng-sortable="field.sortable">
+    <ul ng-if="::field.typeOf('fieldset')" class="np-formula-list">
       <li ng-repeat="value in field.values" ng-if="!value.hidden" class="np-formula-list-item">
         <div class="np-formula-collapsed-item" ng-if="!value.visible" ng-click="field.itemToggle($index)"></div>
         <md-whiteframe class="md-whiteframe-z2">
@@ -46,11 +46,11 @@
               <span ng-if="!value.visible">{{ value.value | formulaInlineValues }}</span>
               <div class="np-formula-object-ctrls">
                 <div npdc:formula-field-info class="np-field-info" ng-if="value.description"></div>
-                <a ng-show="!$first" href="" ng-click="field.moveUp($index)" class="drag-handle">
+                <a ng-show="!$first" href="" ng-click="field.moveUp($index)">
                   <md-icon>arrow_upward</md-icon>
                   <md-tooltip>{{ i18n.text.moveup }}</md-tooltip>
                 </a>
-                <a ng-show="!$last" href="" ng-click="field.moveDown($index)" class="drag-handle">
+                <a ng-show="!$last" href="" ng-click="field.moveDown($index)">
                   <md-icon>arrow_downward</md-icon>
                   <md-tooltip>{{ i18n.text.movedown }}</md-tooltip>
                 </a>
