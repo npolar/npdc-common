@@ -32,6 +32,10 @@ gulp.task('default', function (cb) {
     'copy-demo', 'copy-shared-assets'], 'browserSync', ['watch-all', 'watch-demo'], cb);
 });
 
+gulp.task('build', function (cb) {
+  runSequence(['clean', 'info'], 'lint', 'test', ['sass', 'copy-all', 'copy-demo', 'copy-shared-assets'], cb);
+});
+
 gulp.task('prod', function (cb) {
   global.isProd = true;
   runSequence(['clean', 'info'], 'lint', 'test', ['sass', 'shared-libs', 'copy-assets',
