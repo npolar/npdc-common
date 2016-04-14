@@ -30,7 +30,6 @@ const QueryBuilder = function () {
       return;
     }
     let query = {};
-    console.debug('QueryBuilder.build()', filters);
     filters.forEach(filter => {
       let key = filterKey(filter);
       let val = query[key] ? query[key] + ',' : '';
