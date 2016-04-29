@@ -16,4 +16,4 @@ ui.directive('npdcPlacenames', require('./placenames/placenamesDirective'));
 ui.directive('npdcCollection', require('./collection/collectionDirective'));
 ui.directive('npdcLicences', require('./licences/licencesDirective'));
 
-ui.directive('npdcDocAttribs', require('./doc-attribs/docAttribsDirective'));
+ui.directive('npdcBadges', require('./badges/badgesDirective'));
