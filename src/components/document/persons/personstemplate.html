@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <section ng-if="document.people && document.people.length > 0">
-  <h3>People</h3>
   <md-divider></md-divider>
+  <h3>People</h3>
   <md-list>
     <md-list-item class="md-2-line" ng-repeat="person in document.people">
       <md-icon class="md-avatar-icon">person</md-icon>
         <div class="md-list-item-text">
-          <h3> {{ person.first_name }} {{ person.last_name }} </h3>
-          <p ng-if="person.role">{{ ''+person.role|t}}</p>
-          <p ng-if="person.roles"><span ng-repeat="r in person.roles">{{ 'role.'+r | t }}<span ng-if="!$last">, </span></span></p>
-          <p><a href="mailto:{{person.email}}">{{ person.email }}</a></p>
+          <h3><a ng-href="?q={{ person.first_name }}&filter-people.last_name={{ person.last_name }}">{{ person.first_name }} {{ person.last_name }}</a><span ng-if="!person.email">{{ person.first_name }} {{ person.last_name }}</span></h3>
+          <p ng-if="person.organisation">{{ person.organisation | t }}</p>
+          <p ng-if="person.role">{{ person.role | t}}</p>
+          <p ng-if="person.roles">
+            <span ng-repeat="r in person.roles">{{ r | t }}
+              <span ng-if="person.email && r=='pointOfContact'"> [{{ person.email}}] {{ person.homepage}}</span><span ng-if="!$last">, </span>
+            </span>
+          </p>
         </div>
       </md-list-item>
     </md-list>
