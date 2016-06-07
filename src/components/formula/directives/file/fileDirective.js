@@ -61,7 +61,7 @@ let fileDirective = function($http, $routeParams, fileFunnelService) {
       $scope.removeFile = function(index) {
         let file = $scope.field.itemRemove(index);
         if (typeof options.valueToFileMapper === "function") {
-          file = options.valueToFileMapper(file);
+          file = options.valueToFileMapper(file.value);
         }
         $http.delete(file.url);
       };
