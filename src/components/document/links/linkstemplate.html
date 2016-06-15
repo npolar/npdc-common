@@ -14,12 +14,13 @@
   </div>
 
   <div ng-if="!isEmpty(related)">
-    <h3>Relevant documents</h3>
+    <h3>{{ 'See also' | t}}</h3>
     <md-list>
       <md-subheader class="md-no-sticky" ng-repeat-start="collection in related" ng-if="collection[0]">{{ title(collection) }}</md-subheader>
-      <md-list-item ng-repeat="rel in collection" ng-if="rel._score > 0.1" ng-repeat-end>
+      <md-list-item ng-repeat="rel in collection" ng-if="rel._score > 0.25" ng-repeat-end>
         <div class="md-list-item-text">
           <a ng-href="{{'/' + rel.collection + '/' + rel.id}}">{{ rel.title }}</a>
+          <span ng-show="false">[{{ rel._score }}]</span> 
         </div>
       </md-list-item>
     </md-list>

@@ -38,6 +38,9 @@ let fileDirective = function($http, $routeParams, fileFunnelService) {
         }
         return file;
       };
+      
+      $scope.id = $routeParams.id; 
+      
       $scope.field.values.forEach(value => {
         let file = mapFile(value);
         $scope.files.push(file);

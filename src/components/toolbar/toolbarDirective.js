@@ -1,6 +1,6 @@
 "use strict";
 
-let toolbar = function($mdSidenav, NpolarApiSecurity, NpolarTranslate) {
+let toolbar = function($mdSidenav, $document, NpolarApiSecurity, NpolarTranslate) {
   'ngInject';
 
   const APP_TITLE_CODE = 'npdc.app.Title';
@@ -9,17 +9,37 @@ let toolbar = function($mdSidenav, NpolarApiSecurity, NpolarTranslate) {
   return {
     restrict: 'E',
     scope: {
+      resource : '=?',
       options: '=?'
     },
     template: require('./toolbar.html'),
     link: function(scope) {
       scope.security = NpolarApiSecurity;
     },
-    controller: function($scope, npdcAppConfig) {
+    controller: function($scope, $location, $routeParams, NpolarApiResource, npdcAppConfig) {
       'ngInject';
 
-      $scope.options = $scope.options || npdcAppConfig;
+      
+      $scope.uiBase = function() {
+        let base = $document[0].getElementsByTagName('base')[0].href || '';
+        base = base.replace(/\/$/, '');
+        
+        let path = '';
+        if ($routeParams.id) {
+          path = $location.path().split($routeParams.id)[0];
+        } else {
+          path = $location.path();
+        }
+        path = path.replace(/\/$/, '');
+        
+        console.log(base,path);
+        let uiBase = base+path;
+        
+        return uiBase;
+      }
 
+      $scope.options = $scope.options || npdcAppConfig;
+      
       $scope.appTitle = function() {
         var i18nTitle = NpolarTranslate.translate(APP_TITLE_CODE);
         return i18nTitle === APP_TITLE_CODE ? $scope.options.toolbarTitle : i18nTitle;

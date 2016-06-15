@@ -1,27 +1,37 @@
 <!DOCTYPE html>
 <md-toolbar class="np-toolbar">
   <div class="md-toolbar-tools np-toolbar-content">
-    <a href="/" class="np-toolbar-logo">
-      <img src="/assets/img/NPI-logo-hvit-no.png" />
-    </a>
-
-    <a href="." class="np-app-title">
-      <strong >{{ appTitle() }}</strong>
-    </a>
-    <a href="/" class="np-toolbar-title">
-      <span>{{ siteTitle() }}</span>
+    
+    <a href=" {{ uiBase() || '.'}}" class="np-app-title">
+      <strong>{{ appTitle() }}</strong>
     </a>
 
     <span class="flex">
       <!-- This span is used to push the other content to the right -->
     </span>
 
-    <md-menu class="np-app-menu">
+    <a href="/" class="np-toolbar-title">
+      <a href="/" class="np-toolbar-logo">
+        <img src="/assets/img/NPI-logo-hvit-no.png" alt="{{siteTitle()}} {{ 'home' | t }}" title="{{siteTitle()}}" />
+      </a>
+      <span><!--{{ siteTitle() }}--><a href="/" class="np-toolbar-logo"><abbr title="{{ 'NPDC'|t }}">NPDC</abbr></a></span>
+    </a>
+    
+    <span class="flex">
+      <!-- This span is used to push the other content to the right -->
+    </span>
+    
+    
+     <md-menu class="np-app-menu">
+      
       <md-button class="md-icon-button" ng-click="$mdOpenMenu($event)">
         <md-icon md-menu-origin>apps</md-icon>
         <md-tooltip>{{ 'npdc.menu.quicknav' | t }}</md-tooltip>
       </md-button>
+      
       <md-menu-content width="6" class="np-app-menu-content">
+    
+        <!-- Apps -->    
         <div ng-repeat="group in options.toolbarMenuGroups">
           <md-subheader>{{group.name}}</md-subheader>
           <md-grid-list md-cols="3" md-row-height="80px" md-gutter="10px">
@@ -35,7 +45,9 @@
           <md-divider></md-divider>
         </div>
 
-        <!-- User applications menu -->
+        <!-- Apps for logged-in users -->
+        
+        
         <div ng-show="security.isAuthenticated()">
           <div ng-repeat="group in options.toolbarInternalApps">
             <md-subheader>{{group.name}}</md-subheader>
@@ -50,14 +62,15 @@
             <md-divider></md-divider>
           </div>
         </div>
-
+              
       </md-menu-content>
     </md-menu>
-
-    <!-- User login and menu -->
+    
+    <!-- Login -->
     <npdc:user-menu></npdc:user-menu>
+    
 
-    <!-- Search component -->
     <npdc:expand-search options="options.search.global"></npdc:expand-search>
+    
   </div>
 </md-toolbar>

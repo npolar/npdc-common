@@ -14,13 +14,14 @@ var dataDirective = function() {
       'ngInject';
       
       $scope.licenceText = function (licence) {
-        if (/\/by\//.test(licence)) {
+        return licence;
+        /*if (/\/by\//.test(licence)) {
           return 'CC BY';
         } else if (/\/nlod\//.test(licence)) {
           return 'NLOD';
         } else {
           return licence;
-        }
+        }*/
       };
     }
   };

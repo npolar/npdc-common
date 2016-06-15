@@ -4,7 +4,7 @@
   <md-divider></md-divider>
   <p>
     <div ng-repeat="p in document.placenames">
-      <md-icon>place</md-icon>{{ p.placename || p.area }}
+      <md-icon>place</md-icon><a ng-href="{{resource.uiBase}}?q={{ p.placename || p.area }}">{{ p.placename || p.area }}</a>
     </div>
   </p>
 </section>

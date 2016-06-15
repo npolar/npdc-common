@@ -119,7 +119,11 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
       function addImageOverlay(imageUri, bbox) {
         // @todo use bbox
         let imageBounds = scope.options.coverage[0];
-        L.imageOverlay(imageUri, imageBounds).addTo(map);
+        let imageOverlay = L.imageOverlay(imageUri, imageBounds).addTo(map);
+        L.DomEvent.on(imageOverlay._image, 'click', function(e) {
+          console.log(e)
+        });
+        
       }
 
       if (scope.options.draw) {

@@ -6,7 +6,8 @@
     <md-list-item class="md-2-line" ng-repeat="person in document.people">
       <md-icon class="md-avatar-icon">person</md-icon>
         <div class="md-list-item-text">
-          <h3><a ng-href="?q={{ person.first_name }}&filter-people.last_name={{ person.last_name }}">{{ person.first_name }} {{ person.last_name }}</a><span ng-if="!person.email">{{ person.first_name }} {{ person.last_name }}</span></h3>
+          <h3><a ng-href="{{resource.uiBase}}?q={{ person.first_name }}+{{ person.last_name }}&filter-people.last_name={{ person.last_name }}">
+            {{ person.first_name }} {{ person.last_name }}</a></h3>
           <p ng-if="person.organisation">{{ person.organisation | t }}</p>
           <p ng-if="person.role">{{ person.role | t}}</p>
           <p ng-if="person.roles">

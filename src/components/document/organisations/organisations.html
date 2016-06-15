@@ -6,7 +6,7 @@
     <md-list-item class="md-2-line" ng-repeat="o in document.organisations">
       <md-icon>business</md-icon>
       <div class="md-list-item-text">
-        <h3>{{ o.name || o.id }}</h3>
+        <h3><a ng-href="{{resource.uiBase}}?q={{ (o.id || o.name|t) }}">{{ (o.name || o.id) | t }}</a></h3>
         <p ng-if="o.role">{{o.role | t }}</p>
         <p><span ng-repeat="r in o.roles">{{ r }}<span ng-if="!$last">, </span></span></p>
         <a ng-href="{{o.homepage}}">{{o.homepage}}</a>
