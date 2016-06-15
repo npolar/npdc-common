@@ -24,10 +24,13 @@ In your app
 $ npm link npdc-common
 ```
 
+## Release
+```sh
+$ npm version minor
+$ git push --tags
 
-      "Alle	data som eies	av Norsk Polarinstitutt skal være åpent og kostnadsfritt tilgjengelige for videre bruk"
-      " All data owned by the Norwegian Polar Institute should be open and free for further use "
-    
-      This website is open source ... and built using only open search technologies
-      Open data from the Npolar APIs are CC-BY-4 unless otherwise noted
-      (where is otherwise? => metadata of dataset and/or service metadata )
+```
+## Open data policy footer @todo
+
+"Alle data som eies av Norsk Polarinstitutt skal være åpent og kostnadsfritt tilgjengelige for videre bruk"
+"All data owned by the Norwegian Polar Institute should be open and free for further use"
