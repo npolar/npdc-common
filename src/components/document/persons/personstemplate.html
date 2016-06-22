@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <section ng-if="document.people && document.people.length > 0">
   <md-divider></md-divider>
-  <h3>People</h3>
+  <h3>{{ 'People' | t }}</h3>
   <md-list>
     <md-list-item class="md-2-line" ng-repeat="person in document.people">
       <md-icon class="md-avatar-icon">person</md-icon>
