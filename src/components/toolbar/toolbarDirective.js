@@ -19,11 +19,11 @@ let toolbar = function($mdSidenav, $document, NpolarApiSecurity, NpolarTranslate
     controller: function($scope, $location, $routeParams, NpolarApiResource, npdcAppConfig) {
       'ngInject';
 
-      
+
       $scope.uiBase = function() {
         let base = $document[0].getElementsByTagName('base')[0].href || '';
         base = base.replace(/\/$/, '');
-        
+
         let path = '';
         if ($routeParams.id) {
           path = $location.path().split($routeParams.id)[0];
@@ -31,15 +31,14 @@ let toolbar = function($mdSidenav, $document, NpolarApiSecurity, NpolarTranslate
           path = $location.path();
         }
         path = path.replace(/\/$/, '');
-        
-        console.log(base,path);
+
         let uiBase = base+path;
-        
+
         return uiBase;
       }
 
       $scope.options = $scope.options || npdcAppConfig;
-      
+
       $scope.appTitle = function() {
         var i18nTitle = NpolarTranslate.translate(APP_TITLE_CODE);
         return i18nTitle === APP_TITLE_CODE ? $scope.options.toolbarTitle : i18nTitle;
