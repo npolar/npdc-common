@@ -54,9 +54,8 @@
         </md-whiteframe>
       </li>
     </ul>
-    <!-- @hack to hide upload for new documents (where id == "__new") -->
-    <div ng-show="id.length > 10" layout="column" layout-align="space-between end" class="np-formula-file-upload">
-      <md-button class="md-raised md-primary" ng-click="showUpload($event);"><md-icon>backup</md-icon></md-button>
+    <div layout="column" layout-align="space-between end" class="np-formula-file-upload">
+      <md-button class="md-raised md-primary" ng-disabled="disableUpload" ng-click="showUpload($event);"><md-icon>backup</md-icon></md-button>
     </div>
     <div npdc:formula-validation-message class="np-validation-message"></div>
   </md-whiteframe>

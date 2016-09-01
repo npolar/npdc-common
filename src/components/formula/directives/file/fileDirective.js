@@ -38,9 +38,9 @@ let fileDirective = function($http, $routeParams, fileFunnelService) {
         }
         return file;
       };
-      
-      $scope.id = $routeParams.id; 
-      
+
+      $scope.id = $routeParams.id;
+
       $scope.field.values.forEach(value => {
         let file = mapFile(value);
         $scope.files.push(file);
@@ -49,6 +49,10 @@ let fileDirective = function($http, $routeParams, fileFunnelService) {
       $scope.isFile = function(value, index, array) {
         return !!$scope.files[index];
       };
+
+      console.log("SCOPE: ", $scope);
+
+      $scope.disableUpload = ($scope.id == "__new");
 
       $scope.showUpload = function(ev) {
         fileFunnelService.showUpload(ev, $scope.field, options).then(files => {
