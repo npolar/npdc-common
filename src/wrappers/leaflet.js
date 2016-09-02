@@ -1,3 +1,12 @@
+// Initialization from you code, ex:
+// $scope.mapOptions = {};
+// $scope.mapOptions.initcoord = [79.004959, 17.666016];
+// $scope.mapOptions.color = "#ff0000";
+// $scope.mapOptions.weight = 10;
+// You can choose color and width of point/rectangle line and inital coord of your choice,
+// Antarctica f.ex.
+
+
 'use strict';
 
 let angular = require('angular');
@@ -93,19 +102,7 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
       if (isSvalbard(scope.options)) {
         mapOptions.crs = crsFactory();
       }
-
-
-      //Set init center coord by using mapOptions.initcoord, otherwise defaults to Svalbard
-      let lat = 69.68;
-      let lng = 18.94;
-
-      if (scope.options.initcoord) {
-        lat = scope.options.initcoord[0];
-        lng = scope.options.initcoord[1];
-      }
-
-      //Initiate the map with mapOptions object
-      let map = L.map(iElement.find('div')[0], mapOptions).setView([lat, lng], 4);
+      let map = L.map(iElement.find('div')[0], mapOptions).setView([69.68, 18.94], 4);
       tileLayer.addTo(map);
 
       let drawnItems;
@@ -131,11 +128,7 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
       function addImageOverlay(imageUri, bbox) {
         // @todo use bbox
         let imageBounds = scope.options.coverage[0];
-        let imageOverlay = L.imageOverlay(imageUri, imageBounds).addTo(map);
-        L.DomEvent.on(imageOverlay._image, 'click', function(e) {
-          console.log(e)
-        });
-
+        L.imageOverlay(imageUri, imageBounds).addTo(map);
       }
 
       if (scope.options.draw) {
@@ -185,11 +178,25 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
         x_max = x_min = coverage[0][1][1]; // east
         y_max = y_min = coverage[0][1][0]; // north
 
+        //Default weight and color if not set in scope.options.weight / scope.options.color
+        let wgt = 10;
+        let clr = "#0011ff";
+
+        if (scope.options.weight) {
+            wgt = scope.options.weight;
+        }
+
+         if (scope.options.color) {
+            clr = scope.options.color;
+        }
+
+
         coverage.forEach(cov => {
           let south = cov[0][0];
           let west = cov[0][1];
           let north = cov[1][0];
           let east = cov[1][1];
+
           x_max = Math.max(x_max, east);
           y_max = Math.max(y_max, north);
           x_min = Math.min(x_min, west);
@@ -198,8 +205,9 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
             [south, west],
             [north, east]
           ];
-          let layer = L.rectangle(poly);
+          let layer = L.rectangle(poly, {color: clr, weight: wgt });
           addDrawnItemsLayer(layer);
+
         });
         map.fitBounds([
           [y_min, x_min],
