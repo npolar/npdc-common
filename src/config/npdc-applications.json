@@ -389,6 +389,38 @@
   "promote": true
 },
 {
+  "link": "/courses",
+  "name": [
+    {
+      "@language": "en",
+      "@value": "Courses"
+    },
+    {
+      "@language": "no",
+      "@value": "Kurs"
+    }
+  ],
+  "icons": [{
+    "size": 96,
+    "src": "/assets/img/app-icons/96/courses.png"
+  }, {
+    "size": 48,
+    "src": "/assets/img/app-icons/48/courses.png"
+  }],
+  "screenshots": [],
+  "description": [
+    {
+      "@language": "en",
+      "@value": "Courses available at the institute"
+    },
+    {
+      "@language": "no",
+      "@value": "Kurs tilgjengelig ved instituttet"
+    }
+  ],
+  "category": "internal"
+},
+{
   "link": "/inventory",
   "name": [
     {
@@ -418,7 +450,7 @@
       "@value": "Inventory of past activities Antarctica"
     }
   ],
-  "category": "public",
+  "category": "internal",
   "promote": true
 },
 {
@@ -451,41 +483,11 @@
       "@value": "Research Stations Statistics"
     }
   ],
-  "category": "public",
+  "category": "internal",
   "promote": true
 },
+
 {
-  "link": "/courses",
-  "name": [
-    {
-      "@language": "en",
-      "@value": "Courses"
-    },
-    {
-      "@language": "no",
-      "@value": "Kurs"
-    }
-  ],
-  "icons": [{
-    "size": 96,
-    "src": "/assets/img/app-icons/96/courses.png"
-  }, {
-    "size": 48,
-    "src": "/assets/img/app-icons/48/courses.png"
-  }],
-  "screenshots": [],
-  "description": [
-    {
-      "@language": "en",
-      "@value": "Courses available at the institute"
-    },
-    {
-      "@language": "no",
-      "@value": "Kurs tilgjengelig ved instituttet"
-    }
-  ],
-  "category": "internal"
-}, {
   "link": "/marine/biology",
   "name": [
     {
