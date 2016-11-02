@@ -31,7 +31,39 @@
   "category": "public",
   "promote": true
 },
-
+{
+  "link": "/sighting",
+  "name": [
+    {
+      "@language": "en",
+      "@value": "Sightings"
+    },
+    {
+      "@language": "no",
+      "@value": "Observasjoner"
+    }
+  ],
+  "icons": [{
+    "size": 96,
+    "src": "/assets/img/app-icons/96/sighting.png"
+  }, {
+    "size": 48,
+    "src": "/assets/img/app-icons/48/sighting.png"
+  }],
+  "screenshots": [],
+  "description": [
+    {
+      "@language": "no",
+      "@value": "Observasjoner av marine pattedyr på Svalbard"
+    },
+    {
+      "@language": "en",
+      "@value": "Svalbard Marine Mammal Sightings"
+    }
+  ],
+  "category": "public",
+  "promote": true
+},
 {
   "link": "//api.npolar.no",
   "name": [
@@ -105,6 +137,7 @@
   "category": "public",
   "promote": true
 },
+
 {
   "link": "/publication",
   "name": [
@@ -239,9 +272,6 @@
   "promote": true
 },
 
-
-
-
 {
   "link": "http://svalbardkartet.npolar.no",
   "name": [
@@ -283,17 +313,6 @@
   "category": "public",
   "promote": true
 },
-
-
-
-
-
-
-
-
-
-
-
 {
   "link": "http://placenames.npolar.no",
   "name": [
@@ -336,16 +355,6 @@
   "promote": true
 },
 
-
-
-
-
-
-
-
-
-
-
 {
   "link": "/indicator/timeseries",
   "name": [
@@ -378,7 +387,74 @@
   ],
   "category": "public",
   "promote": true
-}, {
+},
+{
+  "link": "/inventory",
+  "name": [
+    {
+      "@language": "en",
+      "@value": "Inventory"
+    },
+    {
+      "@language": "no",
+      "@value": "Aktivitet"
+    }
+  ],
+  "icons": [{
+    "size": 96,
+    "src": "/assets/img/app-icons/96/inventory.png"
+  }, {
+    "size": 48,
+    "src": "/assets/img/app-icons/48/inventory.png"
+  }],
+  "screenshots": [],
+  "description": [
+    {
+      "@language": "no",
+      "@value": "Tidligere aktivitet Antarktis"
+    },
+    {
+      "@language": "en",
+      "@value": "Inventory of past activities Antarctica"
+    }
+  ],
+  "category": "public",
+  "promote": true
+},
+{
+  "link": "/station-booking",
+  "name": [
+    {
+      "@language": "en",
+      "@value": "Stations"
+    },
+    {
+      "@language": "no",
+      "@value": "Stasjoner"
+    }
+  ],
+  "icons": [{
+    "size": 96,
+    "src": "/assets/img/app-icons/96/station-booking.png"
+  }, {
+    "size": 48,
+    "src": "/assets/img/app-icons/48/station-booking.png"
+  }],
+  "screenshots": [],
+  "description": [
+    {
+      "@language": "no",
+      "@value": "Forskningsstasjoner Statistikk"
+    },
+    {
+      "@language": "en",
+      "@value": "Research Stations Statistics"
+    }
+  ],
+  "category": "public",
+  "promote": true
+},
+{
   "link": "/courses",
   "name": [
     {
