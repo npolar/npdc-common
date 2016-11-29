@@ -26,7 +26,15 @@ var NpdcBreadcrumbs = function($location, $rootScope, $window) {
     if (i > 0) {
       self.path += '/' + crumb;
     }
-    return { href: self.path, title: translate(crumb), text: decodeURIComponent(translate(crumb)) };
+    
+    
+    let href = self.path;
+    let title = translate(crumb);
+    let text = decodeURIComponent(translate(crumb)) || title || href ;
+    if ((/^[0-9a-f]{8}-/i).test(crumb)) {
+      text = crumb.split('-')[0];
+    }
+    return { href, title, text };
   };
 
   var buildCrumbs = function(event, uri) {
@@ -49,7 +57,7 @@ var NpdcBreadcrumbs = function($location, $rootScope, $window) {
     if (JSON.stringify(parts.slice(-2)) === JSON.stringify(['__new', 'edit'])) {
       parts = parts.slice(0, -2).concat('new');
     }
-
+    
     let i = 0;
     self.breadcrumbs = parts.map(
       crumb => {
