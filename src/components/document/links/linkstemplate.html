@@ -1,26 +1,22 @@
 <!DOCTYPE html>
 <section>
   <div ng-if="links.length > 0">
-    <h3>{{ 'Links' | t }}</h3>
-    <md-divider></md-divider>
     <md-list>
-      <md-list-item class="md-2-line" ng-repeat="link in links">
+      <md-list-item class="md-1-line" ng-repeat="link in links">
         <div class="md-list-item-text">
           <a ng-href="{{link.href}}">{{ link.title || link.href }}</a>
-          <p>{{ link.rel }}</p>
         </div>
       </md-list-item>
     </md-list>
   </div>
 
   <div ng-if="!isEmpty(related)">
-    <h3>{{ 'See also' | t}}</h3>
     <md-list>
       <md-subheader class="md-no-sticky" ng-repeat-start="collection in related" ng-if="collection[0]">{{ title(collection) }}</md-subheader>
-      <md-list-item ng-repeat="rel in collection" ng-if="rel._score > 0.25" ng-repeat-end>
+      <md-list-item ng-repeat="rel in collection" ng-if="rel._score > 0.45" ng-repeat-end>
         <div class="md-list-item-text">
           <a ng-href="{{'/' + rel.collection + '/' + rel.id}}">{{ rel.title }}</a>
-          <span ng-show="false">[{{ rel._score }}]</span> 
+          <span ng-show="true">[{{ rel._score }}]</span> 
         </div>
       </md-list-item>
     </md-list>
