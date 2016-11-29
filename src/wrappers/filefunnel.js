@@ -6,7 +6,7 @@ require('filefunnel.js/dist/js/filefunnel-i18n.min.js');
 
 let ff = angular.module('filefunnel', ['ngMaterial', 'ngNpolar']);
 
-ff.controller('FFUploadController', function($scope, $mdDialog, options, NpolarApiSecurity) {
+ff.controller('FFUploadController', function($scope, $rootScope, $mdDialog, options, NpolarApiSecurity) {
   let ff = new FileFunnel(null, options);
   $scope.ff = ff;
 
@@ -33,7 +33,8 @@ ff.controller('FFUploadController', function($scope, $mdDialog, options, NpolarA
     }
   }
 
-  ff._elements.fileInput.on('change', () => {
+  ff._elements.fileInput.on('change', (event) => {
+    $rootScope.$broadcast('npdc-filefunnel-change', ff);
     $scope.$apply();
   });
 
@@ -52,7 +53,12 @@ ff.controller('FFUploadController', function($scope, $mdDialog, options, NpolarA
     ff.locale = lang.lang;
   });
 
+  // Success for each file
   ff.on('success', file => {
+    
+    $rootScope.$broadcast('npdc-filefunnel-success', file);
+    
+    // Completed when all files are in
     if (ff.status === FileFunnel.status.COMPLETED) {
       $mdDialog.hide(ff.files);
     }

@@ -13,7 +13,7 @@ common.directive('npdcUserMenu', require('./user-menu/userMenu'));
 
 common.service('NpdcBreadcrumbs', require('./breadcrumbs/BreadcrumbsService'));
 common.controller('NpdcBreadcrumbsController', require('./breadcrumbs/BreadcrumbsController'));
-common.directive('npdcCrumbs', require('./breadcrumbs/breadcrumbsDirective'));
+common.directive('npdcBreadcrumbs', require('./breadcrumbs/breadcrumbsDirective'));
 
 common.directive('npdcBottom', require('./bottom/bottom'));
 common.controller('NpdcBottomController', require('./bottom/BottomController'));
