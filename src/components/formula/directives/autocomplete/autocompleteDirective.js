@@ -38,7 +38,7 @@ let autocompleteDirective = function ($http, $q, formulaAutoCompleteService) {
               fields: '*'
             },
             headers: {
-              Accept: 'application/json, application/vnd.geo+json'
+              Accept: 'application/json, application/geo+json'
             },
             isArray: true,
             cache: true
