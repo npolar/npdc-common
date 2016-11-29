@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <section class="np-authors" ng-if="authors.length">
   <md-icon>account_circle</md-icon>
-  <span ng-repeat="p in authors" class="author">
-    <span ng-if="p.organisation == 'npolar.no'" title="{{ p.organisation | t }}"><b>{{ p.name }}</b></span><span ng-if="p.organisation != 'npolar.no'">{{ p.name  }}</span><span ng-if="!$last">, </span>
+  <span ng-repeat="p in authors" class="author" ng-click="showPerson($event, p)">
+    <span title="{{ (p.organisation || p.homepage) | t }}">{{ p.name  }}</span><span ng-if="!$last">, </span>
   </span>
 </section>
