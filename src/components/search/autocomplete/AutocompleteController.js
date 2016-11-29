@@ -4,6 +4,9 @@ var AutocompleteController = function($location, $window, $q, $scope,
   NpolarApiResource, NpdcSearchService, npolarDocumentUtil) {
     'ngInject';
 
+  if (!$scope.options) {
+    $scope.options = {};
+  }
   $scope.options.q = $scope.options.q || ($location.search().q || "");
 
   let appBase = (() => {
