@@ -68,6 +68,6 @@ describe("BreadcrumbsService", function () {
     let breadcrumbsService = new BreadcrumbsService($locationMock, $rootScopeMock, $windowMock);
     breadcrumbsService.breadcrumbs[0].should.have.property('href','/home');
     breadcrumbsService.breadcrumbs[1].should.have.property('href','/ny-alesund');
-    breadcrumbsService.breadcrumbs[2].should.have.property('text','a8c8dfd0-f42e-403e-a913-5f35fabe6caf');
+    breadcrumbsService.breadcrumbs[2].should.have.property('text','a8c8dfd0');
   });
 });
