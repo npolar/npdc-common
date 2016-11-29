@@ -6,21 +6,16 @@
       <strong>{{ appTitle() }}</strong>
     </a>
 
-    <span class="flex">
-      <!-- This span is used to push the other content to the right -->
-    </span>
+    <span class="flex"><!-- This span is used to push the other content to the right --></span>
 
-    <a href="/" class="np-toolbar-title">
-      <a href="/" class="np-toolbar-logo">
-        <img src="/assets/img/NPI-logo-hvit-no.png" alt="{{siteTitle()}} {{ 'home' | t }}" title="{{siteTitle()}}" />
+    <a href="/" class="np-toolbar-title" hide>
+      <a href="/" class="np-toolbar-logo" hide-xs>
+        <img hide-xs src="/assets/img/NPI-logo-hvit-no.png" alt="{{siteTitle()}} {{ 'home' | t }}" title="{{siteTitle()}}" />
       </a>
-      <span><!--{{ siteTitle() }}--><a href="/" class="np-toolbar-logo"><abbr title="{{ 'NPDC'|t }}">NPDC</abbr></a></span>
+      <!--<span><!--{{ siteTitle() }}--><!--<a href="/" class="np-toolbar-logo"><abbr title="{{ 'NPDC'|t }}">NPDC</abbr></a></span>-->
     </a>
     
-    <span class="flex">
-      <!-- This span is used to push the other content to the right -->
-    </span>
-    
+    <span class="flex"><!-- This span is used to push the other content to the right --></span>
     
      <md-menu class="np-app-menu">
       
@@ -71,6 +66,6 @@
     
 
     <npdc:expand-search options="options.search.global"></npdc:expand-search>
-    
+  
   </div>
 </md-toolbar>
