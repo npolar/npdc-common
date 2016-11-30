@@ -59,7 +59,7 @@
         "babelify",
         {
           "presets": [
-            "latest"
+            "es2015"
           ]
         }
       ],
