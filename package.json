@@ -1,6 +1,6 @@
 {
   "name": "npdc-common",
-  "version": "4.5.0",
+  "version": "4.6.0-dev",
   "description": "Common modules for NPDC apps",
   "main": "src/index.js",
   "scripts": {
@@ -20,27 +20,29 @@
     "angular": "^1",
     "angular-animate": "^1",
     "angular-aria": "^1",
-    "angular-marked": "^1.0.1",
-    "angular-material": "^1.0.7",
-    "angular-npolar": "github:npolar/angular-npolar#v2.5.4",
+    "angular-marked": "^1",
+    "angular-material": "^1",
+    "angular-npolar": "github:npolar/angular-npolar",
     "angular-route": "^1",
-    "angularjs-slider": "^2.4.1",
+    "angularjs-slider": "^5",
     "leaflet.heat": "*",
     "chronopic.js": "github:npolar/chronopic.js#v0.4.3",
     "filefunnel.js": "github:npolar/filefunnel.js#v0.8.1",
-    "formula": "github:npolar/formula#v4.5.1",
+    "formula": "github:npolar/formula",
     "leaflet": "^0",
-    "leaflet-draw": "^0.2.3",
-    "leaflet-fullscreen": "^1.0.1",
+    "leaflet-draw": "^0",
+    "leaflet-fullscreen": "^1",
     "esri-leaflet": "^1",
     "proj4": "^2",
     "proj4leaflet": "^0",
-    "material-design-icons": "^2.0.0"
+    "material-design-icons": "^3",
+    "jsondiffpatch": "*"
   },
   "devDependencies": {
-    "babel-preset-es2015": "^6.3.13",
-    "babelify": "^7.2.0",
-    "browserify": "^13.0.0",
+    "babel-cli": "*",
+    "babel-preset-latest": "*",
+    "babelify": "*",
+    "browserify": "*",
     "browserify-ngannotate": "^2.0.0",
     "csv-spectrum": "^1.0.0",
     "gulp": "^3.9.0",
@@ -49,7 +51,7 @@
     "partialify": "^3.1.3",
     "q": "^1.4.1",
     "run-sequence": "^1.1.2",
-    "should": "^8.1.1"
+    "should": "^11"
   },
   "browserify": {
     "transform": [
@@ -57,7 +59,7 @@
         "babelify",
         {
           "presets": [
-            "es2015"
+            "latest"
           ]
         }
       ],
