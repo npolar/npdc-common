@@ -3,6 +3,7 @@
 let person = function ($q, NpolarApiResource) {
   'ngInject';
 
+  // rolesList
   let Person = NpolarApiResource.resource({ path: '/person', resource: 'Person' });
   let query = { 'fields': 'first_name,last_name,organisation,email', 'variant': 'array', 'limit': 200 };
 
@@ -36,7 +37,7 @@ let person = function ($q, NpolarApiResource) {
         $scope.email.value = person.email;
       };
 
-      $scope.otherFields = $scope.field.fields.filter(field => !['first_name', 'last_name', 'email', 'id', 'organisation'].includes(field.id));
+      $scope.otherFields = $scope.field.fields.filter(field => !['first_name', 'last_name', 'email', 'id'].includes(field.id));
     }
   };
 };
