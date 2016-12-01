@@ -1,6 +1,6 @@
 {
   "name": "npdc-common",
-  "version": "4.6.0-dev",
+  "version": "4.5.0",
   "description": "Common modules for NPDC apps",
   "main": "src/index.js",
   "scripts": {
@@ -28,7 +28,7 @@
     "leaflet.heat": "*",
     "chronopic.js": "github:npolar/chronopic.js#v0.4.3",
     "filefunnel.js": "github:npolar/filefunnel.js#v0.8.1",
-    "formula": "github:npolar/formula",
+    "formula": "github:npolar/formula#v4.5.2",
     "leaflet": "^0",
     "leaflet-draw": "^0",
     "leaflet-fullscreen": "^1",
