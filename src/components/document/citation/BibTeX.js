@@ -7,9 +7,9 @@ module.exports = function (NpdcDOI) {
   
   // BibTeX citation
   // Based on http://www.bibtex.org/Format/ and http://citation.datacite.org/format?doi=10.21334/npolar.2016.408e8178&style=bibtex&lang=en-US
-  this.bibtex = (param = { type:'@misc', id:'', year:null, title: '', url: '', doi: '', publisher:'', author, authors }) => {
+  this.bibtex = (param = { type:'@misc', id:'', year:null, title: '', url: '', doi: '', publisher:'', author:null, authors:null }) => {
     
-    if (param.author && param.authors) {
+    if (param.author && param.authors.length > 0) {
       throw "Please provide only author (string) OR authors (array)";
     }
     
@@ -31,4 +31,4 @@ year={${ param.year }}}`;
   };
   
   this.citation = self.bibtex;
-}
+};

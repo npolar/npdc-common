@@ -31,10 +31,7 @@ var citationDirective = function($http) {
               $scope.citation.text = r.data;  
           }, (e) => {
             if (404 === e.status) {
-              $scope.error = `No ${link.title} citation for this dataset yet`;
-              if (dataset.doi) {
-                $scope.error += `This is normal for 24 hours after DOI creation`;
-              }
+              $scope.error = `No ${link.title} citation for this dataset yet\nNot found: ${link.href}`;
             } else {
               $scope.error = `Citation service ${link.href} failed, status: ${e.status}`;  
             }

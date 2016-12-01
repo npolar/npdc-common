@@ -77,7 +77,6 @@ function MetadataController($scope, $http, $routeParams, npolarPeople) {
   }
   
   $scope.editors = () => {
-    return [];
     return [...new Set($scope.edits.map(e => e.user.name))].filter(a => {
       return ((/ /).test(a));
     });

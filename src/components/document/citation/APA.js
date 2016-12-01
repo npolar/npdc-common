@@ -40,4 +40,4 @@ module.exports = function (NpdcDOI) {
   ${ param.publisher }. ${ param.uri }`;
       
   };
-}
+};

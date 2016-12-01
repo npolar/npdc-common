@@ -10,8 +10,6 @@ let authorsDirective = function($location, $anchorScroll) {
     controller: function($scope) {
       'ngInject';
       
-      let self = this;
-      
       $scope.authors = ($scope.authors||[]).map(a => {
         if (a && a.last_name) {  
           a.name = `${a.first_name||''} ${a.last_name}`.trim();
