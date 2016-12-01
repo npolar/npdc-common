@@ -5,7 +5,12 @@ var ui = angular.module('npdcCommon');
 
 ui.directive('npdcDocument', require('./show/document'));
 ui.directive('npdcShow', require('./show/document'));
+
 ui.directive('npdcCitation', require('./citation/citationDirective'));
+ui.service('NpdcBibTeX', require('./citation/BibTeX'));
+ui.service('NpdcAPA', require('./citation/APA'));
+ui.service('NpdcCitationModel', require('./citation/CitationModel'));
+
 ui.directive('npdcOrganisations', require('./organisations/organisationsDirective'));
 ui.directive('npdcPersons', require('./persons/personsDirective'));
 ui.directive('npdcLinks', require('./links/linksDirective'));

@@ -34,3 +34,11 @@ common.directive('npdcBottomSheet', require('./bottom-sheet/bottomSheetDirective
 common.directive('npdcLoader', require('./loader/loaderDirective'));
 common.directive('npdcFooter', require('./footer/footerDirective'));
 common.directive('npdcTabs', require('./tabs/tabsDirective'));
+
+common.controller('NpdcMetadataController', require('./metadata/MetadataController'));
+common.directive('npdcMetadata', require('./metadata/metadataDirective'));
+common.service('NpdcDOI', require('./metadata/DOI'));
+
+//common.service('NpdcWarningsService', require('./warnings/WarningsService'));
+//common.controller('NpdcWarningsController', require('./warnings/WarningsController'));
+//common.directive('npdcWarnings', require('./warnings/warningsDirective'));

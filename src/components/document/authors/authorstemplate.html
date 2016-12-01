@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <section class="np-authors" ng-if="authors.length">
-  <md-icon>account_circle</md-icon>
-  <span ng-repeat="p in authors" class="author" ng-click="showPerson($event, p)">
-    <span title="{{ (p.organisation || p.homepage) | t }}">{{ p.name  }}</span><span ng-if="!$last">, </span>
+  <md-icon>account_circle<md-tooltip md-direction="left">{{ authors.length }} {{ (authors.length > 1) ? ('authors'|t) : ('author'|t) }}</md-tooltip></md-icon>
+  <span ng-repeat="p in authors" class="author" ng-click="gotoPerson(p)">
+    <span>{{ p.name  }}<a ng-if="p.email && hasRole(p,'pointOfContact')" ng-href="mailto:{{p.email}}"><md-icon>email</md-icon></a><md-tooltip md-direction="top" md-delay="150">{{ p.name  }} ({{ (p.organisation||'') | t}})</md-tooltip></span><span ng-if="!$last">, </span>
   </span>
 </section>
