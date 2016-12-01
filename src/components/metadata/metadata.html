@@ -1,0 +1,55 @@
+<md-card>
+  <md-card-header>
+    <md-card-avatar>
+      <md-icon><img src="/dataset/show/json-ld-data-48.png"></md-icon>
+    </md-card-avatar>
+    <md-card-header-text>
+      <span class="md-headline">{{ (headline || 'Machine-readable metadata') | t }}</span>
+      <span class="md-subhead" title="URI">{{ uri }}</span>
+      </span>
+    </md-card-header-text>
+  </md-card-header>
+  <md-card-content>
+    <p ng-if="formats">{{ (formats.length > 1) ? ('Formats'|t) : ('Format'|t) }}:
+      <span ng-repeat="link in formats">
+        <a ng-href="{{link.href}}" title="{{link.type}}">{{ link.title || link.href }}</a> <span ng-if="!$last">|</span>
+      </span>
+    </p>
+    <p ng-if="license">Metadata license: <a ng-href="{{ license }}">{{ license | t}}</a></p>
+    <p ng-if="schema">Metadata schema: <a ng-href="{{ schema }}">{{ schema | t }}</a></p>
+    <p ng-if="byline" marked="byline"></p>
+  </md-card-content>
+</md-card>   
+
+<md-card>
+  <md-card-header>
+    <md-card-avatar>
+      <md-icon>history</md-icon>
+    </md-card-avatar>
+    <md-card-header-text>
+      <span class="md-headline">{{ (headline || 'Edit history') | t }}</span>
+    </md-card-header-text>
+  </md-card-header>
+  <md-card-content>
+    
+    <p>Metadata was created by {{ creator.name }}<span ng-if="editors().length > 0">, and edited by </span><span ng-repeat="editor in editors()"><span ng-if="!$first">, <span ng-if="$last">and </span></span>{{ editor }}</span>. Last update by {{ updater.name }}.</p>
+
+    <md-menu>
+      <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button" aria-label="Open sample menu">
+       <md-icon>history</md-icon>
+       <md-tooltip>Time machine</md-tooltip>
+     </md-button>
+    
+      <md-menu-content width="6">
+        <md-menu-item ng-repeat="edit in edits" ng-init="text = edit.when +' '+ (edit.user.name || edit.user.id) +' [revision '+ (edit.revision || '?') +']'">
+          <md-button ng-if="rev == edit.rev" ng-disabled="true">{{text}}</md-button>
+          <md-button ng-if="rev != edit.rev" rel="nofollow" ng-href="{{ edit.href }}">{{text}}</md-button>
+        </md-menu-item>
+      </md-menu-content>
+     </md-menu>
+    <!--@todo WARN if not newest @todo make prettier-->
+    <!-- @todo Available/Published DOI created) time -->
+    <span>Created: {{ created }} Updated: {{ updated }}</span>
+    
+  </md-card-content>
+</md-card>   
