@@ -17,6 +17,8 @@ function MetadataController($scope, $http, $routeParams, npolarPeople) {
       } else {
         return `${p.first_name} ${p.last_name}`;
       }
+    } else {
+      return email;
     }
   }
   
@@ -95,7 +97,7 @@ function MetadataController($scope, $http, $routeParams, npolarPeople) {
       name: name(document.updated_by)
     };
   }
-  
+
   $scope.id = document.id;
   $scope.rev = document._rev;
   $scope.created = document.created;
