@@ -1,0 +1,10 @@
+<span>{{ 'Citation'|t }}</span>
+<span ng-repeat="link in citations">
+  <a ng-click="citationClicked(link)" href="" title="{{link.type}}"><span ng-show="link.title != citation.title" >{{ link.title || link.href }}</span></a>
+  <b ng-show="link.title == citation.title" >{{ link.title || link.href }}</b>
+  <span ng-if="!$last">|</span>
+</span>
+<br ng-if="!isPreformatted(citation)"></br>
+<code ng-show="!error && !isPreformatted(citation)" class="np-citation">{{ citation.text }}</code>
+<pre ng-show="!error && isPreformatted(citation)" class="np-citation">{{ citation.text }}</pre>
+<pre>{{ error | t }}</pre>
