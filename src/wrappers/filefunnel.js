@@ -56,11 +56,12 @@ ff.controller('FFUploadController', function($scope, $rootScope, $mdDialog, opti
   // Success for each file
   ff.on('success', file => {
     
-    $rootScope.$broadcast('npdc-filefunnel-success', file);
+    $rootScope.$broadcast('npdc-filefunnel-upload-success', file);
     
     // Completed when all files are in
     if (ff.status === FileFunnel.status.COMPLETED) {
       $mdDialog.hide(ff.files);
+      $rootScope.$broadcast('npdc-filefunnel-upload-completed', ff.files.filter((f,k) => typeof(k) === 'number'));
     }
   }).on('error', file => {
     ff.progressType = 'determinate';
