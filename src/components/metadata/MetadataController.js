@@ -1,14 +1,14 @@
 'use strict';
 
-function MetadataController($scope, $http, $routeParams, npolarPeople) {
+function MetadataController($scope, $http, $routeParams, npolarPeople, npolarAliases) {
   'ngInject';
   
   const LICENSE = "https://creativecommons.org/publicdomain/zero/1.0/";
   
   // Metadata template
-  let metadata =  { uri:null, id:$routeParams.id, formats:null, path:null, edits:null, editors:null, byline:null, license: LICENSE, schema: null };
+  let metadata =  { uri:null, id:$routeParams.id, formats:null, path:null, document:null, edits:null, editors:null, byline:null, license: LICENSE, schema: null };
   
-  function name(email, people=npolarPeople) {
+  function name(email, people=npolarPeople.people, alias=npolarAliases) {
     if (!email || !people) { return; }
     let p = people.find(p => (p.email === email || (p.alias||[]).includes(email)));
     if (p) {
@@ -49,8 +49,8 @@ function MetadataController($scope, $http, $routeParams, npolarPeople) {
     return $http.get('//api.npolar.no/editlog',{ params, cache: true});
   };
   
-  $scope.document = $scope.document;
-  let  document = $scope.document;
+  //$scope.document = $scope.document;
+  //let document = {}; //$scope.metadata || $scope.metadata.document || {};
   
   // Set metadata from @metadata in <npdc:metadata metadata="{ 'license': 'URI'}"></npdc:metadata>
   Object.keys(metadata).forEach(p => {
@@ -83,15 +83,15 @@ function MetadataController($scope, $http, $routeParams, npolarPeople) {
       return ((/ /).test(a));
     });
   };
-  
-  if (!$scope.creator) {
+  /*
+  if (!$scope.creator && document) {
     $scope.creator = {
       id: document.created_by,
       name: name(document.created_by),
     };
   }
   
-  if (!$scope.updater) {
+  if (!$scope.updater && document) {
     $scope.updater = {
       id: document.updated_by,
       name: name(document.updated_by)
@@ -102,6 +102,7 @@ function MetadataController($scope, $http, $routeParams, npolarPeople) {
   $scope.rev = document._rev;
   $scope.created = document.created;
   $scope.updated = document.updated;
+  */
   // @todo find and set newest
   // @todo warn also in bottom about old times...
   

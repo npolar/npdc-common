@@ -5,7 +5,7 @@ var personsDirective = function() {
   'ngInject';
   
   return {
-    template: require('./personstemplate.html'),
+    template: require('./persons.html'),
   };
 };
 
