@@ -1,6 +1,6 @@
 {
   "name": "npdc-common",
-  "version": "4.6.1",
+  "version": "4.6.0",
   "description": "Common modules for NPDC apps",
   "main": "src/index.js",
   "scripts": {
@@ -22,7 +22,7 @@
     "angular-aria": "^1",
     "angular-marked": "^1",
     "angular-material": "^1",
-    "angular-npolar": "github:npolar/angular-npolar#5edd49737fbcf2313645051119e11254a4879a76",
+    "angular-npolar": "github:npolar/angular-npolar#v2.6.0",
     "angular-route": "^1",
     "angularjs-slider": "^5",
     "leaflet.heat": "*",
