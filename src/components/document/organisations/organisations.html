@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<section ng-if="document.organisations">
+<!-- <section ng-if="document.organisations">
   <h3 class="headline">{{'Organisations' | t}}</h3>
   <md-divider></md-divider>
   <md-list>
@@ -14,3 +14,32 @@
     </md-list-item>
   </md-list>
 </section>
+-->
+<md-card>
+    <md-card-header>
+      <md-card-avatar>
+        <md-icon>business</md-icon>
+      </md-card-avatar>
+      <md-card-header-text>
+        <span class="md-headline">{{'Organisations' | t}}</span>
+        <span class="md-subhead"></span>
+      </md-card-header-text>
+    </md-card-header>
+    <md-card-content>
+      <span class="md-subhead">
+      <md-list>
+        <md-list-item class="md-1-line" ng-repeat="o in document.organisations">
+
+          <div class="md-list-item-text">
+            <span>{{ (o.name) | t }} ({{ o.id }})</span>
+
+            <i ng-repeat="r in o.roles">{{ r | t }}<span ng-if="!$last">, </span></i>
+
+            <a ng-if="o.homepage" ng-href="{{o.homepage}}"><md-icon>home</md-icon><md-tooltip>{{'Homepage'}}: {{o.homepage}}</md-tooltip></a>
+            <!-- @todo create nice menu --><!--<md-button ng-href="{{resource.uiBase}}?q={{ (o.id || o.name|t) }}">{{ 'Search' }}</md-button>-->
+          </div>
+        </md-list-item>
+      </md-list>
+      </span>
+    </md-card-content>
+  </md-card>

@@ -35,7 +35,7 @@ let toolbar = function($mdSidenav, $document, NpolarApiSecurity, NpolarTranslate
         let uiBase = base+path;
 
         return uiBase;
-      }
+      };
 
       $scope.options = $scope.options || npdcAppConfig;
 

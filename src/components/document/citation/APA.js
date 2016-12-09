@@ -3,9 +3,10 @@
 module.exports = function (NpdcDOI) {
   'ngInject';
   
-  this.citation = (param={ authors:[], year:null, title:'', type:'Data set', publisher:'', uri:''}) => {
-    // @todo handle authors as array of strings or string
-    let who = param.authors.map(a => {
+  let self = this;
+  
+  this.authors = (authors) => {
+    let who = authors.map(a => {
       // @todo has .apa? 
       if (a.last_name && a.first_name) { 
         a.initials = a.first_name.split(' ').map(c => c[0]);
@@ -34,10 +35,21 @@ module.exports = function (NpdcDOI) {
         who = who.slice(0,6).map(a => a.apa).join(', ').trim() +', … '+ last.apa;
       }
     }
-    
-    return `${who} (${param.year}).
+    return who;
+  };
+  
+  this.citation = (param={ authors:[], year:null, title:'', type:'Data set', publisher:'', uri:''}) => {
+    // @todo handle authors as array of strings or string
+    return `${ self.authors(param.authors) } (${param.year}).
   ${ param.title } [${param.type}].
   ${ param.publisher }. ${ param.uri }`;
       
   };
+  
+  this.reference = (authors, year) => {
+    // is this a reference or a citation?
+   return `${ self.authors(authors) } (${ year })`;
+      
+  };
+  
 };
