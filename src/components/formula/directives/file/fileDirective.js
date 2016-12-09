@@ -52,7 +52,7 @@ let fileDirective = function($http, $routeParams, fileFunnelService) {
 
       console.log("SCOPE: ", $scope);
 
-      $scope.disableUpload = ($scope.id == "__new");
+      $scope.disableUpload = ($scope.id === "__new");
 
       $scope.showUpload = function(ev) {
         fileFunnelService.showUpload(ev, $scope.field, options).then(files => {

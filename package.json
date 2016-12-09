@@ -1,6 +1,6 @@
 {
   "name": "npdc-common",
-  "version": "4.6.0",
+  "version": "4.7.0",
   "description": "Common modules for NPDC apps",
   "main": "src/index.js",
   "scripts": {
@@ -22,7 +22,7 @@
     "angular-aria": "^1",
     "angular-marked": "^1",
     "angular-material": "^1",
-    "angular-npolar": "github:npolar/angular-npolar",
+    "angular-npolar": "github:npolar/angular-npolar#v2.6.0",
     "angular-route": "^1",
     "angularjs-slider": "^5",
     "leaflet.heat": "*",
@@ -35,12 +35,11 @@
     "esri-leaflet": "^1",
     "proj4": "^2",
     "proj4leaflet": "^0",
-    "material-design-icons": "^3",
-    "jsondiffpatch": "*"
+    "material-design-icons": "^3"
   },
   "devDependencies": {
     "babel-cli": "*",
-    "babel-preset-latest": "*",
+    "babel-preset-es2015": "*",
     "babelify": "*",
     "browserify": "*",
     "browserify-ngannotate": "^2.0.0",
