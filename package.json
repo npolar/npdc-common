@@ -27,7 +27,7 @@
     "angularjs-slider": "^5",
     "leaflet.heat": "*",
     "chronopic.js": "github:npolar/chronopic.js#v0.4.3",
-    "filefunnel.js": "github:npolar/filefunnel.js#v0.9.0",
+    "filefunnel.js": "github:npolar/filefunnel.js#v0.8.1",
     "formula": "github:npolar/formula#v4.5.2",
     "leaflet": "^0",
     "leaflet-draw": "^0",
