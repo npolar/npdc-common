@@ -13,7 +13,7 @@ var citationDirective = function($http) {
     controller: ($scope) => {
       'ngInject';
       $scope = $scope;
-      $scope.citation = $scope.citations[0];
+      $scope.citation =  $scope.citation || $scope.citations[0];
       $scope.error = null;
       
       // Use <pre> ? (Not for all as this breaks mobile views)
