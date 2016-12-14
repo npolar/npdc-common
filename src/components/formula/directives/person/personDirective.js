@@ -13,6 +13,7 @@ let person = function ($q, NpolarApiResource) {
     controller($scope) {
       'ngInject';
 
+      //@todo handle affiliation (multiple)
       $scope.firstName = $scope.field.fields.find(field => field.id === 'first_name');
       $scope.lastName = $scope.field.fields.find(field => field.id === 'last_name');
       $scope.organisation = $scope.field.fields.find(field => field.id === 'organisation');
@@ -37,7 +38,7 @@ let person = function ($q, NpolarApiResource) {
         $scope.email.value = person.email;
       };
 
-      $scope.otherFields = $scope.field.fields.filter(field => !['first_name', 'last_name', 'email', 'id'].includes(field.id));
+      $scope.otherFields = $scope.field.fields.filter(field => !['first_name', 'last_name', 'email', 'id', 'affiliation'].includes(field.id));
     }
   };
 };
