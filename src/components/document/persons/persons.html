@@ -12,12 +12,13 @@
     <md-card-content>
       <p ng-repeat="p in document.people">
         <span id="{{ p.first_name | lowercase }}+{{ p.last_name | lowercase}}" class="anchor"></span>
-        <span>
+        <b>
           {{ p.first_name}} {{ p.last_name}}
-        </span>
+        </b>
 
-        <span ng-if="p.organisation">({{ (p.organisation) }})</span>
-        <i ng-repeat="r in p.roles">{{ r | t }}<span ng-if="!$last">, </span></i>
+        - <i ng-repeat="r in p.roles">{{ r | t }}<span ng-if="!$last">, </span></i>
+        </br>
+        <span ng-if="p.organisation" style="font-size:.5em">{{ (p.organisation) }}</span>
 
         <a ng-if="p.homepage" ng-href="{{p.homepage}}"><md-icon alt="Homepage">home</md-icon><md-tooltip>{{'Homepage'}}: {{p.homepage}}</md-tooltip></a>
         <a ng-if="p.email && isPointOfContact(p)" ng-href="mailto:{{p.email}}"><md-icon>email</md-icon></a>
