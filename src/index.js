@@ -31,17 +31,17 @@ common.config(function($mdThemingProvider) {
     "300": "#0f3f4c",
     "500": "#0c3642",
     "800": "#427296",
+    "A100": "#ffffff",
     "contrastDefaultColor": "light",
     "contrastLightColors": ["300", "500", "800"],
   });
-  var npdcAccent = $mdThemingProvider.extendPalette('brown', {
-    'A200': '#ffffff',
-    'A700': '#ffffff',
+  var npdcAccent = $mdThemingProvider.extendPalette('green', {
+    'A200': '#00963D'
   });
   $mdThemingProvider.definePalette('npdcPrimary', npdcPrimary);
   $mdThemingProvider.definePalette('npdcAccent', npdcAccent);
-  $mdThemingProvider.theme('default').primaryPalette('npdcPrimary').accentPalette('deep-orange');
-  $mdThemingProvider.theme('white').primaryPalette('npdcPrimary').accentPalette('npdcAccent');
+  $mdThemingProvider.theme('default').primaryPalette('npdcPrimary').accentPalette('npdcAccent');
+  $mdThemingProvider.theme('white').primaryPalette('npdcPrimary').accentPalette('grey');
 });
 
 common.factory('npdcAppConfig', require('./config/npdcAppConfig'));
