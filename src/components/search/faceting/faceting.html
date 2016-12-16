@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <div class="np-faceting">
   <div class="np-faceting-active-filters np-center-content" ng-show="activeFilters()">
-    <span>Active filters: </span>
-    <div class="md-chips">
-      <div ng-repeat="filter in filters()" ng-class="{'md-focused': selectedChip === $index}" class="md-chip md-default-theme">
-        <div class="md-chip-content" tabindex="-1" aria-hidden="true" ng-click="selectChip($index)">
+    <div class="np-chips">
+      <div ng-repeat="filter in filters()" ng-class="{'md-focused': selectedChip === $index}" class="np-chip md-default-theme">
+        <div class="np-chip-content" tabindex="-1" aria-hidden="true" ng-click="selectChip($index)">
           <strong>{{ i18n(filter.facet) | t }}: {{ filter.term }}</strong>
           <em>({{ filter.count }})</em>
-        </div>
-        <div class="md-chip-remove-container">
-          <button class="md-chip-remove" ng-click="removeFilter(filter)" type="button" aria-hidden="true">
+          <a class="np-chip-remove" ng-click="removeFilter(filter)" type="button" aria-hidden="true">
             <md-icon>close</md-icon>
-          </button>
+          </a>
         </div>
       </div>
     </div>

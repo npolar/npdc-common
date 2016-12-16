@@ -6,19 +6,25 @@
     -webkit-padding-start: 0;
   }
 
-  .md-chips .md-chip {
-    background: rgb(224, 224, 224);
-    color: rgb(66, 66, 66);
+  .np-chips {
+    .np-chip {
+      background: rgb(3, 155, 229);
+      color: #fff;
+      padding: .3em .0em .1em .5em;
+      border-radius: 1em;
+      margin: .2em .2em;
+      float: left;
 
-    .md-chip-remove md-icon {
-      color: rgb(66, 66, 66);
-      font-size: 18px;
-    }
+      .np-chip-remove md-icon {
+        color: #fff;
+        font-size: 18px;
+        border-radius: 1em;
+      }
 
-    &.md-focused,
-    &.md-focused .md-chip-remove md-icon {
-      background: rgb(16, 108, 200);
-      color: rgba(255, 255, 255, .87);
+      md-icon:hover {
+        color: #000;
+        cursor: pointer;
+      }
     }
   }
 
@@ -61,4 +67,10 @@
     right: 0;
     top: 7px;
   }
+}
+
+.np-faceting:after {
+  clear:both;
+  content: "";
+  display:block;
 }
