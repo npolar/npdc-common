@@ -30,11 +30,11 @@
 
   <span ng-show="true" class="np-authors">
     <span ng-repeat="p in ctrl.authors" class="author" ng-click="ctrl.gotoPerson(p)">
-      <span>{{ p.name }}<a ng-if="p.email && hasRole(p,'pointOfContact')" ng-href="mailto:{{p.email}}"><md-icon>email</md-icon></a><md-tooltip md-direction="top" md-delay="150">{{ p.roles }}</md-tooltip></span><span class="md-caption" ng-show="ctrl.show('affiliations')"><span ng-if="ctrl.isNpolar(p.organisation)"><img height="20" ng-src="{{ctrl.tinyLogo('npolar.no')}}"></img></span><span ng-if="!ctrl.isNpolar(p.organisation)">&nbsp;{{ p.organisation || '' }}</span></span><span ng-if="!$last">, </span>
+      <span>{{ p.name }}<md-tooltip md-direction="top" md-delay="250">{{ p.roles }}</md-tooltip></span><a ng-if="p.email && isContact(p)" ng-href="mailto:{{p.email}}"><md-icon>email</md-icon><md-tooltip md-direction="bottom" md-delay="250">{{ p.email }}</md-tooltip></a><span class="md-caption" ng-show="ctrl.show('affiliations')"><span ng-if="ctrl.isNpolar(p.organisation)"><img height="20" ng-src="{{ctrl.tinyLogo('npolar.no')}}" alt="npolar.no"><md-tooltip md-direction="top" md-delay="250">{{ 'npolar.no'|t }}</md-tooltip></img></span><span ng-if="!ctrl.isNpolar(p.organisation)">&#160;({{ p.organisation }})<md-tooltip md-direction="top" md-delay="250">{{ p.organisation|t }}</md-tooltip></span></span><span ng-if="!$last">,</span>
     </span>
     <p ng-show="ctrl.show('contributor')">
       <span ng-repeat="p in ctrl.contributors" ng-click="ctrl.gotoPerson(p)">
-        {{ p.name  }} {{p.roles|json}}<a ng-if="p.email && hasRole(p,'pointOfContact')" ng-href="mailto:{{p.email}}"><md-icon>email</md-icon></a>
+        {{ p.name  }} {{ p.roles|json}}<a ng-if="p.email && isContact(p)" ng-href="mailto:{{p.email}}"><md-icon>email</md-icon></a>
         <md-tooltip md-direction="top" md-delay="150">{{ p.name  }} ({{ (p.organisation||'') | t}})</md-tooltip>
         <span ng-if="!$last">, </span>
       </span>

@@ -54,7 +54,15 @@ function AuthorsController($scope, $location, $anchorScroll) {
     console.log('gotoPerson', person, anchor);
     $location.hash(anchor);
     $anchorScroll();
-
   };
+
+  $scope.isContact = (person) => {
+    if (!person || !person.roles.length || person.roles.length < 1) { return; }
+    if (person.roles.findIndex(r => ['correspondent', 'pointOfContact'].includes(r)) > 0) {
+      return true;
+    }
+  };
+
+
 }
 module.exports = AuthorsController;
