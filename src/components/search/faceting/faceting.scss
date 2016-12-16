@@ -1,76 +1,76 @@
 .np-faceting {
 
-    ul {
-        list-style-type: none;
-        padding: 0;
-        -webkit-padding-start: 0;
+  ul {
+    list-style-type: none;
+    padding: 0;
+    -webkit-padding-start: 0;
+  }
+
+  .np-chips {
+    .np-chip {
+      background: rgb(3, 155, 229);
+      color: #fff;
+      padding: .3em .0em .1em .5em;
+      border-radius: 1em;
+      margin: .2em .2em;
+      float: left;
+
+      .np-chip-remove md-icon {
+        color: #fff;
+        font-size: 18px;
+        border-radius: 1em;
+      }
+
+      md-icon:hover {
+        color: #000;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .np-custom-facet {
+    box-sizing: border-box;
+    margin-bottom: 15px;
+    margin-left: 4px;
+    margin-right: 4px;
+  }
+
+  label,
+  .rz-bubble {
+    color: rgba(0, 0, 0, .54);
+  }
+
+  .np-range-facet {
+
+    rzslider {
+      margin: 40px 0 15px;
+    }
+  }
+
+  .np-faceting-active-filters {
+    min-height: 48px;
+    padding: 0 15px;
+
+    > * {
+      float: left;
     }
 
-    .md-chips {
-        .md-chip {
-            background: rgb(3, 155, 229);
-            color: #fff;
-            padding: .3em .0em .1em .5em;
-            border-radius: 1em;
-            margin: .2em .2em;
-            float: left;
-
-            .md-chip-remove md-icon {
-                color: #fff;
-                font-size: 18px;
-                border-radius: 1em;
-            }
-
-            md-icon:hover {
-                color: #000;
-                cursor: pointer;
-            }
-        }
+    > span {
+      margin-top: 15px;
     }
+  }
 
-    .np-custom-facet {
-        box-sizing: border-box;
-        margin-bottom: 15px;
-        margin-left: 4px;
-        margin-right: 4px;
-    }
-
-    label,
-    .rz-bubble {
-        color: rgba(0, 0, 0, .54);
-    }
-
-    .np-range-facet {
-
-        rzslider {
-            margin: 40px 0 15px;
-        }
-    }
-
-    .np-faceting-active-filters {
-        min-height: 48px;
-        padding: 0 15px;
-
-        > * {
-            float: left;
-        }
-
-        > span {
-            margin-top: 15px;
-        }
-    }
-
-    .np-faceting-autocomplete-icon {
-        color: $color-primary-2;
-        pointer-events: none;
-        position: absolute;
-        right: 0;
-        top: 7px;
-    }
+  .np-faceting-autocomplete-icon {
+    color: $color-primary-2;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+    top: 7px;
+  }
 }
 
 .np-faceting:after {
-    clear:both;
-    content: "";
-    display:block;
+  clear:both;
+  content: "";
+  display:block;
 }

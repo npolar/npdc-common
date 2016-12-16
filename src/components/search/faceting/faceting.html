@@ -1,59 +1,59 @@
 <!DOCTYPE html>
 <div class="np-faceting">
-    <div class="np-faceting-active-filters np-center-content" ng-show="activeFilters()">
-        <div class="md-chips">
-            <div ng-repeat="filter in filters()" ng-class="{'md-focused': selectedChip === $index}" class="md-chip md-default-theme">
-                <div class="md-chip-content" tabindex="-1" aria-hidden="true" ng-click="selectChip($index)">
-                    <strong>{{ i18n(filter.facet) | t }}: {{ filter.term }}</strong>
-                    <em>({{ filter.count }})</em>
-                    <a class="md-chip-remove" ng-click="removeFilter(filter)" type="button" aria-hidden="true">
-                        <md-icon>close</md-icon>
-                    </a>
-                </div>
-            </div>
+  <div class="np-faceting-active-filters np-center-content" ng-show="activeFilters()">
+    <div class="np-chips">
+      <div ng-repeat="filter in filters()" ng-class="{'md-focused': selectedChip === $index}" class="np-chip md-default-theme">
+        <div class="np-chip-content" tabindex="-1" aria-hidden="true" ng-click="selectChip($index)">
+          <strong>{{ i18n(filter.facet) | t }}: {{ filter.term }}</strong>
+          <em>({{ filter.count }})</em>
+          <a class="np-chip-remove" ng-click="removeFilter(filter)" type="button" aria-hidden="true">
+            <md-icon>close</md-icon>
+          </a>
         </div>
+      </div>
     </div>
-    <div class="np-faceting-facets" layout="row" layout-wrap layout-align="space-around start">
-        <div ng-repeat="facet in model" flex="100" flex-gt-sm="50" flex-gt-md="33" ng-if="facet.uiType !== 'hidden'">
+  </div>
+  <div class="np-faceting-facets" layout="row" layout-wrap layout-align="space-around start">
+    <div ng-repeat="facet in model" flex="100" flex-gt-sm="50" flex-gt-md="33" ng-if="facet.uiType !== 'hidden'">
 
-            <!-- autocomplete -->
-            <md-autocomplete ng-if="facet.uiType === 'autocomplete'"
-                md-items="item in facet.querySearch(facet.searchText)"
-                md-item-text="item.term"
-                md-min-length="0"
-                md-search-text="facet.searchText"
-                md-floating-label="{{ i18n(facet.key) | t}}"
-                md-selected-item-change="selectedItemChange(item, facet)"
-                md-select-on-match="true"
-                md-selected-item="facet.selectedItem">
-                <md-item-template>
-                    <span md-highlight-text="facet.searchText" md-highlight-flags="^i">{{item.term}} ({{item.count}})</span>
-                </md-item-template>
-                <md-not-found>
-                    No matches found for "{{facet.searchText}}".
-                </md-not-found>
-                <md-icon class="np-faceting-autocomplete-icon">arrow_drop_down</md-icon>
-            </md-autocomplete>
+      <!-- autocomplete -->
+      <md-autocomplete ng-if="facet.uiType === 'autocomplete'"
+        md-items="item in facet.querySearch(facet.searchText)"
+        md-item-text="item.term"
+        md-min-length="0"
+        md-search-text="facet.searchText"
+        md-floating-label="{{ i18n(facet.key) | t}}"
+        md-selected-item-change="selectedItemChange(item, facet)"
+        md-select-on-match="true"
+        md-selected-item="facet.selectedItem">
+        <md-item-template>
+          <span md-highlight-text="facet.searchText" md-highlight-flags="^i">{{item.term}} ({{item.count}})</span>
+        </md-item-template>
+        <md-not-found>
+          No matches found for "{{facet.searchText}}".
+        </md-not-found>
+        <md-icon class="np-faceting-autocomplete-icon">arrow_drop_down</md-icon>
+      </md-autocomplete>
 
-            <!-- checkbox -->
-            <div ng-if="facet.uiType === 'checkbox'" class="np-custom-facet">
-                <label>{{i18n(facet.key) | t}}</label>
-                <ul layout layout-wrap>
-                    <li ng-repeat="item in facet[facet.key] | orderBy:'-term'" flex="none">
-                        <md-checkbox ng-model="item.selected" ng-change="toggleSelect(item)">
-                            {{item.term}} ({{item.count}})
-                        </md-checkbox>
-                    </li>
-                </ul>
-            </div>
+      <!-- checkbox -->
+      <div ng-if="facet.uiType === 'checkbox'" class="np-custom-facet">
+        <label>{{i18n(facet.key) | t}}</label>
+        <ul layout layout-wrap>
+          <li ng-repeat="item in facet[facet.key] | orderBy:'-term'" flex="none">
+            <md-checkbox ng-model="item.selected" ng-change="toggleSelect(item)">
+              {{item.term}} ({{item.count}})
+            </md-checkbox>
+          </li>
+        </ul>
+      </div>
 
-            <!-- range -->
-            <div ng-if="facet.uiType === 'range'" class="np-custom-facet np-range-facet">
-                <label>{{i18n(facet.key) | t}}</label>
-                <rzslider rz-slider-options="facet.slider.options" rz-slider-model="facet.slider.min" rz-slider-high="facet.slider.max"></rzslider>
-            </div>
+      <!-- range -->
+      <div ng-if="facet.uiType === 'range'" class="np-custom-facet np-range-facet">
+        <label>{{i18n(facet.key) | t}}</label>
+        <rzslider rz-slider-options="facet.slider.options" rz-slider-model="facet.slider.min" rz-slider-high="facet.slider.max"></rzslider>
+      </div>
 
-        </div>
     </div>
+  </div>
 
 </div>
