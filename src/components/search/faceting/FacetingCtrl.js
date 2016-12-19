@@ -36,7 +36,7 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
   let onSliderEnd = function(sliderId) {
     let facet = sliders[sliderId];
     if (facet.slider.min === facet.slider.options.floor &&
-      facet.slider.max === facet.slider.options.ceil) {
+        facet.slider.max === facet.slider.options.ceil) {
       filters.removeRangeFilter(facet);
     } else {
       filters.addRangeFilter(facet);
@@ -47,10 +47,17 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
     let floor, ceil, min, max, filter;
     facet.slider = {};
 
-    floor = min = facet[facet.key].reduce((memo, term) => Math.min(termToInt(term.term), memo),
-      termToInt(facet[facet.key][0].term));
-    ceil = max = facet[facet.key].reduce((memo, term) => Math.max(termToInt(term.term), memo),
-      termToInt(facet[facet.key][0].term));
+    floor = min = facet[facet.key].reduce(
+      (memo, term) => Math.min(
+        termToInt(term.term), memo),
+        termToInt(facet[facet.key][0].term)
+    );
+    ceil = max = facet[facet.key].reduce(
+      (memo, term) => Math.max(
+        termToInt(term.term), memo),
+        termToInt(facet[facet.key][0].term)
+    );
+
     filter = $scope.filterArray.find(item => facet.key === item.facet);
     if (filter) {
       min = filter.min;
@@ -100,8 +107,9 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
       if (facet.uiType === 'autocomplete') {
         facet.querySearch = function(q) {
           q = q || '';
-          return facet[facet.key].filter(item =>
-            item.term.toString().toLowerCase().indexOf(q.toLowerCase()) === 0);
+          return facet[facet.key].filter(
+            item => item.term.toString().toLowerCase().indexOf(q.toLowerCase()) === 0
+          );
         };
       }
 
@@ -127,19 +135,15 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
 
   // Respect the URL!
   $scope.$on('$locationChangeSuccess', (event, data) => {
+    // Drain filters if the query is reset
+    if (Object.keys($location.search()).length === 0 && $location.search().constructor === Object) {
+      while (filters.array.length !== 0) {
+        filters.remove(filters.array[0]);
+      };
+      $scope.$parent.query = '';
+    };
     urlFilterParser.parseUrl($scope, filters, $location.search());
   });
-
-  // Chips
-  $scope.selectedChip = -1;
-  $scope.selectChip = function(index) {
-    if ($scope.selectedChip === index) {
-      $scope.selectedChip = -1;
-    } else {
-      $scope.selectedChip = index;
-    }
-  };
-
 
   // Filters
   $scope.filters = () => filters.array;
