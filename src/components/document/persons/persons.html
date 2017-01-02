@@ -17,7 +17,7 @@
         </span>
 
         <span ng-if="p.organisation">({{ (p.organisation) }})</span>
-        <i ng-repeat="r in p.roles">{{ r | t }}<span ng-if="!$last">, </span></i>
+        <i ng-repeat="r in p.roles || [p.role]">{{ r | t }}<span ng-if="!$last">, </span></i>
 
         <a ng-if="p.homepage" ng-href="{{p.homepage}}"><md-icon alt="Homepage">home</md-icon><md-tooltip>{{'Homepage'}}: {{p.homepage}}</md-tooltip></a>
         <a ng-if="p.email && isPointOfContact(p)" ng-href="mailto:{{p.email}}"><md-icon>email</md-icon></a>
@@ -26,4 +26,3 @@
       </p>
     </md-card-content>
   </md-card>
-
