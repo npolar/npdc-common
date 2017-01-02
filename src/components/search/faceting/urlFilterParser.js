@@ -37,7 +37,7 @@ let parseUrl = function($scope, filters, query) {
       let matches = FILTER_PARAM_REQEX.exec(key);
       if (matches) {
         let key_reqex = new RegExp(`^(year-)?${matches[1]}$`);
-        let facet = $scope.options.facets.find(f => key_reqex.test(Object.keys(f)[0]));
+        let facet = ($scope.options.facets||[]).find(f => key_reqex.test(Object.keys(f)[0]));
         let terms = query[key].split(',');
         if (facet) {
           facet.key = Object.keys(facet)[0];
