@@ -6,7 +6,7 @@ function MetadataController($scope, $http, $routeParams, npolarPeople, npolarAli
   const LICENSE = "https://creativecommons.org/publicdomain/zero/1.0/";
 
   // Metadata template
-  let metadata =  { uri:null, id:$routeParams.id, formats:null, path:null, document:null, edits:null, editors:null, byline:null, license: LICENSE, schema: null };
+  let metadata = { uri:null, id:$routeParams.id, formats:null, path:null, document:null, edits:null, editors:null, byline:null, license: LICENSE, schema: null };
 
   function name(email, people=npolarPeople.people, alias=npolarAliases) {
     if (!email || !people) { return; }
@@ -55,6 +55,11 @@ function MetadataController($scope, $http, $routeParams, npolarPeople, npolarAli
   $scope.document = document;
 
   // Set metadata from @metadata in <npdc:metadata metadata="{ 'license': 'URI'}"></npdc:metadata>
+  if (!$scope.metadata && document) {
+    $scope.metadata = { uri: null, id: document.id, formats: ['json'], schema: document.schema };
+  }
+
+
   Object.keys(metadata).forEach(p => {
     if ($scope.metadata && $scope.metadata[p]) {
       $scope[p]=$scope.metadata[p];
