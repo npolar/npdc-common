@@ -39,6 +39,6 @@ common.controller('NpdcMetadataController', require('./metadata/MetadataControll
 common.directive('npdcMetadata', require('./metadata/metadataDirective'));
 common.service('NpdcDOI', require('./metadata/DOI'));
 
-//common.service('NpdcWarningsService', require('./warnings/WarningsService'));
-//common.controller('NpdcWarningsController', require('./warnings/WarningsController'));
-//common.directive('npdcWarnings', require('./warnings/warningsDirective'));
+common.service('NpdcWarningsService', require('./warnings/WarningsService'));
+common.controller('NpdcWarningsController', require('./warnings/WarningsController'));
+common.directive('npdcWarnings', require('./warnings/warningsDirective'));
