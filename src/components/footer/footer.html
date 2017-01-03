@@ -2,24 +2,21 @@
 <footer layout="row" layout-align="center start" layout-wrap>
   <div flex="33" flex-sm="50" flex-order-sm="2">
     <div class="np-center-box">
-      <ol class="address">
-        <li><strong>Norwegian Polar Data Centre</strong></li>
+      <ol class="address"><md-tooltip>NPDC is a permanent facility operated by the {{ 'npolar.no' |t }}</md-tooltip>
+        <li><strong><a href="https://data.npolar.no">Norwegian Polar Data Centre</a></strong></li>
         <li><a href="http://npolar.no">{{ 'npolar.no' |t }}</a></li>
-        <li>Tromsø, <a href="http://norway.no">Norway</a></li>
-        <li></li>
       </ol>
+
     </div>
   </div>
   <div flex="33" flex-sm="50" flex-order-sm="1">
     <div class="np-center-box">
-    
-
-      
+      <a href="https://doi.org/10.17616/R3B94H"><img src="http://service.re3data.org/public/badges/l/dark/100012291.svg" style="max-width:100%"/></a>
     </div>
   </div>
   <div flex="33" flex-sm="100" flex-order-sm="3">
     <div class="np-center-box">
-      <md-button class="md-icon-button" href="http://github.com/npolar/npdc">
+      <md-button class="md-icon-button" href="http://github.com/npolar/npdc-common">
         <i class="github-icon"></i>
         <md-tooltip>Open source @ Github</md-tooltip>
       </md-button>
