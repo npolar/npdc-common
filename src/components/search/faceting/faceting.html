@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <div class="np-faceting">
-  <div class="np-faceting-active-filters np-center-content" ng-show="activeFilters()">
+  <!-- blue pills (active facet filters)-->
+  <div class="np-faceting-active-filters np-center-content" ng-show="ctrl.activeFilters()">
     <div class="np-chips">
-      <div ng-repeat="filter in filters()" ng-class="{'md-focused': selectedChip === $index}" class="np-chip md-default-theme">
+      <div ng-repeat="filter in ctrl.filters()" ng-class="{'md-focused': selectedChip === $index}" class="np-chip md-default-theme">
         <div class="np-chip-content" tabindex="-1" aria-hidden="true" ng-click="selectChip($index)">
-          <strong>{{ i18n(filter.facet) | t }}: {{ filter.term }}</strong>
-          <em>({{ filter.count }})</em>
+          <strong>{{ i18n(filter.facet) | t }}: {{ filter.term.replace('field.', '') }}</strong>
+          <span ng-if="false">({{ filter.count }})</span><!-- @todo Make configurable? -->
           <a class="np-chip-remove" ng-click="removeFilter(filter)" type="button" aria-hidden="true">
             <md-icon>close</md-icon>
           </a>
@@ -13,6 +14,8 @@
       </div>
     </div>
   </div>
+
+  <!-- faceting -->
   <div class="np-faceting-facets" layout="row" layout-wrap layout-align="space-around start">
     <div ng-repeat="facet in model" flex="100" flex-gt-sm="50" flex-gt-md="33" ng-if="facet.uiType !== 'hidden'">
 
@@ -23,11 +26,11 @@
         md-min-length="0"
         md-search-text="facet.searchText"
         md-floating-label="{{ i18n(facet.key) | t}}"
-        md-selected-item-change="selectedItemChange(item, facet)"
+        md-selected-item-change="ctrl.selectedItemChange(item, facet)"
         md-select-on-match="true"
         md-selected-item="facet.selectedItem">
         <md-item-template>
-          <span md-highlight-text="facet.searchText" md-highlight-flags="^i">{{item.term}} ({{item.count}})</span>
+          <span md-highlight-text="facet.searchText" md-highlight-flags="^i" ng-click="ctrl.clickedFacet(item)">{{item.term}} ({{item.count}})</span>
         </md-item-template>
         <md-not-found>
           No matches found for "{{facet.searchText}}".

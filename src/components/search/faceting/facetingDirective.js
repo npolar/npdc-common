@@ -7,9 +7,11 @@ let sidenav = function () {
         restrict: 'E',
         template: require('./faceting.html'),
         scope: {
-            options: '='
+            options: '=',
+            show: '='
         },
-        controller: 'NpdcFacetingCtrl'
+        controller: 'NpdcFacetingCtrl',
+        controllerAs: 'ctrl'
     };
 };
 

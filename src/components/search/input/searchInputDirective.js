@@ -9,9 +9,23 @@ var searchInputDirective = function () {
       feed: '='
     },
     template: require('./searchInput.html'),
+    controllerAs: 'ctrl',
     controller: function ($scope, $location, NpdcSearchService, npdcAppConfig) {
       'ngInject';
-      
+
+      let ctrl = this;
+
+      ctrl.sort = () => {
+        if ($location.search().sort) {
+          return $location.search().sort;
+        } else if ($scope.feed) {
+          if (!(/[?&]sort=/).test($scope.feed.links.find(f => f.rel==='self').href)) {
+            return 'relevance';
+          }
+        }
+
+      };
+
       $scope.options = $scope.options || {};
       Object.assign($scope.options, npdcAppConfig.search.local,
         $scope.options, $scope.feed ? {facets: $scope.feed.facets} : {});
@@ -35,7 +49,7 @@ var searchInputDirective = function () {
         }
       });
 
-      $scope.toggleFilters = function () {
+      ctrl.toggleFilters = function () {
         $scope.isFiltersOpen = !$scope.isFiltersOpen;
       };
     }

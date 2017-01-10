@@ -9,6 +9,7 @@ var searchResultsDirective = function () {
       feed: '='
     },
     controller: 'NpdcSearchResultsController',
+    controllerAs: 'ctrl',
     template: require('./searchResults.html'),
     link(scope) {
       scope.resource = scope.$parent.resource;

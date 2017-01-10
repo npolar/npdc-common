@@ -4,7 +4,51 @@ var SearchResultsController = function($scope, $filter, $location, $http, Npolar
   npdcAppConfig, npolarDocumentUtil, NpdcApplications) {
   'ngInject';
 
+  let ctrl = this;
+
   let options = Object.assign({}, npdcAppConfig.search.local.results, $scope.options ? $scope.options.results : {});
+
+  // FIXME @todo Sort select proved problematic, so taken out. Maybe move into a directive of its own?
+  //ctrl.sort = (param=$location.search(), feed=$scope.feed) => {
+  //  return param.sort;
+  //  let sort;
+  //  if (param.sort) {
+  //    return param.sort;
+  //  } else if (feed && feed.links) {
+  //    if ((/[?&]sort=/).test($scope.feed.links.find(f => f.rel==='self').href)) {
+  //      sort = $scope.feed.links.find(f => f.rel==='self').href.split('sort=')[1];
+  //      console.log('sort', sort);
+  //      return sort;
+  //    } else {
+  //      return null;
+  //    }
+  //  }
+  //
+  //};
+
+  ctrl.removeFilters = () => {
+    $location.path('/');
+  };
+
+  ctrl.hasFilters = () => {
+    return Object.keys($location.search()).find(k => (/^filter[-]/).test(k));
+  };
+
+  // @todo FIXME sort
+  //ctrl.sort=null
+  //ctrl.direction = '-';
+  //ctrl.sortList = () => [
+  //    { name: 'sort.relevance', sort: undefined },
+  //    { name: `sort.${ctrl.direction}created`, sort: `${ctrl.direction}created` },
+  //    { name: `sort.${ctrl.direction}updated`, sort: `${ctrl.direction}updated` }
+  //];
+  //ctrl.sortHref = (sort=ctrl.sort) => {
+  //  let uiBase = $scope.resource.uiBase || '';
+  //  return `${uiBase}?sort=${ sort }`;
+  //}
+  //if (sort !== null && (/^[-]/).test(sort)) {
+  //  //  direction = '';
+  //  //}
 
   $scope.security = NpolarApiSecurity;
 

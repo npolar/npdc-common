@@ -24,7 +24,6 @@ common.directive('npdcSaveButton', require('./button/SaveButton'));
 common.directive('npdcDeleteButton', require('./button/DeleteButton'));
 common.controller('NpdcButtonComponent', require('./button/ButtonComponent'));
 
-
 common.controller('NpdcAppController', require('./app/AppController'));
 common.directive('npdcApp', require('./app/appDirective'));
 
@@ -42,3 +41,5 @@ common.service('NpdcDOI', require('./metadata/DOI'));
 common.service('NpdcWarningsService', require('./warnings/WarningsService'));
 common.controller('NpdcWarningsController', require('./warnings/WarningsController'));
 common.directive('npdcWarnings', require('./warnings/warningsDirective'));
+
+common.directive('npdcContributions', require('./contributions/contributionsDirective'));

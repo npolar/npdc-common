@@ -1,5 +1,18 @@
 <!DOCTYPE html>
+<md-content layout-padding ng-if="true">
+  <span ng-if="feed.opensearch.totalResults > 0">
+    {{feed.opensearch.totalResults}} results, displaying {{ feed.entries.length}}
+  </span>
+  <span ng-if="showNext()" ><a ng-href="#" ng-click="next()">More</a></span>
+  <span ng-if="feed.opensearch.totalResults == 0">{{ 'search.no_results' | t}} "{{q()}}"<span ng-if="ctrl.hasFilters()">, try <a ng-click="ctrl.removeFilters()">removing all filters</a></span></span>
+<!--  <span ng-show="feed.opensearch.totalResults > 0">@todo FIXME infinite loop[sort by:
+    <a ng-repeat="s in ctrl.sortList" ng-href="{{ctrl.sortHref(s.sort)}}">{{ s.name }} </a>]
+  </span>-->
+</md-content>
+
+<npdc:contributions facets="feed.facets"></npdc:contributions>
 <npdc:create-button class="np-primary-control"></npdc:create-button>
+
 <div class="npdc-search">
   <md-content>
 
@@ -27,18 +40,8 @@
         </md-list>
         <md-divider></md-divider>
       </div>
+      <md-button class="md-raised md-primary" ng-if="showNext()" ng-click="next()">More</md-button>
 
-      <div layout-padding>
-        <div ng-if="feed.opensearch.totalResults > 0" layout layout-align="space-between center">
-          <div style="line-height: 48px;">{{feed.opensearch.totalResults}}
-            results, displaying
-            {{ feed.entries.length}}</div>
-          <div>
-            <md-button class="md-raised md-primary" ng-if="showNext()" ng-click="next()">More ...</md-button>
-          </div>
-        </div>
-        <div ng-if="feed.opensearch.totalResults == 0">{{ 'search.no_results' | t}} "{{q()}}"</div>
-      </div>
     </section>
   </md-content>
 </div>

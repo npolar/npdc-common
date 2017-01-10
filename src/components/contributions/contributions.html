@@ -1,0 +1,25 @@
+<span ng-if="ctrl.isAuthenticated() && ctrl.getFacet('created_by')">
+  <md-content>
+    <md-menu>
+      <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button" aria-label="Open contributors menu">
+        <md-icon>person</md-icon>
+        <md-tooltip>{{ 'Contributors' | t }}</md-tooltip>
+      </md-button>
+
+      {{ ctrl.getUser().email | name }}
+
+      <md-menu-content width="6">
+        <!-- @todo searchable autocomplete list? -->
+        <md-subheader>{{ 'Created by' | t }}</md-subheader>
+        <md-menu-item ng-repeat="f in ctrl.getFacet('created_by', facets)">
+          <md-button rel="nofollow" ng-href="?filter-created_by={{f.term}}">{{ f.term | name }} [{{f.term}}] ({{f.count}})</md-button>
+        </md-menu-item>
+      </md-menu-content>
+    </md-menu>
+
+    <npdc:facet-link value="{{ ctrl.getUser().email }}" field="created_by" params="{ sort: '-created'}" text="is&#160;creator" count="{{ctrl.count('created_by', ctrl.getUser().email) }}"></npdc:facet-link>
+    <npdc:facet-link value="{{ ctrl.getUser().email }}" field="updated_by" params="{ sort: '-updated'}" text="is&#160;last&#160;editor" count="{{ctrl.count('updated_by', ctrl.getUser().email) }}"></npdc:facet-link>
+    <npdc:facet-link ng-if="ctrl.getFacet('people.email')" value="{{ ctrl.getUser().email }}" field="people.email" text="is&#160;contributor" count="{{ctrl.count('people.email', ctrl.getUser().email) }}"></npdc:facet-link>
+  </md-content>
+
+</span>
