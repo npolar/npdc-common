@@ -10,8 +10,8 @@
 
       <md-menu-content width="6">
         <!-- @todo searchable autocomplete list? -->
-        Created
-        <md-menu-item ng-repeat="f in ctrl.getFacet('created_by')">
+        <md-subheader>{{ 'Created by' | t }}</md-subheader>
+        <md-menu-item ng-repeat="f in ctrl.getFacet('created_by', facets)">
           <md-button rel="nofollow" ng-href="?filter-created_by={{f.term}}">{{ f.term | name }} [{{f.term}}] ({{f.count}})</md-button>
         </md-menu-item>
       </md-menu-content>
