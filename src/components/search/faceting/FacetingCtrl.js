@@ -7,6 +7,12 @@ let urlFilterParser = require('./urlFilterParser');
 let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
   'ngInject';
 
+  let ctrl = this;
+
+  ctrl.clickedFacet = (f) => {
+    console.log('ctrl.clickedFacet', f);
+  };
+
   let queryBuilder = new QueryBuilder();
   const UI_TYPES = ['autocomplete', 'checkbox', 'range', 'hidden'];
   let isURLParsed = false;
@@ -21,8 +27,14 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
   let filters = new FilterCollection($scope, filterChangeCallback);
 
   let uiType = function(facet) {
+
     let _type = 'autocomplete';
-    if ($scope.options.filterUi && $scope.options.filterUi[facet.key]) {
+    // @todo facet hiding needs to be dynamic...
+    let hide = ['created_by', 'updated_by']; // These are exposed in <npdc:contributions>
+
+    if (hide.includes(facet.key)) {
+      _type = 'hidden';
+    } else if ($scope.options.filterUi && $scope.options.filterUi[facet.key]) {
       let optType = $scope.options.filterUi[facet.key].type;
       _type = UI_TYPES.some(type => type === optType) ? optType : _type;
     }
@@ -142,10 +154,14 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
 
 
   // Filters
-  $scope.filters = () => filters.array;
-  $scope.activeFilters = function() {
-    return filters.array.length > 0;
-  };
+  $scope.filters = ctrl.filters;
+  ctrl.filters = () => {
+    if (!filters || !filters.array) {
+      return [];
+    }
+    return filters.array;
+  }
+  ctrl.activeFilters = () => (ctrl.filters().length > 0);
 
   $scope.removeFilter = function(filter) {
     let facet = $scope.model.find(facet => facet.key === filter.facet);
@@ -158,11 +174,12 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
   };
 
 
-  // Autocomplete
-  $scope.selectedItemChange = function(item, facet) {
+  // Autocomplete value selected
+  ctrl.selectedItemChange = function(item, facet) {
     if (item) {
       filters.add(item);
     }
+    // @todo Close filters?
   };
 
 

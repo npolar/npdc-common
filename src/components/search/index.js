@@ -17,3 +17,5 @@ ui.factory('NpdcSearchConfigFactory', require('./SearchConfigFactory'));
 ui.controller('NpdcAutocompleteController', require('./autocomplete/AutocompleteController'));
 ui.factory('NpdcAutocompleteConfigFactory', require('./autocomplete/AutocompleteConfigFactory'));
 ui.directive('npdcAutocomplete', require('./autocomplete/autocompleteDirective'));
+
+ui.directive('npdcFacetLink', require('./faceting/facetLinkDirective'));

@@ -5,10 +5,12 @@ let authorsDirective = function() {
   return {
     scope: {
       authors: '=',
+      icon: '@?',
       people: '=?' // may include or exclude authors
     },
     template: require('./authorstemplate.html'),
-    controller: 'NpdcAuthorsController'
+    controller: 'NpdcAuthorsController',
+    controllerAs: 'ctrl'
   };
 };
 

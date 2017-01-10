@@ -7,6 +7,13 @@ function AuthorsController($scope, $location, $anchorScroll) {
 
   let name = (p) => `${p.first_name||''} ${p.last_name}`.trim();
 
+  this.icon = () => {
+    if ($scope.icon) {
+      return $scope.icon;
+    }
+    return 'people';
+  }
+
   this._show = { author: true, contributor: false, affiliations: false };
 
   this.flip = (role='contributor') => {

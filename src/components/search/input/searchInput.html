@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <md-whiteframe class="np-search-input md-whiteframe-z1">
   <div>
+
     <div layout="row">
       <md-input-container flex md-no-float md-autofocus class="np-search-input-input md-icon-left md-has-icon">
         <md-icon>search</md-icon>
         <input ng-model="query.q" placeholder="{{options.placeholder | t}}" type="text" md-autofocus>
       </md-input-container>
-      <md-button class="md-icon-button np-search-input-filters" ng-click="toggleFilters();">
+      <md-button class="md-icon-button np-search-input-filters" ng-click="ctrl.toggleFilters();">
         <md-icon>build</md-icon>
         <md-tooltip>{{ 'search.filter' | t }}</md-tooltip>
       </md-button>
     </div>
-
+    
     <npdc:faceting options="options" ng-class="{ open: isFiltersOpen }"></npdc:faceting>
   </div>
 </md-whiteframe>
