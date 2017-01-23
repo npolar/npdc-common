@@ -23,7 +23,7 @@ require('leaflet-fullscreen');
 angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) {
   'ngInject';
 
-  console.debug('leaflet', L);
+  console.warn('DEPRECATED directive: leaflet', L);
 
   const base = '//geodata.npolar.no/arcgis/rest/services';
   L.Icon.Default.imagePath = '/assets/images';
@@ -41,27 +41,13 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
   function crsFactory() {
     return new L.Proj.CRS('EPSG:25833', '+proj=utm +zone=33 +ellps=GRS80 +units=m +no_defs', {
       transformation: new L.Transformation(1, 5120900, -1, 9998100),
-      resolutions: [2709.3387520108377,
-        1354.6693760054188,
-        677.3346880027094,
-        338.6673440013547,
-        169.33367200067735,
-        84.66683600033868,
-        42.33341800016934,
-        21.16670900008467,
-        10.583354500042335,
-        5.291677250021167,
-        2.6458386250105836,
-        1.3229193125052918,
-        0.6614596562526459,
-        0.33072982812632296,
-        0.16536491406316148]
+      resolutions: [21674.7100160867,10837.35500804335,5418.677504021675,2709.3387520108377,1354.6693760054188,677.3346880027094,338.6673440013547,169.33367200067735,84.66683600033868,42.33341800016934,21.16670900008467,10.583354500042335,5.291677250021167,2.6458386250105836,1.3229193125052918,0.6614596562526459,0.33072982812632296,0.16536491406316148]
     });
   }
 
   function tileLayerFactory(options) {
     if (isSvalbard(options)) {
-      let esriBase = `//${base}/Basisdata_Intern/NP_Nordomraadene_WMTS_25833/MapServer`;
+      let esriBase = `//${base}/Basisdata/NP_Basiskart_Svalbard_WMTS_25833/MapServer`;
       return new L.esri.tiledMapLayer({
         url: esriBase,
         continuousWorld: true,
@@ -69,14 +55,9 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
       });
     }
 
-    // OSM
-    /* return L.tileLayer('//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    });
-    */
     // Esri sat images
     return L.tileLayer('//services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}/', {
-      attribution: 'Esmapri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AEX, Getmapping, Aerogrid, IGN, IGP, swisstopo, and the GIS User Community'
+      attribution: 'Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AEX, Getmapping, Aerogrid, IGN, IGP, swisstopo, and the GIS User Community'
     });
   }
 
