@@ -32,6 +32,8 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
     // @todo facet hiding needs to be dynamic...
     let hide = ['created_by', 'updated_by']; // These are exposed in <npdc:contributions>
 
+    console.log('facet', facet, '=');
+
     if (hide.includes(facet.key)) {
       _type = 'hidden';
     } else if ($scope.options.filterUi && $scope.options.filterUi[facet.key]) {
