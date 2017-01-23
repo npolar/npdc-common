@@ -12,7 +12,7 @@ function AuthorsController($scope, $location, $anchorScroll) {
       return $scope.icon;
     }
     return 'people';
-  }
+  };
 
   this._show = { author: true, contributor: false, affiliations: false };
 
