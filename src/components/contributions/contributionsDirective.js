@@ -23,14 +23,17 @@ function contributions() {
       'ngInject';
 
       let ctrl = this;
-      this._user;
+
+      this._user = null;
+
       this.getUser = () => {
         if ($location.search()['filter-created_by']) {
-          let email = name = $location.search()['filter-created_by'];
-          return { name, email, count: 0 };
+          let email = $location.search()['filter-created_by'];
+          return { email, count: 0 };
         }
         return ctrl._user || NpolarApiSecurity.getUser();
-      }
+      };
+
       this.isAuthenticated = () => NpolarApiSecurity.isAuthenticated();
 
       this.count = (field,term) => {
@@ -55,7 +58,7 @@ function contributions() {
           return;
         }
         let contribs = facets.filter(f => {
-          return Object.keys(f).includes(key) && f[key]
+          return (Object.keys(f).includes(key) && f[key]);
         }).map(c => {
           return c[key];
         })[0];
