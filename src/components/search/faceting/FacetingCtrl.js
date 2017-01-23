@@ -155,12 +155,14 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
 
   // Filters
   $scope.filters = ctrl.filters;
+
   ctrl.filters = () => {
     if (!filters || !filters.array) {
       return [];
     }
     return filters.array;
-  }
+  };
+
   ctrl.activeFilters = () => (ctrl.filters().length > 0);
 
   $scope.removeFilter = function(filter) {
