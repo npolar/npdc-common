@@ -87,6 +87,9 @@ let autocompleteDirective = function ($http, $q, formulaAutoCompleteService) {
       });
 
       let isExactMatch = function (item, searchText = '') {
+        if (typeof searchText === 'number') {
+          return $scope.label(item).toLowerCase() === searchText.toString().toLowerCase();
+        }
         return $scope.label(item).toLowerCase() === searchText.toLowerCase();
       };
 
