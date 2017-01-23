@@ -3,6 +3,8 @@
 function MetadataController($scope, $http, $routeParams, npolarPeople, npolarAliases) {
   'ngInject';
 
+  let ctrl = this;
+
   const LICENSE = "https://creativecommons.org/publicdomain/zero/1.0/";
 
   // Metadata template
@@ -23,9 +25,10 @@ function MetadataController($scope, $http, $routeParams, npolarPeople, npolarAli
   }
 
   // Fetch edits from Editlog API
-  function edits (dataset, path) {
+  // FIXME (create/revision 1 is impossible to GET pt)
+  ctrl.edits = (dataset, path)=> {
 
-    let edits = [];
+    //let edits = [];
     //let created = { action: 'create', user: { id: dataset.created_by, name: name(dataset.created_by) }, when: dataset.created, comment: null, revision: null };
     //let updated = { action: 'update', user: { id: dataset.updated_by, name: name(dataset.updated_by) }, when: dataset.updated, comment: null, revision: dataset._rev.split('-')[0] };
 
@@ -47,9 +50,7 @@ function MetadataController($scope, $http, $routeParams, npolarPeople, npolarAli
     };
 
     return $http.get('//api.npolar.no/editlog',{ params, cache: true});
-  }
-
-
+  };
 
   let document = $scope.document || $scope.metadata.document || {};
   $scope.document = document;
@@ -70,7 +71,7 @@ function MetadataController($scope, $http, $routeParams, npolarPeople, npolarAli
     $scope.edits = [];
     let path = $scope.path; //.replace('//api.npolar.no', '');
 
-    edits('', path).then(r => {
+    ctrl.edits('', path).then(r => {
       r.data.forEach(e => {
         // hmm only pushing one at a time works, probably async/digest issue
         // @todo refactor

@@ -41,7 +41,7 @@
      </md-button>
 
       <md-menu-content width="6">
-        <md-menu-item ng-repeat="edit in edits" ng-init="text = edit.when +' '+ (edit.user.name || edit.user.id) +' [revision '+ (edit.revision || '?') +']'">
+        <md-menu-item ng-repeat="edit in edits" ng-init="text = edit.when +' '+ (edit.user.name || edit.user.id|name) +' [revision '+ (edit.revision || '?') +']'">
           <md-button ng-if="rev == edit.rev" ng-disabled="true">{{text}}</md-button>
           <md-button ng-if="rev != edit.rev" rel="nofollow" ng-href="{{ edit.href }}">{{text}}</md-button>
         </md-menu-item>

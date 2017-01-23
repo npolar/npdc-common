@@ -20,7 +20,7 @@ let DOI = function() {
 
   this.uri = (str) => {
     return `https://doi.org/${self.doi(str)}`;
-  }
+  };
 
 };
 module.exports = DOI;
