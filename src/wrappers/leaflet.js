@@ -25,7 +25,7 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
 
   console.warn('DEPRECATED directive: leaflet', L);
 
-  const base = '//geodata.npolar.no/arcgis/rest/services';
+  const base = 'http://geodata.npolar.no/arcgis/rest/services';
   L.Icon.Default.imagePath = '/assets/images';
 
   function isSvalbard(config) {
@@ -47,7 +47,7 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
 
   function tileLayerFactory(options) {
     if (isSvalbard(options)) {
-      let esriBase = `//${base}/Basisdata/NP_Basiskart_Svalbard_WMTS_25833/MapServer`;
+      let esriBase = `${base}/Basisdata/NP_Basiskart_Svalbard_WMTS_25833/MapServer`;
       return new L.esri.tiledMapLayer({
         url: esriBase,
         continuousWorld: true,

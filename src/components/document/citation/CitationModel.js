@@ -70,10 +70,10 @@ module.exports = function (NpdcDOI, NpdcAPA, NpdcBibTeX) {
           //{ href: `//api.crossref.org/works/${document.doi}/transform/application/vnd.crossref.unixref+xml`, title: 'XML'}
         ];
 
-      } else {
+      } //else {
         //list.push({ href: `https://search.datacite.org/citation?format=ris&doi=${document.doi}`, title: 'RIS'});
         //list.push({ href: `//data.datacite.org/application/x-research-info-systems/${document.doi}`, title: 'RIS'});
-      }
+      //}
     }
 
     list = list.sort((a,b) => a.title.localeCompare(b.title));
