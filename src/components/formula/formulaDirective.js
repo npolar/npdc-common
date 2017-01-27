@@ -53,7 +53,7 @@ var formula = function($mdDialog, $location, $routeParams, npdcAppConfig, npolar
       //   });
       // });
 
-      $scope.title = "";
+      $scope.title = $routeParams.id;
       $scope.id = $routeParams.id;
 
       $scope.href = function (id) {
