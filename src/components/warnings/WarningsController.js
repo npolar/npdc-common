@@ -1,12 +1,30 @@
 'use strict';
 
-var WarningsController = function ($scope, $routeParams, $location, NpolarMessage, NpdcWarningsService) {
+var WarningsController = function ($scope, $routeParams, $document, $location, NpolarMessage, NpdcWarningsService) {
   'ngInject';
 
   let id = () => $routeParams.id;
   let rev = () => $location.search().rev;
   let isArchived = () => ($location.search().rev && (/^[0-9]+[-]/).test($location.search().rev));
   let revision = () => rev().split('-')[0];
+
+  // FIXME move to ?
+  const uiBase = function() {
+    let base = $document[0].getElementsByTagName('base')[0].href || '';
+    base = base.replace(/\/$/, '');
+
+    let path = '';
+    if ($routeParams.id) {
+      path = $location.path().split($routeParams.id)[0];
+    } else {
+      path = $location.path();
+    }
+    path = path.replace(/\/$/, '');
+
+    let uiBase = base+path;
+
+    return uiBase;
+  };
 
   $scope.headline = "Warning";
   $scope.icon = "warning";
@@ -44,7 +62,7 @@ var WarningsController = function ($scope, $routeParams, $location, NpolarMessag
     }
     let warnings = NpdcWarningsService.warnings[id];
     if (isArchived()) {
-      return [`You are displaying archived revision ${revision()} of this page <a href="${id}">click here</a> to go back to the current version`].concat(warnings);
+      return [`You are displaying archived revision ${revision()} of this page <a href="${uiBase()}/${id}">click here</a> to go back to the current version`].concat(warnings);
      }
     return warnings;
   };
