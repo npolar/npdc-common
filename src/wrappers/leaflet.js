@@ -25,7 +25,7 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
 
   console.warn('DEPRECATED directive: leaflet', L);
 
-  const base = 'http://geodata.npolar.no/arcgis/rest/services';
+  const base = '//geodata.npolar.no/arcgis/rest/services';
   L.Icon.Default.imagePath = '/assets/images';
 
   function isSvalbard(config) {
