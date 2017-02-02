@@ -21,7 +21,7 @@
   </md-card-content>
 </md-card>
 
-<md-card>
+<md-card ng-if="document">
   <md-card-header>
     <md-card-avatar>
       <md-icon>history</md-icon>
@@ -32,7 +32,7 @@
   </md-card-header>
   <md-card-content>
 
-    <p>Metadata was created by {{ creator.name }}<span ng-if="editors().length > 0">, and edited by </span><span ng-repeat="editor in editors()"><span ng-if="!$first">, <span ng-if="$last">and </span></span>{{ editor }}</span>. Last update by {{ updater.name }}.</p>
+    <p>Metadata was created by {{ document.created_by | name  }}<span ng-if="editors().length > 0">, and edited by </span><span ng-repeat="editor in editors()"><span ng-if="!$first">, <span ng-if="$last">and </span></span>{{ editor }}</span>. Last update by {{ document.updated_by | name  }}.</p>
 
     <md-menu>
       <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button" aria-label="Open sample menu">
@@ -51,11 +51,11 @@
     <!-- @todo Available/Published DOI created) time -->
 
     <span>
-      <md-tooltip>{{ document.created }}</md-tooltip>
+      <md-tooltip>{{ document.created.split('T')[1] }}</md-tooltip>
       {{'Created' | t}} {{ document.created | isodate }}
     </span>
     <span>
-      <md-tooltip>{{document.updated}} [revision: {{document._rev.split('-')[0] }}]</md-tooltip>
+      <md-tooltip>{{document.updated.split('T')[1]}} [revision: {{document._rev.split('-')[0] }}]</md-tooltip>
       {{'Updated' | t}} {{ document.updated | isodate }}
     </span>
 

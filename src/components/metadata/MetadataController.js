@@ -25,7 +25,6 @@ function MetadataController($scope, $http, $routeParams, $filter, $window, Npola
       href = ctrl.editUri(document.id, resource);
       uri = base+ctrl.path(document.id, resource);
     }
-    console.log('metadata'. metadata);
     let formats = [{ href, title: "JSON"}];
     return Object.assign({ uri, id: document.id, formats, schema: document.schema }, metadata||{});
   };
@@ -113,10 +112,14 @@ function MetadataController($scope, $http, $routeParams, $filter, $window, Npola
     };
   }
 
-  $scope.id = document.id;
-  $scope.rev = document._rev;
-  $scope.created = document.created;
-  $scope.updated = document.updated;
+  if (document) {
+    $scope.id = document.id;
+    $scope.rev = document._rev;
+    $scope.created = document.created;
+    $scope.created_by = document.created_by;
+    $scope.updated = document.updated;
+    $scope.updated_by = document.updated_by;
+  }
   // @todo warn also in bottom about old times...
 }
 
