@@ -1,13 +1,14 @@
 'use strict';
-// <npdc:metadata document="document" path="resource.path" metadata="{ 'license': 'URI'}"></npdc:metadata>
+// <npdc:metadata document="document" resource="resource"></npdc:metadata>
 function metadataDirective() {
   'ngInject';
-  
+
   return {
     scope: {
-      metadata: "=?",
+      resource: "=?",
       document: "=?",
-      path: "=?"
+      metadata: "=?",
+
     },
     template: require('./metadata.html'),
     controller: 'NpdcMetadataController'
