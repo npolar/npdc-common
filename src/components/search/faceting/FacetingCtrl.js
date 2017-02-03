@@ -10,7 +10,7 @@ let FacetingCtrl = function($scope, $location, $timeout, NpdcSearchService) {
   let ctrl = this;
 
   ctrl.clickedFacet = (f) => {
-    console.log('ctrl.clickedFacet', f);
+    //console.log('ctrl.clickedFacet', f);
   };
 
   let queryBuilder = new QueryBuilder();
