@@ -10,6 +10,11 @@ var formula = function($mdDialog, $location, $routeParams, $filter,
     controller: function($scope) {
       'ngInject';
 
+      if (npdcAppConfig.help) {
+        $scope.help = npdcAppConfig.help;
+      }
+
+
       let initBottomSheet = function() {
         $scope.bottomSheetOptions = {
           items: [],
