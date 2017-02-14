@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<fieldset ng-class="{ valid: field.valid, error: field.error }" ng-if="field.visible">
+<fieldset ng-class="{ valid: field.valid, error: field.error }" ng-if="field.visible" ng-controller="NpdcFormulaFileController as ctrl">
   <md-whiteframe class="md-whiteframe-z2 np-formula-file">
 
     <legend>
@@ -55,8 +55,16 @@
       </li>
     </ul>
     <div layout="column" layout-align="space-between end" class="np-formula-file-upload">
-      <md-button class="md-raised md-primary" ng-disabled="disableUpload" ng-click="showUpload($event);"><md-icon>backup</md-icon></md-button>
+      <md-button class="md-raised md-primary" ng-disabled="!ctrl.canUpload()" ng-click="displayUploadDialog($event);">
+        <md-icon>backup</md-icon>
+        <md-tooltip ng-if="ctrl.canUpload()">Upload files</md-tooltip>
+      </md-button>
+      <p ng-show="!ctrl.canUpload()">
+        <span ng-if="!ctrl.isNew()">You are currently not authorized to upload (are you logged in?)</span>
+        <span ng-if="ctrl.isNew()">Uploading is disabled: You need to save before you can upload any files</span>
+      </p>
     </div>
+
     <div npdc:formula-validation-message class="np-validation-message"></div>
   </md-whiteframe>
 </fieldset>
