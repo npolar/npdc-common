@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <h1 class="np-heading md-display-1">{{ 'Editing' | t }} <a ng-href="{{ id === '__new' ? resource.uiBase : href(id) }}">{{ title }}</a>
-  <a ng-if="help && help.uri" ng-href="{{ help.uri }}">
+  <a ng-if="help && help.uri" ng-href="{{ help.uri }}" target="_blank">
     <md-button class="md-icon-button">
     <md-icon md-menu-origin>help</md-icon>
-    <md-tooltip>{{ 'help' | t }}</md-tooltip>
+    <md-tooltip>{{ 'help-with-editing' | t }}</md-tooltip>
   </md-button></a>
 </h1>
 
