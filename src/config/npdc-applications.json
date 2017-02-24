@@ -284,10 +284,10 @@
 		"category": "public",
 		"promote": true
 	}, {
-		"link": "/courses",
+		"link": "/course",
 		"name": [{
 			"@language": "en",
-			"@value": "Courses"
+			"@value": "Course"
 		}, {
 			"@language": "no",
 			"@value": "Kurs"
