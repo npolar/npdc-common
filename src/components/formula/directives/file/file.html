@@ -34,7 +34,7 @@
                   <md-tooltip>{{ value.visible ? i18n.text.minimize.tooltip : i18n.text.maximize.tooltip }}</md-tooltip>
                 </a>
                 <md-menu>
-                  <md-button aria-label="{{ i18n.text.remove.label }}" class="md-icon-button remove" ng-click="$mdOpenMenu($event)">
+                  <md-button ng-show="ctrl.canDelete()" aria-label="{{ i18n.text.remove.label }}" class="md-icon-button remove" ng-click="$mdOpenMenu($event)">
                     <md-icon md-menu-origin>close</md-icon>
                     <md-tooltip>{{ i18n.text.remove.tooltip }}</md-tooltip>
                   </md-button>
@@ -55,7 +55,7 @@
       </li>
     </ul>
     <div layout="column" layout-align="space-between end" class="np-formula-file-upload">
-      <md-button class="md-raised md-primary" ng-disabled="!ctrl.canUpload()" ng-click="displayUploadDialog($event);">
+      <md-button ng-disabled="!ctrl.canUpload()" ng-click="ctrl.displayUploadDialog($event);" class="md-raised md-primary">
         <md-icon>backup</md-icon>
         <md-tooltip ng-if="ctrl.canUpload()">Upload files</md-tooltip>
       </md-button>
