@@ -30,8 +30,8 @@ var SearchResultsController = function($scope, $filter, $location, $http, Npolar
     $location.path('/');
   };
 
-  ctrl.hasFilters = () => {
-    return Object.keys($location.search()).find(k => (/^filter[-]/).test(k));
+  ctrl.hasFilters = (param=$location.search()) => {
+    return Object.keys(param).find(k => (/^filter[-]/).test(k));
   };
 
   // @todo FIXME sort
@@ -74,7 +74,6 @@ var SearchResultsController = function($scope, $filter, $location, $http, Npolar
     if (options.avatar) {
       return valueFromPath(entry, options.avatar);
     }
-
     return entry.id.substr(0,3);
   };
 
