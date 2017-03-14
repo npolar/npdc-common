@@ -29,7 +29,7 @@
                   <md-icon>arrow_downward</md-icon>
                   <md-tooltip>{{ i18n.text.movedown }}</md-tooltip>
                 </a>
-                <a href="" ng-click="field.itemToggle($index)">
+                <a ng-show="files[$index] && files[$index].extras && files[$index].extras.length > 0" href="" ng-click="field.itemToggle($index)">
                   <md-icon>{{ value.visible ? 'expand_less' : 'expand_more' }}</md-icon>
                   <md-tooltip>{{ value.visible ? i18n.text.minimize.tooltip : i18n.text.maximize.tooltip }}</md-tooltip>
                 </a>
