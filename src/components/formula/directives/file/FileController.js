@@ -23,18 +23,24 @@ function FormulaFileController($scope, $mdDialog, $http, $routeParams, NpolarApi
   let options = fileFunnelService.getOptions($scope.field);
   //console.log('field', $scope.field, fileFunnelService.getOptions(), options);
 
-  let mapFile = function(link_field) {
-    let file = Object.assign({},link_field.value);
+  // From app-specific metadata to Hashi object
+  let toHashi = function(hashi_field) {
 
-    if (typeof options.valueToFileMapper === "function") {
+    // file: metadata object as stored in the application
+    let file = Object.assign({},hashi_field.value);
+
+    if (typeof options.toHashi === "function") {
+      file = options.toHashi(file);
+      options.valueToFileMapper = options.toHashi;
+    } else if (typeof options.valueToFileMapper === "function") {
+      console.warn('DEPRECATED: use toHashi');
       file = options.valueToFileMapper(file);
     }
-
     if (file) {
       if (!file.filename || !file.url) {
         throw "The hashi file mapper should be an object with keys filename, url, [file_size, icon, extras].";
       }
-      file.extras = link_field.fields.filter(field => (options.fields || []).includes(field.id));
+      file.extras = hashi_field.fields.filter(field => (options.fields || []).includes(field.id));
     }
     return file;
   };
@@ -42,8 +48,8 @@ function FormulaFileController($scope, $mdDialog, $http, $routeParams, NpolarApi
   $scope.id = $routeParams.id;
 
   $scope.field.values.forEach(value => {
-    let file = mapFile(value);
-    $scope.files.push(file);
+    let hashiFile = toHashi(value);
+    $scope.files.push(hashiFile);
   });
 
   $scope.isFile = function(value, index, array) {
@@ -53,6 +59,9 @@ function FormulaFileController($scope, $mdDialog, $http, $routeParams, NpolarApi
   ctrl.displayUploadDialog = (ev) => {
     console.log('displayUploadDialog', ev);
     fileFunnelService.showUpload(ev, $scope.field, options).then(files => {
+
+      files = files.filter(f => f.status >= 200 && f.status < 300);
+
       if (files) {
         files.forEach(file => {
           let length = $scope.files.push(file);

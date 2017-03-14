@@ -55,9 +55,9 @@ ff.controller('FFUploadController', function($scope, $rootScope, $mdDialog, opti
 
   // Success for each file
   ff.on('success', file => {
-    
+
     $rootScope.$broadcast('npdc-filefunnel-upload-success', file);
-    
+
     // Completed when all files are in
     if (ff.status === FileFunnel.status.COMPLETED) {
       $mdDialog.hide(ff.files);
@@ -80,18 +80,18 @@ ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig, NpolarMe
   const DEFAULTS = {
     accept: "*/*",
     chunked: false,
-    multiple: false
+    multiple: false,
+    restricted: false
   };
 
   let configs = formulaFieldConfig.getInstance();
   let fileUploader = function(config, formula) {
-    var options = Object.assign({}, DEFAULTS, config, {
-      formula
-      //,
-      //auth: NpolarApiSecurity.authorization()
-    });
+    var options = Object.assign({}, DEFAULTS, config, { formula });
     if (!options.server) {
       throw "You must set a server!";
+    }
+    if (options.fromHashi) {
+      options.fileToValueMapper = options.fromHashi;
     }
     if (!options.fileToValueMapper) {
       options.fileToValueMapper = function (file) {return file; };
@@ -141,8 +141,9 @@ ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig, NpolarMe
       responses.forEach(response => {
 
         // @TODO Handle out of sync metadata in backend
-        //if (response.status !== 409) {
+        if (response.status >= 200 && response.status < 300) {
           let value = options.fileToValueMapper(response);
+          console.log('fromHashi', value);
           if (typeof value !== 'object') {
             throw "fileToValueMapper should return object with keys matching the fields you want to set file data to";
           }
@@ -152,9 +153,9 @@ ff.service('fileFunnelService', function($mdDialog, formulaFieldConfig, NpolarMe
           item.valueFromModel(valueModel);
           field.itemChange();
 
-        // } else {
-        //   NpolarMessage.info("Attachment: " + response.filename + " already exists");
-        // }
+        } else {
+          console.log('Hashi error:', response);
+        }
       });
 
       return responses;
