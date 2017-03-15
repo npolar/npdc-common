@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<md-whiteframe class="np-search-input md-whiteframe-z1">
-  <div>
+<md-card>
+  <md-card-content class="np-search-input">
 
     <div layout="row">
       <md-input-container flex md-no-float md-autofocus class="np-search-input-input md-icon-left md-has-icon">
@@ -12,8 +12,10 @@
         <md-tooltip>{{ 'search.filter' | t }}</md-tooltip>
       </md-button>
     </div>
-    
-    <npdc:faceting options="options" ng-class="{ open: isFiltersOpen }"></npdc:faceting>
-  </div>
-</md-whiteframe>
+
+    <npdc:faceting ng-if="options" options="options" ng-class="{ open: isFiltersOpen }"></npdc:faceting>
+
+  </md-card-content>
+</md-card>
+
 <div class="clearfix"></div>
