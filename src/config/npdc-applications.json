@@ -198,10 +198,10 @@
 			"@value": "Svalbard atlas"
 		}, {
 			"@language": "nb",
-			"@value": "Svalbardkartet"
+			"@value": "Svalbard-kartet"
 		}, {
 			"@language": "nn",
-			"@value": "Svalbardkartet"
+			"@value": "Svalbard-kartet"
 		}],
 		"icons": [{
 			"size": 96,
@@ -224,7 +224,7 @@
 		"category": "public",
 		"promote": true
 	}, {
-		"link": "http://placenames.npolar.no",
+		"link": "/placename",
 		"name": [{
 			"@language": "en",
 			"@value": "Placenames"
