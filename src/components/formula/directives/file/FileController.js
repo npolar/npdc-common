@@ -12,7 +12,8 @@ function FormulaFileController($scope, $mdDialog, $http, $routeParams, NpolarApi
   };
 
   ctrl.canUpload = (security = NpolarApiSecurity, options=fileFunnelService.getOptions(ctrl.field)) => {
-    return (false === ctrl.isNew() && security.isAuthorized('create', options.server));
+    let file_uri = options.server.replace('/:id/_file', '');
+    return (false === ctrl.isNew() && security.isAuthorized('create', file_uri));
   };
 
   ctrl.canDelete = (security = NpolarApiSecurity, options=fileFunnelService.getOptions(ctrl.field)) => {
