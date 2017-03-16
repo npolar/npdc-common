@@ -65,7 +65,7 @@ function AuthorsController($scope, $location, $anchorScroll) {
 
   $scope.isContact = (person) => {
     if (!person || !person.roles.length || person.roles.length < 1) { return; }
-    if (person.roles.findIndex(r => ['correspondent', 'pointOfContact'].includes(r)) > 0) {
+    if (person.roles.findIndex(r => ['correspondent', 'pointOfContact'].includes(r)) >= 0) {
       return true;
     }
   };
