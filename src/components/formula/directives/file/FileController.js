@@ -11,13 +11,16 @@ function FormulaFileController($scope, $mdDialog, $http, $routeParams, NpolarApi
     return params.id === '__new';
   };
 
-  ctrl.canUpload = (security = NpolarApiSecurity, options=fileFunnelService.getOptions(ctrl.field)) => {
-    let file_uri = options.server.replace('/:id/_file', '');
-    return (false === ctrl.isNew() && security.isAuthorized('create', file_uri));
+  ctrl.file_uri = (options=fileFunnelService.getOptions(ctrl.field)) => {
+    return options.server.replace('/:id/_file', '');
   };
 
-  ctrl.canDelete = (security = NpolarApiSecurity, options=fileFunnelService.getOptions(ctrl.field)) => {
-    return security.isAuthorized('delete', options.server);
+  ctrl.canUpload = (security = NpolarApiSecurity) => {
+    return ((false === ctrl.isNew()) && (security.isAuthorized('create', ctrl.file_uri())));
+  };
+
+  ctrl.canDelete = (security = NpolarApiSecurity) => {
+    return security.isAuthorized('delete', ctrl.file_uri());
   };
 
   $scope.files = [];
