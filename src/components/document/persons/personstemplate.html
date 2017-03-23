@@ -11,7 +11,7 @@
           <p ng-if="person.organisation">{{ person.organisation | t }}</p>
           <p ng-if="person.role">{{ person.role | t}}</p>
           <p ng-if="person.roles">
-            <span ng-repeat="r in person.roles">{{ r | t }}
+            <span ng-repeat="r in person.roles">{{ r.replace("project","") | t }}
               <span ng-if="person.email && r=='pointOfContact'"> [{{ person.email}}] {{ person.homepage}}</span><span ng-if="!$last">, </span>
             </span>
           </p>
