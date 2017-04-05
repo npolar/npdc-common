@@ -20,10 +20,11 @@ function MetadataController($scope, $http, $routeParams, $filter, $window, Npola
     let href;
     let uri;
     let l = $window.location;
+    let id = $routeParams.id;
     let base = `${l.protocol}//${l.host}`;
     if (resource) {
-      href = ctrl.editUri(document.id, resource);
-      uri = base+ctrl.path(document.id, resource);
+      href = ctrl.editUri(id, resource);
+      uri = base+ctrl.path(id, resource);
     }
     let formats = [{ href, title: "JSON"}];
     return Object.assign({ uri, id: document.id, formats, schema: document.schema }, metadata||{});
