@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <md-menu ng-if="!security.isAuthenticated()" class="np-user-menu">
-  <md-button aria-label="Open user" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+  <md-button aria-label="Open user" class="md-icon-button" ng-click="$mdMenu.open($event)">
     <md-icon md-menu-origin>person</md-icon>
     <md-tooltip>{{ 'npdc.menu.user' | t }}</md-tooltip>
   </md-button>
@@ -26,7 +26,7 @@
     <md-divider></md-divider>
     <md-menu-item>
       <md-menu>
-        <md-button ng-click="$mdOpenMenu($event)">
+        <md-button ng-click="$mdMenu.open($event)">
           <md-icon>language</md-icon>
           {{ lang.getNativeName(lang.getLang()) }}
         </md-button>
@@ -44,7 +44,7 @@
 </md-menu>
 
 <md-menu ng-if="security.isAuthenticated()" class="np-user-menu">
-  <md-button aria-label="Open user" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+  <md-button aria-label="Open user" class="md-icon-button" ng-click="$mdMenu.open($event)">
     <md-icon md-menu-origin>account_box</md-icon>
     <md-tooltip>{{ security.getUser().name }}</md-tooltip>
   </md-button>
@@ -67,7 +67,7 @@
     <md-divider></md-divider>
     <md-menu-item>
       <md-menu>
-        <md-button ng-click="$mdOpenMenu($event)">
+        <md-button ng-click="$mdMenu.open($event)">
           <md-icon>language</md-icon>
           {{ lang.getNativeName(lang.getLang()) }}
         </md-button>

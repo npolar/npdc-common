@@ -34,7 +34,7 @@
                   <md-tooltip>{{ value.visible ? i18n.text.minimize.tooltip : i18n.text.maximize.tooltip }}</md-tooltip>
                 </a>
                 <md-menu>
-                  <md-button ng-show="ctrl.canDelete()" aria-label="{{ i18n.text.remove.label }}" class="md-icon-button remove" ng-click="$mdOpenMenu($event)">
+                  <md-button ng-show="ctrl.canDelete()" aria-label="{{ i18n.text.remove.label }}" class="md-icon-button remove" ng-click="$mdMenu.open($event)">
                     <md-icon md-menu-origin>close</md-icon>
                     <md-tooltip>{{ i18n.text.remove.tooltip }}</md-tooltip>
                   </md-button>

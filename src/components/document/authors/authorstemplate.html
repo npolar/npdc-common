@@ -2,7 +2,7 @@
 <section ng-controller="NpdcAuthorsController as ctrl">
   <md-menu>
 
-    <md-button class="md-fab md-primary md-hue-2" aria-label="Open people interactions menu" ng-click="$mdOpenMenu($event)">
+    <md-button class="md-fab md-primary md-hue-2" aria-label="Open people interactions menu" ng-click="$mdMenu.open($event)">
        <md-icon md-menu-origin>{{ctrl.icon()}}</md-icon>
        <md-tooltip md-direction="top">{{ authors.length }} {{ (authors.length > 1) ? ('authors'|t) : ('author'|t) }}
         <span ng-if="ctrl.contributors.length > 0">{{ contributors.length}}</span>

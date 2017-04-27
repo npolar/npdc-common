@@ -35,7 +35,7 @@
     <p>Metadata was created by {{ document.created_by | name  }}<span ng-if="editors().length > 0">, and edited by </span><span ng-repeat="editor in editors()"><span ng-if="!$first">, <span ng-if="$last">and </span></span>{{ editor }}</span>. Last update by {{ document.updated_by | name  }}.</p>
 
     <md-menu>
-      <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button" aria-label="Open sample menu">
+      <md-button ng-click="$mdMenu.open($event)" class="md-icon-button" aria-label="Open sample menu">
        <md-icon>track_changes</md-icon>
        <md-tooltip>Time machine</md-tooltip>
      </md-button>

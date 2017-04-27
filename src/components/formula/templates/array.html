@@ -11,7 +11,7 @@
         <formula:field field="value" class="multi-ctrls"></formula:field>
         <div class="np-formula-input-ctrls">
           <md-menu>
-            <md-button aria-label="Actions" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+            <md-button aria-label="Actions" class="md-icon-button" ng-click="$mdMenu.open($event)">
               <md-icon md-menu-origin>menu</md-icon>
               <md-tooltip md-direction="left">{{ i18n.text.actions.tooltip }}</md-tooltip>
             </md-button>
@@ -55,7 +55,7 @@
                   <md-tooltip>{{ value.visible ? i18n.text.minimize.tooltip : i18n.text.maximize.tooltip }}</md-tooltip>
                 </a>
                 <md-menu>
-                  <md-button aria-label="Actions" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+                  <md-button aria-label="Actions" class="md-icon-button" ng-click="$mdMenu.open($event)">
                     <md-icon md-menu-origin>menu</md-icon>
                     <md-tooltip md-direction="left">{{ i18n.text.actions.tooltip }}</md-tooltip>
                   </md-button>
