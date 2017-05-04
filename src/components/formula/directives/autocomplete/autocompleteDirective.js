@@ -43,7 +43,16 @@ let autocompleteDirective = function ($http, $q, formulaAutoCompleteService) {
             isArray: true,
             cache: true
           };
-          $http.get(config.querySource, options).then(function (response) {
+            var link = config.querySource;
+            //If using the ?q- option - submit the link without the field query value included and include it here
+            var conf = link.split('?q-');
+            if (conf.length == 2) {
+                //arr[0] contains the field name
+                var arr = conf[1].split('&');
+                //include the query letters into link
+                link = conf[0] + '?q-' + arr[0] +  q + conf[1].replace(arr[0],'')
+            }
+            $http.get(link, options).then(function (response) {
             deferred.resolve(response.data);
           });
         } else if (config.querySource instanceof Array) {
@@ -59,9 +68,12 @@ let autocompleteDirective = function ($http, $q, formulaAutoCompleteService) {
         let result = item;
         if (config[key]) {
           if (typeof config[key] === 'function') {
-            result = config[key].apply({}, item);
+             result = config[key].apply({}, item);
           } else if (item[config[key]]) {
-            result = item[config[key]];
+             result = item[config[key]];
+          } else if (config[key].includes(".")) { //object value in array notation "array.value"
+             var arr = config[key].split('.');
+             result = (item[arr[0]])[arr[1]];
           }
         }
         return String(result);
@@ -78,6 +90,7 @@ let autocompleteDirective = function ($http, $q, formulaAutoCompleteService) {
       $scope.label = function (item) {
         return mapItem(item, 'label');
       };
+
 
       $scope.items = querySource(field.value);
 
