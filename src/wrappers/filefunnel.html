@@ -6,6 +6,7 @@
 
       <md-list>
         <md-list-item class="md-3-line" ng-repeat="file in ff.files">
+          
           <md-icon class="md-avatar">attachment</md-icon>
           <div class="md-list-item-text">
             <h3>{{file.reference.name}}</h3>
@@ -13,7 +14,8 @@
             <span class="{{file.elements.info.dom.className}}">{{file.elements.info.value}}</span>
           </div>
         </md-list-item>
-        <md-list-item ng-if="askForScope && ff.files.length">
+        
+        <md-list-item ng-show="askForScope && ff.files.length">
           <p>{{ 'upload.restrict' | t }}</p>
           <md-checkbox class="md-secondary" ng-model="access.data"></md-checkbox>
         </md-list-item>

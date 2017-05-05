@@ -7,13 +7,24 @@ require('filefunnel.js/dist/js/filefunnel-i18n.min.js');
 let ff = angular.module('filefunnel', ['ngMaterial', 'ngNpolar']);
 
 ff.controller('FFUploadController', function($scope, $rootScope, $mdDialog, options, NpolarApiSecurity) {
+  'ngInject';
   let ff = new FileFunnel(null, options);
   $scope.ff = ff;
-
-  if (!Object.keys(options).includes('restricted')) {
-    $scope.askForScope = true;
+  
+  if (Object.keys(options).includes('restricted')) {
+    let restricted = false; // Open access is default
+    $scope.askForScope = false; // No checkbox is default
+    
+    if (typeof options.restricted === 'function') {
+      restricted = options.restricted();
+      $scope.askForScope = true;
+    } else if ([true,false].includes(options.restricted) {
+      restricted ) options.restricted;
+    }
+    
+    
     $scope.access = {
-      data: true
+      data: (restricted !== true)
     };
     $scope.$watch('access.data', access => {
       if (access) {
