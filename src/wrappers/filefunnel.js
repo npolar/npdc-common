@@ -18,11 +18,9 @@ ff.controller('FFUploadController', function($scope, $rootScope, $mdDialog, opti
     if (typeof options.restricted === 'function') {
       restricted = options.restricted();
       $scope.askForScope = true;
-    } else if ([true,false].includes(options.restricted) {
-      restricted ) options.restricted;
+    } else if ([true,false].includes(options.restricted)) {
+      restricted = options.restricted;
     }
-    
-    
     $scope.access = {
       data: (restricted !== true)
     };
