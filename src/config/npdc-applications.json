@@ -109,6 +109,34 @@
 		"category": "public",
 		"promote": true
 	}, {
+		"link": "/geology",
+		"name": [{
+			"@language": "en",
+			"@value": "Geology"
+		}, {
+			"@language": "no",
+			"@value": "Geologi"
+		}],
+		"icons": [{
+			"size": 96,
+			"src": "/assets/img/app-icons/96/geology.png"
+		}, {
+			"size": 48,
+			"src": "/assets/img/app-icons/48/geology.png"
+		}],
+		"screenshots": ["/assets/img/screenshots/geology.png"],
+		"description": [{
+			"@language": "en",
+			"@value": "Geology rock collection"
+		}, {
+			"@language": "no",
+			"@value": "Geologi steinsamling"
+		}],
+		"category": "public",
+		"promote": true
+	},
+
+	{
 		"link": "/tracking",
 		"name": [{
 			"@language": "en",
