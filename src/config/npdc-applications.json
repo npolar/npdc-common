@@ -252,7 +252,7 @@
 		"category": "public",
 		"promote": true
 	}, {
-		"link": "/placename",
+		"link": "https://placenames.npolar.no/",
 		"name": [{
 			"@language": "en",
 			"@value": "Placenames"
@@ -273,7 +273,7 @@
 		"screenshots": [],
 		"description": [{
 			"@language": "en",
-			"@value": "Official place names database for the Norwegian polar regions"
+			"@value": "Official place names in Norwegian polar regions"
 		}, {
 			"@language": "nb",
 			"@value": "Offisielle stedsnavn i norske polarområder"
