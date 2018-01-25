@@ -40,7 +40,7 @@
     "csv-spectrum": "^1.0.0",
     "gulp": "^3.9.0",
     "gulp-changed": "^1.3.0",
-    "npdc-gulp": "github:npolar/npdc-gulp#v4.1.3",
+    "npdc-gulp": "github:npolar/npdc-gulp#v4.1.4",
     "partialify": "^3.1.3",
     "q": "^1.4.1",
     "run-sequence": "^1.1.2",
