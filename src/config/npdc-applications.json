@@ -567,6 +567,8 @@
 		}, {
 		    "@language": "no",
 		    "@value": "Hendelsesregister for interaksjoner mellom isbjørn og mennesker"
-		}]
+		}],
+                "category": "public",
+                "promote": true
 	}
 ]
