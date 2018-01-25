@@ -545,5 +545,28 @@
 		}],
 		"category": "public",
 		"promote": true
+	}, {
+		"link": "/pbhims",
+		"name": [{
+		    "@language": "en",
+		    "@value": "PBHIMS"
+		}, {
+		    "@language": "no",
+		    "@value": "PBHIMS"
+		}],
+		"icons": [{
+			"size": 96,
+			"src": "/assets/img/app-icons/96/pbhims.png"
+		}, {
+			"size": 48,
+			"src": "/assets/img/app-icons/48/pbhims.png"
+		}],
+		"description": [{
+		    "@language": "en",
+		    "@value": "Polar Bear/Human Information Management System"
+		}, {
+		    "@language": "no",
+		    "@value": "Hendelsesregister for interaksjoner mellom isbjørn og mennesker"
+		}]
 	}
 ]
