@@ -83,7 +83,18 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
       if (isSvalbard(scope.options)) {
         mapOptions.crs = crsFactory();
       }
-      let map = L.map(iElement.find('div')[0], mapOptions).setView([69.68, 18.94], 4);
+
+      //Set init center coord by using mapOptions.initcoord, otherwise defaults to Svalbard
+     let lat = 69.68;
+     let lng = 18.94;
+
+      if (scope.options.initcoord) {
+        lat = scope.options.initcoord[0];
+        lng = scope.options.initcoord[1];
+      }
+    //  let map = L.map(iElement.find('div')[0], mapOptions).setView([69.68, 18.94], 4);
+     let map = L.map(iElement.find('div')[0], mapOptions).setView([lat, lng], 4);
+
       tileLayer.addTo(map);
 
       let drawnItems;
@@ -135,6 +146,7 @@ angular.module('leaflet', []).directive('leaflet', function($compile, $timeout) 
             polygon: false,
             rectangle: false,
             circle: false,
+            circlemarker: false,
             marker: false
           }, scope.options.draw)
         });
