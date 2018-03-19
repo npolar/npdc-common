@@ -64,31 +64,31 @@ function MetadataController($scope, $http, $routeParams, $filter, $window, Npola
     }
   });
 
-  if (!$scope.edits && resource) {
-    $scope.edits = [];
-    let path = resource.path.split('//api.npolar.no')[1]; // FIXME Only works in production
-
-    ctrl.edits(document||{}, path).then(r => {
-      r.data.forEach(e => {
-        // hmm only pushing one at a time works, probably async/digest issue
-        // @todo refactor
-        let href = e.response.header.Location;
-        let rev = href.split('rev=')[1];
-        let revision = rev.split('-')[0];
-        let edit = { action: 'update', user: { id: e.request.username, name: ctrl.name(e.request.username)}, when: e.request.time, href, revision, rev };
-
-        $scope.edits.push(edit);
-
-      });
-      // FIXME (create/revision 1 is pt impossible to GET from Editlog)
-      if (document) {
-        let created = { action: 'create', user: { id: document.created_by, name: ctrl.name(document.created_by) }, when: document.created, revision: '1' };
-        $scope.edits.push(created);
-      }
-
-
-    });
-  }
+  // if (!$scope.edits && resource) {
+  //   $scope.edits = [];
+  //   let path = resource.path.split('//api.npolar.no')[1]; // FIXME Only works in production
+  //
+  //   ctrl.edits(document||{}, path).then(r => {
+  //     r.data.forEach(e => {
+  //       // hmm only pushing one at a time works, probably async/digest issue
+  //       // @todo refactor
+  //       let href = e.response.header.Location;
+  //       let rev = href.split('rev=')[1];
+  //       let revision = rev.split('-')[0];
+  //       let edit = { action: 'update', user: { id: e.request.username, name: ctrl.name(e.request.username)}, when: e.request.time, href, revision, rev };
+  //
+  //       $scope.edits.push(edit);
+  //
+  //     });
+  //     // FIXME (create/revision 1 is pt impossible to GET from Editlog)
+  //     if (document) {
+  //       let created = { action: 'create', user: { id: document.created_by, name: ctrl.name(document.created_by) }, when: document.created, revision: '1' };
+  //       $scope.edits.push(created);
+  //     }
+  //
+  //
+  //   });
+  // }
 
   $scope.editors = () => {
     if (!$scope.edits) {
