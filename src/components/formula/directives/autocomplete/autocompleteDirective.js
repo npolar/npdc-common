@@ -46,11 +46,11 @@ let autocompleteDirective = function ($http, $q, formulaAutoCompleteService) {
             var link = config.querySource;
             //If using the ?q- option - submit the link without the field query value included and include it here
             var conf = link.split('?q-');
-            if (conf.length == 2) {
+            if (conf.length === 2) {
                 //arr[0] contains the field name
                 var arr = conf[1].split('&');
                 //include the query letters into link
-                link = conf[0] + '?q-' + arr[0] +  q + conf[1].replace(arr[0],'')
+                link = conf[0] + '?q-' + arr[0] +  q + conf[1].replace(arr[0],'');
             }
             $http.get(link, options).then(function (response) {
             deferred.resolve(response.data);
