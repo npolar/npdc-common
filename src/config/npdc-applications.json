@@ -545,7 +545,64 @@
 		}],
 		"category": "public",
 		"promote": true
-	}, {
+	}, 
+
+{
+		"link": "/seabird-colony",
+		"name": [{
+			"@language": "en",
+			"@value": "Seabird colonies"
+		}, {
+			"@language": "no",
+			"@value": "Sjøfugl kolonier"
+		}],
+		"icons": [{
+			"size": 96,
+			"src": "/assets/img/app-icons/96/seabird-colony.png"
+		}, {
+			"size": 48,
+			"src": "/assets/img/app-icons/48/seabird-colony.png"
+		}],
+		"screenshots": ["/assets/img/screenshots/seabird-colony.png"],
+		"description": [{
+			"@language": "en",
+			"@value": "Seabird colonies Svalbard"
+		}, {
+			"@language": "no",
+			"@value": "Sjøfuglkolonier Svalbard"
+		}],
+		"category": "public",
+		"promote": true
+	},
+  {
+  		"link": "/mapview",
+  		"name": [{
+  			"@language": "en",
+  			"@value": "Mapview"
+  		}, {
+  			"@language": "no",
+  			"@value": "Kartoversikt"
+  		}],
+  		"icons": [{
+  			"size": 96,
+  			"src": "/assets/img/app-icons/96/mapview.png"
+  		}, {
+  			"size": 48,
+  			"src": "/assets/img/app-icons/48/mapview.png"
+  		}],
+  		"screenshots": ["/assets/img/screenshots/mapview.png"],
+  		"description": [{
+  			"@language": "en",
+  			"@value": "Mapview NPI databases"
+  		}, {
+  			"@language": "no",
+  			"@value": "Kartoversikt NP databaser"
+  		}],
+  		"category": "public",
+  		"promote": true
+  	},
+
+{
 		"link": "/pbhims",
 		"name": [{
 		    "@language": "en",
