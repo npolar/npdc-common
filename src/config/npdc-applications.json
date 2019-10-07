@@ -363,6 +363,33 @@
 		"category": "internal",
 		"promote": true
 	}, {
+		"link": "/ecotox",
+		"name": [{
+			"@language": "en",
+			"@value": "Ecotox"
+		}, {
+			"@language": "no",
+			"@value": "Økotoks"
+		}],
+		"icons": [{
+			"size": 96,
+			"src": "/assets/img/app-icons/96/ecotox.png"
+		}, {
+			"size": 48,
+			"src": "/assets/img/app-icons/48/ecotox.png"
+		}],
+		"screenshots": [],
+		"description": [{
+			"@language": "no",
+			"@value": "Økotoks felt database"
+		}, {
+			"@language": "en",
+			"@value": "Ecotox field database"
+		}],
+		"category": "internal",
+		"promote": true
+	},
+	 {
 		"link": "/station-booking",
 		"name": [{
 			"@language": "en",
@@ -545,7 +572,7 @@
 		}],
 		"category": "public",
 		"promote": true
-	}, 
+	},
 
 {
 		"link": "/seabird-colony",
