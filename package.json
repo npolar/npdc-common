@@ -1,6 +1,6 @@
 {
   "name": "npdc-common",
-  "version": "4.11.4",
+  "version": "4.11.5",
   "engines": {
     "node": "11"
   },
